@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<ruleset name="Default Coding Standard">
+    <description>Default Coding Standard in PSR</description>
+    <rule ref="PSR2"/>
+</ruleset>
