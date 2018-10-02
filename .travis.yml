@@ -10,6 +10,9 @@ php:
   env:
     global:
       - COMPOSER_ARGS="--no-interaction"
+      - github_token:
+          secure: "bVv7aJn4hL9PSvWdSebemd2twIYjCVoLqjQU2YBJrR5gm53LByWL8ff3a0IarWm/cLTx0OXigWoN3hBr81RITZrg2RR1zbT6pzeijAKT+uhwX3z1POv1EMluQ2M/0HCZVjqly770LyeWU+KSIHamhmV9VcdDjMm+2zJj6y/44JIcq5NO95G1Icwo55JgUSfcoMt4IWa9+zR5ymDwHFMOwUMet6MGq7QfIaDJKqyPngLWIrVMX4GZ2OSO6ZUAlDb0No8Dc60qwP+vsHAZLf3Yiw7VhaOYu1G9fDEib1YbZfBnS2uzG9oCFtToxSAOmeLjrfjzO6frwyIN/yd1Nx0ajlO6HdEjlrthSHFkf+BnPRQquLGTJL4iWvteF3wynrue7nxD6X3Lqd+EWRGwQES52TcJNVdsfgBZ1s7qTfZW2m8Y2YzCvAAPzwE4+3ofriBYCoT1JdzeN/HD7fHf2NQuBUYtoz/uxcLepPeQu3oiFJf7h07WA3mvB7VUf8xgoKlgrCxZT2DORrSU3fuCizH3eeUIeXkyVIYI0zEgPTiGZ0jSWCJLYVC/dtj/MdpsYKaol0nxj3GeV7xrI66KxiNcBWX3x4sOySKoUUa5ZIF+K96tVcznhjA4dUsPdkl3RJ7uvROcDu+QRjq1hOuxms9WJcf62KBFTagbXLsjg8OsSa0="
+
 
   install:
     - travis_retry composer install $COMPOSER_ARGS
