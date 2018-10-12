@@ -1,0 +1,7 @@
+<config>
+    <modules>
+        <Wirecard_ElasticEngine>
+            <version>0.1.0</version>
+        </Wirecard_ElasticEngine>
+    </modules>
+</config>

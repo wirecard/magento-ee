@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Wirecard_ElasticEngine>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Wirecard_ElasticEngine>
+    </modules>
+</config>
