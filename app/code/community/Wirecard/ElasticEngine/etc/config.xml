@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/LICENSE
+-->
+<config>
+    <modules>
+        <Wirecard_ElasticEngine>
+            <version>0.1.0</version>
+        </Wirecard_ElasticEngine>
+    </modules>
+</config>

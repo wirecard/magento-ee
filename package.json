@@ -1,0 +1,16 @@
+{
+  "name": "@wirecard/magento-ee",
+  "version": "0.1.0",
+  "scripts": {
+    "test": "mocha tests/Selenium/**/*Test.js --timeout 220000",
+    "test:default": "mocha tests/Selenium/Payments/DefaultTest.js --timeout 60000"
+  },
+  "private": true,
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chromedriver": "2.38.3",
+    "mocha": "^5.2.0",
+    "selenium-webdriver": "^4.0.0-alpha.1"
+  }
+}
