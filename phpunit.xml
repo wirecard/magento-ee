@@ -4,8 +4,19 @@
          verbose="true"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="My Test Suite">
-            <directory>tests</directory>
+        <testsuite name="Wirecard Magento 1 EE Test Suite">
+            <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
+
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">*</directory>
+            <exclude>
+                <directory suffix=".php">./tests</directory>
+                <directory>./lib/Wirecard/ElasticEngine/vendor</directory>
+                <directory>./app/code/community/Wirecard/ElasticEngine/sql</directory>
+            </exclude>
+        </whitelist>
+    </filter>
 </phpunit>
