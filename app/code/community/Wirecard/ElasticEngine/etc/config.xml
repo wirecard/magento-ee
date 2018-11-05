@@ -12,4 +12,70 @@
             <version>0.1.0</version>
         </Wirecard_ElasticEngine>
     </modules>
+
+    <global>
+        <helpers>
+            <elasticengine>
+                <class>Wirecard_ElasticEngine_Helper</class>
+            </elasticengine>
+        </helpers>
+        <blocks>
+            <elasticengine>
+                <class>Wirecard_ElasticEngine_Block</class>
+            </elasticengine>
+        </blocks>
+        <models>
+            <elasticengine>
+                <class>Wirecard_ElasticEngine_Model</class>
+            </elasticengine>
+        </models>
+        <events>
+            <controller_front_init_before>
+                <observers>
+                    <wirecard_elastic_engine_composer_autoload>
+                        <type>singleton</type>
+                        <class>elasticengine/observer</class>
+                        <method>controllerFrontInitBefore</method>
+                    </wirecard_elastic_engine_composer_autoload>
+                </observers>
+            </controller_front_init_before>
+        </events>
+    </global>
+
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Wirecard_ElasticEngine after="Mage_Adminhtml">Wirecard_ElasticEngine_Adminhtml</Wirecard_ElasticEngine>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+
+    <default>
+        <payment>
+            <wirecard_elastic_engine_paypal>
+                <active>0</active>
+                <model>wirecard_elastic_engine/paypal</model>
+                <title>PayPal</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>70000-APITEST-AP</api_user>
+                <api_password>qD2wzQ_hrc!8</api_password>
+                <api_maid>2a0e9351-24ed-4110-9a1b-fd0fee6bec26</api_maid>
+                <api_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</api_secret>
+            </wirecard_elastic_engine_paypal>
+        </payment>
+    </default>
+
+    <adminhtml>
+        <layout>
+            <updates>
+                <Wirecard_ElasticEngine>
+                    <file>wirecard/elastic_engine.xml</file>
+                </Wirecard_ElasticEngine>
+            </updates>
+        </layout>
+    </adminhtml>
 </config>

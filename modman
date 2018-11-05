@@ -1,2 +1,9 @@
-app/etc/modules/Wirecard_ElasticEngine.xml      app/etc/modules/Wirecard_ElasticEngine.xml
-app/code/community/Wirecard/*                   app/code/community/Wirecard
+app/code/community/Wirecard/*                               app/code/community/Wirecard
+app/etc/modules/Wirecard_ElasticEngine.xml                  app/etc/modules/Wirecard_ElasticEngine.xml
+
+app/design/adminhtml/default/default/layout/wirecard/*      app/design/adminhtml/default/default/layout/wirecard
+app/design/adminhtml/default/default/template/wirecard/*    app/design/adminhtml/default/default/template/wirecard
+
+js/wirecard/elastic_engine/*                                js/wirecard/elastic_engine
+
+lib/Wirecard/ElasticEngine/*                                lib/Wirecard/ElasticEngine
