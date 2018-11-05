@@ -6,3 +6,9 @@ vendor
 composer.lock
 package-lock.json
 npm-debug.log
+
+
+clover.xml
+build/coverage.xml
+
+lib/Wirecard/ElasticEngine/vendor
