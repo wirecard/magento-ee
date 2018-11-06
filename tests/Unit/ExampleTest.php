@@ -7,6 +7,8 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+namespace WirecardEE\Tests\Unit;
+
 use PHPUnit\Framework\TestCase;
 
 class ExampleTest extends TestCase

@@ -7,21 +7,23 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-use PHPUnit\Framework\TestCase;
+namespace WirecardEE\Tests\Functional\Controller\Adminhtml;
 
-class WirecardEEPaymentGatewayAdminhtmlControllerTest extends TestCase
+use WirecardEE\Tests\Test\MagentoTestCase;
+
+class WirecardEEPaymentGatewayAdminhtmlControllerTest extends MagentoTestCase
 {
     public function setUp()
     {
-        require_once 'app/code/community/WirecardEE/PaymentGateway/controllers/Adminhtml/WirecardEEPaymentGatewayController.php';
+        $this->loadFile('controllers/Adminhtml/WirecardEEPaymentGatewayController.php');
     }
 
     public function testCredentialsAction()
     {
-        /** @var Zend_Controller_Request_Abstract $request */
-        $request = $this->getMockForAbstractClass(Zend_Controller_Request_Abstract::class);
-        /** @var Zend_Controller_Response_Abstract $response */
-        $response = $this->getMockForAbstractClass(Zend_Controller_Response_Abstract::class);
+        /** @var \Zend_Controller_Request_Abstract $request */
+        $request = $this->getMockForAbstractClass(\Zend_Controller_Request_Abstract::class);
+        /** @var \Zend_Controller_Response_Abstract $response */
+        $response = $this->getMockForAbstractClass(\Zend_Controller_Response_Abstract::class);
 
         $request->setParams([
             'wirecardElasticEngineServer'       => getenv('API_TEST_URL'),
@@ -29,7 +31,7 @@ class WirecardEEPaymentGatewayAdminhtmlControllerTest extends TestCase
             'wirecardElasticEngineHttpPassword' => getenv('API_HTTP_PASSWORD'),
         ]);
 
-        $controller = new WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController(
+        $controller = new \WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController(
             $request,
             $response
         );

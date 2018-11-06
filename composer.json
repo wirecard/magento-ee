@@ -25,5 +25,10 @@
   },
   "config": {
     "vendor-dir": "lib/WirecardEE/vendor"
+  },
+  "autoload": {
+    "psr-4": {
+      "WirecardEE\\Tests\\": "tests/"
+    }
   }
 }

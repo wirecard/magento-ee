@@ -7,6 +7,8 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+namespace WirecardEE\Tests\Functional;
+
 use PHPUnit\Framework\TestCase;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;

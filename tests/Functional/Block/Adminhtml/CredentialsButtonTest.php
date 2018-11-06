@@ -7,21 +7,23 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-use PHPUnit\Framework\TestCase;
+namespace WirecardEE\Tests\Functional\Block\Adminhtml;
 
-class CredentialsButtonTest extends TestCase
+use WirecardEE\Tests\Test\MagentoTestCase;
+
+class CredentialsButtonTest extends MagentoTestCase
 {
     public function setUp()
     {
-        require_once 'app/code/community/WirecardEE/PaymentGateway/Block/Adminhtml/System/Config/CredentialsButton.php';
+        $this->loadFile('Block/Adminhtml/System/Config/CredentialsButton.php');
     }
 
     public function testTemplate()
     {
-        /** @var Mage_Core_Model_Layout $layout */
-        $layout = $this->createMock(Mage_Core_Model_Layout::class);
+        /** @var \Mage_Core_Model_Layout $layout */
+        $layout = $this->createMock(\Mage_Core_Model_Layout::class);
 
-        $button = new WirecardEE_PaymentGateway_Block_Adminhtml_System_Config_CredentialsButton();
+        $button = new \WirecardEE_PaymentGateway_Block_Adminhtml_System_Config_CredentialsButton();
         $button->setLayout($layout);
 
         $this->assertEquals('WirecardEE/system/config/credentials_button.phtml', $button->getTemplate());
