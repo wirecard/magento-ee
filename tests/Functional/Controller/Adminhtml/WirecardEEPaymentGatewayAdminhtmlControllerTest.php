@@ -24,9 +24,9 @@ class WirecardEEPaymentGatewayAdminhtmlControllerTest extends TestCase
         $response = $this->getMockForAbstractClass(Zend_Controller_Response_Abstract::class);
 
         $request->setParams([
-            'wirecardElasticEngineServer'       => 'https://api-test.wirecard.com',
-            'wirecardElasticEngineHttpUser'     => '70000-APITEST-AP',
-            'wirecardElasticEngineHttpPassword' => 'qD2wzQ_hrc!8',
+            'wirecardElasticEngineServer'       => getenv('API_TEST_URL'),
+            'wirecardElasticEngineHttpUser'     => getenv('API_HTTP_USER'),
+            'wirecardElasticEngineHttpPassword' => getenv('API_HTTP_PASSWORD'),
         ]);
 
         $controller = new WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController(
