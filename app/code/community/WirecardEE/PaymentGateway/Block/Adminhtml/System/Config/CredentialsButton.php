@@ -7,7 +7,7 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-class Wirecard_ElasticEngine_Block_Adminhtml_System_Config_CredentialsButton extends Mage_Adminhtml_Block_System_Config_Form_Field
+class WirecardEE_PaymentGateway_Block_Adminhtml_System_Config_CredentialsButton extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
     /**
      * @return $this|Mage_Core_Block_Abstract
@@ -16,7 +16,7 @@ class Wirecard_ElasticEngine_Block_Adminhtml_System_Config_CredentialsButton ext
     {
         parent::_prepareLayout();
 
-        $this->setTemplate('wirecard/system/config/credentials_button.phtml');
+        $this->setTemplate('WirecardEE/system/config/credentials_button.phtml');
 
         return $this;
     }

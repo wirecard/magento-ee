@@ -13,7 +13,7 @@ class CredentialsButtonTest extends TestCase
 {
     public function setUp()
     {
-        require_once 'app/code/community/Wirecard/ElasticEngine/Block/Adminhtml/System/Config/CredentialsButton.php';
+        require_once 'app/code/community/WirecardEE/PaymentGateway/Block/Adminhtml/System/Config/CredentialsButton.php';
     }
 
     public function testTemplate()
@@ -21,9 +21,9 @@ class CredentialsButtonTest extends TestCase
         /** @var Mage_Core_Model_Layout $layout */
         $layout = $this->createMock(Mage_Core_Model_Layout::class);
 
-        $button = new Wirecard_ElasticEngine_Block_Adminhtml_System_Config_CredentialsButton();
+        $button = new WirecardEE_PaymentGateway_Block_Adminhtml_System_Config_CredentialsButton();
         $button->setLayout($layout);
 
-        $this->assertEquals('wirecard/system/config/credentials_button.phtml', $button->getTemplate());
+        $this->assertEquals('WirecardEE/system/config/credentials_button.phtml', $button->getTemplate());
     }
 }

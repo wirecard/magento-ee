@@ -10,7 +10,7 @@
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;
 
-class Wirecard_ElasticEngine_Adminhtml_WirecardElasticEngineController extends Mage_Adminhtml_Controller_Action
+class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController extends Mage_Adminhtml_Controller_Action
 {
     /**
      * Check Credentials against Wirecard server.

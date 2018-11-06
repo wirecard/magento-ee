@@ -7,7 +7,7 @@
   "require": {
     "php": ">=5.6",
     "wirecard/payment-sdk-php": "3.4.0",
-    "php-http/guzzle5-adapter": ">=1.0.1",
+    "php-http/guzzle5-adapter": "^1.0.1",
     "guzzlehttp/psr7": "^1.4",
     "ext-json": "*"
   },
@@ -24,6 +24,6 @@
     "test-coverage": "phpunit --colors=always --coverage-clover build/coverage.xml"
   },
   "config": {
-    "vendor-dir": "lib/Wirecard/ElasticEngine/vendor"
+    "vendor-dir": "lib/WirecardEE/vendor"
   }
 }

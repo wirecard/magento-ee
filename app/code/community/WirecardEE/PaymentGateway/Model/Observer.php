@@ -7,7 +7,7 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-class Wirecard_ElasticEngine_Model_Observer
+class WirecardEE_PaymentGateway_Model_Observer
 {
     public function controllerFrontInitBefore()
     {
@@ -19,9 +19,11 @@ class Wirecard_ElasticEngine_Model_Observer
      */
     private function registerComposerAutoloader()
     {
-        $vendorPath = Mage::getBaseDir('lib') . '/Wirecard/ElasticEngine/vendor/';
+        $vendorPath = Mage::getBaseDir('lib') . '/WirecardEE/vendor/';
 
-        set_include_path(get_include_path() . PATH_SEPARATOR . $vendorPath);
+        if (! file_exists($vendorPath . 'autoload.php')) {
+            throw new RuntimeException('Unable to include the Composer autoloader.');
+        }
 
         require_once($vendorPath . 'autoload.php');
     }

@@ -11,7 +11,7 @@
         <reference name="head">
             <action method="addJs"><script>lib/jquery/jquery-1.12.0.min.js</script></action>
             <action method="addJs"><script>lib/jquery/noconflict.js</script></action>
-            <action method="addJs"><script>wirecard/elastic_engine/check_credentials.js</script></action>
+            <action method="addJs"><script>WirecardEE/check_credentials.js</script></action>
         </reference>
     </adminhtml_system_config_edit>
 </layout>

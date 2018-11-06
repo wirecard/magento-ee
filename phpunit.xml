@@ -14,8 +14,8 @@
             <directory suffix=".php">*</directory>
             <exclude>
                 <directory suffix=".php">./tests</directory>
-                <directory>./lib/Wirecard/ElasticEngine/vendor</directory>
-                <directory>./app/code/community/Wirecard/ElasticEngine/sql</directory>
+                <directory>./lib/WirecardEE/vendor</directory>
+                <directory>./app/code/community/WirecardEE/PaymentGateway/sql</directory>
             </exclude>
         </whitelist>
     </filter>

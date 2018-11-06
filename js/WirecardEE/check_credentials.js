@@ -6,18 +6,18 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-function Wirecard_ElasticEngine_CheckCredentials(payment) {
-  var server = jQuery('#payment_wirecard_elastic_engine_' + payment + '_api_url').val();
-  var httpUser = jQuery('#payment_wirecard_elastic_engine_' + payment + '_api_user').val();
-  var httpPassword = jQuery('#payment_wirecard_elastic_engine_' + payment + '_api_password').val();
-  var $testButton = jQuery('#payment_wirecard_elastic_engine_' + payment + '_check_credentials_button');
+function WirecardEE_CheckCredentials(payment) {
+  var server = jQuery('#payment_wirecardee_payment_gateway_' + payment + '_api_url').val();
+  var httpUser = jQuery('#payment_wirecardee_payment_gateway_' + payment + '_api_user').val();
+  var httpPassword = jQuery('#payment_wirecardee_payment_gateway_' + payment + '_api_password').val();
+  var $testButton = jQuery('#payment_wirecardee_payment_gateway_' + payment + '_check_credentials_button');
 
   if (!new RegExp("^https?://([^/]+?\.[a-zA-Z]{2,4})/?$", "gm").test(server)) {
     alert($testButton.data('invalid-url-string'));
     return;
   }
 
-  new Ajax.Request('/admin/WirecardElasticEngine/testCredentials', {
+  new Ajax.Request('/admin/WirecardEEPaymentGateway/testCredentials', {
     parameters: {
       wirecardElasticEngineServer: server,
       wirecardElasticEngineHttpUser: httpUser,
@@ -37,5 +37,5 @@ function Wirecard_ElasticEngine_CheckCredentials(payment) {
     onFailure: function() {
       return alert($testButton.data('error-string'));
     }
-  })
+  });
 }

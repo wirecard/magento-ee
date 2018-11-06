@@ -10,8 +10,8 @@
     <sections>
         <payment>
             <groups>
-                <wirecard_elastic_engine_paypal translate="label" module="elasticengine">
-                    <label>Wirecard Elastic Engine PayPal</label>
+                <wirecardee_payment_gateway_paypal translate="label" module="paymentgateway">
+                    <label>Wirecard PayPal</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>1000</sort_order>
                     <show_in_default>1</show_in_default>
@@ -53,7 +53,7 @@
                         </api_password>
                         <api_test_button>
                             <frontend_type>button</frontend_type>
-                            <frontend_model>elasticengine/adminhtml_system_config_credentialsButton</frontend_model>
+                            <frontend_model>paymentgateway/adminhtml_system_config_credentialsButton</frontend_model>
                             <method>paypal</method>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -77,7 +77,7 @@
                             <show_in_website>1</show_in_website>
                         </transaction_type>
                     </fields>
-                </wirecard_elastic_engine_paypal>
+                </wirecardee_payment_gateway_paypal>
             </groups>
         </payment>
     </sections>

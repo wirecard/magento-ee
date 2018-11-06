@@ -1,3 +1,11 @@
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/LICENSE
+ */
+
 const { expect } = require('chai');
 const { Builder, By, until } = require('selenium-webdriver');
 const { config } = require('../config');

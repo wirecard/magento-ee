@@ -9,11 +9,11 @@
 
 use PHPUnit\Framework\TestCase;
 
-class WirecardElasticEngineControllerTest extends TestCase
+class WirecardEEPaymentGatewayAdminhtmlControllerTest extends TestCase
 {
     public function setUp()
     {
-        require_once 'app/code/community/Wirecard/ElasticEngine/controllers/Adminhtml/WirecardElasticEngineController.php';
+        require_once 'app/code/community/WirecardEE/PaymentGateway/controllers/Adminhtml/WirecardEEPaymentGatewayController.php';
     }
 
     public function testCredentialsAction()
@@ -24,12 +24,12 @@ class WirecardElasticEngineControllerTest extends TestCase
         $response = $this->getMockForAbstractClass(Zend_Controller_Response_Abstract::class);
 
         $request->setParams([
-            'wirecardElasticEngineServer' => 'https://api-test.wirecard.com',
-            'wirecardElasticEngineHttpUser' => '70000-APITEST-AP',
+            'wirecardElasticEngineServer'       => 'https://api-test.wirecard.com',
+            'wirecardElasticEngineHttpUser'     => '70000-APITEST-AP',
             'wirecardElasticEngineHttpPassword' => 'qD2wzQ_hrc!8',
         ]);
 
-        $controller = new Wirecard_ElasticEngine_Adminhtml_WirecardElasticEngineController(
+        $controller = new WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController(
             $request,
             $response
         );
@@ -40,7 +40,7 @@ class WirecardElasticEngineControllerTest extends TestCase
         $body = $response->getBody('default');
         $data = json_decode($body, true);
         $this->assertEquals([
-            'status' => 'success'
+            'status' => 'success',
         ], $data);
     }
 }

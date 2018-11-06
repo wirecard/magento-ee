@@ -7,6 +7,6 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-class Wirecard_ElasticEngine_Helper_Data extends Mage_Payment_Helper_Data
+class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
 {
 }

@@ -1,9 +1,9 @@
-app/code/community/Wirecard/*                               app/code/community/Wirecard
-app/etc/modules/Wirecard_ElasticEngine.xml                  app/etc/modules/Wirecard_ElasticEngine.xml
+app/code/community/WirecardEE/*                                 app/code/community/WirecardEE
+app/etc/modules/WirecardEE_PaymentGateway.xml                   app/etc/modules/WirecardEE_PaymentGateway.xml
 
-app/design/adminhtml/default/default/layout/wirecard/*      app/design/adminhtml/default/default/layout/wirecard
-app/design/adminhtml/default/default/template/wirecard/*    app/design/adminhtml/default/default/template/wirecard
+app/design/adminhtml/default/default/layout/WirecardEE/*        app/design/adminhtml/default/default/layout/WirecardEE
+app/design/adminhtml/default/default/template/WirecardEE/*      app/design/adminhtml/default/default/template/WirecardEE
 
-js/wirecard/elastic_engine/*                                js/wirecard/elastic_engine
+js/WirecardEE/*                                                 js/WirecardEE/
 
-lib/Wirecard/ElasticEngine/*                                lib/Wirecard/ElasticEngine
+lib/WirecardEE/*                                                lib/WirecardEE

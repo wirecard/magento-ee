@@ -8,13 +8,13 @@
 -->
 <config>
     <modules>
-        <Wirecard_ElasticEngine>
+        <WirecardEE_PaymentGateway>
             <active>true</active>
             <codePool>community</codePool>
 
             <depends>
                 <Mage_Payment/>
             </depends>
-        </Wirecard_ElasticEngine>
+        </WirecardEE_PaymentGateway>
     </modules>
 </config>
