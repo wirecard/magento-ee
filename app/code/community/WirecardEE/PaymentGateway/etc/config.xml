@@ -65,6 +65,10 @@
                 <api_password>qD2wzQ_hrc!8</api_password>
                 <api_maid>2a0e9351-24ed-4110-9a1b-fd0fee6bec26</api_maid>
                 <api_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</api_secret>
+                <transaction_type>purchase</transaction_type>
+                <send_basket>1</send_basket>
+                <fraud_prevention>1</fraud_prevention>
+                <order_identification>1</order_identification>
             </wirecardee_paypal>
         </payment>
     </default>
