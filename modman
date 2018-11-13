@@ -3,6 +3,7 @@ app/etc/modules/WirecardEE_PaymentGateway.xml                   app/etc/modules/
 
 app/design/adminhtml/default/default/layout/WirecardEE/*        app/design/adminhtml/default/default/layout/WirecardEE
 app/design/adminhtml/default/default/template/WirecardEE/*      app/design/adminhtml/default/default/template/WirecardEE
+app/design/frontend/base/default/template/WirecardEE/*          app/design/frontend/base/default/template/WirecardEE
 
 js/WirecardEE/*                                                 js/WirecardEE/
 

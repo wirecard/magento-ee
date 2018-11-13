@@ -28,6 +28,7 @@
   },
   "autoload": {
     "psr-4": {
+      "WirecardEE\\PaymentGateway\\": "lib/WirecardEE/PaymentGateway",
       "WirecardEE\\Tests\\": "tests/"
     }
   }

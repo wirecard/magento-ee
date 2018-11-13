@@ -7,10 +7,14 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
-class WirecardEE_PaymentGateway_Model_Paypal extends Mage_Core_Model_Abstract
+class WirecardEE_PaymentGateway_Model_Paypal extends WirecardEE_PaymentGateway_Model_Payment
 {
+    protected $_code = 'wirecardee_paymentgateway_paypal';
+    protected $_paymentMethod = PayPalTransaction::NAME;
+
     /**
      * Return available transaction types for this payment.
      *

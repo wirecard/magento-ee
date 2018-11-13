@@ -10,15 +10,14 @@
     <sections>
         <payment>
             <groups>
-                <wirecardee_payment_gateway_paypal translate="label" module="paymentgateway">
+                <wirecardee_paymentgateway_paypal translate="label" module="paymentgateway">
                     <label>Wirecard PayPal</label>
-                    <frontend_type>text</frontend_type>
                     <sort_order>1000</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
-                        <title>
+                        <title translate="label">
                             <label>Title</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
@@ -109,7 +108,7 @@
                             <show_in_store>1</show_in_store>
                         </order_identification>
                     </fields>
-                </wirecardee_payment_gateway_paypal>
+                </wirecardee_paymentgateway_paypal>
             </groups>
         </payment>
     </sections>
