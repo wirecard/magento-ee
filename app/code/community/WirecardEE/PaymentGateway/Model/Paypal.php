@@ -7,8 +7,8 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
-use Wirecard\PaymentSdk\Transaction\Transaction;
 
 class WirecardEE_PaymentGateway_Model_Paypal extends WirecardEE_PaymentGateway_Model_Payment
 {
@@ -24,11 +24,11 @@ class WirecardEE_PaymentGateway_Model_Paypal extends WirecardEE_PaymentGateway_M
     {
         return [
             [
-                'value' => Transaction::TYPE_AUTHORIZATION,
+                'value' => Operation::RESERVE,
                 'label' => Mage::helper('catalog')->__('Authorization')
             ],
             [
-                'value' => Transaction::TYPE_PURCHASE,
+                'value' => Operation::PAY,
                 'label' => Mage::helper('catalog')->__('Purchase')
             ]
         ];
