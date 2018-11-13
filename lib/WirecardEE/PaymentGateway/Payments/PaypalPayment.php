@@ -66,8 +66,6 @@ class PaypalPayment extends Payment
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
         $paymentConfig->setOrderIdentification($this->getPluginConfig('order_identification'));
 
-        var_dump($paymentConfig->toArray());
-
         return $paymentConfig;
     }
 }
