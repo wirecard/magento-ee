@@ -1,4 +1,7 @@
 <?php
+
+use WirecardEE\PaymentGateway\Service\Logger;
+
 /**
  * Shop System Plugins:
  * - Terms of Use can be found under:
@@ -12,6 +15,7 @@ class WirecardEE_PaymentGateway_Model_Observer
     public function controllerFrontInitBefore()
     {
         $this->registerComposerAutoloader();
+        $this->registerServices();
     }
 
     /**
@@ -25,6 +29,12 @@ class WirecardEE_PaymentGateway_Model_Observer
             throw new RuntimeException('Unable to include the Composer autoloader.');
         }
 
+        /** @noinspection PhpIncludeInspection */
         require_once($vendorPath . 'autoload.php');
+    }
+
+    private function registerServices()
+    {
+        Mage::register('logger', new Logger());
     }
 }

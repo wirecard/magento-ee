@@ -12,8 +12,9 @@ namespace WirecardEE\PaymentGateway\Payments;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use WirecardEE\PaymentGateway\Data\PaymentConfig;
+use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
-class PaypalPayment extends Payment
+class PaypalPayment extends Payment implements ProcessPaymentInterface
 {
     const NAME = PayPalTransaction::NAME;
 
@@ -67,5 +68,9 @@ class PaypalPayment extends Payment
         $paymentConfig->setOrderIdentification($this->getPluginConfig('order_identification'));
 
         return $paymentConfig;
+    }
+
+    public function processPayment()
+    {
     }
 }
