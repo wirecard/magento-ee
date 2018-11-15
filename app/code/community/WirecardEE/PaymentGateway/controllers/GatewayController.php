@@ -8,6 +8,7 @@
  */
 
 use Psr\Log\LoggerInterface;
+use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
@@ -19,6 +20,7 @@ use WirecardEE\PaymentGateway\Data\BasketMapper;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\UserMapper;
 use WirecardEE\PaymentGateway\Exception\UnknownActionException;
+use WirecardEE\PaymentGateway\Service\NotificationHandler;
 use WirecardEE\PaymentGateway\Service\PaymentFactory;
 use WirecardEE\PaymentGateway\Service\PaymentHandler;
 use WirecardEE\PaymentGateway\Service\ReturnHandler;
@@ -90,7 +92,18 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
 
     public function notifyAction()
     {
-        exit('Notify');
+        $notificationHandler = new NotificationHandler($this->getLogger());
+        $request             = $this->getRequest();
+        $payment             = (new PaymentFactory())->create($request->getParam('method'));
+
+        try {
+            $backendService = new BackendService($payment->getTransactionConfig());
+            $notification = $backendService->handleNotification($request->getRawBody());
+
+            $notificationHandler->handleResponse($notification);
+        } catch (\Exception $e) {
+            $this->logException('Notification handling failed', $e);
+        }
     }
 
     protected function handleAction(Action $action)
@@ -104,6 +117,13 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
         }
 
         throw new UnknownActionException(get_class($action));
+    }
+
+    private function logException($message, \Exception $exception)
+    {
+        $this->getLogger()->error(
+            $message . ' - ' . get_class($exception) . ': ' . $exception->getMessage()
+        );
     }
 
     /**
