@@ -121,6 +121,10 @@ class PaymentHandler
             $transaction->setShipping($orderSummary->getUserMapper()->getWirecardShippingAccountHolder());
             $transaction->setLocale($orderSummary->getUserMapper()->getLocale());
         }
+
+        if ($paymentConfig->sendOrderIdentification() || $paymentConfig->hasFraudPrevention()) {
+            $transaction->setDescriptor($this->getDescriptor($orderSummary->getOrder()->getRealOrderId()));
+        }
     }
 
     protected function getDescriptor($orderNumber)
