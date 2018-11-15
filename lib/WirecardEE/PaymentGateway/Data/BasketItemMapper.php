@@ -25,7 +25,7 @@ class BasketItemMapper
 
     public function getWirecardItem()
     {
-        $amount = new Amount($this->getItem()->getPriceInclTax(), $this->currency);
+        $amount = new Amount(BasketMapper::numberFormat($this->getItem()->getPriceInclTax()), $this->currency);
 
         $item = new Item($this->getItem()->getName(), $amount, (int)$this->getItem()->getQtyOrdered());
         $item->setArticleNumber($this->getItem()->getProductId());
@@ -40,8 +40,6 @@ class BasketItemMapper
             $item->setTaxRate($this->getItem()->getTaxPercent());
             $item->setTaxAmount($taxAmount);
         }
-
-        var_dump($item);
 
         return $item;
     }
