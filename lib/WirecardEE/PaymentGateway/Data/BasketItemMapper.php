@@ -28,7 +28,7 @@ class BasketItemMapper
         $amount = new Amount(BasketMapper::numberFormat($this->getItem()->getPriceInclTax()), $this->currency);
 
         $item = new Item($this->getItem()->getName(), $amount, (int)$this->getItem()->getQtyOrdered());
-        $item->setArticleNumber($this->getItem()->getProductId());
+        $item->setArticleNumber($this->getItem()->getSku());
         $item->setDescription($this->getItem()->getDescription());
 
         if ($amount->getValue() >= 0.0) {
