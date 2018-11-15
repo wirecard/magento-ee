@@ -17,6 +17,7 @@ use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\RedirectAction;
 use WirecardEE\PaymentGateway\Data\BasketMapper;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
+use WirecardEE\PaymentGateway\Data\UserMapper;
 use WirecardEE\PaymentGateway\Exception\UnknownActionException;
 use WirecardEE\PaymentGateway\Service\PaymentFactory;
 use WirecardEE\PaymentGateway\Service\PaymentHandler;
@@ -36,7 +37,12 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
                 $payment,
                 $order,
                 new BasketMapper($order, $payment->getTransaction()),
-                ''
+                new UserMapper(
+                    $order,
+                    Mage::helper('core/http')->getRemoteAddr(true),
+                    Mage::app()->getLocale()->getLocaleCode()
+                ),
+                $this->getHelper()->getDeviceFingerprintId($payment->getPaymentConfig()->getTransactionMAID())
             ),
             new TransactionService(
                 $payment->getTransactionConfig(),

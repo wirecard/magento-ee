@@ -22,6 +22,7 @@ use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\RedirectAction;
 use WirecardEE\PaymentGateway\Data\BasketMapper;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
+use WirecardEE\PaymentGateway\Data\UserMapper;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
 class PaymentHandler
@@ -52,6 +53,9 @@ class PaymentHandler
         $payment = $orderSummary->getPayment();
 
         $this->prepareTransaction($orderSummary, $redirect, $notificationUrl);
+
+        $user = new UserMapper($orderSummary->getOrder(), '', '');
+        var_dump($user->getWirecardShippingAccountHolder());
 
         try {
             if ($payment instanceof ProcessPaymentInterface) {
@@ -110,8 +114,9 @@ class PaymentHandler
 
         if ($paymentConfig->hasFraudPrevention()) {
             $transaction->setOrderNumber($orderSummary->getOrder()->getRealOrderId());
-//            $transaction->setIpAddress(\Mage::helper('core/http')->getRemoteAddr(true));
-//            $transaction->setConsumerId($orderSummary->getOrder()->getCustomerId());
+            $transaction->setDevice($orderSummary->getWirecardDevice());
+            $transaction->setConsumerId($orderSummary->getOrder()->getCustomerId());
+            //            $transaction->setIpAddress(\Mage::helper('core/http')->getRemoteAddr(true));
 //            $transaction->setAccountHolder();
 //            $transaction->setShipping();
 //            $transaction->setLocale();
