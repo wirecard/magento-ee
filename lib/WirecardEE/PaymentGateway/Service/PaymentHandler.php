@@ -36,11 +36,11 @@ class PaymentHandler
     }
 
     /**
-     * @param OrderSummary           $orderSummary
-     * @param TransactionService     $transactionService
+     * @param OrderSummary       $orderSummary
+     * @param TransactionService $transactionService
      *
-     * @param Redirect               $redirect
-     * @param string                 $notificationUrl
+     * @param Redirect           $redirect
+     * @param string             $notificationUrl
      *
      * @return Action
      */
@@ -91,8 +91,8 @@ class PaymentHandler
         Redirect $redirect,
         $notificationUrl
     ) {
-        $payment       = $orderSummary->getPayment();
-        $order         = $orderSummary->getOrder();
+        $payment = $orderSummary->getPayment();
+        $order   = $orderSummary->getOrder();
 
         $paymentConfig = $payment->getPaymentConfig();
         $transaction   = $payment->getTransaction();
@@ -116,11 +116,10 @@ class PaymentHandler
             $transaction->setOrderNumber($orderSummary->getOrder()->getRealOrderId());
             $transaction->setDevice($orderSummary->getWirecardDevice());
             $transaction->setConsumerId($orderSummary->getOrder()->getCustomerId());
-            //            $transaction->setIpAddress(\Mage::helper('core/http')->getRemoteAddr(true));
-//            $transaction->setAccountHolder();
-//            $transaction->setShipping();
-//            $transaction->setLocale();
-//            $transaction->setDevice();
+            $transaction->setIpAddress($orderSummary->getUserMapper()->getClientIp());
+            $transaction->setAccountHolder($orderSummary->getUserMapper()->getWirecardBillingAccountHolder());
+            $transaction->setShipping($orderSummary->getUserMapper()->getWirecardShippingAccountHolder());
+            $transaction->setLocale($orderSummary->getUserMapper()->getLocale());
         }
     }
 
