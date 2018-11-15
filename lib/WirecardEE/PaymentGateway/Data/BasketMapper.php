@@ -45,16 +45,27 @@ class BasketMapper
             );
 
             $shippingTaxValue = $shippingCosts - $this->getOrder()->getShippingTaxAmount();
-            $shippingName     = $this->getOrder()->getShippingMethod();
-            $description      = $this->getOrder()->getShippingDescription();
 
-            $basketItem = new Item($shippingName, $shippingAmount, 1);
-            $basketItem->setDescription($description);
-            $basketItem->setArticleNumber('shipping');
+            $basketItem = new Item('Shipping', $shippingAmount, 1);
+            $basketItem->setDescription('Shipping');
+            $basketItem->setArticleNumber('Shipping');
             $basketItem->setTaxAmount(
                 new Amount(self::numberFormat($shippingTaxValue),
                 $this->getOrder()->getBaseCurrencyCode())
             );
+
+            $basket->add($basketItem);
+        }
+
+        $couponCode = $this->getOrder()->getCouponCode();
+        if ($couponCode !== '') {
+            $discountValue = new Amount(
+                self::numberFormat($this->getOrder()->getBaseDiscountAmount()),
+                $this->getOrder()->getBaseCurrencyCode()
+            );
+
+            $basketItem = new Item('Discount', $discountValue, 1);
+            $basketItem->setDescription($couponCode);
 
             $basket->add($basketItem);
         }
