@@ -47,6 +47,7 @@ class UserMapper
         $billingAccountHolder->setDateOfBirth(new \DateTime($this->getOrder()->getCustomerDob()));
         $billingAccountHolder->setPhone($billingAddress->getTelephone());
         $billingAccountHolder->setAddress($this->getWirecardBillingAddress());
+        $billingAccountHolder->setGender($this->getOrder()->getCustomerGender());
 
         return $billingAccountHolder;
     }
