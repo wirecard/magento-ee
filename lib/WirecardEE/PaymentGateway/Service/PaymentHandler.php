@@ -10,6 +10,8 @@
 namespace WirecardEE\PaymentGateway\Service;
 
 use Wirecard\PaymentSdk\Entity\Amount;
+use Wirecard\PaymentSdk\Entity\CustomField;
+use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
@@ -61,8 +63,6 @@ class PaymentHandler
             return new ErrorAction(0, 'Transaction processing failed');
         }
 
-//        exit();
-
         if ($response instanceof SuccessResponse || $response instanceof InteractionResponse) {
             return new RedirectAction($response->getRedirectUrl());
         }
@@ -84,6 +84,10 @@ class PaymentHandler
 
         $paymentConfig = $payment->getPaymentConfig();
         $transaction   = $payment->getTransaction();
+
+        $customFields = new CustomFieldCollection();
+        $customFields->add(new CustomField('order-id', $orderSummary->getOrder()->getId()));
+        $transaction->setCustomFields($customFields);
 
         $transaction->setAmount(
             new Amount(BasketMapper::numberFormat($order->getBaseGrandTotal()), $order->getBaseCurrencyCode())
