@@ -7,7 +7,10 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Response\Response;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
@@ -17,15 +20,16 @@ use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Exception\UnknownActionException;
 use WirecardEE\PaymentGateway\Service\PaymentFactory;
 use WirecardEE\PaymentGateway\Service\PaymentHandler;
+use WirecardEE\PaymentGateway\Service\ReturnHandler;
 
 class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_Front_Action
 {
     public function indexAction()
     {
-        $paymentName  = $this->getRequest()->getParam('method');
-        $payment      = (new PaymentFactory())->create($paymentName);
-        $handler      = new PaymentHandler();
-        $order        = $this->getCheckoutSession()->getLastRealOrder();
+        $paymentName = $this->getRequest()->getParam('method');
+        $payment     = (new PaymentFactory())->create($paymentName);
+        $handler     = new PaymentHandler();
+        $order       = $this->getCheckoutSession()->getLastRealOrder();
 
         $action = $handler->execute(
             new OrderSummary(
@@ -39,13 +43,46 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
                 $this->getLogger()
             ),
             new Redirect(
-                $this->getUrl('paymentgateway/gateway/redirect'),
-                $this->getUrl('paymentgateway/gateway/cancel')
+                $this->getUrl('paymentgateway/gateway/return', ['method' => $paymentName]),
+                $this->getUrl('paymentgateway/gateway/cancel', ['method' => $paymentName])
             ),
-            $this->getUrl('paymentgateway/gateway/notify')
+            $this->getUrl('paymentgateway/gateway/notify', ['method' => $paymentName])
         );
 
         return $this->handleAction($action);
+    }
+
+    public function returnAction()
+    {
+        $returnHandler = new ReturnHandler($this->getLogger());
+        $request       = $this->getRequest();
+        $payment       = (new PaymentFactory())->create($request->getParam('method'));
+
+        try {
+            $response = $returnHandler->handleRequest(
+                $request,
+                new TransactionService($payment->getTransactionConfig(), $this->getLogger())
+            );
+
+            $action = $response instanceof SuccessResponse
+                ? $this->updateOrder($returnHandler, $response)
+                : $returnHandler->handleResponse($response);
+        } catch (\Exception $e) {
+            $this->getLogger()->error($e->getMessage());
+            $action = new ErrorAction(0, 'Return processing failed');
+        }
+
+        return $this->handleAction($action);
+    }
+
+    public function updateOrder(ReturnHandler $returnHandler, Response $response)
+    {
+        return $returnHandler->handleSuccess($response, $this->getUrl('checkout/onepage/success'));
+    }
+
+    public function notifyAction()
+    {
+        exit('Notify');
     }
 
     protected function handleAction(Action $action)
@@ -61,24 +98,17 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
         throw new UnknownActionException(get_class($action));
     }
 
-    public function redirectAction()
-    {
-        exit('Welcome back!');
-    }
-
-    public function notifyAction()
-    {
-        exit('Notify');
-    }
-
+    /**
+     * @return LoggerInterface
+     */
     protected function getLogger()
     {
         return Mage::registry('logger');
     }
 
-    protected function getUrl($route)
+    protected function getUrl($route, $params = [])
     {
-        return Mage::getUrl($route);
+        return Mage::getUrl($route, $params);
     }
 
     protected function getCheckoutSession()

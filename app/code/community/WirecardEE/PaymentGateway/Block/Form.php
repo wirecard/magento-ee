@@ -14,4 +14,22 @@ class WirecardEE_PaymentGateway_Block_Form extends Mage_Payment_Block_Form
         parent::_construct();
         $this->setTemplate('WirecardEE/form.phtml');
     }
+
+    public function getMethodLabelAfterHtml()
+    {
+        $imagePath = 'images/WirecardEE/PaymentGateway/';
+        $imageName = \Mage::helper('catalog')
+                          ->__(str_replace('wirecardee_paymentgateway_', '', $this->getMethodCode()) . '.png');
+        $filePath  = sprintf(
+            '%s/frontend/base/default/%s', Mage::getBaseDir('skin'),
+            $imagePath . $imageName
+        );
+
+        if (file_exists($filePath)) {
+            $image = $this->getSkinUrl($imagePath . $imageName);
+            return "<img src='$image' style='float: initial !important;'>";
+        }
+
+        return '';
+    }
 }

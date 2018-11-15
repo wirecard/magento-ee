@@ -8,3 +8,5 @@ app/design/frontend/base/default/template/WirecardEE/*          app/design/front
 js/WirecardEE/*                                                 js/WirecardEE/
 
 lib/WirecardEE/*                                                lib/WirecardEE
+
+skin/frontend/base/default/images/WirecardEE                    skin/frontend/base/default/images/WirecardEE
