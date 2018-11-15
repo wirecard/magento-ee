@@ -20,10 +20,10 @@ class OrderSummary
         BasketMapper $basketMapper,
         $deviceFingerprintId
     ) {
-        $this->payment = $payment;
-        $this->order = $order;
+        $this->payment             = $payment;
+        $this->order               = $order;
         $this->deviceFingerprintId = $deviceFingerprintId;
-        $this->basketMapper = $basketMapper;
+        $this->basketMapper        = $basketMapper;
     }
 
     public function getOrder()

@@ -26,12 +26,20 @@ use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
 class PaymentHandler
 {
+    /** @var \Mage_Core_Model_Store */
+    protected $store;
+
+    public function __construct(\Mage_Core_Model_Store $store)
+    {
+        $this->store = $store;
+    }
+
     /**
-     * @param OrderSummary       $orderSummary
-     * @param TransactionService $transactionService
+     * @param OrderSummary           $orderSummary
+     * @param TransactionService     $transactionService
      *
-     * @param Redirect           $redirect
-     * @param string             $notificationUrl
+     * @param Redirect               $redirect
+     * @param string                 $notificationUrl
      *
      * @return Action
      */
@@ -99,10 +107,21 @@ class PaymentHandler
         if ($paymentConfig->sendBasket() || $paymentConfig->hasFraudPrevention()) {
             $transaction->setBasket($orderSummary->getBasketMapper()->getWirecardBasket());
         }
+
+        if ($paymentConfig->hasFraudPrevention()) {
+            $transaction->setOrderNumber($orderSummary->getOrder()->getRealOrderId());
+//            $transaction->setIpAddress(\Mage::helper('core/http')->getRemoteAddr(true));
+//            $transaction->setConsumerId($orderSummary->getOrder()->getCustomerId());
+//            $transaction->setAccountHolder();
+//            $transaction->setShipping();
+//            $transaction->setLocale();
+//            $transaction->setDevice();
+        }
     }
 
-    protected function getDescriptor()
+    protected function getDescriptor($orderNumber)
     {
-        return '';
+        $shopName = substr($this->store->getName(), 0, 9);
+        return substr($shopName . ' ' . $orderNumber, 0, 20);
     }
 }

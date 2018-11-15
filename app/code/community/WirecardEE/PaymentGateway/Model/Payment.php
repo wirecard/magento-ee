@@ -18,6 +18,7 @@ abstract class WirecardEE_PaymentGateway_Model_Payment extends Mage_Payment_Mode
     protected $_canUseCheckout = true;
 
     protected $_formBlockType = 'paymentgateway/form';
+    protected $_infoBlockType = 'paymentgateway/info';
 
     public function getOrderPlaceRedirectUrl()
     {

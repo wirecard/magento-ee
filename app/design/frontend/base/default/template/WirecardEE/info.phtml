@@ -1,0 +1,17 @@
+<div>
+    <p><strong><?php echo $this->escapeHtml($this->getMethod()->getTitle()) ?></strong></p>
+</div>
+
+<?php
+if ($this->getData('WirecardEEIncludeDeviceFingerprintIFrame')) {
+    $deviceFingerprintId = $this->getData('WirecardEEDeviceFingerprintId');
+?>
+    <script type="text/javascript"
+            src="https://h.wirecard.com/fp/tags.js?org_id=6xxznhva&session_id=<?php echo $deviceFingerprintId; ?>">
+    </script>
+    <noscript>
+        <iframe style="width: 100px; height: 100px; border: 0; position: absolute; top: -5000px;"
+                src="https://h.wirecard.com/tags?org_id=6xxznhva&session_id=<?php echo $deviceFingerprintId; ?>"></iframe>
+    </noscript>
+<?php
+}

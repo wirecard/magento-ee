@@ -28,7 +28,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
     {
         $paymentName = $this->getRequest()->getParam('method');
         $payment     = (new PaymentFactory())->create($paymentName);
-        $handler     = new PaymentHandler();
+        $handler     = new PaymentHandler(\Mage::app()->getStore());
         $order       = $this->getCheckoutSession()->getLastRealOrder();
 
         $action = $handler->execute(

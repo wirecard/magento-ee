@@ -14,4 +14,25 @@ class WirecardEE_PaymentGateway_Block_Info extends Mage_Payment_Block_Info
         parent::_construct();
         $this->setTemplate('WirecardEE/info.phtml');
     }
+
+    protected function _toHtml()
+    {
+        $quotePayment = $this->getInfo();
+
+        if ($quotePayment instanceof Mage_Sales_Model_Quote_Payment) {
+            $paymentCode = $quotePayment->getMethodInstance()->getCode();
+            $paymentName = str_replace('wirecardee_paymentgateway_', '', $paymentCode);
+            $payment     = (new \WirecardEE\PaymentGateway\Service\PaymentFactory())->create($paymentName);
+
+            if ($payment->getPaymentConfig()->hasFraudPrevention()) {
+                $deviceFingerprintId = Mage::helper('paymentgateway')
+                                           ->getDeviceFingerprintId($payment->getPaymentConfig()->getTransactionMAID());
+
+                $this->setData('WirecardEEDeviceFingerprintId', $deviceFingerprintId);
+                $this->setData('WirecardEEIncludeDeviceFingerprintIFrame', true);
+            }
+        }
+
+        return parent::_toHtml();
+    }
 }
