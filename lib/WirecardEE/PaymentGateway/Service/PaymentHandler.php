@@ -127,6 +127,13 @@ class PaymentHandler
         }
     }
 
+    /**
+     * Returns the descriptor sent to Wirecard. Change to your own needs.
+     *
+     * @param $orderNumber
+     *
+     * @return string
+     */
     protected function getDescriptor($orderNumber)
     {
         $shopName = substr($this->store->getName(), 0, 9);
