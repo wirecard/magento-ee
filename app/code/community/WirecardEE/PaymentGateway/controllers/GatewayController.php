@@ -77,6 +77,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
 
     public function updateOrder(ReturnHandler $returnHandler, Response $response)
     {
+        $this->getHelper()->destroyDeviceFingerprintId();
+
         return $returnHandler->handleSuccess($response, $this->getUrl('checkout/onepage/success'));
     }
 
@@ -109,6 +111,11 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
     protected function getUrl($route, $params = [])
     {
         return Mage::getUrl($route, $params);
+    }
+
+    protected function getHelper()
+    {
+        return Mage::helper('paymentgateway');
     }
 
     protected function getCheckoutSession()
