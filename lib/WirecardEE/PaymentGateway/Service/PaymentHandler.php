@@ -9,6 +9,7 @@
 
 namespace WirecardEE\PaymentGateway\Service;
 
+use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
@@ -22,7 +23,6 @@ use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\RedirectAction;
 use WirecardEE\PaymentGateway\Data\BasketMapper;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
-use WirecardEE\PaymentGateway\Data\UserMapper;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
 class PaymentHandler
@@ -30,9 +30,13 @@ class PaymentHandler
     /** @var \Mage_Core_Model_Store */
     protected $store;
 
-    public function __construct(\Mage_Core_Model_Store $store)
+    /** @var LoggerInterface */
+    protected $logger;
+
+    public function __construct(\Mage_Core_Model_Store $store, LoggerInterface $logger)
     {
-        $this->store = $store;
+        $this->logger = $logger;
+        $this->store  = $store;
     }
 
     /**
@@ -53,9 +57,6 @@ class PaymentHandler
         $payment = $orderSummary->getPayment();
 
         $this->prepareTransaction($orderSummary, $redirect, $notificationUrl);
-
-        $user = new UserMapper($orderSummary->getOrder(), '', '');
-        var_dump($user->getWirecardShippingAccountHolder());
 
         try {
             if ($payment instanceof ProcessPaymentInterface) {
@@ -80,10 +81,11 @@ class PaymentHandler
         }
 
         if ($response instanceof FailureResponse) {
-            exit(var_dump($response->getData()));
+            $this->logger->error('Failure response', $response->getData());
+            return new ErrorAction(ErrorAction::FAILURE_RESPONSE, 'Failure response');
         }
 
-        return new ErrorAction(0, 'Payment processing failed');
+        return new ErrorAction(ErrorAction::PROCESSING_FAILED, 'Payment processing failed');
     }
 
     private function prepareTransaction(
