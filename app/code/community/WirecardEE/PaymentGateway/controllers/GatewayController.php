@@ -31,7 +31,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
     {
         $paymentName = $this->getRequest()->getParam('method');
         $payment     = (new PaymentFactory())->create($paymentName);
-        $handler     = new PaymentHandler(\Mage::app()->getStore());
+        $handler     = new PaymentHandler(\Mage::app()->getStore(), $this->getLogger());
         $order       = $this->getCheckoutSession()->getLastRealOrder();
 
         $action = $handler->execute(
@@ -41,7 +41,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
                 new BasketMapper($order, $payment->getTransaction()),
                 new UserMapper(
                     $order,
-                    Mage::helper('core/http')->getRemoteAddr(true),
+                    Mage::helper('paymentgateway')->getClientIp(),
                     Mage::app()->getLocale()->getLocaleCode()
                 ),
                 $this->getHelper()->getDeviceFingerprintId($payment->getPaymentConfig()->getTransactionMAID())

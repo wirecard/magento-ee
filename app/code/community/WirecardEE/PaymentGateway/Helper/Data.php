@@ -26,6 +26,21 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
         }
     }
 
+    public function getClientIp()
+    {
+        $server = Mage::app()->getRequest()->getServer();
+        if (! empty($server['HTTP_CLIENT_IP'])) {
+            return $server['HTTP_CLIENT_IP'];
+        }
+
+        if (! empty($server['HTTP_X_FORWARDED_FOR'])) {
+            $ips = $server['HTTP_X_FORWARDED_FOR'];
+            return trim($ips[count($ips) - 1]);
+        }
+
+        return $server['REMOTE_ADDR'];
+    }
+
     public function getPluginName()
     {
         return 'WirecardEE_PaymentGateway';
