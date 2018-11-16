@@ -12,6 +12,21 @@ namespace WirecardEE\PaymentGateway\Actions;
 class ErrorAction implements Action
 {
     /**
+     * Payment processing failed (e.g. due to an exception)
+     */
+    const PROCESSING_FAILED = 1;
+
+    /**
+     * The API returned a `FailureResponse`
+     */
+    const FAILURE_RESPONSE = 2;
+
+    /**
+     * Payment was cancelled by the consumer
+     */
+    const PAYMENT_CANCELED = 3;
+
+    /**
      * @var int
      */
     protected $code;
