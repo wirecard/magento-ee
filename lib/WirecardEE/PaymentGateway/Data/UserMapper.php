@@ -58,7 +58,7 @@ class UserMapper
         $billingAddress = new Address(
             $address->getCountryId(),
             $address->getCity(),
-            $address->getStreet()
+            !empty($address->getStreet()[0]) ? $address->getStreet()[0] : ''
         );
         $billingAddress->setPostalCode($address->getPostcode());
         $billingAddress->setStreet2($address->getStreet2());
@@ -84,7 +84,7 @@ class UserMapper
         $shippingAddress = new Address(
             $address->getCountryId(),
             $address->getCity(),
-            $address->getStreet()
+            !empty($address->getStreet()[0]) ? $address->getStreet()[0] : ''
         );
         $shippingAddress->setPostalCode($address->getPostcode());
         $shippingAddress->setStreet2($address->getStreet2());
