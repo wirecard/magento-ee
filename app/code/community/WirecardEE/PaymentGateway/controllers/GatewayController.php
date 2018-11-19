@@ -118,6 +118,26 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
         }
     }
 
+    public function cancelAction()
+    {
+        if ($order = $this->getCheckoutSession()->getLastRealOrder()) {
+            if ($order->getStatus() === Mage_Sales_Model_Order::STATE_CANCELED) {
+                return;
+            }
+
+            $quote = Mage::getModel('sales/quote')->load($order->getQuoteId());
+
+            if ($quote->getId()) {
+                $quote->setIsActive(1)
+                      ->setReservedOrderId(null)
+                      ->save();
+                $this->getCheckoutSession()->replaceQuote($quote);
+            }
+        }
+
+        return $this->_redirect('checkout/onepage');
+    }
+
     protected function handleAction(Action $action)
     {
         if ($action instanceof RedirectAction) {
