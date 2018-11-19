@@ -138,7 +138,7 @@ class PaymentHandler
      */
     protected function getDescriptor($orderNumber)
     {
-        $shopName = substr($this->store->getName(), 0, 9);
+        $shopName = substr($this->store->getFrontendName(), 0, 9);
         return substr($shopName . ' ' . $orderNumber, 0, 20);
     }
 }
