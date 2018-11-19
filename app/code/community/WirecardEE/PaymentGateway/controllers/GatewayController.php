@@ -38,6 +38,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
         $this->getHelper()->validateBasket();
 
         $action = $handler->execute(
+            new TransactionManager($this->getLogger()),
             new OrderSummary(
                 $payment,
                 $order,
@@ -79,7 +80,6 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
 
             $transactionManager = new TransactionManager($this->getLogger());
             $transactionManager->createTransaction(
-                $this->getOrderPaymentTransaction(),
                 $this->getCheckoutSession()->getLastRealOrder(),
                 $response
             );
@@ -112,7 +112,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
             $backendService = new BackendService($payment->getTransactionConfig());
             $notification   = $backendService->handleNotification($request->getRawBody());
 
-            $notificationHandler->handleResponse($notification);
+            $notificationHandler->handleResponse($notification, $backendService);
         } catch (\Exception $e) {
             $this->logException('Notification handling failed', $e);
         }

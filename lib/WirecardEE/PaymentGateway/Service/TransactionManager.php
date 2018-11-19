@@ -19,10 +19,10 @@ class TransactionManager
     }
 
     public function createTransaction(
-        \Mage_Sales_Model_Order_Payment_Transaction $transaction,
         \Mage_Sales_Model_Order $order,
         Response $response
     ) {
+        $transaction = $this->getOrderPaymentTransaction();
         $transaction->setAdditionalInformation(
             Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS,
             $response->getData()
@@ -55,6 +55,14 @@ class TransactionManager
                 return Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH;
         }
 
-        throw new \RuntimeException("Unable to map transaction type ($transactionType)");
+        return Mage_Sales_Model_Order_Payment_Transaction::TYPE_PAYMENT;
+    }
+
+    /**
+     * @return Mage_Sales_Model_Order_Payment_Transaction|\Mage_Core_Model_Abstract
+     */
+    protected function getOrderPaymentTransaction()
+    {
+        return \Mage::getModel('sales/order_payment_transaction');
     }
 }

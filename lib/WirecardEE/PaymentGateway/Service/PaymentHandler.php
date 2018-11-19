@@ -40,6 +40,7 @@ class PaymentHandler
     }
 
     /**
+     * @param TransactionManager $transactionManager
      * @param OrderSummary       $orderSummary
      * @param TransactionService $transactionService
      *
@@ -49,6 +50,7 @@ class PaymentHandler
      * @return Action
      */
     public function execute(
+        TransactionManager $transactionManager,
         OrderSummary $orderSummary,
         TransactionService $transactionService,
         Redirect $redirect,
@@ -77,6 +79,10 @@ class PaymentHandler
         }
 
         if ($response instanceof SuccessResponse || $response instanceof InteractionResponse) {
+            $transactionManager->createTransaction(
+                $orderSummary->getOrder(),
+                $response
+            );
             return new RedirectAction($response->getRedirectUrl());
         }
 
