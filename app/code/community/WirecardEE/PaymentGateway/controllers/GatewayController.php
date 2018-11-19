@@ -34,6 +34,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
         $handler     = new PaymentHandler(\Mage::app()->getStore(), $this->getLogger());
         $order       = $this->getCheckoutSession()->getLastRealOrder();
 
+        $this->getHelper()->validateBasket();
+
         $action = $handler->execute(
             new OrderSummary(
                 $payment,
@@ -65,6 +67,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
         $returnHandler = new ReturnHandler($this->getLogger());
         $request       = $this->getRequest();
         $payment       = (new PaymentFactory())->create($request->getParam('method'));
+
+        $this->getHelper()->validateBasket();
 
         try {
             $response = $returnHandler->handleRequest(
@@ -98,7 +102,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
 
         try {
             $backendService = new BackendService($payment->getTransactionConfig());
-            $notification = $backendService->handleNotification($request->getRawBody());
+            $notification   = $backendService->handleNotification($request->getRawBody());
 
             $notificationHandler->handleResponse($notification);
         } catch (\Exception $e) {

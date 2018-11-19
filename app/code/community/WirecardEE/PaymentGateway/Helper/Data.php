@@ -26,6 +26,17 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
         }
     }
 
+    public function validateBasket()
+    {
+        $checkoutOrder = $this->getCheckoutSession()->getLastRealOrder();
+        $order         = Mage::getModel('sales/order')->load($checkoutOrder->getId());
+
+        if (json_encode($checkoutOrder->getAllItems()) !== json_encode($order->getAllItems())) {
+            $this->getLogger()->warning("Basket validation failed for order id: " . $checkoutOrder->getId());
+            $order->setState(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW);
+        }
+    }
+
     public function getClientIp()
     {
         $server = Mage::app()->getRequest()->getServer();
@@ -49,7 +60,7 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
     public function getPluginVersion()
     {
         $moduleConfig = $this->getModuleConfig()->asArray();
-        if (!empty($moduleConfig['version'])) {
+        if (! empty($moduleConfig['version'])) {
             return $moduleConfig['version'];
         }
 
@@ -69,5 +80,18 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
     protected function getSession()
     {
         return Mage::getSingleton('core/session');
+    }
+
+    /**
+     * @return \Psr\Log\LoggerInterface
+     */
+    protected function getLogger()
+    {
+        return Mage::registry('logger');
+    }
+
+    protected function getCheckoutSession()
+    {
+        return Mage::getSingleton('checkout/session');
     }
 }
