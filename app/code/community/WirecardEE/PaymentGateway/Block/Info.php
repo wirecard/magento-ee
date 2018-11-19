@@ -17,20 +17,18 @@ class WirecardEE_PaymentGateway_Block_Info extends Mage_Payment_Block_Info
 
     protected function _toHtml()
     {
-        $quotePayment = $this->getInfo();
+        $info = $this->getInfo();
 
-        if ($quotePayment instanceof Mage_Sales_Model_Quote_Payment) {
-            $paymentCode = $quotePayment->getMethodInstance()->getCode();
-            $paymentName = str_replace('wirecardee_paymentgateway_', '', $paymentCode);
-            $payment     = (new \WirecardEE\PaymentGateway\Service\PaymentFactory())->create($paymentName);
+        $paymentCode  = $info->getMethodInstance()->getCode();
+        $paymentName  = str_replace('wirecardee_paymentgateway_', '', $paymentCode);
+        $payment      = (new \WirecardEE\PaymentGateway\Service\PaymentFactory())->create($paymentName);
 
-            if ($payment->getPaymentConfig()->hasFraudPrevention()) {
-                $deviceFingerprintId = Mage::helper('paymentgateway')
-                                           ->getDeviceFingerprintId($payment->getPaymentConfig()->getTransactionMAID());
+        if ($payment->getPaymentConfig()->hasFraudPrevention()) {
+            $deviceFingerprintId = Mage::helper('paymentgateway')
+                                       ->getDeviceFingerprintId($payment->getPaymentConfig()->getTransactionMAID());
 
-                $this->setData('WirecardEEDeviceFingerprintId', $deviceFingerprintId);
-                $this->setData('WirecardEEIncludeDeviceFingerprintIFrame', true);
-            }
+            $this->setData('WirecardEEDeviceFingerprintId', $deviceFingerprintId);
+            $this->setData('WirecardEEIncludeDeviceFingerprintIFrame', true);
         }
 
         return parent::_toHtml();
