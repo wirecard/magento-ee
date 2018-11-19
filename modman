@@ -1,12 +1,13 @@
-app/code/community/WirecardEE/*                                 app/code/community/WirecardEE
-app/etc/modules/WirecardEE_PaymentGateway.xml                   app/etc/modules/WirecardEE_PaymentGateway.xml
+app/code/community/WirecardEE/*                                             app/code/community/WirecardEE
+app/etc/modules/WirecardEE_PaymentGateway.xml                               app/etc/modules/WirecardEE_PaymentGateway.xml
 
-app/design/adminhtml/default/default/layout/WirecardEE/*        app/design/adminhtml/default/default/layout/WirecardEE
-app/design/adminhtml/default/default/template/WirecardEE/*      app/design/adminhtml/default/default/template/WirecardEE
-app/design/frontend/base/default/template/WirecardEE/*          app/design/frontend/base/default/template/WirecardEE
+app/design/adminhtml/default/default/layout/WirecardEE/*                    app/design/adminhtml/default/default/layout/WirecardEE
+app/design/adminhtml/default/default/template/WirecardEE/*                  app/design/adminhtml/default/default/template/WirecardEE
+app/design/frontend/base/default/template/WirecardEE/*                      app/design/frontend/base/default/template/WirecardEE
+app/design/frontend/base/default/layout/wirecardee_paymentgateway.xml       app/design/frontend/base/default/layout/wirecardee_paymentgateway.xml
 
-js/WirecardEE/*                                                 js/WirecardEE/
+js/WirecardEE/*                                                             js/WirecardEE/
 
-lib/WirecardEE/*                                                lib/WirecardEE
+lib/WirecardEE/*                                                            lib/WirecardEE
 
-skin/frontend/base/default/images/WirecardEE                    skin/frontend/base/default/images/WirecardEE
+skin/frontend/base/default/images/WirecardEE                                skin/frontend/base/default/images/WirecardEE

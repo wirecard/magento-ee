@@ -104,5 +104,13 @@
                 </args>
             </paymentgateway>
         </routers>
+
+        <layout>
+            <updates>
+                <paymentgateway>
+                    <file>wirecardee_paymentgateway.xml</file>
+                </paymentgateway>
+            </updates>
+        </layout>
     </frontend>
 </config>
