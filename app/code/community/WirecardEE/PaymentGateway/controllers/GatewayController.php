@@ -24,6 +24,7 @@ use WirecardEE\PaymentGateway\Service\NotificationHandler;
 use WirecardEE\PaymentGateway\Service\PaymentFactory;
 use WirecardEE\PaymentGateway\Service\PaymentHandler;
 use WirecardEE\PaymentGateway\Service\ReturnHandler;
+use WirecardEE\PaymentGateway\Service\TransactionManager;
 
 class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_Front_Action
 {
@@ -74,6 +75,13 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
             $response = $returnHandler->handleRequest(
                 $request,
                 new TransactionService($payment->getTransactionConfig(), $this->getLogger())
+            );
+
+            $transactionManager = new TransactionManager($this->getLogger());
+            $transactionManager->createTransaction(
+                $this->getOrderPaymentTransaction(),
+                $this->getCheckoutSession()->getLastRealOrder(),
+                $response
             );
 
             $action = $response instanceof SuccessResponse
@@ -128,6 +136,11 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
         $this->getLogger()->error(
             $message . ' - ' . get_class($exception) . ': ' . $exception->getMessage()
         );
+    }
+
+    protected function getOrderPaymentTransaction()
+    {
+        return Mage::getModel('sales/order_payment_transaction');
     }
 
     /**
