@@ -184,6 +184,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
         }
 
         if ($action instanceof ErrorAction) {
+            $this->getLogger()->error($action->getMessage());
             exit($action->getMessage());
         }
 
