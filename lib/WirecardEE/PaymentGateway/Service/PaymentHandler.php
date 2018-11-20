@@ -27,6 +27,9 @@ use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
 class PaymentHandler
 {
+    const DESCRIPTOR_MAX_LENGTH = 20;
+    const DESCRIPTOR_SHOP_NAME_MAX_LENGTH = 9;
+
     /** @var \Mage_Core_Model_Store */
     protected $store;
 
@@ -48,6 +51,7 @@ class PaymentHandler
      * @param string             $notificationUrl
      *
      * @return Action
+     * @throws \Mage_Core_Exception
      */
     public function execute(
         TransactionManager $transactionManager,
@@ -141,20 +145,33 @@ class PaymentHandler
         }
 
         if ($paymentConfig->sendOrderIdentification() || $paymentConfig->hasFraudPrevention()) {
-            $transaction->setDescriptor($this->getDescriptor($orderSummary->getOrder()->getRealOrderId()));
+            $transaction->setDescriptor(
+                $this->getDescriptor(
+                    $this->store->getFrontendName(),
+                    $orderSummary->getOrder()->getRealOrderId()
+                )
+            );
         }
     }
 
     /**
      * Returns the descriptor sent to Wirecard. Change to your own needs.
      *
-     * @param $orderNumber
+     * @param string     $shopName
+     * @param string|int $orderNumber
      *
      * @return string
      */
-    protected function getDescriptor($orderNumber)
+    protected function getDescriptor($shopName, $orderNumber)
     {
-        $shopName = substr($this->store->getFrontendName(), 0, 9);
-        return substr($shopName . ' ' . $orderNumber, 0, 20);
+        $orderNumberMaxLength = strlen($shopName) < self::DESCRIPTOR_SHOP_NAME_MAX_LENGTH
+            ? self::DESCRIPTOR_MAX_LENGTH - strlen($shopName)
+            : self::DESCRIPTOR_MAX_LENGTH - self::DESCRIPTOR_SHOP_NAME_MAX_LENGTH;
+
+        if (strlen($orderNumber) > $orderNumberMaxLength) {
+            $orderNumber = substr($orderNumber, (strlen($orderNumber) - $orderNumberMaxLength));
+        }
+
+        return substr($shopName, 0, self::DESCRIPTOR_SHOP_NAME_MAX_LENGTH) . ' ' . $orderNumber;
     }
 }
