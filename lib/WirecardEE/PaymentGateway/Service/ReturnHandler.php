@@ -20,7 +20,7 @@ use WirecardEE\PaymentGateway\Actions\RedirectAction;
 
 class ReturnHandler
 {
-    /** @var LoggerInterface  */
+    /** @var LoggerInterface */
     protected $logger;
 
     /**
@@ -55,13 +55,17 @@ class ReturnHandler
     }
 
     /**
-     * @param Response $repsonse
-     * @param          $url
+     * @param Response $response
+     * @param string   $url
      *
      * @return RedirectAction
      */
-    public function handleSuccess(Response $repsonse, $url)
+    public function handleSuccess(Response $response, $url)
     {
+        /** @var \Mage_Sales_Model_Order $order */
+        $order = \Mage::getModel('sales/order')->load($response->getCustomFields()->get('order-id'));
+        $order->sendNewOrderEmail();
+
         return new RedirectAction($url);
     }
 
