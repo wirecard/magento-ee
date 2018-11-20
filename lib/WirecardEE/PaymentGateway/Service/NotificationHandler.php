@@ -66,7 +66,7 @@ class NotificationHandler
             throw new \Exception("Order not found");
         }
 
-//        $this->transactionManager->createTransaction($order, $response);
+        $this->transactionManager->createTransaction($order, $response);
 
         if (in_array($order->getStatus(), [
             \Mage_Sales_Model_Order::STATE_COMPLETE,

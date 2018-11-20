@@ -11,6 +11,7 @@ namespace WirecardEE\PaymentGateway\Service;
 
 use Mage_Sales_Model_Order_Payment_Transaction;
 use Psr\Log\LoggerInterface;
+use Wirecard\PaymentSdk\Response\InteractionResponse;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\Transaction\Transaction;
@@ -39,6 +40,7 @@ class TransactionManager
         Response $response
     ) {
         $transaction = $this->getOrderPaymentTransaction();
+
         $transaction->setAdditionalInformation(
             Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS,
             $response->getData()
@@ -47,8 +49,9 @@ class TransactionManager
         $transaction->setOrderPaymentObject($order->getPayment());
         $transaction->setIsClosed(false);
 
-        if ($response instanceof SuccessResponse) {
-            $transaction->setTxnId($response->getTransactionId());
+        if ($response instanceof SuccessResponse || $response instanceof InteractionResponse) {
+            $transactionId = $response->getTransactionId() . '.' . time();
+            $transaction->setTxnId($transactionId);
         }
 
         $transaction->save();
