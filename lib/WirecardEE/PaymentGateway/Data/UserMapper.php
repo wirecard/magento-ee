@@ -72,7 +72,6 @@ class UserMapper
         $shippingAccountHolder = new AccountHolder();
         $shippingAccountHolder->setFirstName($this->getOrder()->getShippingAddress()->getFirstname());
         $shippingAccountHolder->setLastName($this->getOrder()->getShippingAddress()->getLastname());
-        $shippingAccountHolder->setPhone($this->getOrder()->getShippingAddress()->getTelephone());
         $shippingAccountHolder->setAddress($this->getWirecardShippingAddress());
 
         return $shippingAccountHolder;
