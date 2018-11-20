@@ -60,7 +60,7 @@ class UserMapper
      */
     public function getWirecardBillingAccountHolder()
     {
-        $billingAddress = $this->getOrder()->getBillingAddress();
+        $billingAddress       = $this->getOrder()->getBillingAddress();
         $billingAccountHolder = new AccountHolder();
         $billingAccountHolder->setFirstName($billingAddress->getFirstname());
         $billingAccountHolder->setLastName($billingAddress->getLastname());
@@ -68,7 +68,12 @@ class UserMapper
         $billingAccountHolder->setDateOfBirth(new \DateTime($this->getOrder()->getCustomerDob()));
         $billingAccountHolder->setPhone($billingAddress->getTelephone());
         $billingAccountHolder->setAddress($this->getWirecardBillingAddress());
-        $billingAccountHolder->setGender($this->getOrder()->getCustomerGender());
+
+        if ($gender = $this->getOrder()->getCustomerGender()) {
+            $billingAccountHolder->setGender(
+                $gender === '1' ? 'm' : 'f'
+            );
+        }
 
         return $billingAccountHolder;
     }
@@ -78,11 +83,11 @@ class UserMapper
      */
     public function getWirecardBillingAddress()
     {
-        $address = $this->getOrder()->getBillingAddress();
+        $address        = $this->getOrder()->getBillingAddress();
         $billingAddress = new Address(
             $address->getCountryId(),
             $address->getCity(),
-            !empty($address->getStreet()[0]) ? $address->getStreet()[0] : ''
+            ! empty($address->getStreet()[0]) ? $address->getStreet()[0] : ''
         );
         $billingAddress->setPostalCode($address->getPostcode());
         $billingAddress->setStreet2($address->getStreet2());
@@ -109,11 +114,11 @@ class UserMapper
      */
     public function getWirecardShippingAddress()
     {
-        $address = $this->getOrder()->getShippingAddress();
+        $address         = $this->getOrder()->getShippingAddress();
         $shippingAddress = new Address(
             $address->getCountryId(),
             $address->getCity(),
-            !empty($address->getStreet()[0]) ? $address->getStreet()[0] : ''
+            ! empty($address->getStreet()[0]) ? $address->getStreet()[0] : ''
         );
         $shippingAddress->setPostalCode($address->getPostcode());
         $shippingAddress->setStreet2($address->getStreet2());
