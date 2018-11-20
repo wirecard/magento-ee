@@ -11,6 +11,15 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
 {
     const DEVICE_FINGERPRINT_ID = 'WirecardEEDeviceFingerprint';
 
+    /**
+     * Returns the device fingerprint id from the session. In case no device fingerprint id was generated so far a new
+     * one will get generated and returned instead.
+     * Device fingerprint id format: md5 of [maid]_[microtime]
+     *
+     * @param string $maid
+     *
+     * @return string
+     */
     public function getDeviceFingerprintId($maid)
     {
         if (! $this->getSession()->getData(self::DEVICE_FINGERPRINT_ID)) {
@@ -19,6 +28,9 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
         return $this->getSession()->getData(self::DEVICE_FINGERPRINT_ID);
     }
 
+    /**
+     * Removes the current finger print id from the session.
+     */
     public function destroyDeviceFingerprintId()
     {
         if ($this->getSession()->getData(self::DEVICE_FINGERPRINT_ID)) {
@@ -26,17 +38,23 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
         }
     }
 
+    /**
+     * Validates the basket by comparing the order from the session against the order in database.
+     */
     public function validateBasket()
     {
         $checkoutOrder = $this->getCheckoutSession()->getLastRealOrder();
         $order         = Mage::getModel('sales/order')->load($checkoutOrder->getId());
 
         if (json_encode($checkoutOrder->getAllItems()) !== json_encode($order->getAllItems())) {
-            $this->getLogger()->warning("Basket validation failed for order id: " . $checkoutOrder->getId());
-            $order->setState(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW);
+            $this->getLogger()->warning("Basket verification failed for order id: " . $checkoutOrder->getId());
+            $order->addStatusHistoryComment('Basket verification failed', Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW);
         }
     }
 
+    /**
+     * @return string
+     */
     public function getClientIp()
     {
         $server = Mage::app()->getRequest()->getServer();
@@ -52,11 +70,17 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
         return $server['REMOTE_ADDR'];
     }
 
+    /**
+     * @return string
+     */
     public function getPluginName()
     {
         return 'WirecardEE_PaymentGateway';
     }
 
+    /**
+     * @return mixed
+     */
     public function getPluginVersion()
     {
         $moduleConfig = $this->getModuleConfig()->asArray();
@@ -77,6 +101,9 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
         return $config;
     }
 
+    /**
+     * @return Mage_Core_Model_Abstract|Mage_Core_Model_Session
+     */
     protected function getSession()
     {
         return Mage::getSingleton('core/session');
@@ -90,6 +117,9 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
         return Mage::registry('logger');
     }
 
+    /**
+     * @return Mage_Checkout_Model_Session|Mage_Core_Model_Abstract
+     */
     protected function getCheckoutSession()
     {
         return Mage::getSingleton('checkout/session');

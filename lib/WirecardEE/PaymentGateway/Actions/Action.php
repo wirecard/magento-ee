@@ -9,6 +9,10 @@
 
 namespace WirecardEE\PaymentGateway\Actions;
 
+/**
+ * Actions are returned by Handlers to indicate what should happen after the Handler is done (e.g. redirection,
+ * error handling, ...).
+ */
 interface Action
 {
 }

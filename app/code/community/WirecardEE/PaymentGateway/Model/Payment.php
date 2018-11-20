@@ -20,6 +20,11 @@ abstract class WirecardEE_PaymentGateway_Model_Payment extends Mage_Payment_Mode
     protected $_formBlockType = 'paymentgateway/form';
     protected $_infoBlockType = 'paymentgateway/info';
 
+    /**
+     * Sets the redirect url for Wirecard payments.
+     *
+     * @return string
+     */
     public function getOrderPlaceRedirectUrl()
     {
         return Mage::getUrl('paymentgateway/gateway', [

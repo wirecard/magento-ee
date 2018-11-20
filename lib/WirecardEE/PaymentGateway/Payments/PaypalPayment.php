@@ -9,8 +9,10 @@
 
 namespace WirecardEE\PaymentGateway\Payments;
 
+use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
+use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\PaymentConfig;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
@@ -24,6 +26,9 @@ class PaypalPayment extends Payment implements ProcessPaymentInterface
      */
     private $transactionInstance;
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return PayPalTransaction::NAME;
@@ -42,6 +47,9 @@ class PaypalPayment extends Payment implements ProcessPaymentInterface
         return $this->transactionInstance;
     }
 
+    /**
+     * @return Config
+     */
     public function getTransactionConfig()
     {
         $config = parent::getTransactionConfig();
@@ -53,6 +61,9 @@ class PaypalPayment extends Payment implements ProcessPaymentInterface
         return $config;
     }
 
+    /**
+     * @return PaymentConfig
+     */
     public function getPaymentConfig()
     {
         $paymentConfig = new PaymentConfig(
@@ -71,6 +82,11 @@ class PaypalPayment extends Payment implements ProcessPaymentInterface
         return $paymentConfig;
     }
 
+    /**
+     * @param OrderSummary $orderSummary
+     *
+     * @return null|Action
+     */
     public function processPayment(OrderSummary $orderSummary)
     {
         $transaction = $this->getTransaction();

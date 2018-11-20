@@ -18,6 +18,13 @@ class WirecardEE_PaymentGateway_Block_Info extends Mage_Payment_Block_Info
         }
     }
 
+    /**
+     * Attaches the fingerprint id iframe in case the payment has fraud prevention enabled.
+     *
+     * @return string
+     * @throws Mage_Core_Exception
+     * @throws \WirecardEE\PaymentGateway\UnknownPaymentException
+     */
     protected function _toHtml()
     {
         $info = $this->getInfo();

@@ -15,6 +15,11 @@ class WirecardEE_PaymentGateway_Block_Form extends Mage_Payment_Block_Form
         $this->setTemplate('WirecardEE/form.phtml');
     }
 
+    /**
+     * Add payment logo to checkout.
+     *
+     * @return string
+     */
     public function getMethodLabelAfterHtml()
     {
         $imagePath = 'images/WirecardEE/PaymentGateway/';

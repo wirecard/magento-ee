@@ -1,4 +1,11 @@
 <?php
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/LICENSE
+ */
 
 namespace WirecardEE\PaymentGateway\Data;
 
@@ -7,6 +14,9 @@ use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
+/**
+ * Represents the Magento basket as object.
+ */
 class BasketMapper
 {
     /** @var \Mage_Sales_Model_Order */
@@ -15,17 +25,27 @@ class BasketMapper
     /** @var Transaction */
     protected $transaction;
 
+    /**
+     * @param \Mage_Sales_Model_Order $order
+     * @param Transaction             $transaction
+     */
     public function __construct(\Mage_Sales_Model_Order $order, Transaction $transaction)
     {
         $this->order       = $order;
         $this->transaction = $transaction;
     }
 
+    /**
+     * @return \Mage_Sales_Model_Order
+     */
     public function getOrder()
     {
         return $this->order;
     }
 
+    /**
+     * @return Basket
+     */
     public function getWirecardBasket()
     {
         $basket = new Basket();
@@ -73,11 +93,23 @@ class BasketMapper
         return $basket;
     }
 
+    /**
+     * Returns all items within the basket as array.
+     *
+     * @return array
+     */
     public function toArray()
     {
         return $this->order->getAllItems();
     }
 
+    /**
+     * Helper function to format numbers throughout the plugin.
+     *
+     * @param string|float $amount
+     *
+     * @return string
+     */
     public static function numberFormat($amount)
     {
         return number_format($amount, 2, '.', '');

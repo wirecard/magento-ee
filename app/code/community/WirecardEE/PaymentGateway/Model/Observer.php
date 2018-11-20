@@ -1,7 +1,4 @@
 <?php
-
-use WirecardEE\PaymentGateway\Service\Logger;
-
 /**
  * Shop System Plugins:
  * - Terms of Use can be found under:
@@ -9,6 +6,8 @@ use WirecardEE\PaymentGateway\Service\Logger;
  * - License can be found under:
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
+
+use WirecardEE\PaymentGateway\Service\Logger;
 
 class WirecardEE_PaymentGateway_Model_Observer
 {
@@ -33,6 +32,9 @@ class WirecardEE_PaymentGateway_Model_Observer
         require_once($vendorPath . 'autoload.php');
     }
 
+    /**
+     * @throws Mage_Core_Exception
+     */
     private function registerServices()
     {
         Mage::register('logger', new Logger());

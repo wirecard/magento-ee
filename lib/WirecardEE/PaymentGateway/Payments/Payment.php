@@ -13,6 +13,9 @@ use Wirecard\PaymentSdk\Config\Config;
 
 abstract class Payment implements PaymentInterface
 {
+    /**
+     * @return Config
+     */
     public function getTransactionConfig()
     {
         $config = new Config(
@@ -39,6 +42,12 @@ abstract class Payment implements PaymentInterface
         return \Mage::helper('paymentgateway');
     }
 
+    /**
+     * @param        $name
+     * @param string $prefix
+     *
+     * @return string|null
+     */
     protected function getPluginConfig($name, $prefix = 'payment/wirecardee_paymentgateway_')
     {
         $config = \Mage::getStoreConfig($prefix . $this->getName());

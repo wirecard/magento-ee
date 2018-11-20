@@ -1,4 +1,11 @@
 <?php
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/LICENSE
+ */
 
 namespace WirecardEE\PaymentGateway\Data;
 
@@ -20,6 +27,11 @@ class UserMapper
      */
     protected $locale;
 
+    /**
+     * @param \Mage_Sales_Model_Order $order
+     * @param                         $clientIp
+     * @param                         $locale
+     */
     public function __construct(\Mage_Sales_Model_Order $order, $clientIp, $locale)
     {
         $this->order    = $order;
@@ -27,16 +39,25 @@ class UserMapper
         $this->locale   = $locale;
     }
 
+    /**
+     * @return string
+     */
     public function getClientIp()
     {
         return $this->clientIp;
     }
 
+    /**
+     * @return string
+     */
     public function getLocale()
     {
         return $this->locale;
     }
 
+    /**
+     * @return AccountHolder
+     */
     public function getWirecardBillingAccountHolder()
     {
         $billingAddress = $this->getOrder()->getBillingAddress();
@@ -52,6 +73,9 @@ class UserMapper
         return $billingAccountHolder;
     }
 
+    /**
+     * @return Address
+     */
     public function getWirecardBillingAddress()
     {
         $address = $this->getOrder()->getBillingAddress();
@@ -67,6 +91,9 @@ class UserMapper
         return $billingAddress;
     }
 
+    /**
+     * @return AccountHolder
+     */
     public function getWirecardShippingAccountHolder()
     {
         $shippingAccountHolder = new AccountHolder();
@@ -77,6 +104,9 @@ class UserMapper
         return $shippingAccountHolder;
     }
 
+    /**
+     * @return Address
+     */
     public function getWirecardShippingAddress()
     {
         $address = $this->getOrder()->getShippingAddress();
@@ -92,6 +122,9 @@ class UserMapper
         return $shippingAddress;
     }
 
+    /**
+     * @return \Mage_Sales_Model_Order
+     */
     public function getOrder()
     {
         return $this->order;

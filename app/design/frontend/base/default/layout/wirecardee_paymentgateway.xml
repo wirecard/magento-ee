@@ -1,4 +1,11 @@
 <?xml version="1.0"?>
+<!--
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/LICENSE
+-->
 <layout version="0.1.0">
     <checkout_onepage_success>
         <reference name="checkout.success">

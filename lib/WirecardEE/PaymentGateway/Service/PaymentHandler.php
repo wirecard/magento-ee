@@ -94,6 +94,16 @@ class PaymentHandler
         return new ErrorAction(ErrorAction::PROCESSING_FAILED, 'Payment processing failed');
     }
 
+    /**
+     * Prepares the transaction for being sent to Wirecard by adding specific (e.g. amount) and optional (e.g. fraud
+     * prevention data) data to the `Transaction` object of the payment.
+     * Keep in mind that the transaction returned by the payment is ALWAYS the same instance, hence we don't need to
+     * return the transaction here.
+     *
+     * @param OrderSummary $orderSummary
+     * @param Redirect     $redirect
+     * @param              $notificationUrl
+     */
     private function prepareTransaction(
         OrderSummary $orderSummary,
         Redirect $redirect,

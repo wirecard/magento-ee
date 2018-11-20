@@ -1,4 +1,11 @@
 <?php
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/LICENSE
+ */
 
 namespace WirecardEE\PaymentGateway\Service;
 
@@ -13,11 +20,20 @@ class TransactionManager
     /** @var LoggerInterface */
     protected $logger;
 
+    /**
+     * @param LoggerInterface $logger
+     */
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
 
+    /**
+     * @param \Mage_Sales_Model_Order $order
+     * @param Response                $response
+     *
+     * @throws \Mage_Core_Exception
+     */
     public function createTransaction(
         \Mage_Sales_Model_Order $order,
         Response $response
@@ -46,6 +62,11 @@ class TransactionManager
         return \Mage::helper('paymentgateway');
     }
 
+    /**
+     * @param $transactionType
+     *
+     * @return string
+     */
     public static function getMageTransactionType($transactionType)
     {
         switch ($transactionType) {
