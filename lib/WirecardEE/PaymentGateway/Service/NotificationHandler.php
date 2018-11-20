@@ -39,12 +39,15 @@ class NotificationHandler
 
 //        $this->transactionManager->createTransaction($order, $response);
 
-        if ($order->getStatus() !== 'pending') {
+        if (in_array($order->getStatus(), [
+            \Mage_Sales_Model_Order::STATE_COMPLETE,
+            \Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW
+        ])) {
             return;
         }
 
         $status = $this->getOrderStatus($backendService, $response);
-        $order->addStatusHistoryComment('Status updated', $status);
+        $order->addStatusHistoryComment('Status updated by notification', $status);
         $order->save();
     }
 
