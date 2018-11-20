@@ -142,7 +142,7 @@ class Logger implements LoggerInterface
     public function log($level, $message, array $context = [])
     {
         \Mage::log(
-            $message . (count($context) > 0 ? print_r($context, true) : ''),
+            $message . (count($context) > 0 ? ' ' . print_r($context, true) : ''),
             (int)$level,
             self::LOG_FILE
         );
