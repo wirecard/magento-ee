@@ -51,8 +51,8 @@ class BasketMapper
         $basket = new Basket();
         $basket->setVersion($this->transaction);
 
-        foreach ($this->getOrder()->getAllItems() as $item) {
-            /** @var \Mage_Sales_Model_Order_Item $item */
+        /** @var \Mage_Sales_Model_Order_Item $item */
+        foreach ($this->getOrder()->getAllVisibleItems() as $item) {
             $basketItem = new BasketItemMapper($item, $this->getOrder()->getBaseCurrencyCode());
             $basket->add($basketItem->getWirecardItem());
         }
