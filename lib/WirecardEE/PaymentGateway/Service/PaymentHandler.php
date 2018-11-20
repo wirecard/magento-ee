@@ -62,7 +62,7 @@ class PaymentHandler
 
         try {
             if ($payment instanceof ProcessPaymentInterface) {
-                $action = $payment->processPayment();
+                $action = $payment->processPayment($orderSummary);
 
                 if ($action) {
                     return $action;

@@ -11,6 +11,7 @@ namespace WirecardEE\PaymentGateway\Payments;
 
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
+use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\PaymentConfig;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
@@ -70,7 +71,17 @@ class PaypalPayment extends Payment implements ProcessPaymentInterface
         return $paymentConfig;
     }
 
-    public function processPayment()
+    public function processPayment(OrderSummary $orderSummary)
     {
+        $transaction = $this->getTransaction();
+
+        $transaction->setOrderDetail(sprintf(
+            '%s - %.2f %s',
+            $orderSummary->getOrder()->getRealOrderId(),
+            $orderSummary->getOrder()->getBaseGrandTotal(),
+            $orderSummary->getOrder()->getBaseCurrencyCode()
+        ));
+
+        return null;
     }
 }
