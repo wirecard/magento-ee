@@ -57,7 +57,7 @@ class NotificationHandler
      */
     protected function handleSuccess(SuccessResponse $response, BackendService $backendService)
     {
-        $this->logger->info('Incoming success notification', $response->getData());
+        $this->logger->info('Incoming success notification', ['response' => $response->getRawData()]);
 
         /** @var Mage_Sales_Model_Order $order */
         $order = \Mage::getModel('sales/order')->load($response->getCustomFields()->get('order-id'));
