@@ -7,6 +7,11 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+/**
+ * Parent class for payment models.
+ *
+ * @since 1.0.0
+ */
 abstract class WirecardEE_PaymentGateway_Model_Payment extends Mage_Payment_Model_Method_Abstract
 {
     protected $_code = 'wirecardee_paymentgateway_payment';
@@ -24,6 +29,8 @@ abstract class WirecardEE_PaymentGateway_Model_Payment extends Mage_Payment_Mode
      * Sets the redirect url for Wirecard payments.
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getOrderPlaceRedirectUrl()
     {

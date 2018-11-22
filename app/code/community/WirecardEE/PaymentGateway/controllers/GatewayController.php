@@ -26,6 +26,9 @@ use WirecardEE\PaymentGateway\Service\PaymentHandler;
 use WirecardEE\PaymentGateway\Service\ReturnHandler;
 use WirecardEE\PaymentGateway\Service\TransactionManager;
 
+/**
+ * @since 1.0.0
+ */
 class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_Front_Action
 {
     /**
@@ -36,6 +39,9 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      * @throws Mage_Core_Model_Store_Exception
      * @throws UnknownActionException
      * @throws \WirecardEE\PaymentGateway\UnknownPaymentException
+     * @throws Mage_Core_Exception
+     *
+     * @since 1.0.0
      */
     public function indexAction()
     {
@@ -80,6 +86,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      * @return Mage_Core_Controller_Varien_Action
      * @throws UnknownActionException
      * @throws \WirecardEE\PaymentGateway\UnknownPaymentException
+     *
+     * @since 1.0.0
      */
     public function returnAction()
     {
@@ -117,6 +125,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      * @param Response      $response
      *
      * @return RedirectAction
+     *
+     * @since 1.0.0
      */
     protected function updateOrder(ReturnHandler $returnHandler, Response $response)
     {
@@ -129,6 +139,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      * This method is called by Wirecard servers to modify the state of an order. Notifications are generally the
      * source of truth regarding orders, meaning the `NotificationHandler` will most likely overwrite things
      * by the `ReturnHandler`.
+     *
+     * @since 1.0.0
      */
     public function notifyAction()
     {
@@ -151,6 +163,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      * cancelled!) and redirects the user to the checkout.
      *
      * @return Mage_Core_Controller_Varien_Action
+     *
+     * @since 1.0.0
      */
     public function cancelAction()
     {
@@ -176,6 +190,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      *
      * @return Mage_Core_Controller_Varien_Action
      * @throws UnknownActionException
+     *
+     * @since 1.0.0
      */
     protected function handleAction(Action $action)
     {
@@ -194,6 +210,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
     /**
      * @param           $message
      * @param Exception $exception
+     *
+     * @since 1.0.0
      */
     private function logException($message, \Exception $exception)
     {
@@ -204,6 +222,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
 
     /**
      * @return false|Mage_Core_Model_Abstract|Mage_Sales_Model_Order_Payment_Transaction
+     *
+     * @since 1.0.0
      */
     protected function getOrderPaymentTransaction()
     {
@@ -212,6 +232,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
 
     /**
      * @return LoggerInterface
+     *
+     * @since 1.0.0
      */
     protected function getLogger()
     {
@@ -223,6 +245,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      * @param array $params
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     protected function getUrl($route, $params = [])
     {
@@ -231,6 +255,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
 
     /**
      * @return Mage_Core_Helper_Abstract|WirecardEE_PaymentGateway_Helper_Data
+     *
+     * @since 1.0.0
      */
     protected function getHelper()
     {
@@ -239,6 +265,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
 
     /**
      * @return Mage_Checkout_Model_Session|Mage_Core_Model_Abstract
+     *
+     * @since 1.0.0
      */
     protected function getCheckoutSession()
     {

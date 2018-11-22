@@ -10,6 +10,9 @@
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;
 
+/**
+ * @since 1.0.0
+ */
 class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController extends Mage_Adminhtml_Controller_Action
 {
     /**
@@ -17,6 +20,8 @@ class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController ext
      *
      * @return Zend_Controller_Response_Abstract
      * @throws \Http\Client\Exception
+     *
+     * @since 1.0.0
      */
     public function testCredentialsAction()
     {

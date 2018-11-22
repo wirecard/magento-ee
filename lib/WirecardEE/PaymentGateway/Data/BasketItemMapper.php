@@ -14,6 +14,8 @@ use Wirecard\PaymentSdk\Entity\Item;
 
 /**
  * Represents a single item from the Magento basket as object.
+ *
+ * @since 1.0.0
  */
 class BasketItemMapper
 {
@@ -25,6 +27,8 @@ class BasketItemMapper
     /**
      * @param \Mage_Sales_Model_Order_Item $item
      * @param                              $currency
+     *
+     * @since 1.0.0
      */
     public function __construct(\Mage_Sales_Model_Order_Item $item, $currency)
     {
@@ -34,6 +38,8 @@ class BasketItemMapper
 
     /**
      * @return \Mage_Sales_Model_Order_Item
+     *
+     * @since 1.0.0
      */
     public function getItem()
     {
@@ -42,6 +48,8 @@ class BasketItemMapper
 
     /**
      * @return Item
+     *
+     * @since 1.0.0
      */
     public function getWirecardItem()
     {

@@ -16,6 +16,9 @@ use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
+/**
+ * @since 1.0.0
+ */
 class TransactionManager
 {
     /** @var LoggerInterface */
@@ -23,6 +26,8 @@ class TransactionManager
 
     /**
      * @param LoggerInterface $logger
+     *
+     * @since 1.0.0
      */
     public function __construct(LoggerInterface $logger)
     {
@@ -34,6 +39,8 @@ class TransactionManager
      * @param Response                $response
      *
      * @throws \Mage_Core_Exception
+     *
+     * @since 1.0.0
      */
     public function createTransaction(
         \Mage_Sales_Model_Order $order,
@@ -58,17 +65,11 @@ class TransactionManager
     }
 
     /**
-     * @return \Mage_Core_Helper_Abstract|\WirecardEE_PaymentGateway_Helper_Data
-     */
-    protected function getHelper()
-    {
-        return \Mage::helper('paymentgateway');
-    }
-
-    /**
      * @param $transactionType
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     public static function getMageTransactionType($transactionType)
     {
@@ -84,9 +85,21 @@ class TransactionManager
 
     /**
      * @return Mage_Sales_Model_Order_Payment_Transaction|\Mage_Core_Model_Abstract
+     *
+     * @since 1.0.0
      */
     protected function getOrderPaymentTransaction()
     {
         return \Mage::getModel('sales/order_payment_transaction');
+    }
+
+    /**
+     * @return \Mage_Core_Helper_Abstract|\WirecardEE_PaymentGateway_Helper_Data
+     *
+     * @since 1.0.0
+     */
+    protected function getHelper()
+    {
+        return \Mage::helper('paymentgateway');
     }
 }

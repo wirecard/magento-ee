@@ -7,8 +7,14 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+/**
+ * @since 1.0.0
+ */
 class WirecardEE_PaymentGateway_Block_Form extends Mage_Payment_Block_Form
 {
+    /**
+     * @since 1.0.0
+     */
     protected function _construct()
     {
         parent::_construct();
@@ -20,6 +26,8 @@ class WirecardEE_PaymentGateway_Block_Form extends Mage_Payment_Block_Form
      * body of this method.
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getMethodLabelAfterHtml()
     {

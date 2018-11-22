@@ -7,6 +7,9 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+/**
+ * @since 1.0.0
+ */
 class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
 {
     const DEVICE_FINGERPRINT_ID = 'WirecardEEDeviceFingerprint';
@@ -19,6 +22,8 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
      * @param string $maid
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getDeviceFingerprintId($maid)
     {
@@ -30,6 +35,8 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
 
     /**
      * Removes the current finger print id from the session.
+     *
+     * @since 1.0.0
      */
     public function destroyDeviceFingerprintId()
     {
@@ -40,6 +47,8 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
 
     /**
      * Validates the basket by comparing the order from the session against the order in database.
+     *
+     * @since 1.0.0
      */
     public function validateBasket()
     {
@@ -54,6 +63,8 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
 
     /**
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getClientIp()
     {
@@ -72,6 +83,8 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
 
     /**
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getPluginName()
     {
@@ -80,6 +93,8 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
 
     /**
      * @return mixed
+     *
+     * @since 1.0.0
      */
     public function getPluginVersion()
     {
@@ -93,6 +108,8 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
 
     /**
      * @return \Varien_Simplexml_Element
+     *
+     * @since 1.0.0
      */
     public function getModuleConfig()
     {
@@ -103,6 +120,8 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
 
     /**
      * @return Mage_Core_Model_Abstract|Mage_Core_Model_Session
+     *
+     * @since 1.0.0
      */
     protected function getSession()
     {
@@ -111,6 +130,8 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
 
     /**
      * @return \Psr\Log\LoggerInterface
+     *
+     * @since 1.0.0
      */
     protected function getLogger()
     {
@@ -119,6 +140,8 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
 
     /**
      * @return Mage_Checkout_Model_Session|Mage_Core_Model_Abstract
+     *
+     * @since 1.0.0
      */
     protected function getCheckoutSession()
     {

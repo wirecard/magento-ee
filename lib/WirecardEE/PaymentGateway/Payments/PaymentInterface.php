@@ -13,14 +13,24 @@ use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 use WirecardEE\PaymentGateway\Data\PaymentConfig;
 
+/**
+ * @since 1.0.0
+ */
 interface PaymentInterface
 {
+    /**
+     * @return string
+     *
+     * @since 1.0.0
+     */
     public function getName();
 
     /**
      * Returns payment specific transaction object (always returns the same instance!).
      *
      * @return Transaction
+     *
+     * @since 1.0.0
      */
     public function getTransaction();
 
@@ -28,6 +38,8 @@ interface PaymentInterface
      * Returns transaction config.
      *
      * @return Config
+     *
+     * @since 1.0.0
      */
     public function getTransactionConfig();
 
@@ -35,6 +47,8 @@ interface PaymentInterface
      * Returns payment specific configuration.
      *
      * @return PaymentConfig
+     *
+     * @since 1.0.0
      */
     public function getPaymentConfig();
 }

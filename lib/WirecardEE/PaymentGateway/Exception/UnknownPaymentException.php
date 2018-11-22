@@ -9,6 +9,9 @@
 
 namespace WirecardEE\PaymentGateway;
 
+/**
+ * @since 1.0.0
+ */
 class UnknownPaymentException extends \Exception
 {
     /**

@@ -18,6 +18,12 @@ use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\RedirectAction;
 
+/**
+ * Responsible for handling return actions. Payments may implement their own way of handling returns by implementing
+ * the `ProcessReturnInterface` interface.
+ *
+ * @since 1.0.0
+ */
 class ReturnHandler
 {
     /** @var LoggerInterface */
@@ -25,6 +31,8 @@ class ReturnHandler
 
     /**
      * @param LoggerInterface $logger
+     *
+     * @since 1.0.0
      */
     public function __construct(LoggerInterface $logger)
     {
@@ -36,6 +44,8 @@ class ReturnHandler
      * @param TransactionService                 $transactionService
      *
      * @return FailureResponse|InteractionResponse|Response|SuccessResponse
+     *
+     * @since 1.0.0
      */
     public function handleRequest(
         \Mage_Core_Controller_Request_Http $request,
@@ -48,6 +58,8 @@ class ReturnHandler
      * @param Response $response
      *
      * @return ErrorAction
+     *
+     * @since 1.0.0
      */
     public function handleResponse(Response $response)
     {
@@ -59,6 +71,8 @@ class ReturnHandler
      * @param string   $url
      *
      * @return RedirectAction
+     *
+     * @since 1.0.0
      */
     public function handleSuccess(Response $response, $url)
     {
@@ -73,6 +87,8 @@ class ReturnHandler
      * @param $response
      *
      * @return ErrorAction
+     *
+     * @since 1.0.0
      */
     protected function handleFailure($response)
     {

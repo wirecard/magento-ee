@@ -15,6 +15,8 @@ use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 /**
  * The `OrderSummary` is passed to the `PaymentHandler` which processes the actual payment, based on the information
  * stored in the summary (e.g. used payment method, consumer information, etc..).
+ *
+ * @since 1.0.0
  */
 class OrderSummary
 {
@@ -48,7 +50,9 @@ class OrderSummary
      * @param \Mage_Sales_Model_Order $order
      * @param BasketMapper            $basketMapper
      * @param UserMapper              $userMapper
-     * @param                         $deviceFingerprintId
+     * @param string                  $deviceFingerprintId
+     *
+     * @since 1.0.0
      */
     public function __construct(
         PaymentInterface $payment,
@@ -66,6 +70,8 @@ class OrderSummary
 
     /**
      * @return \Mage_Sales_Model_Order
+     *
+     * @since 1.0.0
      */
     public function getOrder()
     {
@@ -74,6 +80,8 @@ class OrderSummary
 
     /**
      * @return PaymentInterface
+     *
+     * @since 1.0.0
      */
     public function getPayment()
     {
@@ -82,6 +90,8 @@ class OrderSummary
 
     /**
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getCurrency()
     {
@@ -90,6 +100,8 @@ class OrderSummary
 
     /**
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getAmount()
     {
@@ -98,6 +110,8 @@ class OrderSummary
 
     /**
      * @return BasketMapper
+     *
+     * @since 1.0.0
      */
     public function getBasketMapper()
     {
@@ -106,6 +120,8 @@ class OrderSummary
 
     /**
      * @return UserMapper
+     *
+     * @since 1.0.0
      */
     public function getUserMapper()
     {
@@ -114,6 +130,8 @@ class OrderSummary
 
     /**
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getDeviceFingerprintId()
     {
@@ -122,6 +140,8 @@ class OrderSummary
 
     /**
      * @return Device
+     *
+     * @since 1.0.0
      */
     public function getWirecardDevice()
     {

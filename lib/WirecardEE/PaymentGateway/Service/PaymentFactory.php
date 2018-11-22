@@ -14,6 +14,11 @@ use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 use WirecardEE\PaymentGateway\Payments\PaypalPayment;
 use WirecardEE\PaymentGateway\UnknownPaymentException;
 
+/**
+ * Responsible for creating payment objects based on their name.
+ *
+ * @since 1.0.0
+ */
 class PaymentFactory
 {
     /**
@@ -21,6 +26,8 @@ class PaymentFactory
      *
      * @return PaymentInterface
      * @throws UnknownPaymentException
+     *
+     * @since 1.0.0
      */
     public function create($paymentName)
     {
@@ -36,6 +43,8 @@ class PaymentFactory
      * Contains a list of actual supported payments by the plugin.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     private function getMappedPayments()
     {
@@ -50,6 +59,8 @@ class PaymentFactory
      * @param string $identifier
      *
      * @return bool
+     *
+     * @since 1.0.0
      */
     public function isSupportedPayment($identifier)
     {

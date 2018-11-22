@@ -9,6 +9,9 @@
 
 namespace WirecardEE\PaymentGateway\Actions;
 
+/**
+ * @since 1.0.0
+ */
 class ErrorAction implements Action
 {
     /**

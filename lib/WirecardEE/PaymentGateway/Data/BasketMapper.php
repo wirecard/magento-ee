@@ -16,6 +16,8 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Represents the Magento basket as object.
+ *
+ * @since 1.0.0
  */
 class BasketMapper
 {
@@ -28,6 +30,8 @@ class BasketMapper
     /**
      * @param \Mage_Sales_Model_Order $order
      * @param Transaction             $transaction
+     *
+     * @since 1.0.0
      */
     public function __construct(\Mage_Sales_Model_Order $order, Transaction $transaction)
     {
@@ -37,6 +41,8 @@ class BasketMapper
 
     /**
      * @return \Mage_Sales_Model_Order
+     *
+     * @since 1.0.0
      */
     public function getOrder()
     {
@@ -45,6 +51,8 @@ class BasketMapper
 
     /**
      * @return Basket
+     *
+     * @since 1.0.0
      */
     public function getWirecardBasket()
     {
@@ -71,7 +79,7 @@ class BasketMapper
             $basketItem->setArticleNumber('Shipping');
             $basketItem->setTaxAmount(
                 new Amount(self::numberFormat($shippingTaxValue),
-                $this->getOrder()->getBaseCurrencyCode())
+                    $this->getOrder()->getBaseCurrencyCode())
             );
 
             $basket->add($basketItem);
@@ -97,6 +105,8 @@ class BasketMapper
      * Returns all items within the basket as array.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public function toArray()
     {
@@ -109,6 +119,8 @@ class BasketMapper
      * @param string|float $amount
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     public static function numberFormat($amount)
     {

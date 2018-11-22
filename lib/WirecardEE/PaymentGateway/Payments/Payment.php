@@ -11,10 +11,15 @@ namespace WirecardEE\PaymentGateway\Payments;
 
 use Wirecard\PaymentSdk\Config\Config;
 
+/**
+ * @since 1.0.0
+ */
 abstract class Payment implements PaymentInterface
 {
     /**
      * @return Config
+     *
+     * @since 1.0.0
      */
     public function getTransactionConfig()
     {
@@ -36,6 +41,8 @@ abstract class Payment implements PaymentInterface
 
     /**
      * @return \Mage_Core_Helper_Abstract|\WirecardEE_PaymentGateway_Helper_Data
+     *
+     * @since 1.0.0
      */
     protected function getHelper()
     {
@@ -43,10 +50,12 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param        $name
+     * @param string $name
      * @param string $prefix
      *
      * @return string|null
+     *
+     * @since 1.0.0
      */
     protected function getPluginConfig($name, $prefix = 'payment/wirecardee_paymentgateway_')
     {

@@ -49,6 +49,8 @@ class PaypalPayment extends Payment implements ProcessPaymentInterface
 
     /**
      * @return Config
+     *
+     * @since 1.0.0
      */
     public function getTransactionConfig()
     {
@@ -63,6 +65,8 @@ class PaypalPayment extends Payment implements ProcessPaymentInterface
 
     /**
      * @return PaymentConfig
+     *
+     * @since 1.0.0
      */
     public function getPaymentConfig()
     {
@@ -86,6 +90,8 @@ class PaypalPayment extends Payment implements ProcessPaymentInterface
      * @param OrderSummary $orderSummary
      *
      * @return null|Action
+     *
+     * @since 1.0.0
      */
     public function processPayment(OrderSummary $orderSummary)
     {

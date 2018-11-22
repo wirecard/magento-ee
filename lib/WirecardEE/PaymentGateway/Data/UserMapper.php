@@ -12,6 +12,9 @@ namespace WirecardEE\PaymentGateway\Data;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Address;
 
+/**
+ * @since 1.0.0
+ */
 class UserMapper
 {
     /** @var \Mage_Sales_Model_Order */
@@ -29,8 +32,10 @@ class UserMapper
 
     /**
      * @param \Mage_Sales_Model_Order $order
-     * @param                         $clientIp
-     * @param                         $locale
+     * @param string                  $clientIp
+     * @param string                  $locale
+     *
+     * @since 1.0.0
      */
     public function __construct(\Mage_Sales_Model_Order $order, $clientIp, $locale)
     {
@@ -41,6 +46,8 @@ class UserMapper
 
     /**
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getClientIp()
     {
@@ -49,6 +56,8 @@ class UserMapper
 
     /**
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getLocale()
     {
@@ -57,6 +66,8 @@ class UserMapper
 
     /**
      * @return AccountHolder
+     *
+     * @since 1.0.0
      */
     public function getWirecardBillingAccountHolder()
     {
@@ -80,6 +91,8 @@ class UserMapper
 
     /**
      * @return Address
+     *
+     * @since 1.0.0
      */
     public function getWirecardBillingAddress()
     {
@@ -98,6 +111,8 @@ class UserMapper
 
     /**
      * @return AccountHolder
+     *
+     * @since 1.0.0
      */
     public function getWirecardShippingAccountHolder()
     {
@@ -111,6 +126,8 @@ class UserMapper
 
     /**
      * @return Address
+     *
+     * @since 1.0.0
      */
     public function getWirecardShippingAddress()
     {
@@ -129,6 +146,8 @@ class UserMapper
 
     /**
      * @return \Mage_Sales_Model_Order
+     *
+     * @since 1.0.0
      */
     public function getOrder()
     {

@@ -25,6 +25,13 @@ use WirecardEE\PaymentGateway\Data\BasketMapper;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
+/**
+ * Responsible for handling the payment. Payments may implement their own way of handling payments by implementing
+ * the `ProcessPaymentInterface` interface.
+ * Ultimately a proper `Action` is returned to the controller.
+ *
+ * @since   1.0.0
+ */
 class PaymentHandler
 {
     const DESCRIPTOR_MAX_LENGTH = 20;
@@ -36,6 +43,12 @@ class PaymentHandler
     /** @var LoggerInterface */
     protected $logger;
 
+    /**
+     * @param \Mage_Core_Model_Store $store
+     * @param LoggerInterface        $logger
+     *
+     * @since   1.0.0
+     */
     public function __construct(\Mage_Core_Model_Store $store, LoggerInterface $logger)
     {
         $this->logger = $logger;
@@ -46,12 +59,13 @@ class PaymentHandler
      * @param TransactionManager $transactionManager
      * @param OrderSummary       $orderSummary
      * @param TransactionService $transactionService
-     *
      * @param Redirect           $redirect
      * @param string             $notificationUrl
      *
      * @return Action
      * @throws \Mage_Core_Exception
+     *
+     * @since   1.0.0
      */
     public function execute(
         TransactionManager $transactionManager,
@@ -107,6 +121,8 @@ class PaymentHandler
      * @param OrderSummary $orderSummary
      * @param Redirect     $redirect
      * @param              $notificationUrl
+     *
+     * @since   1.0.0
      */
     private function prepareTransaction(
         OrderSummary $orderSummary,
@@ -161,6 +177,8 @@ class PaymentHandler
      * @param string|int $orderNumber
      *
      * @return string
+     *
+     * @since   1.0.0
      */
     protected function getDescriptor($shopName, $orderNumber)
     {

@@ -11,6 +11,8 @@ namespace WirecardEE\PaymentGateway\Actions;
 
 /**
  * Returned by Handlers if a redirect is required.
+ *
+ * @since 1.0.0
  */
 class RedirectAction implements Action
 {

@@ -11,6 +11,8 @@ namespace WirecardEE\PaymentGateway\Data;
 
 /**
  * Basic payment configuration class, which stores general data like http user, api url, merchant account id (maid), ...
+ *
+ * @since 1.0.0
  */
 class PaymentConfig
 {

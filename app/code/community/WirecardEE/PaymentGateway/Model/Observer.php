@@ -9,8 +9,16 @@
 
 use WirecardEE\PaymentGateway\Service\Logger;
 
+/**
+ * @since 1.0.0
+ */
 class WirecardEE_PaymentGateway_Model_Observer
 {
+    /**
+     * @throws Mage_Core_Exception
+     *
+     * @since 1.0.0
+     */
     public function controllerFrontInitBefore()
     {
         $this->registerComposerAutoloader();
@@ -19,6 +27,8 @@ class WirecardEE_PaymentGateway_Model_Observer
 
     /**
      * Registers the composer autoloader.
+     *
+     * @since 1.0.0
      */
     private function registerComposerAutoloader()
     {
@@ -34,6 +44,8 @@ class WirecardEE_PaymentGateway_Model_Observer
 
     /**
      * @throws Mage_Core_Exception
+     *
+     * @since 1.0.0
      */
     private function registerServices()
     {

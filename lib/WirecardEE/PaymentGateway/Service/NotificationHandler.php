@@ -15,6 +15,14 @@ use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
+/**
+ * Handles notification responses. Notification responses are server-to-server, meaning you must NEVER access session
+ * data in here.
+ * Additionally notifications are the "source of truth", hence they are responsible for setting - respectively
+ * updating - the payment status.
+ *
+ * @since 1.0.0
+ */
 class NotificationHandler
 {
     /**
@@ -29,6 +37,8 @@ class NotificationHandler
 
     /**
      * @param LoggerInterface $logger
+     *
+     * @since 1.0.0
      */
     public function __construct(LoggerInterface $logger)
     {
@@ -41,6 +51,8 @@ class NotificationHandler
      * @param BackendService $backendService
      *
      * @throws \Exception
+     *
+     * @since 1.0.0
      */
     public function handleResponse(Response $response, BackendService $backendService)
     {
@@ -54,6 +66,8 @@ class NotificationHandler
      * @param BackendService  $backendService
      *
      * @throws \Exception
+     *
+     * @since 1.0.0
      */
     protected function handleSuccess(SuccessResponse $response, BackendService $backendService)
     {
@@ -70,7 +84,7 @@ class NotificationHandler
 
         if (in_array($order->getStatus(), [
             \Mage_Sales_Model_Order::STATE_COMPLETE,
-            \Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW
+            \Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW,
         ])) {
             return;
         }

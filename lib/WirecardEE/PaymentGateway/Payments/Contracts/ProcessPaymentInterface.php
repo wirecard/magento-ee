@@ -12,6 +12,9 @@ namespace WirecardEE\PaymentGateway\Payments\Contracts;
 use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 
+/**
+ * @since 1.0.0
+ */
 interface ProcessPaymentInterface
 {
     /**

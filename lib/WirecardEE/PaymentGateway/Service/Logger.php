@@ -11,6 +11,11 @@ namespace WirecardEE\PaymentGateway\Service;
 
 use Psr\Log\LoggerInterface;
 
+/**
+ * PSR compatible Logger.
+ *
+ * @since 1.0.0
+ */
 class Logger implements LoggerInterface
 {
     const LOG_FILE = 'wirecard_elastic_engine.log';
@@ -22,6 +27,8 @@ class Logger implements LoggerInterface
      * @param array  $context
      *
      * @return void
+     *
+     * @since 1.0.0
      */
     public function emergency($message, array $context = [])
     {
@@ -38,6 +45,8 @@ class Logger implements LoggerInterface
      * @param array  $context
      *
      * @return void
+     *
+     * @since 1.0.0
      */
     public function alert($message, array $context = [])
     {
@@ -53,6 +62,8 @@ class Logger implements LoggerInterface
      * @param array  $context
      *
      * @return void
+     *
+     * @since 1.0.0
      */
     public function critical($message, array $context = [])
     {
@@ -67,6 +78,8 @@ class Logger implements LoggerInterface
      * @param array  $context
      *
      * @return void
+     *
+     * @since 1.0.0
      */
     public function error($message, array $context = [])
     {
@@ -83,6 +96,8 @@ class Logger implements LoggerInterface
      * @param array  $context
      *
      * @return void
+     *
+     * @since 1.0.0
      */
     public function warning($message, array $context = [])
     {
@@ -96,6 +111,8 @@ class Logger implements LoggerInterface
      * @param array  $context
      *
      * @return void
+     *
+     * @since 1.0.0
      */
     public function notice($message, array $context = [])
     {
@@ -111,6 +128,8 @@ class Logger implements LoggerInterface
      * @param array  $context
      *
      * @return void
+     *
+     * @since 1.0.0
      */
     public function info($message, array $context = [])
     {
@@ -124,6 +143,8 @@ class Logger implements LoggerInterface
      * @param array  $context
      *
      * @return void
+     *
+     * @since 1.0.0
      */
     public function debug($message, array $context = [])
     {
@@ -138,6 +159,8 @@ class Logger implements LoggerInterface
      * @param array  $context
      *
      * @return void
+     *
+     * @since 1.0.0
      */
     public function log($level, $message, array $context = [])
     {

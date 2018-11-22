@@ -10,6 +10,9 @@
 use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
+/**
+ * @since 1.0.0
+ */
 class WirecardEE_PaymentGateway_Model_Paypal extends WirecardEE_PaymentGateway_Model_Payment
 {
     protected $_code = 'wirecardee_paymentgateway_paypal';
@@ -19,18 +22,20 @@ class WirecardEE_PaymentGateway_Model_Paypal extends WirecardEE_PaymentGateway_M
      * Return available transaction types for this payment.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public function toOptionArray()
     {
         return [
             [
                 'value' => Operation::RESERVE,
-                'label' => Mage::helper('catalog')->__('Authorization')
+                'label' => Mage::helper('catalog')->__('Authorization'),
             ],
             [
                 'value' => Operation::PAY,
-                'label' => Mage::helper('catalog')->__('Purchase')
-            ]
+                'label' => Mage::helper('catalog')->__('Purchase'),
+            ],
         ];
     }
 }
