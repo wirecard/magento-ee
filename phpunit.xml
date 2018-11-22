@@ -3,9 +3,27 @@
          colors="true"
          verbose="true"
          stopOnFailure="false">
+
+    <php>
+        <env name="API_TEST_URL" value="https://api-test.wirecard.com"/>
+        <env name="API_HTTP_USER" value="70000-APITEST-AP"/>
+        <env name="API_HTTP_PASSWORD" value="qD2wzQ_hrc!8"/>
+    </php>
+
     <testsuites>
-        <testsuite name="My Test Suite">
-            <directory>tests</directory>
+        <testsuite name="Wirecard Magento 1 EE Test Suite">
+            <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
+
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">*</directory>
+            <exclude>
+                <directory suffix=".php">./tests</directory>
+                <directory>./lib/WirecardEE/vendor</directory>
+                <directory>./app/code/community/WirecardEE/PaymentGateway/sql</directory>
+            </exclude>
+        </whitelist>
+    </filter>
 </phpunit>

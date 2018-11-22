@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<!--
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/LICENSE
+-->
+<config>
+    <modules>
+        <WirecardEE_PaymentGateway>
+            <version>0.1.0</version>
+        </WirecardEE_PaymentGateway>
+    </modules>
+
+    <global>
+        <helpers>
+            <paymentgateway>
+                <class>WirecardEE_PaymentGateway_Helper</class>
+            </paymentgateway>
+        </helpers>
+
+        <blocks>
+            <paymentgateway>
+                <class>WirecardEE_PaymentGateway_Block</class>
+            </paymentgateway>
+        </blocks>
+
+        <models>
+            <paymentgateway>
+                <class>WirecardEE_PaymentGateway_Model</class>
+            </paymentgateway>
+        </models>
+
+        <events>
+            <controller_front_init_before>
+                <observers>
+                    <wirecard_ee_composer_autoload>
+                        <type>singleton</type>
+                        <class>paymentgateway/observer</class>
+                        <method>controllerFrontInitBefore</method>
+                    </wirecard_ee_composer_autoload>
+                </observers>
+            </controller_front_init_before>
+        </events>
+
+        <resources>
+            <paymentgateway_setup>
+                <setup>
+                    <module>WirecardEE_PaymentGateway</module>
+                </setup>
+            </paymentgateway_setup>
+        </resources>
+    </global>
+
+    <default>
+        <payment>
+            <wirecardee_paymentgateway_paypal>
+                <active>0</active>
+                <model>paymentgateway/paypal</model>
+                <title>Wirecard PayPal</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>70000-APITEST-AP</api_user>
+                <api_password>qD2wzQ_hrc!8</api_password>
+                <api_maid>2a0e9351-24ed-4110-9a1b-fd0fee6bec26</api_maid>
+                <api_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</api_secret>
+                <transaction_type>pay</transaction_type>
+                <send_basket>1</send_basket>
+                <fraud_prevention>1</fraud_prevention>
+                <order_identification>1</order_identification>
+            </wirecardee_paymentgateway_paypal>
+        </payment>
+    </default>
+
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <WirecardEE_PaymentGateway after="Mage_Adminhtml">WirecardEE_PaymentGateway_Adminhtml</WirecardEE_PaymentGateway>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+
+    <adminhtml>
+        <layout>
+            <updates>
+                <WirecardEE_PaymentGateway>
+                    <file>WirecardEE/payment_gateway.xml</file>
+                </WirecardEE_PaymentGateway>
+            </updates>
+        </layout>
+    </adminhtml>
+
+    <frontend>
+        <routers>
+            <paymentgateway>
+                <use>standard</use>
+                <args>
+                    <module>WirecardEE_PaymentGateway</module>
+                    <frontName>paymentgateway</frontName>
+                </args>
+            </paymentgateway>
+        </routers>
+
+        <layout>
+            <updates>
+                <paymentgateway>
+                    <file>wirecardee_paymentgateway.xml</file>
+                </paymentgateway>
+            </updates>
+        </layout>
+    </frontend>
+</config>

@@ -7,14 +7,14 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-namespace WirecardEE\Tests\Unit;
+namespace WirecardEE\PaymentGateway\Actions;
 
-use PHPUnit\Framework\TestCase;
-
-class ExampleTest extends TestCase
+/**
+ * Actions are returned by Handlers to indicate what should happen after the Handler is done (e.g. redirection,
+ * error handling, ...).
+ *
+ * @since 1.0.0
+ */
+interface Action
 {
-    public function testExample()
-    {
-        $this->assertTrue(true);
-    }
 }

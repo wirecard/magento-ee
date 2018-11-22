@@ -1,4 +1,11 @@
 <?php
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/LICENSE
+ */
 
 // See https://magento.stackexchange.com/a/143990
 
@@ -28,6 +35,6 @@ fix_error_handler();
 
 $_SESSION = [];
 
-if(!Mage::getConfig()->getModuleConfig('Wirecard_ElasticEngine')->is('active', true)) {
+if(!Mage::getConfig()->getModuleConfig('WirecardEE_PaymentGateway')->is('active', true)) {
     throw new \RuntimeException('The Wirecard Elastic Engine extension is not enabled!');
 }
