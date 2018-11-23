@@ -103,12 +103,6 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
                 new TransactionService($payment->getTransactionConfig(), $this->getLogger())
             );
 
-            $transactionManager = new TransactionManager($this->getLogger());
-            $transactionManager->createTransaction(
-                $this->getCheckoutSession()->getLastRealOrder(),
-                $response
-            );
-
             $action = $response instanceof SuccessResponse
                 ? $this->updateOrder($returnHandler, $response)
                 : $returnHandler->handleResponse($response);

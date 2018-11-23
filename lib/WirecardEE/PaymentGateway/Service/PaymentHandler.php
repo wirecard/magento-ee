@@ -98,6 +98,7 @@ class PaymentHandler
 
         if ($response instanceof SuccessResponse || $response instanceof InteractionResponse) {
             $transactionManager->createTransaction(
+                TransactionManager::TYPE_INITIAL,
                 $orderSummary->getOrder(),
                 $response
             );
