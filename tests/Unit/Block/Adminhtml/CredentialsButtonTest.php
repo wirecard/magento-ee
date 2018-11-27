@@ -7,7 +7,7 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-namespace WirecardEE\Tests\Functional\Block\Adminhtml;
+namespace WirecardEE\Tests\Unit\Block\Adminhtml;
 
 use WirecardEE\Tests\Test\MagentoTestCase;
 
@@ -15,7 +15,7 @@ class CredentialsButtonTest extends MagentoTestCase
 {
     public function setUp()
     {
-        $this->loadFile('Block/Adminhtml/System/Config/CredentialsButton.php');
+        $this->requireFile('Block/Adminhtml/System/Config/CredentialsButton.php');
     }
 
     public function testTemplate()

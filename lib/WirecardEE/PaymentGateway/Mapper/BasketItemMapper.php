@@ -58,19 +58,20 @@ class BasketItemMapper
      */
     public function getWirecardItem()
     {
-        $amount = new Amount(BasketMapper::numberFormat($this->getItem()->getPriceInclTax()), $this->currency);
+        $mageItem = $this->getItem();
+        $amount   = new Amount(BasketMapper::numberFormat($mageItem->getPriceInclTax()), $this->currency);
 
-        $item = new Item($this->getItem()->getName(), $amount, (int)$this->getItem()->getQtyOrdered());
-        $item->setArticleNumber($this->getItem()->getSku());
-        $item->setDescription($this->getItem()->getDescription());
+        $item = new Item($mageItem->getName(), $amount, (int)$mageItem->getQtyOrdered());
+        $item->setArticleNumber($mageItem->getSku());
+        $item->setDescription($mageItem->getDescription());
 
         if ($amount->getValue() >= 0.0) {
             $taxAmount = new Amount(
-                BasketMapper::numberFormat($this->getItem()->getTaxAmount() / $this->getItem()->getQtyOrdered()),
+                BasketMapper::numberFormat($mageItem->getTaxAmount() / (int)$mageItem->getQtyOrdered()),
                 $this->currency
             );
 
-            $item->setTaxRate($this->getItem()->getTaxPercent());
+            $item->setTaxRate($mageItem->getTaxPercent());
             $item->setTaxAmount($taxAmount);
         }
 

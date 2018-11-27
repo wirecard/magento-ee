@@ -7,7 +7,7 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-namespace WirecardEE\Tests\Service;
+namespace WirecardEE\Tests\Unit\Service;
 
 use WirecardEE\PaymentGateway\Service\Logger;
 use WirecardEE\Tests\Test\MagentoTestCase;
