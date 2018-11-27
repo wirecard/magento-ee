@@ -9,6 +9,7 @@
 
 /**
  * @since 1.0.0
+ * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Block_Form extends Mage_Payment_Block_Form
 {

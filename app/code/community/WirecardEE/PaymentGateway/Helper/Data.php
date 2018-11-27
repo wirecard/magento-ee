@@ -9,9 +9,12 @@
 
 /**
  * @since 1.0.0
+ * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
 {
+    // @codingStandardsIgnoreEnd
+
     const DEVICE_FINGERPRINT_ID = 'WirecardEEDeviceFingerprint';
 
     /**
@@ -53,7 +56,8 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
     public function validateBasket()
     {
         $checkoutOrder = $this->getCheckoutSession()->getLastRealOrder();
-        $order         = Mage::getModel('sales/order')->load($checkoutOrder->getId());
+        /** @var Mage_Sales_Model_Order $order */
+        $order = Mage::getModel('sales/order')->load($checkoutOrder->getId());
 
         if (json_encode($checkoutOrder->getAllItems()) !== json_encode($order->getAllItems())) {
             $this->getLogger()->warning("Basket verification failed for order id: " . $checkoutOrder->getId());

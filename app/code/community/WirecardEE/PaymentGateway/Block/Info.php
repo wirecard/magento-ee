@@ -9,6 +9,7 @@
 
 /**
  * @since 1.0.0
+ * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Block_Info extends Mage_Payment_Block_Info
 {
@@ -42,8 +43,9 @@ class WirecardEE_PaymentGateway_Block_Info extends Mage_Payment_Block_Info
         $payment     = (new \WirecardEE\PaymentGateway\Service\PaymentFactory())->create($paymentName);
 
         if ($payment->getPaymentConfig()->hasFraudPrevention()) {
-            $deviceFingerprintId = Mage::helper('paymentgateway')
-                                       ->getDeviceFingerprintId($payment->getPaymentConfig()->getTransactionMAID());
+            /** @var WirecardEE_PaymentGateway_Helper_Data $paymentHelper */
+            $paymentHelper       = Mage::helper('paymentgateway');
+            $deviceFingerprintId = $paymentHelper->getDeviceFingerprintId($payment->getPaymentConfig()->getTransactionMAID());
 
             $this->setData('WirecardEEDeviceFingerprintId', $deviceFingerprintId);
             $this->setData('WirecardEEIncludeDeviceFingerprintIFrame', true);

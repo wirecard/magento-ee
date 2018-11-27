@@ -11,9 +11,12 @@ use WirecardEE\PaymentGateway\Service\Logger;
 
 /**
  * @since 1.0.0
+ * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Model_Observer
 {
+    // @codingStandardsIgnoreEnd
+
     /**
      * @throws Mage_Core_Exception
      *
