@@ -7,7 +7,7 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-namespace WirecardEE\PaymentGateway\Data;
+namespace WirecardEE\PaymentGateway\Mapper;
 
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
@@ -21,10 +21,14 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
  */
 class BasketMapper
 {
-    /** @var \Mage_Sales_Model_Order */
+    /**
+     * @var \Mage_Sales_Model_Order
+     */
     protected $order;
 
-    /** @var Transaction */
+    /**
+     * @var Transaction
+     */
     protected $transaction;
 
     /**

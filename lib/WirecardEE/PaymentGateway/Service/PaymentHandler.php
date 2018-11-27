@@ -21,7 +21,7 @@ use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\RedirectAction;
-use WirecardEE\PaymentGateway\Data\BasketMapper;
+use WirecardEE\PaymentGateway\Mapper\BasketMapper;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
