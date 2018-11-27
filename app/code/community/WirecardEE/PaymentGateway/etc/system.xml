@@ -109,6 +109,133 @@
                         </order_identification>
                     </fields>
                 </wirecardee_paymentgateway_paypal>
+                <wirecardee_paymentgateway_creditcard translate="label" module="paymentgateway">
+                    <label>Wirecard CreditCard</label>
+                    <sort_order>999</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <title translate="label">
+                            <label>Title</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </title>
+                        <active translate="label">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </active>
+                        <api_url translate="label">
+                            <label>Base URL</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </api_url>
+                        <api_user translate="label">
+                            <label>HTTP User</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </api_user>
+                        <api_password translate="label">
+                            <label>HTTP Password</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </api_password>
+                        <api_test_button>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>paymentgateway/adminhtml_system_config_credentialsButton</frontend_model>
+                            <method>creditcard</method>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </api_test_button>
+                        <api_maid translate="label">
+                            <label>MAID</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </api_maid>
+                        <api_secret translate="label">
+                            <label>Secret</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </api_secret>
+                        <threeds_maid translate="label">
+                            <label>3-D Secure MAID</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </threeds_maid>
+                        <threeds_secret translate="label">
+                            <label>3-D Secure Secret</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </threeds_secret>
+                        <transaction_type translate="label">
+                            <label>Payment action</label>
+                            <source_model>paymentgateway/paypal</source_model>
+                            <frontend_type>select</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </transaction_type>
+                        <fraud_prevention translate="label">
+                            <label>Send additional data</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </fraud_prevention>
+                        <non_threeds_max_limit translate="label">
+                            <label>Non 3-D Secure Maximum Limit</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </non_threeds_max_limit>
+                        <non_threeds_max_limit_currency translate="label">
+                            <label>Non 3-D Secure Maximum Limit Currency</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_currency</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </non_threeds_max_limit_currency>
+                        <threeds_min_limit translate="label">
+                            <label>Non 3-D Secure Maximum Limit</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </threeds_min_limit>
+                        <threeds_min_limit_currency translate="label">
+                            <label>Non 3-D Secure Maximum Limit Currency</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_currency</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </threeds_min_limit_currency>
+                    </fields>
+                </wirecardee_paymentgateway_creditcard>
             </groups>
         </payment>
     </sections>

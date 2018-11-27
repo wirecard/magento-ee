@@ -7,22 +7,17 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-use WirecardEE\PaymentGateway\Service\Logger;
-
 /**
  * @since 1.0.0
  */
 class WirecardEE_PaymentGateway_Model_Observer
 {
     /**
-     * @throws Mage_Core_Exception
-     *
      * @since 1.0.0
      */
     public function controllerFrontInitBefore()
     {
         $this->registerComposerAutoloader();
-        $this->registerServices();
     }
 
     /**
@@ -40,15 +35,5 @@ class WirecardEE_PaymentGateway_Model_Observer
 
         /** @noinspection PhpIncludeInspection */
         require_once($vendorPath . 'autoload.php');
-    }
-
-    /**
-     * @throws Mage_Core_Exception
-     *
-     * @since 1.0.0
-     */
-    private function registerServices()
-    {
-        Mage::register('logger', new Logger());
     }
 }

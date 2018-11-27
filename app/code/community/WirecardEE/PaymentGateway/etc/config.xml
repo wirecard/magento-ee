@@ -69,6 +69,24 @@
                 <fraud_prevention>1</fraud_prevention>
                 <order_identification>1</order_identification>
             </wirecardee_paymentgateway_paypal>
+            <wirecardee_paymentgateway_creditcard>
+                <active>0</active>
+                <model>paymentgateway/creditcard</model>
+                <title>Wirecard Credit Card</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>70000-APITEST-AP</api_user>
+                <api_password>qD2wzQ_hrc!8</api_password>
+                <api_maid>2a0e9351-24ed-4110-9a1b-fd0fee6bec26</api_maid>
+                <api_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</api_secret>
+                <threeds_maid>508b8896-b37d-4614-845c-26bf8bf2c948</threeds_maid>
+                <threeds_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</threeds_secret>
+                <transaction_type>pay</transaction_type>
+                <fraud_prevention>1</fraud_prevention>
+                <non_threeds_max_limit>300</non_threeds_max_limit>
+                <non_threeds_max_limit_currency>EUR</non_threeds_max_limit_currency>
+                <threeds_min_limit>100</threeds_min_limit>
+                <threeds_min_limit_currency>EUR</threeds_min_limit_currency>
+            </wirecardee_paymentgateway_creditcard>
         </payment>
     </default>
 

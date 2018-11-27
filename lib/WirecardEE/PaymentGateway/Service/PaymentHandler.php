@@ -9,18 +9,19 @@
 
 namespace WirecardEE\PaymentGateway\Service;
 
-use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Response\FailureResponse;
+use Wirecard\PaymentSdk\Response\FormInteractionResponse;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\RedirectAction;
+use WirecardEE\PaymentGateway\Actions\ViewAction;
 use WirecardEE\PaymentGateway\Data\BasketMapper;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
@@ -32,31 +33,12 @@ use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
  *
  * @since   1.0.0
  */
-class PaymentHandler
+class PaymentHandler extends Handler
 {
     const DESCRIPTOR_MAX_LENGTH = 20;
     const DESCRIPTOR_SHOP_NAME_MAX_LENGTH = 9;
 
-    /** @var \Mage_Core_Model_Store */
-    protected $store;
-
-    /** @var LoggerInterface */
-    protected $logger;
-
     /**
-     * @param \Mage_Core_Model_Store $store
-     * @param LoggerInterface        $logger
-     *
-     * @since   1.0.0
-     */
-    public function __construct(\Mage_Core_Model_Store $store, LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-        $this->store  = $store;
-    }
-
-    /**
-     * @param TransactionManager $transactionManager
      * @param OrderSummary       $orderSummary
      * @param TransactionService $transactionService
      * @param Redirect           $redirect
@@ -68,7 +50,6 @@ class PaymentHandler
      * @since   1.0.0
      */
     public function execute(
-        TransactionManager $transactionManager,
         OrderSummary $orderSummary,
         TransactionService $transactionService,
         Redirect $redirect,
@@ -96,20 +77,27 @@ class PaymentHandler
             return new ErrorAction(0, 'Transaction processing failed');
         }
 
+        if ($response instanceof FormInteractionResponse) {
+            $this->transactionManager->createTransaction(
+                TransactionManager::TYPE_INITIAL,
+                $orderSummary->getOrder(),
+                $response
+            );
+            // todo
+            return new ViewAction('', []);
+        }
         if ($response instanceof SuccessResponse || $response instanceof InteractionResponse) {
-            $transactionManager->createTransaction(
+            $this->transactionManager->createTransaction(
                 TransactionManager::TYPE_INITIAL,
                 $orderSummary->getOrder(),
                 $response
             );
             return new RedirectAction($response->getRedirectUrl());
         }
-
         if ($response instanceof FailureResponse) {
             $this->logger->error('Failure response', $response->getData());
             return new ErrorAction(ErrorAction::FAILURE_RESPONSE, 'Failure response');
         }
-
         return new ErrorAction(ErrorAction::PROCESSING_FAILED, 'Payment processing failed');
     }
 
@@ -124,6 +112,7 @@ class PaymentHandler
      * @param              $notificationUrl
      *
      * @since   1.0.0
+     * @throws \Mage_Core_Model_Store_Exception
      */
     private function prepareTransaction(
         OrderSummary $orderSummary,
@@ -164,7 +153,7 @@ class PaymentHandler
         if ($paymentConfig->sendOrderIdentification() || $paymentConfig->hasFraudPrevention()) {
             $transaction->setDescriptor(
                 $this->getDescriptor(
-                    $this->store->getFrontendName(),
+                    \Mage::app()->getStore()->getFrontendName(),
                     $orderSummary->getOrder()->getRealOrderId()
                 )
             );

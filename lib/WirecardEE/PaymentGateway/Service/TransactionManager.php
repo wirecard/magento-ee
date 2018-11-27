@@ -146,7 +146,9 @@ class TransactionManager
                     // try again to find this transaction and overwrite it.
                     if ($mageTransactionModel->loadByTxnId($transactionId)->getId()) {
                         $mageTransactionModel->setTxnId($transactionId);
-                        $mageTransactionModel->setTxnType(self::getMageTransactionType($response->getTransactionType()));
+                        $mageTransactionModel->setTxnType(
+                            self::getMageTransactionType($response->getTransactionType())
+                        );
                         $mageTransactionModel->setAdditionalInformation(
                             Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS,
                             array_merge($response->getData(), [

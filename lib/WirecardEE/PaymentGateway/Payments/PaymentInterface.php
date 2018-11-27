@@ -37,11 +37,13 @@ interface PaymentInterface
     /**
      * Returns transaction config.
      *
+     * @param $selectedCurrency
+     *
      * @return Config
      *
      * @since 1.0.0
      */
-    public function getTransactionConfig();
+    public function getTransactionConfig($selectedCurrency);
 
     /**
      * Returns payment specific configuration.

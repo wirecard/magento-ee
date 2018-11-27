@@ -48,13 +48,15 @@ class PaypalPayment extends Payment implements ProcessPaymentInterface
     }
 
     /**
+     * @param $selectedCurrency
+     *
      * @return Config
      *
      * @since 1.0.0
      */
-    public function getTransactionConfig()
+    public function getTransactionConfig($selectedCurrency)
     {
-        $config = parent::getTransactionConfig();
+        $config = parent::getTransactionConfig($selectedCurrency);
         $config->add(new PaymentMethodConfig(
             PayPalTransaction::NAME,
             $this->getPaymentConfig()->getTransactionMAID(),

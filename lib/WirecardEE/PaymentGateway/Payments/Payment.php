@@ -17,11 +17,13 @@ use Wirecard\PaymentSdk\Config\Config;
 abstract class Payment implements PaymentInterface
 {
     /**
+     * @param $selectedCurrency
+     *
      * @return Config
      *
      * @since 1.0.0
      */
-    public function getTransactionConfig()
+    public function getTransactionConfig($selectedCurrency)
     {
         $config = new Config(
             $this->getPaymentConfig()->getBaseUrl(),
