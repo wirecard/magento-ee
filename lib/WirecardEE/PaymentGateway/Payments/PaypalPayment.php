@@ -31,7 +31,7 @@ class PaypalPayment extends Payment implements ProcessPaymentInterface
      */
     public function getName()
     {
-        return PayPalTransaction::NAME;
+        return self::NAME;
     }
 
     /**
