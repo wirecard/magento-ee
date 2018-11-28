@@ -15,10 +15,10 @@ use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\RedirectAction;
-use WirecardEE\PaymentGateway\Data\BasketMapper;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
-use WirecardEE\PaymentGateway\Data\UserMapper;
 use WirecardEE\PaymentGateway\Exception\UnknownActionException;
+use WirecardEE\PaymentGateway\Mapper\BasketMapper;
+use WirecardEE\PaymentGateway\Mapper\UserMapper;
 use WirecardEE\PaymentGateway\Service\NotificationHandler;
 use WirecardEE\PaymentGateway\Service\PaymentFactory;
 use WirecardEE\PaymentGateway\Service\PaymentHandler;
@@ -26,9 +26,12 @@ use WirecardEE\PaymentGateway\Service\ReturnHandler;
 
 /**
  * @since 1.0.0
+ * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_Front_Action
 {
+    // @codingStandardsIgnoreEnd
+
     /**
      * @var LoggerInterface
      */
@@ -61,7 +64,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
                 new BasketMapper($order, $payment->getTransaction()),
                 new UserMapper(
                     $order,
-                    Mage::helper('paymentgateway')->getClientIp(),
+                    $this->getHelper()->getClientIp(),
                     Mage::app()->getLocale()->getLocaleCode()
                 ),
                 $this->getHelper()->getDeviceFingerprintId($payment->getPaymentConfig()->getTransactionMAID())
@@ -185,6 +188,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
             if ($order->getStatus() !== Mage_Sales_Model_Order::STATE_CANCELED) {
                 $order->addStatusHistoryComment('Payment canceled by consumer', Mage_Sales_Model_Order::STATE_CANCELED);
 
+                /** @var Mage_Sales_Model_Quote $quote */
                 $quote = Mage::getModel('sales/quote')->load($order->getQuoteId());
 
                 if ($quote->getId()) {

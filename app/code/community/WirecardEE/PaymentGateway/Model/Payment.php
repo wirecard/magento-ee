@@ -11,6 +11,7 @@
  * Parent class for payment models.
  *
  * @since 1.0.0
+ * @codingStandardsIgnoreStart
  */
 abstract class WirecardEE_PaymentGateway_Model_Payment extends Mage_Payment_Model_Method_Abstract
 {
@@ -24,6 +25,8 @@ abstract class WirecardEE_PaymentGateway_Model_Payment extends Mage_Payment_Mode
 
     protected $_formBlockType = 'paymentgateway/form';
     protected $_infoBlockType = 'paymentgateway/info';
+
+    // @codingStandardsIgnoreEnd
 
     /**
      * Sets the redirect url for Wirecard payments.

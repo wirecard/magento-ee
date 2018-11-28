@@ -7,7 +7,7 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-namespace WirecardEE\PaymentGateway\Data;
+namespace WirecardEE\PaymentGateway\Mapper;
 
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
@@ -27,7 +27,9 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
  */
 class ResponseMapper
 {
-    /** @var Response */
+    /**
+     * @var Response
+     */
     protected $response;
 
     /**
@@ -69,7 +71,8 @@ class ResponseMapper
     {
         if ($this->response instanceof SuccessResponse
             || $this->response instanceof InteractionResponse
-            || $this->response instanceof FormInteractionResponse) {
+            || $this->response instanceof FormInteractionResponse
+        ) {
             return $this->response->getTransactionId();
         }
 
@@ -114,8 +117,9 @@ class ResponseMapper
         if ($this->response instanceof SuccessResponse) {
             return $this->response->getProviderTransactionReference();
         }
-        if (isset($this->response['provider-transaction-reference-id'])) {
-            return $this->response['provider-transaction-reference-id'];
+        $data = $this->getData();
+        if (isset($data['provider-transaction-reference-id'])) {
+            return $data['provider-transaction-reference-id'];
         }
 
         return null;
@@ -161,8 +165,9 @@ class ResponseMapper
         if ($this->response instanceof SuccessResponse) {
             return $this->response->getPaymentMethod();
         }
-        if (isset($this->response['payment-methods.0.name'])) {
-            return $this->response['payment-methods.0.name'];
+        $data = $this->getData();
+        if (isset($data['payment-methods.0.name'])) {
+            return $data['payment-methods.0.name'];
         }
 
         return null;

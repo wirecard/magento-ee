@@ -22,7 +22,7 @@ use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\RedirectAction;
 use WirecardEE\PaymentGateway\Actions\ViewAction;
-use WirecardEE\PaymentGateway\Data\BasketMapper;
+use WirecardEE\PaymentGateway\Mapper\BasketMapper;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
@@ -137,7 +137,7 @@ class PaymentHandler extends Handler
         $transaction->setNotificationUrl($notificationUrl);
 
         if ($paymentConfig->sendBasket() || $paymentConfig->hasFraudPrevention()) {
-            $transaction->setBasket($orderSummary->getBasketMapper()->getWirecardBasket());
+            $transaction->setBasket($orderSummary->getBasketMapper()->getBasket());
         }
 
         if ($paymentConfig->hasFraudPrevention()) {
@@ -145,8 +145,8 @@ class PaymentHandler extends Handler
             $transaction->setDevice($orderSummary->getWirecardDevice());
             $transaction->setConsumerId($orderSummary->getOrder()->getCustomerId());
             $transaction->setIpAddress($orderSummary->getUserMapper()->getClientIp());
-            $transaction->setAccountHolder($orderSummary->getUserMapper()->getWirecardBillingAccountHolder());
-            $transaction->setShipping($orderSummary->getUserMapper()->getWirecardShippingAccountHolder());
+            $transaction->setAccountHolder($orderSummary->getUserMapper()->getBillingAccountHolder());
+            $transaction->setShipping($orderSummary->getUserMapper()->getShippingAccountHolder());
             $transaction->setLocale($orderSummary->getUserMapper()->getLocale());
         }
 

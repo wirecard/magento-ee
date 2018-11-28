@@ -12,9 +12,12 @@ use Wirecard\PaymentSdk\TransactionService;
 
 /**
  * @since 1.0.0
+ * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController extends Mage_Adminhtml_Controller_Action
 {
+    // @codingStandardsIgnoreEnd
+
     /**
      * Check Credentials against Wirecard server.
      *
@@ -37,6 +40,9 @@ class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController ext
             );
         }
 
+        /** @var \Mage_Core_Helper_Data $coreHelper */
+        $coreHelper = Mage::helper('core');
+
         try {
             $testConfig = new Config(
                 $params[$prefix . 'Server'],
@@ -49,7 +55,7 @@ class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController ext
             $success = $transactionService->checkCredentials();
         } catch (\Exception $e) {
             return $this->getResponse()->setBody(
-                Mage::helper('core')->jsonEncode([
+                $coreHelper->jsonEncode([
                     'status' => 'failed',
                     'msg'    => $e->getMessage(),
                 ])
@@ -57,7 +63,7 @@ class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController ext
         }
 
         return $this->getResponse()->setBody(
-            Mage::helper('core')->jsonEncode([
+            $coreHelper->jsonEncode([
                 'status' => $success ? 'success' : 'failed',
             ])
         );

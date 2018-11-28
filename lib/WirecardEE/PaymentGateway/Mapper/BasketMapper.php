@@ -7,7 +7,7 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-namespace WirecardEE\PaymentGateway\Data;
+namespace WirecardEE\PaymentGateway\Mapper;
 
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
@@ -21,10 +21,14 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
  */
 class BasketMapper
 {
-    /** @var \Mage_Sales_Model_Order */
+    /**
+     * @var \Mage_Sales_Model_Order
+     */
     protected $order;
 
-    /** @var Transaction */
+    /**
+     * @var Transaction
+     */
     protected $transaction;
 
     /**
@@ -54,63 +58,45 @@ class BasketMapper
      *
      * @since 1.0.0
      */
-    public function getWirecardBasket()
+    public function getBasket()
     {
+        $order    = $this->getOrder();
+        $currency = $order->getBaseCurrencyCode();
+
         $basket = new Basket();
         $basket->setVersion($this->transaction);
 
         /** @var \Mage_Sales_Model_Order_Item $item */
-        foreach ($this->getOrder()->getAllVisibleItems() as $item) {
-            $basketItem = new BasketItemMapper($item, $this->getOrder()->getBaseCurrencyCode());
-            $basket->add($basketItem->getWirecardItem());
+        foreach ($order->getAllVisibleItems() as $item) {
+            $basketItem = new BasketItemMapper($item, $currency);
+            $basket->add($basketItem->getItem());
         }
 
-        $shippingCosts = $this->getOrder()->getShippingInclTax();
-        if ($shippingCosts >= 0.0) {
-            $shippingAmount = new Amount(
-                self::numberFormat($this->getOrder()->getShippingInclTax()),
-                $this->getOrder()->getBaseCurrencyCode()
-            );
+        $shippingCosts = $order->getShippingInclTax();
+        if ($shippingCosts > 0.0) {
+            $shippingAmount = new Amount(self::numberFormat($shippingCosts), $currency);
 
-            $shippingTaxValue = $shippingCosts - $this->getOrder()->getShippingTaxAmount();
-
-            $basketItem = new Item('Shipping', $shippingAmount, 1);
-            $basketItem->setDescription('Shipping');
-            $basketItem->setArticleNumber('Shipping');
+            $basketItem = new Item(\Mage::helper('catalog')->__('Shipping'), $shippingAmount, 1);
+            $basketItem->setDescription($order->getShippingDescription());
+            $basketItem->setArticleNumber('shipping');
             $basketItem->setTaxAmount(
-                new Amount(self::numberFormat($shippingTaxValue),
-                    $this->getOrder()->getBaseCurrencyCode())
+                new Amount(self::numberFormat($order->getShippingTaxAmount()), $currency)
             );
 
             $basket->add($basketItem);
         }
 
-        $couponCode = $this->getOrder()->getCouponCode();
+        $couponCode = (string)$order->getCouponCode();
         if ($couponCode !== '') {
-            $discountValue = new Amount(
-                self::numberFormat($this->getOrder()->getBaseDiscountAmount()),
-                $this->getOrder()->getBaseCurrencyCode()
-            );
+            $discountValue = new Amount(self::numberFormat($order->getBaseDiscountAmount()), $currency);
 
-            $basketItem = new Item('Discount', $discountValue, 1);
+            $basketItem = new Item(\Mage::helper('catalog')->__('Discount'), $discountValue, 1);
             $basketItem->setDescription($couponCode);
 
             $basket->add($basketItem);
         }
 
         return $basket;
-    }
-
-    /**
-     * Returns all items within the basket as array.
-     *
-     * @return array
-     *
-     * @since 1.0.0
-     */
-    public function toArray()
-    {
-        return $this->order->getAllItems();
     }
 
     /**

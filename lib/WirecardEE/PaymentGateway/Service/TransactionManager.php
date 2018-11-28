@@ -13,7 +13,7 @@ use Mage_Sales_Model_Order_Payment_Transaction;
 use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Transaction\Transaction;
-use WirecardEE\PaymentGateway\Data\ResponseMapper;
+use WirecardEE\PaymentGateway\Mapper\ResponseMapper;
 
 /**
  * @since 1.0.0

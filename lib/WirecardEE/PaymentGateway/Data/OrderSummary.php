@@ -10,6 +10,8 @@
 namespace WirecardEE\PaymentGateway\Data;
 
 use Wirecard\PaymentSdk\Entity\Device;
+use WirecardEE\PaymentGateway\Mapper\BasketMapper;
+use WirecardEE\PaymentGateway\Mapper\UserMapper;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 
 /**

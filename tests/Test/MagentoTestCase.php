@@ -18,14 +18,16 @@ abstract class MagentoTestCase extends TestCase
      *
      * @param string $file
      * @param string $path
+     * @return mixed
      */
-    protected function loadFile($file, $path = 'app/code/community/WirecardEE/PaymentGateway/')
+    protected function requireFile($file, $path = 'app/code/community/WirecardEE/PaymentGateway/')
     {
-        if (! file_exists($path . $file)) {
-            throw new \RuntimeException("Unable to load file $file (in $path)");
+        $filename = BP . DS . $path . $file;
+        if (! file_exists($filename)) {
+            throw new \RuntimeException("Unable to load file $filename");
         }
 
         /** @noinspection PhpIncludeInspection */
-        require_once $path . $file;
+        return require_once $filename;
     }
 }
