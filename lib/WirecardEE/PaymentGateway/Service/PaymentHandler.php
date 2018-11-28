@@ -61,7 +61,7 @@ class PaymentHandler extends Handler
 
         try {
             if ($payment instanceof ProcessPaymentInterface) {
-                $action = $payment->processPayment($orderSummary);
+                $action = $payment->processPayment($orderSummary, $transactionService, $redirect);
 
                 if ($action) {
                     return $action;
@@ -83,8 +83,11 @@ class PaymentHandler extends Handler
                 $orderSummary->getOrder(),
                 $response
             );
-            // todo
-            return new ViewAction('', []);
+            return new ViewAction('paymentgateway/redirect', [
+                'method'     => $response->getMethod(),
+                'formFields' => $response->getFormFields(),
+                'url'        => $response->getUrl(),
+            ]);
         }
         if ($response instanceof SuccessResponse || $response instanceof InteractionResponse) {
             $this->transactionManager->createTransaction(

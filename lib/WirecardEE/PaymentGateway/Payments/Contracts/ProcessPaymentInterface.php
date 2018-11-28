@@ -9,6 +9,8 @@
 
 namespace WirecardEE\PaymentGateway\Payments\Contracts;
 
+use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 
@@ -25,11 +27,13 @@ interface ProcessPaymentInterface
      *
      * @see   PaymentHandler
      *
-     * @param OrderSummary                        $orderSummary
+     * @param OrderSummary       $orderSummary
+     * @param TransactionService $transactionService
+     * @param Redirect           $redirect
      *
      * @return Action|null
      *
      * @since 1.0.0
      */
-    public function processPayment(OrderSummary $orderSummary);
+    public function processPayment(OrderSummary $orderSummary, TransactionService $transactionService, Redirect $redirect);
 }

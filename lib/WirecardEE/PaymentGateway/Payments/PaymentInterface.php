@@ -53,4 +53,13 @@ interface PaymentInterface
      * @since 1.0.0
      */
     public function getPaymentConfig();
+
+    /**
+     * Returns the transaction type from `getPaymentOptions`.
+     *
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getTransactionType();
 }

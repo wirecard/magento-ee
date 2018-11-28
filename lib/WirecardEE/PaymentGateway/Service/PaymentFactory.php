@@ -9,10 +9,12 @@
 
 namespace WirecardEE\PaymentGateway\Service;
 
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
+use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
+use WirecardEE\PaymentGateway\Payments\CreditCardPayment;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 use WirecardEE\PaymentGateway\Payments\PaypalPayment;
-use WirecardEE\PaymentGateway\UnknownPaymentException;
 
 /**
  * Responsible for creating payment objects based on their name.
@@ -49,7 +51,8 @@ class PaymentFactory
     private function getMappedPayments()
     {
         return [
-            PayPalTransaction::NAME => PaypalPayment::class,
+            PayPalTransaction::NAME     => PaypalPayment::class,
+            CreditCardTransaction::NAME => CreditCardPayment::class,
         ];
     }
 

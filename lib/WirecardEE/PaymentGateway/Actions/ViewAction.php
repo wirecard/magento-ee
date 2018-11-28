@@ -26,17 +26,17 @@ class ViewAction implements Action
     /**
      * @var string
      */
-    protected $template;
+    protected $blockName;
 
     /**
-     * @param string|null $template    Template path; if null the current view is used.
-     * @param array       $assignments View variables which are assigned to the view.
+     * @param string $blockName   Template path
+     * @param array  $assignments View variables which are assigned to the view.
      *
      * @since 1.0.0
      */
-    public function __construct($template, array $assignments = [])
+    public function __construct($blockName, array $assignments = [])
     {
-        $this->template    = $template;
+        $this->blockName   = $blockName;
         $this->assignments = $assignments;
     }
 
@@ -55,8 +55,8 @@ class ViewAction implements Action
      *
      * @since 1.0.0
      */
-    public function getTemplate()
+    public function getBlockName()
     {
-        return $this->template;
+        return $this->blockName;
     }
 }

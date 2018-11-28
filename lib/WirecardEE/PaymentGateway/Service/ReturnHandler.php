@@ -45,10 +45,20 @@ class ReturnHandler extends Handler
         TransactionService $transactionService
     ) {
         if ($payment instanceof ProcessReturnInterface) {
-            $response = $payment->processReturn($transactionService);
+            $response = $payment->processReturn($transactionService, $request);
             if ($response) {
                 return $response;
             }
+        }
+
+        $params = $request->getParams();
+        if (! empty($params['jsresponse'])) {
+            return $transactionService->processJsResponse(
+                $request->getParams(),
+                \Mage::getUrl('paymentgateway/gateway/return', [
+                    'method' => $payment->getName(),
+                ])
+            );
         }
 
         return $transactionService->handleResponse($request->getParams());
@@ -64,7 +74,7 @@ class ReturnHandler extends Handler
     public function handleResponse(Response $response)
     {
         if ($response instanceof FormInteractionResponse) {
-            return new ViewAction('seamless_form.tpl', [
+            return new ViewAction('paymentgateway/redirect', [
                 'method'     => $response->getMethod(),
                 'formFields' => $response->getFormFields(),
                 'url'        => $response->getUrl(),
@@ -85,7 +95,20 @@ class ReturnHandler extends Handler
      */
     protected function handleFailure($response)
     {
-        // todo: set order status to cancel
+        if ($response instanceof FailureResponse) {
+            $orderId = $response->getCustomFields()->get('order-id');
+            if ($orderId) {
+                /** @var \Mage_Sales_Model_Order $order */
+                $order = \Mage::getModel('sales/order')->load($orderId);
+                if ($order) {
+                    $order->addStatusHistoryComment(
+                        'Canceled due to failure response',
+                        \Mage_Sales_Model_Order::STATE_CANCELED
+                    );
+                }
+            }
+        }
+
         $message = 'Unexpected response';
         $context = [get_class($response)];
 

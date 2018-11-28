@@ -11,10 +11,16 @@ namespace WirecardEE\PaymentGateway\Payments;
 
 use Wirecard\PaymentSdk\Config\CreditCardConfig;
 use Wirecard\PaymentSdk\Entity\Amount;
+use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\PaymentSdk\TransactionService;
+use WirecardEE\PaymentGateway\Actions\ViewAction;
 use WirecardEE\PaymentGateway\Data\CreditCardPaymentConfig;
+use WirecardEE\PaymentGateway\Data\OrderSummary;
+use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
+use WirecardEE\PaymentGateway\Payments\Contracts\ProcessReturnInterface;
 
-class CreditCardPayment extends Payment
+class CreditCardPayment extends Payment implements ProcessPaymentInterface, ProcessReturnInterface
 {
     const NAME = CreditCardTransaction::NAME;
 
@@ -103,15 +109,14 @@ class CreditCardPayment extends Payment
      */
     private function getLimit($selectedCurrency, $limitValue, $limitCurrency)
     {
-        /** @var \Mage_Directory_Helper_Data $directoryHelper */
-        $directoryHelper = \Mage::helper('directory');
-        $value           = $directoryHelper->currencyConvert(
-            $limitValue,
-            $limitCurrency,
-            $selectedCurrency
-        );
-
-        return new Amount($value, $selectedCurrency);
+        // todo: convert
+        // $directoryHelper = \Mage::helper('directory');
+        // $value           = $directoryHelper->currencyConvert(
+        // $limitValue,
+        // $limitCurrency,
+        // $selectedCurrency
+        // );
+        return new Amount($limitValue, $selectedCurrency);
     }
 
     /**
@@ -145,5 +150,28 @@ class CreditCardPayment extends Payment
         // $paymentConfig->setThreeDUsageOnTokens($this->getPluginConfig('CreditCardThreeDUsageOnTokens'));
 
         return $paymentConfig;
+    }
+
+    public function processPayment(OrderSummary $orderSummary, TransactionService $transactionService, Redirect $redirect)
+    {
+        $transaction = $this->getTransaction();
+        $transaction->setTermUrl($redirect);
+
+        $requestData = $transactionService->getCreditCardUiWithData(
+            $transaction,
+            $orderSummary->getPayment()->getTransactionType(),
+            \Mage::app()->getLocale()->getLocaleCode()
+        );
+
+        return new ViewAction('paymentgateway/seamless', [
+            'wirecardUrl'         => $orderSummary->getPayment()->getPaymentConfig()->getBaseUrl(),
+            'wirecardRequestData' => $requestData,
+            'url'                 => \Mage::getUrl('paymentgateway/gateway/return', ['method' => self::NAME])
+        ]);
+    }
+
+    public function processReturn(TransactionService $transactionService, \Mage_Core_Controller_Request_Http $request)
+    {
+        return null;
     }
 }

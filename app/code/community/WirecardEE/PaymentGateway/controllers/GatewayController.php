@@ -7,7 +7,6 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
@@ -15,6 +14,7 @@ use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\RedirectAction;
+use WirecardEE\PaymentGateway\Actions\ViewAction;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Exception\UnknownActionException;
 use WirecardEE\PaymentGateway\Mapper\BasketMapper;
@@ -33,18 +33,13 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
     // @codingStandardsIgnoreEnd
 
     /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
      * Gets payment from `PaymentFactory`, assembles the `OrderSummary` and executes the payment through the
      * `PaymentHandler` service. Further action depends on the response from the handler.
      *
      * @return Mage_Core_Controller_Varien_Action
      * @throws UnknownActionException
-     * @throws \WirecardEE\PaymentGateway\UnknownPaymentException
      * @throws Mage_Core_Exception
+     * @throws \WirecardEE\PaymentGateway\Exception\UnknownPaymentException
      *
      * @since 1.0.0
      */
@@ -89,7 +84,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      *
      * @return Mage_Core_Controller_Varien_Action
      * @throws UnknownActionException
-     * @throws \WirecardEE\PaymentGateway\UnknownPaymentException
+     * @throws \WirecardEE\PaymentGateway\Exception\UnknownPaymentException
      *
      * @since 1.0.0
      */
@@ -216,11 +211,37 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
         if ($action instanceof RedirectAction) {
             return $this->_redirectUrl($action->getUrl());
         }
+        if ($action instanceof ViewAction) {
+            return $this->render($action);
+        }
         if ($action instanceof ErrorAction) {
             $this->getHelper()->getLogger()->error($action->getMessage());
             exit($action->getMessage());
         }
         throw new UnknownActionException(get_class($action));
+    }
+
+    /**
+     * @param ViewAction $action
+     *
+     * @return Mage_Core_Controller_Varien_Action
+     *
+     * @since 1.0.0
+     */
+    private function render(ViewAction $action)
+    {
+        $this->loadLayout();
+
+        /** @var Mage_Core_Block_Template $root */
+        $root = $this->getLayout()->getBlock('root');
+        $root->setTemplate('page/1column.phtml');
+
+        $block = $this->getLayout()->createBlock($action->getBlockName());
+        $block->setData($action->getAssignments());
+
+        $this->getLayout()->getBlock('content')->append($block);
+
+        return $this->renderLayout();
     }
 
     /**

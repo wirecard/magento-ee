@@ -10,17 +10,17 @@
 namespace WirecardEE\PaymentGateway\Exception;
 
 /**
- * @since 1.0.0
+ * @since   1.0.0
  */
-class UnknownPaymentException extends \Exception
+class UnknownTransactionTypeException extends \Exception
 {
     /**
-     * @param string $paymentName
+     * @param string $operation
      *
      * @since 1.0.0
      */
-    public function __construct($paymentName)
+    public function __construct($operation)
     {
-        parent::__construct("Unknown payment '$paymentName'");
+        parent::__construct("Unknown transaction type for operation ($operation)");
     }
 }

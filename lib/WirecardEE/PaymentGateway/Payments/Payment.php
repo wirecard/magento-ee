@@ -10,6 +10,9 @@
 namespace WirecardEE\PaymentGateway\Payments;
 
 use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\Transaction\Operation;
+use Wirecard\PaymentSdk\Transaction\Transaction;
+use WirecardEE\PaymentGateway\Exception\UnknownTransactionTypeException;
 
 /**
  * @since 1.0.0
@@ -63,5 +66,20 @@ abstract class Payment implements PaymentInterface
     {
         $config = \Mage::getStoreConfig($prefix . $this->getName());
         return isset($config[$name]) ? $config[$name] : null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTransactionType()
+    {
+        $operation = $this->getPaymentConfig()->getTransactionOperation();
+        if ($operation === Operation::PAY) {
+            return Transaction::TYPE_PURCHASE;
+        }
+        if ($operation === Operation::RESERVE) {
+            return Transaction::TYPE_AUTHORIZATION;
+        }
+        throw new UnknownTransactionTypeException($operation);
     }
 }
