@@ -46,7 +46,7 @@ class BasketMapperTest extends TestCase
 
         $mapper = new BasketMapper($order, $transaction);
         $this->assertSame($order, $mapper->getOrder());
-        $basket = $mapper->getWirecardBasket();
+        $basket = $mapper->getBasket();
         $this->assertInstanceOf(Basket::class, $basket);
         $this->assertEquals([
             'order-item' => [
@@ -112,7 +112,7 @@ class BasketMapperTest extends TestCase
                     'article-number' => 'shipping',
                 ],
             ],
-        ], $mapper->getWirecardBasket()->mappedProperties());
+        ], $mapper->getBasket()->mappedProperties());
     }
 
     public function testBasketWithCoupon()
@@ -156,7 +156,7 @@ class BasketMapperTest extends TestCase
                     'description' => 'ABC',
                 ],
             ],
-        ], $mapper->getWirecardBasket()->mappedProperties());
+        ], $mapper->getBasket()->mappedProperties());
     }
 
     /**

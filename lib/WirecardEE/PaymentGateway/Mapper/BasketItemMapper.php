@@ -42,36 +42,25 @@ class BasketItemMapper
     }
 
     /**
-     * @return \Mage_Sales_Model_Order_Item
+     * @return Item
      *
      * @since 1.0.0
      */
     public function getItem()
     {
-        return $this->item;
-    }
+        $amount = new Amount(BasketMapper::numberFormat($this->item->getPriceInclTax()), $this->currency);
 
-    /**
-     * @return Item
-     *
-     * @since 1.0.0
-     */
-    public function getWirecardItem()
-    {
-        $mageItem = $this->getItem();
-        $amount   = new Amount(BasketMapper::numberFormat($mageItem->getPriceInclTax()), $this->currency);
-
-        $item = new Item($mageItem->getName(), $amount, (int)$mageItem->getQtyOrdered());
-        $item->setArticleNumber($mageItem->getSku());
-        $item->setDescription($mageItem->getDescription());
+        $item = new Item($this->item->getName(), $amount, (int)$this->item->getQtyOrdered());
+        $item->setArticleNumber($this->item->getSku());
+        $item->setDescription($this->item->getDescription());
 
         if ($amount->getValue() >= 0.0) {
             $taxAmount = new Amount(
-                BasketMapper::numberFormat($mageItem->getTaxAmount() / (int)$mageItem->getQtyOrdered()),
+                BasketMapper::numberFormat($this->item->getTaxAmount() / (int)$this->item->getQtyOrdered()),
                 $this->currency
             );
 
-            $item->setTaxRate($mageItem->getTaxPercent());
+            $item->setTaxRate($this->item->getTaxPercent());
             $item->setTaxAmount($taxAmount);
         }
 

@@ -17,7 +17,9 @@ use Wirecard\PaymentSdk\Entity\Address;
  */
 class UserMapper
 {
-    /** @var \Mage_Sales_Model_Order */
+    /**
+     * @var \Mage_Sales_Model_Order
+     */
     protected $order;
 
     /**
@@ -69,44 +71,22 @@ class UserMapper
      *
      * @since 1.0.0
      */
-    public function getWirecardBillingAccountHolder()
+    public function getBillingAccountHolder()
     {
-        $billingAddress       = $this->getOrder()->getBillingAddress();
-        $billingAccountHolder = new AccountHolder();
-        $billingAccountHolder->setFirstName($billingAddress->getFirstname());
-        $billingAccountHolder->setLastName($billingAddress->getLastname());
-        $billingAccountHolder->setEmail($billingAddress->getEmail());
-        $billingAccountHolder->setDateOfBirth(new \DateTime($this->getOrder()->getCustomerDob()));
-        $billingAccountHolder->setPhone($billingAddress->getTelephone());
-        $billingAccountHolder->setAddress($this->getWirecardBillingAddress());
+        $address       = $this->getOrder()->getBillingAddress();
+        $accountHolder = new AccountHolder();
+        $accountHolder->setFirstName($address->getFirstname());
+        $accountHolder->setLastName($address->getLastname());
+        $accountHolder->setEmail($address->getEmail());
+        $accountHolder->setDateOfBirth(new \DateTime($this->getOrder()->getCustomerDob()));
+        $accountHolder->setPhone($address->getTelephone());
+        $accountHolder->setAddress($this->getAddress($address));
 
-        if ($gender = $this->getOrder()->getCustomerGender()) {
-            $billingAccountHolder->setGender(
-                $gender === '1' ? 'm' : 'f'
-            );
+        if (($gender = $this->getOrder()->getCustomerGender())) {
+            $accountHolder->setGender($gender === '1' ? 'm' : 'f');
         }
 
-        return $billingAccountHolder;
-    }
-
-    /**
-     * @return Address
-     *
-     * @since 1.0.0
-     */
-    public function getWirecardBillingAddress()
-    {
-        $address        = $this->getOrder()->getBillingAddress();
-        $billingAddress = new Address(
-            $address->getCountryId(),
-            $address->getCity(),
-            ! empty($address->getStreet()[0]) ? $address->getStreet()[0] : ''
-        );
-        $billingAddress->setPostalCode($address->getPostcode());
-        $billingAddress->setStreet2($address->getStreet2());
-        $billingAddress->setState($address->getRegion());
-
-        return $billingAddress;
+        return $accountHolder;
     }
 
     /**
@@ -114,28 +94,30 @@ class UserMapper
      *
      * @since 1.0.0
      */
-    public function getWirecardShippingAccountHolder()
+    public function getShippingAccountHolder()
     {
-        $shippingAccountHolder = new AccountHolder();
-        $shippingAccountHolder->setFirstName($this->getOrder()->getShippingAddress()->getFirstname());
-        $shippingAccountHolder->setLastName($this->getOrder()->getShippingAddress()->getLastname());
-        $shippingAccountHolder->setAddress($this->getWirecardShippingAddress());
+        $address       = $this->getOrder()->getShippingAddress();
+        $accountHolder = new AccountHolder();
+        $accountHolder->setFirstName($address->getFirstname());
+        $accountHolder->setLastName($address->getLastname());
+        $accountHolder->setAddress($this->getAddress($address));
 
-        return $shippingAccountHolder;
+        return $accountHolder;
     }
 
     /**
+     * @param \Mage_Sales_Model_Order_Address $address
+     *
      * @return Address
      *
      * @since 1.0.0
      */
-    public function getWirecardShippingAddress()
+    private function getAddress(\Mage_Sales_Model_Order_Address $address)
     {
-        $address         = $this->getOrder()->getShippingAddress();
         $shippingAddress = new Address(
             $address->getCountryId(),
             $address->getCity(),
-            ! empty($address->getStreet()[0]) ? $address->getStreet()[0] : ''
+            $address->getStreet1()
         );
         $shippingAddress->setPostalCode($address->getPostcode());
         $shippingAddress->setStreet2($address->getStreet2());

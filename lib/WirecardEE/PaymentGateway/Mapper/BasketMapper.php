@@ -58,7 +58,7 @@ class BasketMapper
      *
      * @since 1.0.0
      */
-    public function getWirecardBasket()
+    public function getBasket()
     {
         $order    = $this->getOrder();
         $currency = $order->getBaseCurrencyCode();
@@ -69,7 +69,7 @@ class BasketMapper
         /** @var \Mage_Sales_Model_Order_Item $item */
         foreach ($order->getAllVisibleItems() as $item) {
             $basketItem = new BasketItemMapper($item, $currency);
-            $basket->add($basketItem->getWirecardItem());
+            $basket->add($basketItem->getItem());
         }
 
         $shippingCosts = $order->getShippingInclTax();

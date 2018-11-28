@@ -148,7 +148,7 @@ class PaymentHandler
         $transaction->setNotificationUrl($notificationUrl);
 
         if ($paymentConfig->sendBasket() || $paymentConfig->hasFraudPrevention()) {
-            $transaction->setBasket($orderSummary->getBasketMapper()->getWirecardBasket());
+            $transaction->setBasket($orderSummary->getBasketMapper()->getBasket());
         }
 
         if ($paymentConfig->hasFraudPrevention()) {
@@ -156,8 +156,8 @@ class PaymentHandler
             $transaction->setDevice($orderSummary->getWirecardDevice());
             $transaction->setConsumerId($orderSummary->getOrder()->getCustomerId());
             $transaction->setIpAddress($orderSummary->getUserMapper()->getClientIp());
-            $transaction->setAccountHolder($orderSummary->getUserMapper()->getWirecardBillingAccountHolder());
-            $transaction->setShipping($orderSummary->getUserMapper()->getWirecardShippingAccountHolder());
+            $transaction->setAccountHolder($orderSummary->getUserMapper()->getBillingAccountHolder());
+            $transaction->setShipping($orderSummary->getUserMapper()->getShippingAccountHolder());
             $transaction->setLocale($orderSummary->getUserMapper()->getLocale());
         }
 

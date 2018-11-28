@@ -28,9 +28,7 @@ class BasketItemMapperTest extends TestCase
         $mageItem->setTaxPercent(20);
         $mapper = new BasketItemMapper($mageItem, 'EUR');
 
-        $this->assertSame($mageItem, $mapper->getItem());
-
-        $item = $mapper->getWirecardItem();
+        $item = $mapper->getItem();
         $this->assertInstanceOf(Item::class, $item);
         $this->assertEquals('A10', $item->getArticleNumber());
         $this->assertEquals(new Amount(1000, 'EUR'), $item->getPrice());
@@ -63,7 +61,7 @@ class BasketItemMapperTest extends TestCase
             'amount'         => ['currency' => 'EUR', 'value' => 1000.5],
             'article-number' => 'A10',
             'tax-rate'       => 20,
-        ], $mapper->getWirecardItem()->mappedProperties());
+        ], $mapper->getItem()->mappedProperties());
 
         $mageItem->setDescription('foobar');
 
@@ -75,7 +73,7 @@ class BasketItemMapperTest extends TestCase
             'description'    => 'foobar',
             'article-number' => 'A10',
             'tax-rate'       => 20,
-        ], $mapper->getWirecardItem()->mappedProperties());
+        ], $mapper->getItem()->mappedProperties());
 
         $mapper = new BasketItemMapper($mageItem, 'USD');
         $this->assertEquals([
@@ -85,6 +83,6 @@ class BasketItemMapperTest extends TestCase
             'description'    => 'foobar',
             'article-number' => 'A10',
             'tax-rate'       => 20,
-        ], $mapper->getWirecardItem()->mappedProperties());
+        ], $mapper->getItem()->mappedProperties());
     }
 }
