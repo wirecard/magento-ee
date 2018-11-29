@@ -82,10 +82,10 @@
                 <threeds_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</threeds_secret>
                 <transaction_type>pay</transaction_type>
                 <fraud_prevention>1</fraud_prevention>
-                <non_threeds_max_limit>300</non_threeds_max_limit>
-                <non_threeds_max_limit_currency>EUR</non_threeds_max_limit_currency>
-                <threeds_min_limit>100</threeds_min_limit>
-                <threeds_min_limit_currency>EUR</threeds_min_limit_currency>
+                <ssl_max_limit>300</ssl_max_limit>
+                <ssl_max_limit_currency>EUR</ssl_max_limit_currency>
+                <three_d_min_limit>100</three_d_min_limit>
+                <three_d_min_limit_currency>EUR</three_d_min_limit_currency>
             </wirecardee_paymentgateway_creditcard>
         </payment>
     </default>

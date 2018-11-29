@@ -168,10 +168,10 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface, Proc
 
         $paymentConfig->setThreeDMAID($this->getPluginConfig('threeds_maid'));
         $paymentConfig->setThreeDSecret($this->getPluginConfig('threeds_secret'));
-        $paymentConfig->setSslMaxLimit($this->getPluginConfig('non_threeds_max_limit'));
-        $paymentConfig->setSslMaxLimitCurrency($this->getPluginConfig('non_threeds_max_limit_currency'));
-        $paymentConfig->setThreeDMinLimit($this->getPluginConfig('threeds_min_limit'));
-        $paymentConfig->setThreeDMinLimitCurrency($this->getPluginConfig('threeds_min_limit_currency'));
+        $paymentConfig->setSslMaxLimit($this->getPluginConfig('ssl_max_limit'));
+        $paymentConfig->setSslMaxLimitCurrency($this->getPluginConfig('ssl_max_limit_currency'));
+        $paymentConfig->setThreeDMinLimit($this->getPluginConfig('three_d_min_limit'));
+        $paymentConfig->setThreeDMinLimitCurrency($this->getPluginConfig('three_d_min_limit_currency'));
 
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
 
