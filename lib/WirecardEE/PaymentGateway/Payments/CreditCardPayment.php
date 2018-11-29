@@ -19,6 +19,7 @@ use WirecardEE\PaymentGateway\Data\CreditCardPaymentConfig;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessReturnInterface;
+use WirecardEE\PaymentGateway\Service\Logger;
 
 class CreditCardPayment extends Payment implements ProcessPaymentInterface, ProcessReturnInterface
 {
@@ -109,14 +110,43 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface, Proc
      */
     private function getLimit($selectedCurrency, $limitValue, $limitCurrency)
     {
-        // todo: convert
-        // $directoryHelper = \Mage::helper('directory');
-        // $value           = $directoryHelper->currencyConvert(
-        // $limitValue,
-        // $limitCurrency,
-        // $selectedCurrency
-        // );
-        return new Amount($limitValue, $selectedCurrency);
+        $factor = $this->getCurrencyConversionFactor(strtoupper($selectedCurrency), strtoupper($limitCurrency));
+        return new Amount($limitValue * $factor, $selectedCurrency);
+    }
+
+    private function getCurrencyConversionFactor($selectedCurrency, $limitCurrency)
+    {
+        if ($selectedCurrency === $limitCurrency) {
+            return 1.0;
+        }
+
+        try {
+            \Mage::app()->getLocale()->currency($selectedCurrency);
+            \Mage::app()->getLocale()->currency($limitCurrency);
+        } catch (\Exception $e) {
+            (new Logger())->error("Failed to load currency for converting currency: " . $e->getMessage());
+            return 1.0;
+        }
+
+        /** @var \Mage_Directory_Helper_Data $directoryHelper */
+        $directoryHelper = \Mage::helper('directory');
+        $selectedFactor  = $directoryHelper->currencyConvert(
+            1,
+            \Mage::app()->getStore()->getBaseCurrencyCode(),
+            $selectedCurrency
+        );
+        $limitFactor     = $directoryHelper->currencyConvert(
+            1,
+            \Mage::app()->getStore()->getBaseCurrencyCode(),
+            $limitCurrency
+        );
+        if (! $selectedFactor) {
+            $selectedFactor = 1.0;
+        }
+        if (! $limitFactor) {
+            $limitFactor = 1.0;
+        }
+        return $selectedFactor / $limitFactor;
     }
 
     /**
@@ -152,8 +182,11 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface, Proc
         return $paymentConfig;
     }
 
-    public function processPayment(OrderSummary $orderSummary, TransactionService $transactionService, Redirect $redirect)
-    {
+    public function processPayment(
+        OrderSummary $orderSummary,
+        TransactionService $transactionService,
+        Redirect $redirect
+    ) {
         $transaction = $this->getTransaction();
         $transaction->setTermUrl($redirect);
 
@@ -166,7 +199,7 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface, Proc
         return new ViewAction('paymentgateway/seamless', [
             'wirecardUrl'         => $orderSummary->getPayment()->getPaymentConfig()->getBaseUrl(),
             'wirecardRequestData' => $requestData,
-            'url'                 => \Mage::getUrl('paymentgateway/gateway/return', ['method' => self::NAME])
+            'url'                 => \Mage::getUrl('paymentgateway/gateway/return', ['method' => self::NAME]),
         ]);
     }
 
