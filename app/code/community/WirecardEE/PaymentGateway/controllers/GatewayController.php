@@ -179,22 +179,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      */
     public function cancelAction()
     {
-        if ($order = $this->getCheckoutSession()->getLastRealOrder()) {
-            if ($order->getStatus() !== Mage_Sales_Model_Order::STATE_CANCELED) {
-                $order->addStatusHistoryComment('Payment canceled by consumer', Mage_Sales_Model_Order::STATE_CANCELED);
-
-                /** @var Mage_Sales_Model_Quote $quote */
-                $quote = Mage::getModel('sales/quote')->load($order->getQuoteId());
-
-                if ($quote->getId()) {
-                    $quote->setIsActive(1)
-                          ->setReservedOrderId(null)
-                          ->save();
-                    $this->getCheckoutSession()->replaceQuote($quote);
-                }
-            }
-        }
-
+        $this->cancelOrderAndRestoreBasket();
         return $this->_redirect('checkout/onepage');
     }
 
@@ -215,6 +200,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
             return $this->render($action);
         }
         if ($action instanceof ErrorAction) {
+            $this->cancelOrderAndRestoreBasket();
             $this->getCheckoutSession()->setData(
                 'error_message',
                 Mage::helper('catalog')->__($action->getMessage())
@@ -245,6 +231,31 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
         $this->getLayout()->getBlock('content')->append($block);
 
         return $this->renderLayout();
+    }
+
+    /**
+     * @return bool
+     */
+    private function cancelOrderAndRestoreBasket()
+    {
+        if ($order = $this->getCheckoutSession()->getLastRealOrder()) {
+            if ($order->getStatus() !== Mage_Sales_Model_Order::STATE_CANCELED) {
+                $order->addStatusHistoryComment('Payment canceled by consumer', Mage_Sales_Model_Order::STATE_CANCELED);
+
+                $quote = Mage::getModel('sales/quote')->load($order->getQuoteId());
+
+                if ($quote->getId()) {
+                    $quote->setIsActive(1)
+                          ->setReservedOrderId(null)
+                          ->save();
+                    $this->getCheckoutSession()->replaceQuote($quote);
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
