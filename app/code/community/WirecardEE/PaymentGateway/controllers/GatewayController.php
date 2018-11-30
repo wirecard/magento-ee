@@ -215,8 +215,11 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
             return $this->render($action);
         }
         if ($action instanceof ErrorAction) {
-            $this->getHelper()->getLogger()->error($action->getMessage());
-            exit($action->getMessage());
+            $this->getCheckoutSession()->setData(
+                'error_message',
+                Mage::helper('catalog')->__($action->getMessage())
+            );
+            return $this->_redirect('checkout/onepage/failure');
         }
         throw new UnknownActionException(get_class($action));
     }
