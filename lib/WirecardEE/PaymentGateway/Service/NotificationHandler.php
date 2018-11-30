@@ -112,8 +112,9 @@ class NotificationHandler extends Handler
         }
         switch ($backendService->getOrderState($response->getTransactionType())) {
             case BackendService::TYPE_PROCESSING:
-            case BackendService::TYPE_AUTHORIZED:
                 return \Mage_Sales_Model_Order::STATE_PROCESSING;
+            case BackendService::TYPE_AUTHORIZED:
+                return \Mage_Sales_Model_Order::STATE_PENDING_PAYMENT;
             case BackendService::TYPE_CANCELLED:
                 return \Mage_Sales_Model_Order::STATE_CANCELED;
             default:
