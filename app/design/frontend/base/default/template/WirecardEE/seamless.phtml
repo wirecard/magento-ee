@@ -11,7 +11,8 @@ $wirecardUrl = $this->getData('wirecardUrl');
 $requestData = $this->getData('wirecardRequestData');
 $url         = $this->getData('url');
 ?>
-<div class="wirecardee-credit-card-error-message" style="display: none; margin-bottom: 20px;">
+<div class="wirecardee-credit-card-error-message"
+     style="display: none; margin-bottom: 20px; font-weight: bold; color: #ff0000;">
 </div>
 <div class="content content--checkout confirm--content">
     <form id="wirecardee-credit-card--form" method="post" action="<?php echo $url; ?>">
@@ -72,7 +73,6 @@ $url         = $this->getData('url');
                 event.preventDefault();
                 // disable submit button and replace icon with loading spinner
                 $formSubmit.prop('disabled', true);
-                $formSubmitIcon.attr('class', 'js--loading');
                 WirecardPaymentPage.seamlessSubmitForm({
                     wrappingDivId: 'wirecardee-credit-card--iframe-div',
                     onSuccess: function (response) {
