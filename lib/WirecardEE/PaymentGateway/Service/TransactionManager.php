@@ -23,6 +23,7 @@ class TransactionManager
     const TYPE_INITIAL = 'initial';
     const TYPE_NOTIFY = 'notify';
     const TYPE_BACKEND = 'backend';
+    const TYPE_RETURN = 'return';
 
     // Key for type in additional information in transactions
     const TYPE_KEY = 'source_type';
@@ -72,6 +73,7 @@ class TransactionManager
 
         switch ($type) {
             case self::TYPE_INITIAL:
+            case self::TYPE_RETURN:
             case self::TYPE_BACKEND:
                 // Initial transactions are always saved as new transactions.
                 if ($mageTransactionModel->loadByTxnId($transactionId)->getId()) {
@@ -181,6 +183,7 @@ class TransactionManager
     {
         switch ($transactionType) {
             case Transaction::TYPE_DEBIT:
+            case Transaction::TYPE_PURCHASE:
                 return Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE;
             case Transaction::TYPE_AUTHORIZATION:
                 return Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH;
