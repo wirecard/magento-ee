@@ -118,7 +118,7 @@
                     </fields>
                 </wirecardee_paymentgateway_paypal>
                 <wirecardee_paymentgateway_creditcard translate="label" module="paymentgateway">
-                    <label>Wirecard CreditCard</label>
+                    <label>Wirecard Credit Card</label>
                     <sort_order>999</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
