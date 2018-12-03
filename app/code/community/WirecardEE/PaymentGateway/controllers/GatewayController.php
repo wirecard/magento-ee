@@ -114,7 +114,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
 
             $action = $response instanceof SuccessResponse
                 ? $this->updateOrder($order)
-                : $returnHandler->handleResponse($response);
+                : $returnHandler->handleResponse($response, $order);
         } catch (\Exception $e) {
             $this->getHelper()->getLogger()->error($e->getMessage());
             $action = new ErrorAction(0, 'Return processing failed');
