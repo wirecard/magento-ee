@@ -54,6 +54,13 @@
     </global>
 
     <default>
+        <wirecardee_paymentgateway>
+            <settings>
+                <notify_mail></notify_mail>
+                <pending_mail>0</pending_mail>
+                <delete_cancelled_orders>0</delete_cancelled_orders>
+            </settings>
+        </wirecardee_paymentgateway>
         <payment>
             <wirecardee_paymentgateway_paypal>
                 <active>0</active>
