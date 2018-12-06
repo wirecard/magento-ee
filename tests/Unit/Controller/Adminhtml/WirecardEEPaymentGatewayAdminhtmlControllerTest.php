@@ -7,7 +7,7 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-namespace WirecardEE\Tests\Functional\Controller\Adminhtml;
+namespace WirecardEE\Tests\Unit\Controller\Adminhtml;
 
 use WirecardEE\Tests\Test\MagentoTestCase;
 
@@ -15,7 +15,7 @@ class WirecardEEPaymentGatewayAdminhtmlControllerTest extends MagentoTestCase
 {
     public function setUp()
     {
-        $this->loadFile('controllers/Adminhtml/WirecardEEPaymentGatewayController.php');
+        $this->requireFile('controllers/Adminhtml/WirecardEEPaymentGatewayController.php');
     }
 
     public function testCredentialsAction()

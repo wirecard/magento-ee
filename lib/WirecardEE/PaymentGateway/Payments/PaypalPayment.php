@@ -11,7 +11,9 @@ namespace WirecardEE\PaymentGateway\Payments;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
+use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\PaymentConfig;
@@ -31,7 +33,7 @@ class PaypalPayment extends Payment implements ProcessPaymentInterface
      */
     public function getName()
     {
-        return PayPalTransaction::NAME;
+        return self::NAME;
     }
 
     /**
@@ -48,13 +50,15 @@ class PaypalPayment extends Payment implements ProcessPaymentInterface
     }
 
     /**
+     * @param $selectedCurrency
+     *
      * @return Config
      *
      * @since 1.0.0
      */
-    public function getTransactionConfig()
+    public function getTransactionConfig($selectedCurrency)
     {
-        $config = parent::getTransactionConfig();
+        $config = parent::getTransactionConfig($selectedCurrency);
         $config->add(new PaymentMethodConfig(
             PayPalTransaction::NAME,
             $this->getPaymentConfig()->getTransactionMAID(),
@@ -88,13 +92,18 @@ class PaypalPayment extends Payment implements ProcessPaymentInterface
 
     /**
      * @param OrderSummary $orderSummary
+     * @param TransactionService $transactionService
+     * @param Redirect $redirect
      *
      * @return null|Action
      *
      * @since 1.0.0
      */
-    public function processPayment(OrderSummary $orderSummary)
-    {
+    public function processPayment(
+        OrderSummary $orderSummary,
+        TransactionService $transactionService,
+        Redirect $redirect
+    ) {
         $transaction = $this->getTransaction();
 
         $transaction->setOrderDetail(sprintf(

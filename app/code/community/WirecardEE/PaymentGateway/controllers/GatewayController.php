@@ -7,24 +7,22 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Redirect;
-use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\RedirectAction;
-use WirecardEE\PaymentGateway\Data\BasketMapper;
+use WirecardEE\PaymentGateway\Actions\ViewAction;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
-use WirecardEE\PaymentGateway\Data\UserMapper;
 use WirecardEE\PaymentGateway\Exception\UnknownActionException;
+use WirecardEE\PaymentGateway\Mapper\BasketMapper;
+use WirecardEE\PaymentGateway\Mapper\UserMapper;
 use WirecardEE\PaymentGateway\Service\NotificationHandler;
 use WirecardEE\PaymentGateway\Service\PaymentFactory;
 use WirecardEE\PaymentGateway\Service\PaymentHandler;
 use WirecardEE\PaymentGateway\Service\ReturnHandler;
-use WirecardEE\PaymentGateway\Service\TransactionManager;
 
 /**
  * @since 1.0.0
@@ -36,10 +34,9 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      * `PaymentHandler` service. Further action depends on the response from the handler.
      *
      * @return Mage_Core_Controller_Varien_Action
-     * @throws Mage_Core_Model_Store_Exception
      * @throws UnknownActionException
-     * @throws \WirecardEE\PaymentGateway\UnknownPaymentException
      * @throws Mage_Core_Exception
+     * @throws \WirecardEE\PaymentGateway\Exception\UnknownPaymentException
      *
      * @since 1.0.0
      */
@@ -47,27 +44,26 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
     {
         $paymentName = $this->getRequest()->getParam('method');
         $payment     = (new PaymentFactory())->create($paymentName);
-        $handler     = new PaymentHandler(\Mage::app()->getStore(), $this->getLogger());
+        $handler     = new PaymentHandler($this->getHelper()->getTransactionManager(), $this->getHelper()->getLogger());
         $order       = $this->getCheckoutSession()->getLastRealOrder();
 
         $this->getHelper()->validateBasket();
 
         $action = $handler->execute(
-            new TransactionManager($this->getLogger()),
             new OrderSummary(
                 $payment,
                 $order,
                 new BasketMapper($order, $payment->getTransaction()),
                 new UserMapper(
                     $order,
-                    Mage::helper('paymentgateway')->getClientIp(),
+                    $this->getHelper()->getClientIp(),
                     Mage::app()->getLocale()->getLocaleCode()
                 ),
                 $this->getHelper()->getDeviceFingerprintId($payment->getPaymentConfig()->getTransactionMAID())
             ),
             new TransactionService(
-                $payment->getTransactionConfig(),
-                $this->getLogger()
+                $payment->getTransactionConfig($order->getBaseCurrency()->getCode()),
+                $this->getHelper()->getLogger()
             ),
             new Redirect(
                 $this->getUrl('paymentgateway/gateway/return', ['method' => $paymentName]),
@@ -85,35 +81,39 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      *
      * @return Mage_Core_Controller_Varien_Action
      * @throws UnknownActionException
-     * @throws \WirecardEE\PaymentGateway\UnknownPaymentException
+     * @throws \WirecardEE\PaymentGateway\Exception\UnknownPaymentException
      *
      * @since 1.0.0
      */
     public function returnAction()
     {
-        $returnHandler = new ReturnHandler($this->getLogger());
+        $returnHandler = new ReturnHandler(
+            $this->getHelper()->getTransactionManager(),
+            $this->getHelper()->getLogger()
+        );
         $request       = $this->getRequest();
         $payment       = (new PaymentFactory())->create($request->getParam('method'));
-
-        $this->getHelper()->validateBasket();
+        $order         = $this->getCheckoutSession()->getLastRealOrder();
 
         try {
             $response = $returnHandler->handleRequest(
+                $payment,
                 $request,
-                new TransactionService($payment->getTransactionConfig(), $this->getLogger())
+                new TransactionService(
+                    $payment->getTransactionConfig($order->getBaseCurrency()->getCode()),
+                    $this->getHelper()->getLogger()
+                )
             );
 
-            $transactionManager = new TransactionManager($this->getLogger());
-            $transactionManager->createTransaction(
-                $this->getCheckoutSession()->getLastRealOrder(),
-                $response
-            );
+            $this->getHelper()
+                 ->getLogger()
+                 ->info("Called return action", ['response' => $response->getRawData()]);
 
             $action = $response instanceof SuccessResponse
-                ? $this->updateOrder($returnHandler, $response)
-                : $returnHandler->handleResponse($response);
+                ? $this->updateOrder($order)
+                : $returnHandler->handleResponse($response, $order);
         } catch (\Exception $e) {
-            $this->getLogger()->error($e->getMessage());
+            $this->getHelper()->getLogger()->error($e->getMessage());
             $action = new ErrorAction(0, 'Return processing failed');
         }
 
@@ -121,18 +121,21 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
     }
 
     /**
-     * @param ReturnHandler $returnHandler
-     * @param Response      $response
+     * @param Mage_Sales_Model_Order $order
      *
      * @return RedirectAction
      *
      * @since 1.0.0
      */
-    protected function updateOrder(ReturnHandler $returnHandler, Response $response)
+    protected function updateOrder(Mage_Sales_Model_Order $order)
     {
         $this->getHelper()->destroyDeviceFingerprintId();
 
-        return $returnHandler->handleSuccess($response, $this->getUrl('checkout/onepage/success'));
+        $this->getHelper()->validateBasket();
+
+        $order->sendNewOrderEmail();
+
+        return new RedirectAction($this->getUrl('checkout/onepage/success'));
     }
 
     /**
@@ -144,12 +147,17 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      */
     public function notifyAction()
     {
-        $notificationHandler = new NotificationHandler($this->getLogger());
+        $notificationHandler = new NotificationHandler(
+            $this->getHelper()->getTransactionManager(),
+            $this->getHelper()->getLogger()
+        );
         $request             = $this->getRequest();
         $payment             = (new PaymentFactory())->create($request->getParam('method'));
 
         try {
-            $backendService = new BackendService($payment->getTransactionConfig());
+            $backendService = new BackendService(
+                $payment->getTransactionConfig(Mage::app()->getLocale()->getCurrency())
+            );
             $notification   = $backendService->handleNotification($request->getRawBody());
 
             $notificationHandler->handleResponse($notification, $backendService);
@@ -168,20 +176,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      */
     public function cancelAction()
     {
-        if ($order = $this->getCheckoutSession()->getLastRealOrder()) {
-            if ($order->getStatus() !== Mage_Sales_Model_Order::STATE_CANCELED) {
-
-                $quote = Mage::getModel('sales/quote')->load($order->getQuoteId());
-
-                if ($quote->getId()) {
-                    $quote->setIsActive(1)
-                          ->setReservedOrderId(null)
-                          ->save();
-                    $this->getCheckoutSession()->replaceQuote($quote);
-                }
-            }
-        }
-
+        $this->cancelOrderAndRestoreBasket();
         return $this->_redirect('checkout/onepage');
     }
 
@@ -198,13 +193,66 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
         if ($action instanceof RedirectAction) {
             return $this->_redirectUrl($action->getUrl());
         }
-
+        if ($action instanceof ViewAction) {
+            return $this->render($action);
+        }
         if ($action instanceof ErrorAction) {
-            $this->getLogger()->error($action->getMessage());
-            exit($action->getMessage());
+            $this->cancelOrderAndRestoreBasket();
+            $this->getCheckoutSession()->setData(
+                'error_message',
+                Mage::helper('catalog')->__($action->getMessage())
+            );
+            return $this->_redirect('checkout/onepage/failure');
+        }
+        throw new UnknownActionException(get_class($action));
+    }
+
+    /**
+     * @param ViewAction $action
+     *
+     * @return Mage_Core_Controller_Varien_Action
+     *
+     * @since 1.0.0
+     */
+    private function render(ViewAction $action)
+    {
+        $this->loadLayout();
+
+        /** @var Mage_Core_Block_Template $root */
+        $root = $this->getLayout()->getBlock('root');
+        $root->setTemplate('page/1column.phtml');
+
+        $block = $this->getLayout()->createBlock($action->getBlockName());
+        $block->setData($action->getAssignments());
+
+        $this->getLayout()->getBlock('content')->append($block);
+
+        return $this->renderLayout();
+    }
+
+    /**
+     * @return bool
+     */
+    private function cancelOrderAndRestoreBasket()
+    {
+        if ($order = $this->getCheckoutSession()->getLastRealOrder()) {
+            if ($order->getStatus() !== Mage_Sales_Model_Order::STATE_CANCELED) {
+                $order->addStatusHistoryComment('Payment canceled by consumer', Mage_Sales_Model_Order::STATE_CANCELED);
+
+                $quote = Mage::getModel('sales/quote')->load($order->getQuoteId());
+
+                if ($quote->getId()) {
+                    $quote->setIsActive(1)
+                          ->setReservedOrderId(null)
+                          ->save();
+                    $this->getCheckoutSession()->replaceQuote($quote);
+
+                    return true;
+                }
+            }
         }
 
-        throw new UnknownActionException(get_class($action));
+        return false;
     }
 
     /**
@@ -215,7 +263,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      */
     private function logException($message, \Exception $exception)
     {
-        $this->getLogger()->error(
+        $this->getHelper()->getLogger()->error(
             $message . ' - ' . get_class($exception) . ': ' . $exception->getMessage()
         );
     }
@@ -228,16 +276,6 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
     protected function getOrderPaymentTransaction()
     {
         return Mage::getModel('sales/order_payment_transaction');
-    }
-
-    /**
-     * @return LoggerInterface
-     *
-     * @since 1.0.0
-     */
-    protected function getLogger()
-    {
-        return Mage::registry('logger');
     }
 
     /**

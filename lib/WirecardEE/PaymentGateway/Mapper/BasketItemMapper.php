@@ -7,7 +7,7 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-namespace WirecardEE\PaymentGateway\Data;
+namespace WirecardEE\PaymentGateway\Mapper;
 
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Item;
@@ -19,14 +19,19 @@ use Wirecard\PaymentSdk\Entity\Item;
  */
 class BasketItemMapper
 {
-    /** @var \Mage_Sales_Model_Order_Item */
+    /**
+     * @var \Mage_Sales_Model_Order_Item
+     */
     protected $item;
 
+    /**
+     * @var string
+     */
     protected $currency;
 
     /**
      * @param \Mage_Sales_Model_Order_Item $item
-     * @param                              $currency
+     * @param string                       $currency
      *
      * @since 1.0.0
      */
@@ -37,35 +42,25 @@ class BasketItemMapper
     }
 
     /**
-     * @return \Mage_Sales_Model_Order_Item
+     * @return Item
      *
      * @since 1.0.0
      */
     public function getItem()
     {
-        return $this->item;
-    }
+        $amount = new Amount(BasketMapper::numberFormat($this->item->getPriceInclTax()), $this->currency);
 
-    /**
-     * @return Item
-     *
-     * @since 1.0.0
-     */
-    public function getWirecardItem()
-    {
-        $amount = new Amount(BasketMapper::numberFormat($this->getItem()->getPriceInclTax()), $this->currency);
-
-        $item = new Item($this->getItem()->getName(), $amount, (int)$this->getItem()->getQtyOrdered());
-        $item->setArticleNumber($this->getItem()->getSku());
-        $item->setDescription($this->getItem()->getDescription());
+        $item = new Item($this->item->getName(), $amount, (int)$this->item->getQtyOrdered());
+        $item->setArticleNumber($this->item->getSku());
+        $item->setDescription($this->item->getDescription());
 
         if ($amount->getValue() >= 0.0) {
             $taxAmount = new Amount(
-                BasketMapper::numberFormat($this->getItem()->getTaxAmount() / $this->getItem()->getQtyOrdered()),
+                BasketMapper::numberFormat($this->item->getTaxAmount() / (int)$this->item->getQtyOrdered()),
                 $this->currency
             );
 
-            $item->setTaxRate($this->getItem()->getTaxPercent());
+            $item->setTaxRate($this->item->getTaxPercent());
             $item->setTaxAmount($taxAmount);
         }
 

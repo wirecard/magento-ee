@@ -1,0 +1,42 @@
+<?php
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/LICENSE
+ */
+
+use WirecardEE\PaymentGateway\Service\Logger;
+
+$method     = $this->getData('method');
+$formFields = $this->getData('formFields');
+$url        = $this->getData('url');
+
+if (! $method || ! $formFields || ! $url) {
+    (new Logger())->error('Unable to render template "' . $this->getTemplate() . '" due to missing variables"');
+    echo Mage::helper('catalog')->__('Unable to render template');
+    return;
+}
+?>
+
+<div class="wirecardee-redirect" style="padding-top: 50px;">
+    <div class="content content--checkout confirm--content">
+        <h2><?php echo Mage::helper('catalog')->__('You will be redirect'); ?></h2>
+        <form id="wirecardee-redirect--form" method="<?php echo $method; ?>" action="<?php echo $url; ?>">
+            <?php
+            foreach ($formFields as $key => $value) {
+                ?>
+                <input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>"/>
+                <?php
+            }
+            ?>
+            <button class="button btn-cart" type="submit">
+                <?php echo Mage::helper('catalog')->__('Send'); ?>
+            </button>
+        </form>
+        <script type="text/javascript">
+            document.getElementById('wirecardee-redirect--form').submit();
+        </script>
+    </div>
+</div>

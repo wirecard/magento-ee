@@ -1,5 +1,11 @@
 <?xml version="1.0"?>
 <ruleset name="Default Coding Standard">
-    <description>Default Coding Standard in PSR</description>
+    <description>Default Coding Standard in PSR2</description>
     <rule ref="PSR2"/>
+    <file>.</file>
+    <exclude-pattern>./lib/WirecardEE/vendor/*</exclude-pattern>
+    <exclude-pattern>./tests/*</exclude-pattern>
+    <exclude-pattern>./node_modules/*</exclude-pattern>
+    <exclude-pattern>./js/*</exclude-pattern>
+    <exclude-pattern>./app/*</exclude-pattern>
 </ruleset>

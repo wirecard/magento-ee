@@ -7,12 +7,26 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+use Psr\Log\LoggerInterface;
+use WirecardEE\PaymentGateway\Service\Logger;
+use WirecardEE\PaymentGateway\Service\TransactionManager;
+
 /**
  * @since 1.0.0
  */
 class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
 {
     const DEVICE_FINGERPRINT_ID = 'WirecardEEDeviceFingerprint';
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * @var TransactionManager
+     */
+    protected $transactionManager;
 
     /**
      * Returns the device fingerprint id from the session. In case no device fingerprint id was generated so far a new
@@ -53,7 +67,8 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
     public function validateBasket()
     {
         $checkoutOrder = $this->getCheckoutSession()->getLastRealOrder();
-        $order         = Mage::getModel('sales/order')->load($checkoutOrder->getId());
+        /** @var Mage_Sales_Model_Order $order */
+        $order = Mage::getModel('sales/order')->load($checkoutOrder->getId());
 
         if (json_encode($checkoutOrder->getAllItems()) !== json_encode($order->getAllItems())) {
             $this->getLogger()->warning("Basket verification failed for order id: " . $checkoutOrder->getId());
@@ -119,6 +134,32 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
     }
 
     /**
+     * @return \Psr\Log\LoggerInterface
+     *
+     * @since 1.0.0
+     */
+    public function getLogger()
+    {
+        if (! $this->logger) {
+            $this->logger = new Logger();
+        }
+        return $this->logger;
+    }
+
+    /**
+     * @return TransactionManager
+     *
+     * @since 1.0.0
+     */
+    public function getTransactionManager()
+    {
+        if (! $this->transactionManager) {
+            $this->transactionManager = new TransactionManager($this->getLogger());
+        }
+        return $this->transactionManager;
+    }
+
+    /**
      * @return Mage_Core_Model_Abstract|Mage_Core_Model_Session
      *
      * @since 1.0.0
@@ -126,16 +167,6 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
     protected function getSession()
     {
         return Mage::getSingleton('core/session');
-    }
-
-    /**
-     * @return \Psr\Log\LoggerInterface
-     *
-     * @since 1.0.0
-     */
-    protected function getLogger()
-    {
-        return Mage::registry('logger');
     }
 
     /**

@@ -7,20 +7,17 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-namespace WirecardEE\PaymentGateway\Exception;
-
 /**
  * @since 1.0.0
  */
-class UnknownPaymentException extends \Exception
+class WirecardEE_PaymentGateway_Block_Seamless extends Mage_Core_Block_Template
 {
     /**
-     * @param string $paymentName
-     *
      * @since 1.0.0
      */
-    public function __construct($paymentName)
+    protected function _construct()
     {
-        parent::__construct("Unknown payment '$paymentName'");
+        parent::_construct();
+        $this->setTemplate('WirecardEE/seamless.phtml');
     }
 }

@@ -9,14 +9,18 @@
 
 namespace WirecardEE\PaymentGateway\Service;
 
-use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\Response\FailureResponse;
+use Wirecard\PaymentSdk\Response\FormInteractionResponse;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\TransactionService;
+use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\RedirectAction;
+use WirecardEE\PaymentGateway\Actions\ViewAction;
+use WirecardEE\PaymentGateway\Payments\Contracts\ProcessReturnInterface;
+use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 
 /**
  * Responsible for handling return actions. Payments may implement their own way of handling returns by implementing
@@ -24,22 +28,10 @@ use WirecardEE\PaymentGateway\Actions\RedirectAction;
  *
  * @since 1.0.0
  */
-class ReturnHandler
+class ReturnHandler extends Handler
 {
-    /** @var LoggerInterface */
-    protected $logger;
-
     /**
-     * @param LoggerInterface $logger
-     *
-     * @since 1.0.0
-     */
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
-    /**
+     * @param PaymentInterface                   $payment
      * @param \Mage_Core_Controller_Request_Http $request
      * @param TransactionService                 $transactionService
      *
@@ -48,39 +40,56 @@ class ReturnHandler
      * @since 1.0.0
      */
     public function handleRequest(
+        PaymentInterface $payment,
         \Mage_Core_Controller_Request_Http $request,
         TransactionService $transactionService
     ) {
+        if ($payment instanceof ProcessReturnInterface) {
+            $response = $payment->processReturn($transactionService, $request);
+            if ($response) {
+                return $response;
+            }
+        }
+
+        $params = $request->getParams();
+        if (! empty($params['jsresponse'])) {
+            return $transactionService->processJsResponse(
+                $request->getParams(),
+                \Mage::getUrl('paymentgateway/gateway/return', [
+                    'method' => $payment->getName(),
+                ])
+            );
+        }
+
         return $transactionService->handleResponse($request->getParams());
     }
 
     /**
-     * @param Response $response
+     * @param Response                $response
+     * @param \Mage_Sales_Model_Order $order
      *
-     * @return ErrorAction
+     * @return Action
      *
+     * @throws \Mage_Core_Exception
      * @since 1.0.0
      */
-    public function handleResponse(Response $response)
+    public function handleResponse(Response $response, \Mage_Sales_Model_Order $order)
     {
+        if ($response instanceof FormInteractionResponse) {
+            $this->transactionManager->createTransaction(TransactionManager::TYPE_RETURN, $order, $response);
+
+            return new ViewAction('paymentgateway/redirect', [
+                'method'     => $response->getMethod(),
+                'formFields' => $response->getFormFields(),
+                'url'        => $response->getUrl(),
+            ]);
+        }
+        if ($response instanceof InteractionResponse) {
+            $this->transactionManager->createTransaction(TransactionManager::TYPE_RETURN, $order, $response);
+
+            return new RedirectAction($response->getRedirectUrl());
+        }
         return $this->handleFailure($response);
-    }
-
-    /**
-     * @param Response $response
-     * @param string   $url
-     *
-     * @return RedirectAction
-     *
-     * @since 1.0.0
-     */
-    public function handleSuccess(Response $response, $url)
-    {
-        /** @var \Mage_Sales_Model_Order $order */
-        $order = \Mage::getModel('sales/order')->load($response->getCustomFields()->get('order-id'));
-        $order->sendNewOrderEmail();
-
-        return new RedirectAction($url);
     }
 
     /**
@@ -93,11 +102,24 @@ class ReturnHandler
     protected function handleFailure($response)
     {
         $message = 'Unexpected response';
-        $context = [get_class($response)];
 
         if ($response instanceof FailureResponse) {
             $message = 'Failure response';
+            $orderId = $response->getCustomFields()->get('order-id');
+            if ($orderId) {
+                /** @var \Mage_Sales_Model_Order $order */
+                $order = \Mage::getModel('sales/order')->load($orderId);
+                if ($order) {
+                    $order->addStatusHistoryComment(
+                        'Canceled due to failure response',
+                        \Mage_Sales_Model_Order::STATE_CANCELED
+                    );
+                }
+            }
         }
+
+        $context = [get_class($response)];
+
         if ($response instanceof Response) {
             $context = $response->getData();
         }

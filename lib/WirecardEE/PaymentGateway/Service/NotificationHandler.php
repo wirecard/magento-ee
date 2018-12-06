@@ -10,8 +10,8 @@
 namespace WirecardEE\PaymentGateway\Service;
 
 use Mage_Sales_Model_Order;
-use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\BackendService;
+use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
@@ -23,33 +23,13 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
  *
  * @since 1.0.0
  */
-class NotificationHandler
+class NotificationHandler extends Handler
 {
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
-     * @var TransactionManager
-     */
-    protected $transactionManager;
-
-    /**
-     * @param LoggerInterface $logger
-     *
-     * @since 1.0.0
-     */
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger             = $logger;
-        $this->transactionManager = new TransactionManager($logger);
-    }
-
     /**
      * @param Response       $response
      * @param BackendService $backendService
      *
+     * @return null
      * @throws \Exception
      *
      * @since 1.0.0
@@ -57,8 +37,27 @@ class NotificationHandler
     public function handleResponse(Response $response, BackendService $backendService)
     {
         if ($response instanceof SuccessResponse) {
+            /** @var Mage_Sales_Model_Order $order */
+            $order = \Mage::getModel('sales/order')->load($response->getCustomFields()->get('order-id'));
             $this->handleSuccess($response, $backendService);
+            $this->transactionManager->createTransaction(
+                TransactionManager::TYPE_NOTIFY,
+                $order,
+                $response
+            );
+            return;
         }
+
+        if ($response instanceof FailureResponse) {
+            $this->logger->error("Failure response", ['response' => $response->getRawData()]);
+            return;
+        }
+
+        $this->logger->error("Unexpected notification response", [
+            'class'    => get_class($response),
+            'response' => $response->getData(),
+        ]);
+        return;
     }
 
     /**
@@ -80,7 +79,7 @@ class NotificationHandler
             throw new \Exception("Order not found");
         }
 
-        $this->transactionManager->createTransaction($order, $response);
+        $this->transactionManager->createTransaction(TransactionManager::TYPE_NOTIFY, $order, $response);
 
         if (in_array($order->getStatus(), [
             \Mage_Sales_Model_Order::STATE_COMPLETE,
@@ -90,6 +89,10 @@ class NotificationHandler
         }
 
         $status = $this->getOrderStatus($backendService, $response);
+        if ($status === \Mage_Sales_Model_Order::STATE_PENDING_PAYMENT) {
+            return;
+        }
+
         $order->addStatusHistoryComment('Status updated by notification', $status);
         $order->save();
     }
@@ -108,9 +111,8 @@ class NotificationHandler
             return \Mage_Sales_Model_Order::STATE_PENDING_PAYMENT;
         }
         switch ($backendService->getOrderState($response->getTransactionType())) {
-            case BackendService::TYPE_PROCESSING:
-                return \Mage_Sales_Model_Order::STATE_COMPLETE;
             case BackendService::TYPE_AUTHORIZED:
+            case BackendService::TYPE_PROCESSING:
                 return \Mage_Sales_Model_Order::STATE_PROCESSING;
             case BackendService::TYPE_CANCELLED:
                 return \Mage_Sales_Model_Order::STATE_CANCELED;
