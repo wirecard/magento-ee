@@ -19,7 +19,7 @@
   "type": "magento-extension",
   "scripts": {
     "upload-coverage": "codacycoverage clover build/coverage/xml",
-    "cs-check": "phpcs --standard=phpcs.xml",
+    "cs-check": "phpcs --standard=phpcs.xml -s",
     "cs-fix": "phpcbf --standard=phpcs.xml",
     "test-coverage": "phpunit --colors=always --coverage-clover build/coverage.xml"
   },
