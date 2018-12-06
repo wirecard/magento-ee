@@ -111,7 +111,7 @@ class TransactionManager
                 return;
 
             case self::TYPE_NOTIFY:
-                // Since notifies are the source of truth for transactions they're overwriting the initial transaction.
+                // Since notifications are the source of truth for transactions they're overwriting the initial transaction.
                 $mageTransactionModel->loadByTxnId($transactionId);
 
                 // Be sure not to overwrite notifications!
@@ -144,7 +144,7 @@ class TransactionManager
                     $mageTransactionModel->save();
                 } catch (\Exception $e) {
                     // Being unable to save at this point is very likely due to a transaction id collision, which means
-                    // a initial transaction with this id has been saved during the execution of this method. Let's
+                    // an initial transaction with this id has been saved during the execution of this method. Let's
                     // try again to find this transaction and overwrite it.
                     if ($mageTransactionModel->loadByTxnId($transactionId)->getId()) {
                         $mageTransactionModel->setTxnId($transactionId);
