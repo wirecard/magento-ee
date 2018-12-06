@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "scripts": {
     "test": "mocha tests/Selenium/**/*Test.js --timeout 220000",
-    "test:default": "mocha tests/Selenium/Payments/DefaultTest.js --timeout 60000"
+    "test:default": "mocha tests/Selenium/Payments/DefaultTest.js --timeout 60000",
+    "test:creditcard": "mocha tests/Selenium/Payments/CreditCardTest.js --timeout 60000"
   },
   "private": true,
   "license": "GPL-3.0",
