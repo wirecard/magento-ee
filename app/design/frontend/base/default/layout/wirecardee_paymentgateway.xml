@@ -13,4 +13,11 @@
                    template="WirecardEE/checkout/success.phtml"/>
         </reference>
     </checkout_onepage_success>
+    <checkout_onepage_review>
+    <reference name="checkout.onepage.review.info.items.after">
+        <block type="paymentgateway/additional" name="wirecard.additional" template="WirecardEE/checkout/additional.phtml">
+            <block type="paymentgateway/additional" name="wirecard.additional.sepa" template="WirecardEE/checkout/additional/sepa.phtml" />
+        </block>
+    </reference>
+    </checkout_onepage_review>
 </layout>
