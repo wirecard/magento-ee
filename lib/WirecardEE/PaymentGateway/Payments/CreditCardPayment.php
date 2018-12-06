@@ -186,10 +186,6 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface, Proc
 
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
 
-        // $paymentConfig->setVaultEnabled($this->getPluginConfig('CreditCardEnableVault'));
-        // $paymentConfig->setAllowAddressChanges($this->getPluginConfig('CreditCardAllowAddressChanges'));
-        // $paymentConfig->setThreeDUsageOnTokens($this->getPluginConfig('CreditCardThreeDUsageOnTokens'));
-
         return $paymentConfig;
     }
 
