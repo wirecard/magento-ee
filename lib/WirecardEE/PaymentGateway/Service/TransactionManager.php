@@ -111,7 +111,8 @@ class TransactionManager
                 return;
 
             case self::TYPE_NOTIFY:
-                // Since notifications are the source of truth for transactions they're overwriting the initial transaction.
+                // Since notifications are the source of truth for transactions they're overwriting the
+                // initial transaction.
                 $mageTransactionModel->loadByTxnId($transactionId);
 
                 // Be sure not to overwrite notifications!
