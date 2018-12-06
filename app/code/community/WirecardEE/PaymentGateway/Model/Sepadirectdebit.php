@@ -18,6 +18,8 @@ class WirecardEE_PaymentGateway_Model_Sepadirectdebit extends WirecardEE_Payment
     protected $_code = 'wirecardee_paymentgateway_sepadirectdebit';
     protected $_paymentMethod = SepaDirectDebitTransaction::NAME;
 
+    protected $_formBlockType = 'paymentgateway/form_sepa';
+
     /**
      * Return available transaction types for this payment.
      *

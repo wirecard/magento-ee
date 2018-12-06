@@ -146,5 +146,16 @@
                 </paymentgateway>
             </updates>
         </layout>
+        <events>
+            <checkout_type_onepage_save_order>
+                <observers>
+                    <wirecard_ee_reviewfield>
+                        <type>model</type>
+                        <class>paymentgateway/observer</class>
+                        <method>checkoutTypeOnepageSaveOrder</method>
+                    </wirecard_ee_reviewfield>
+                </observers>
+            </checkout_type_onepage_save_order>
+        </events>
     </frontend>
 </config>

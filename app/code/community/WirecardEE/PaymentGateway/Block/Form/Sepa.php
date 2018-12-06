@@ -11,36 +11,26 @@
  * @since 1.0.0
  * @codingStandardsIgnoreStart
  */
-class WirecardEE_PaymentGateway_Block_Additional extends Mage_Payment_Block_Info
+class WirecardEE_PaymentGateway_Block_Form_Sepa extends WirecardEE_PaymentGateway_Block_Form
 {
-    protected $_wirecardEEHasAdditional = true;
     /**
      * @since 1.0.0
      */
     protected function _construct()
     {
         parent::_construct();
-
-        if ($this->getAction()->getFullActionName() !== 'adminhtml_sales_order_view') {
-            $this->setTemplate('WirecardEE/checkout/additional.phtml');
-        }
+        $this->setTemplate('WirecardEE/form/sepa.phtml');
     }
 
     /**
-     *
      * @return string
-     * @throws Mage_Core_Exception
-     * @throws \WirecardEE\PaymentGateway\UnknownPaymentException
      *
      * @since 1.0.0
      */
-    protected function _toHtml()
+    public function getMethodLabelAfterHtml()
     {
-        //$info = $this->getInfo();
-
         try {
-            $payment = Mage::getSingleton('checkout/session')->getQuote()->getPayment()->getMethodInstance();
-            $paymentCode = $payment->getCode();
+            $paymentCode = $this->getMethodCode();
             $paymentName = str_replace('wirecardee_paymentgateway_', '', $paymentCode);
             $payment     = (new \WirecardEE\PaymentGateway\Service\PaymentFactory())->create($paymentName);
 

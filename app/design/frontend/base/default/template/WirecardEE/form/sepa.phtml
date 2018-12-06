@@ -1,0 +1,49 @@
+<?php
+/**
+* Shop System Plugins:
+* - Terms of Use can be found under:
+* https://github.com/wirecard/magento-ee/blob/master/_TERMS_OF_USE
+* - License can be found under:
+* https://github.com/wirecard/magento-ee/blob/master/LICENSE
+*/
+
+$additionalData = $this->getData('WirecardEEAdditionalViewAssignments');
+?>
+<div class="form-list" id="payment_form_<?php echo $this->getMethodCode() ?>" style="display:none;">
+    <input type="hidden" id="wirecardee-sepa--confirm-mandate" class="wirecardee--form-field"
+           name="wirecardElasticEngine[sepaConfirmMandate]"
+           required="required" value=""/>
+    <div>
+        <label><?php echo $this->__('First Name') ?>*</label>
+        <span>
+            <input class="is--required wirecardee--form-field" id="wirecardee-sepa--first-name" type="text"
+                   name="wirecardElasticEngine[sepaFirstName]" autocomplete="off"
+                   required="required" placeholder="<?php echo $this->__('First Name'); ?>"/>
+        </span>
+    </div>
+    <div>
+        <label><?php echo $this->__('Last Name') ?>*</label>
+        <span>
+            <input class="is--required wirecardee--form-field" id="wirecardee-sepa--last-name" type="text"
+                   name="wirecardElasticEngine[sepaLastName]" autocomplete="off"
+                   required="required" placeholder="<?php echo $this->__('Last Name'); ?>"}{/s}"/>
+        </span>
+    </div>
+    <div>
+        <label><?php echo $this->__('IBAN') ?>*</label>
+        <span>
+            <input class="is--required wirecardee--form-field" id="wirecardee-sepa--iban" type="text"
+                   name="wirecardElasticEngine[sepaIban]" autocomplete="off"
+                   required="required" placeholder="<?php echo $this->__('IBAN'); ?>"}{/s}"/>
+        </span>
+    </div>
+    <?php if ($additionalData['showBic']) : ?>
+    <div>
+        <label><?php echo $this->__('BIC') ?></label>
+        <span>
+            <input type="text" id="wirecardee-sepa--bic wirecardee--form-field" name="wirecardElasticEngine[sepaBic]"
+                   autocomplete="off" placeholder="<?php echo $this->__('BIC'); ?>}{/s}"/>
+        </span>
+    </div>
+    <?php endif; ?>
+</div>
