@@ -117,6 +117,7 @@ class ReturnHandler extends Handler
                 }
             }
         }
+
         $context = [get_class($response)];
 
         if ($response instanceof Response) {
