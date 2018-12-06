@@ -40,4 +40,35 @@ class WirecardEE_PaymentGateway_Model_Sepadirectdebit extends WirecardEE_Payment
             ],
         ];
     }
+
+    public function validate()
+    {
+        parent::validate();
+        $paymentData = Mage::app()->getRequest()->getParam('wirecardElasticEngine');
+
+        if (empty($paymentData['sepaFirstName']))
+        {
+            $errorCode = 'invalid_data';
+            $errorMsg = $this->_getHelper()->__("First Name is a required field.\n");
+        }
+
+        if (empty($paymentData['sepaLastName']))
+        {
+            $errorCode = 'invalid_data';
+            $errorMsg .= $this->_getHelper()->__('Last Name is a required field.');
+        }
+
+        if (empty($paymentData['sepaIban']))
+        {
+            $errorCode = 'invalid_data';
+            $errorMsg .= $this->_getHelper()->__('IBAN is a required field.');
+        }
+
+        if ($errorMsg)
+        {
+            Mage::throwException($errorMsg);
+        }
+
+        return $this;
+    }
 }
