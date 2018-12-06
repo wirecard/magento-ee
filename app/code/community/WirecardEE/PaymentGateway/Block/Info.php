@@ -9,7 +9,6 @@
 
 /**
  * @since 1.0.0
- * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Block_Info extends Mage_Payment_Block_Info
 {
@@ -30,7 +29,7 @@ class WirecardEE_PaymentGateway_Block_Info extends Mage_Payment_Block_Info
      *
      * @return string
      * @throws Mage_Core_Exception
-     * @throws \WirecardEE\PaymentGateway\UnknownPaymentException
+     * @throws \WirecardEE\PaymentGateway\Exception\UnknownPaymentException
      *
      * @since 1.0.0
      */

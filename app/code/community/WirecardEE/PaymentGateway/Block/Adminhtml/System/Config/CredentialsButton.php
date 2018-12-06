@@ -9,7 +9,6 @@
 
 /**
  * @since 1.0.0
- * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Block_Adminhtml_System_Config_CredentialsButton extends Mage_Adminhtml_Block_System_Config_Form_Field
 {

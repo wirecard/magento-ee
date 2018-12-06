@@ -12,12 +12,9 @@ use Wirecard\PaymentSdk\TransactionService;
 
 /**
  * @since 1.0.0
- * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController extends Mage_Adminhtml_Controller_Action
 {
-    // @codingStandardsIgnoreEnd
-
     /**
      * Check Credentials against Wirecard server.
      *

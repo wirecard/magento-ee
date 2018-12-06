@@ -13,12 +13,9 @@ use WirecardEE\PaymentGateway\Service\TransactionManager;
 
 /**
  * @since 1.0.0
- * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
 {
-    // @codingStandardsIgnoreEnd
-
     const DEVICE_FINGERPRINT_ID = 'WirecardEEDeviceFingerprint';
 
     /**
