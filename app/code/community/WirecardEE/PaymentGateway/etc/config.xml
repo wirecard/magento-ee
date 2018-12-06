@@ -87,6 +87,22 @@
                 <three_d_min_limit>100</three_d_min_limit>
                 <three_d_min_limit_currency>EUR</three_d_min_limit_currency>
             </wirecardee_paymentgateway_creditcard>
+            <wirecardee_paymentgateway_sepadirectdebit>
+                <active>0</active>
+                <model>paymentgateway/sepadirectdebit</model>
+                <title>Wirecard SEPA Direct Debit</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>16390-testing</api_user>
+                <api_password>3!3013=D3fD8X7</api_password>
+                <api_maid>933ad170-88f0-4c3d-a862-cff315ecfbc0</api_maid>
+                <api_secret>ecdf5990-0372-47cd-a55d-037dccfe9d25</api_secret>
+                <transaction_type>pay</transaction_type>
+                <fraud_prevention>1</fraud_prevention>
+                <show_bic>0</show_bic>
+                <creditor_id>DE98ZZZ09999999999</creditor_id>
+                <creditor_name></creditor_name>
+                <creditor_address></creditor_address>
+            </wirecardee_paymentgateway_sepadirectdebit>
         </payment>
     </default>
 
