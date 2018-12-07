@@ -103,6 +103,17 @@
                 <creditor_name></creditor_name>
                 <creditor_address></creditor_address>
             </wirecardee_paymentgateway_sepadirectdebit>
+            <wirecardee_paymentgateway_sofort>
+                <active>0</active>
+                <model>paymentgateway/sofort</model>
+                <title>Wirecard Sofort.</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>16390-testing</api_user>
+                <api_password>3!3013=D3fD8X7</api_password>
+                <api_maid>6c0e7efd-ee58-40f7-9bbd-5e7337a052cd</api_maid>
+                <api_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</api_secret>
+                <fraud_prevention>1</fraud_prevention>
+            </wirecardee_paymentgateway_sofort>
         </payment>
     </default>
 
