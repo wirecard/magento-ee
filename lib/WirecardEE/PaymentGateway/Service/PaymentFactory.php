@@ -12,11 +12,13 @@ namespace WirecardEE\PaymentGateway\Service;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
+use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
 use WirecardEE\PaymentGateway\Payments\CreditCardPayment;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 use WirecardEE\PaymentGateway\Payments\PaypalPayment;
 use WirecardEE\PaymentGateway\Payments\SepaPayment;
+use WirecardEE\PaymentGateway\Payments\SofortPayment;
 
 /**
  * Responsible for creating payment objects based on their name.
@@ -56,6 +58,7 @@ class PaymentFactory
             PayPalTransaction::NAME          => PaypalPayment::class,
             CreditCardTransaction::NAME      => CreditCardPayment::class,
             SepaDirectDebitTransaction::NAME => SepaPayment::class,
+            SofortTransaction::NAME          => SofortPayment::class,
         ];
     }
 

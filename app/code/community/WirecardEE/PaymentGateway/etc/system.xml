@@ -352,7 +352,7 @@
                         </creditor_address>
                     </fields>
                 </wirecardee_paymentgateway_sepadirectdebit>
-                <wirecardee_paymentgateway_sofort>
+                <wirecardee_paymentgateway_sofortbanking>
                     <label>Sofort.</label>
                     <sort_order>1003</sort_order>
                     <show_in_default>1</show_in_default>
@@ -398,7 +398,7 @@
                         <api_test_button>
                             <frontend_type>button</frontend_type>
                             <frontend_model>paymentgateway/adminhtml_system_config_credentialsButton</frontend_model>
-                            <method>sofort</method>
+                            <method>sofortbanking</method>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -426,7 +426,7 @@
                             <show_in_store>1</show_in_store>
                         </fraud_prevention>
                     </fields>
-                </wirecardee_paymentgateway_sofort>
+                </wirecardee_paymentgateway_sofortbanking>
             </groups>
         </payment>
     </sections>
