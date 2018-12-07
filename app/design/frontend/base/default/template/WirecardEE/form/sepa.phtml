@@ -151,6 +151,10 @@ if(!$mandateText) {
          $(".bank_bic").text();
      });
      Payment.prototype.save = Payment.prototype.save.wrap(function(save) {
+         if($("[name=payment\\[method\\]]:checked").val() !== "wirecardee_paymentgateway_sepadirectdebit") {
+             save();
+             return;
+         }
          $("#wirecardee-sepa--cancle-button").on('click', function() {
              $(".wirecardee--sepa-mandate").hide();
          });
