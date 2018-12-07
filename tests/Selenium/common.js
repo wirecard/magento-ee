@@ -52,6 +52,8 @@ exports.checkConfirmationPage = async (driver, title) => {
   await driver.wait(until.elementLocated(By.className('sub-title')));
   const panelTitle = await driver.findElement(By.className('sub-title')).getText();
   expect(panelTitle.toLowerCase()).to.equal((title).toLowerCase());
+  const orderId = await driver.findElement(By.xpath('//p[contains(text(), "Your order # is")]')).getText();
+  console.log(orderId);
 };
 
 exports.placeOrder = async (driver) => {
