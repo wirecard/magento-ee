@@ -46,26 +46,27 @@ class WirecardEE_PaymentGateway_Model_Sepadirectdebit extends WirecardEE_Payment
         parent::validate();
         $paymentData = Mage::app()->getRequest()->getParam('wirecardElasticEngine');
 
-        if (empty($paymentData['sepaFirstName']))
-        {
+        if (empty($paymentData['sepaFirstName'])) {
             $errorCode = 'invalid_data';
             $errorMsg = $this->_getHelper()->__("First Name is a required field.\n");
         }
 
-        if (empty($paymentData['sepaLastName']))
-        {
+        if (empty($paymentData['sepaLastName'])) {
             $errorCode = 'invalid_data';
             $errorMsg .= $this->_getHelper()->__('Last Name is a required field.');
         }
 
-        if (empty($paymentData['sepaIban']))
-        {
+        if (empty($paymentData['sepaIban'])) {
             $errorCode = 'invalid_data';
             $errorMsg .= $this->_getHelper()->__('IBAN is a required field.');
         }
 
-        if ($errorMsg)
-        {
+        if (empty($paymentData['sepaConfirmMandate']) || $paymentData['sepaConfirmMandate'] !== 'confirmed') {
+            $errorCode = 'invalid_data';
+            $errorMsg .= $this->_getHelper()->__('You have to confirm the mandate.');
+        }
+
+        if ($errorMsg) {
             Mage::throwException($errorMsg);
         }
 

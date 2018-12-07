@@ -8,6 +8,30 @@
 */
 
 $additionalData = $this->getData('WirecardEEAdditionalViewAssignments');
+
+$mandateText = Mage::app()->getLayout()->createBlock('cms/block')->setBlockId('wirecardee_sepa_mandate_text')->toHtml();
+
+if(!$mandateText) {
+    $mandateTextForm = $this->__('I authorize the creditor %1$s to send instructions to my bank to collect one single direct debit from my account. At the same time I instruct my bank to debit my account in accordance with the instructions from the creditor %1$s<br /><br />Note: As part of my rights, I am entitled to a refund under the terms and conditions of my agreement with my bank. A refund must be claimed within 8 weeks starting from the date on which my account was debited.<br /><br />I irrevocably agree that, in the event that the direct debit is not honored, or objection against the direct debit exists, my bank will disclose to the creditor %1$s my full name, address and date of birth.');
+
+    $content = sprintf($mandateTextForm, '{{config path=\'payment/wirecardee_paymentgateway_sepadirectdebit/creditor_name\'}}');
+
+    $currentStore = Mage::app()->getStore()->getStoreId();
+    try {
+        Mage::app()->setCurrentStore(Mage_Core_Model_App::ADMIN_STORE_ID);
+        $block = Mage::getModel('cms/block');
+        $block->setTitle('Wirecard Sepa Mandate Text');
+        $block->setIdentifier('wirecardee_sepa_mandate_text');
+        $block->setStores($currentStore);
+        $block->setIsActive(1);
+        $block->setContent($content);
+        $block->save();
+    } catch(Exception $e) {
+    }
+    Mage::app()->setCurrentStore($currentStore);
+
+    $mandateText = sprintf($mandateTextForm, Mage::getStoreConfig('payment/wirecardee_paymentgateway_sepadirectdebit/creditor_name'));
+}
 ?>
 <div class="form-list" id="payment_form_<?php echo $this->getMethodCode() ?>" style="display:none;">
     <input type="hidden" id="wirecardee-sepa--confirm-mandate" class="wirecardee--form-field"
@@ -42,8 +66,106 @@ $additionalData = $this->getData('WirecardEEAdditionalViewAssignments');
         <label><?php echo $this->__('BIC') ?></label>
         <span>
             <input type="text" id="wirecardee-sepa--bic wirecardee--form-field" name="wirecardElasticEngine[sepaBic]"
-                   autocomplete="off" placeholder="<?php echo $this->__('BIC'); ?>}{/s}"/>
+                   autocomplete="off" placeholder="<?php echo $this->__('BIC'); ?>"/>
         </span>
     </div>
     <?php endif; ?>
+    <div class="modal-body wirecardee--sepa-mandate" style="display: none;">
+        <table border="0" cellpadding="0" cellspacing="0" class="stretch">
+            <tr>
+                <td class="text11justify">
+                    <i><?php echo $this->__("Creditor") ?></i><br/>
+                    <?php
+                    echo $additionalData['creditorName'];
+                    if ($additionalData['creditorName']  && $additionalData['creditorAddress']) {
+                    echo ',';
+                    }
+                    echo $additionalData['creditorAddress']
+                    ?>
+                    <br/>
+                    <?php echo $this->__('Creditor ID') ?>: <?php echo $additionalData['creditorId'] ?><br/>
+                </td>
+            </tr>
+            <tr>
+                <td class="text11">
+                    <i><?php echo $this->__('Debtor'); ?></i><br/>
+                    <?php echo $this->__('Account owner'); ?>:
+                    <span class="first_last_name"></span><br/>
+                    <?php echo $this->__('IBAN'); ?>:
+                    <span class="bank_iban"></span><br/>
+                    <?php if ($additionalData['showBic'] ) : ?>
+                    <?php echo $this->__('BIC'); ?>:
+                    <span class="bank_bic"></span>
+                    <br/>
+                    <?php endif; ?>
+                </td>
+            </tr>
+            <tr>
+                <td class="text11justify">
+                    <?php echo $mandateText; ?>
+                </td>
+            </tr>
+            <tr>
+                <td class="text11justify">
+                    <table border="0" width="100%">
+                        <tr>
+                            <td class="text11justify">
+                                <?php
+                                echo $additionalData['creditorAddress'];
+                                echo date(" d.m.Y");
+                                ?>
+                                <br/>
+                                <span class="first_last_name"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="checkbox" id="wirecardee-sepa--confirm-check" name="sepa-check"
+                                       required="required">
+                                <label for="wirecardee-sepa--confirm-check"><?php echo $this->__('I have read and accepted the SEPA Direct Debit Mandate information.'); ?></label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right;">
+                                <button class="btn btn-primary" id="wirecardee-sepa--cancel-button"
+                                        type="button"><?php echo $this->__('Cancel'); ?></button>
+                                <button class="btn btn-primary" id="wirecardee-sepa--confirm-button"
+                                        type="button"><?php echo $this->__('Confirm'); ?></button>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>
+<script>
+ jQuery(function($){
+     $("[name^=wirecardElasticEngine]").on('change', function(){
+         var firstname = $("#wirecardee-sepa--first-name").val(),
+             lastname = $("#wirecardee-sepa--last-name").val(),
+             iban = $("#wirecardee-sepa--iban").val(),
+             bic = $("#wirecardee-sepa--bic").val();
+         $(".first_last_name").text(firstname + " " + lastname);
+         $(".bank_iban").text(iban);
+         $(".bank_bic").text();
+     });
+     Payment.prototype.save = Payment.prototype.save.wrap(function(save) {
+         $("#wirecardee-sepa--cancle-button").on('click', function() {
+             $(".wirecardee--sepa-mandate").hide();
+         });
+
+         $("#wirecardee-sepa--confirm-button").on('click', function() {
+             $(".wirecardee--sepa-mandate").hide();
+
+             if($("#wirecardee-sepa--confirm-check").is(":checked")) {
+                 $("#wirecardee-sepa--confirm-mandate").val("confirmed");
+                 save();
+             }
+         });
+
+         $(".wirecardee--sepa-mandate").show();
+     });
+ });
+
+</script>
