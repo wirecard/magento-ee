@@ -7,7 +7,14 @@
  */
 
 const { Builder } = require('selenium-webdriver');
-const { placeOrder, checkConfirmationPage, choosePaymentMethod, fillOutGuestCheckout, addProductToCartAndGotoCheckout, chooseFlatrateShipping } = require('../common');
+const {
+  placeOrder,
+  checkConfirmationPage,
+  choosePaymentMethod,
+  fillOutGuestCheckout,
+  addProductToCartAndGotoCheckout,
+  chooseFlatRateShipping
+} = require('../common');
 
 describe('default test', () => {
   const driver = new Builder()
@@ -17,7 +24,7 @@ describe('default test', () => {
   it('should check the default checkout', async () => {
     await addProductToCartAndGotoCheckout(driver, '/accessories/eyewear/aviator-sunglasses.html');
     await fillOutGuestCheckout(driver);
-    await chooseFlatrateShipping(driver);
+    await chooseFlatRateShipping(driver);
     await choosePaymentMethod(driver,'p_method_cashondelivery');
     await placeOrder(driver);
     await checkConfirmationPage(driver, 'Thank you for your purchase!');
