@@ -226,7 +226,7 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface, Proc
         $transaction->setAdditionalInformation(
             \Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS,
             array_merge($requestDataArray, [
-                TransactionManager::TYPE_KEY => TransactionManager::TYPE_INITIAL
+                TransactionManager::TYPE_KEY => TransactionManager::TYPE_INITIAL_REQUEST
             ])
         );
         $transaction->save();
