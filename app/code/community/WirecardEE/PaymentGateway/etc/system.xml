@@ -337,14 +337,14 @@
                             <show_in_store>1</show_in_store>
                         </creditor_id>
                         <creditor_name>
-                            <label>Creditor ID</label>
+                            <label>Creditor Name</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </creditor_name>
                         <creditor_address>
-                            <label>Creditor ID</label>
+                            <label>Creditor Address</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>

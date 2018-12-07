@@ -10,6 +10,8 @@
 namespace WirecardEE\PaymentGateway\Payments;
 
 use Wirecard\PaymentSdk\Config\SepaConfig;
+use Wirecard\PaymentSdk\Entity\AccountHolder;
+use Wirecard\PaymentSdk\Entity\Mandate;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\TransactionService;
@@ -136,15 +138,17 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
         TransactionService $transactionService,
         Redirect $redirect
     ) {
-        /*
         $additionalPaymentData = $orderSummary->getAdditionalPaymentData();
-        if (! isset($additionalPaymentData['sepaConfirmMandate'])
-            || $additionalPaymentData['sepaConfirmMandate'] !== 'confirmed'
-            || ! isset($additionalPaymentData['sepaIban'])
+        if (/*! isset($additionalPaymentData['sepaConfirmMandate'])
+              || $additionalPaymentData['sepaConfirmMandate'] !== 'confirmed'
+            || */! isset($additionalPaymentData['sepaIban'])
             || ! isset($additionalPaymentData['sepaFirstName'])
             || ! isset($additionalPaymentData['sepaLastName'])
         ) {
-            throw new InsufficientDataException('Insufficient Data for SEPA Direct Debit Transaction');
+            //throw new InsufficientDataException('Insufficient Data for SEPA Direct Debit Transaction');
+            // FIXXXME
+            var_dump($additionalPaymentData);
+            exit();
         }
 
         $transaction = $this->getTransaction();
@@ -163,7 +167,6 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
         $transaction->setMandate($mandate);
 
         return null;
-        */
     }
     
     /**
@@ -180,7 +183,7 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
     private function generateMandateId(OrderSummary $orderSummary)
     {
         return $this->getPluginConfig('SepaCreditorId') . '-' .
-               substr($orderSummary->getPaymentUniqueId(), 10, 5) . '-' .
-               substr($orderSummary->getPaymentUniqueId(), 0, 10);
+               substr($orderSummary->getOrder()->getRealOrderId(), 10, 5) . '-' .
+               substr($orderSummary->getOrder()->getRealOrderId(), 0, 10);
     }
 }

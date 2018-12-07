@@ -7,6 +7,8 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+use WirecardEE\PaymentGateway\Service\SessionManager;
+
 /**
  * @since 1.0.0
  * @codingStandardsIgnoreStart
@@ -42,9 +44,11 @@ class WirecardEE_PaymentGateway_Model_Observer
 
     public function checkoutTypeOnepageSaveOrder(Varien_Event_Observer $observer)
     {
+        //        var_dump(get_class(Mage::getSingleton("core/session",  array("name"=>"frontend"))));
         /** @var Mage_Sales_Model_Order $order */
-        $additionalData = Mage::app()->getRequest()->getParams('wirecardElasticEngine');
-        $session = Mage::getSingleton("core/session",  array("name"=>"frontend"));
-        $session->setData("wirecardEEAdditionalData", $additionalData);
+        $additionalData = Mage::app()->getRequest()->getParam('wirecardElasticEngine');
+        $sessionManager = new SessionManager(Mage::getSingleton("core/session",  array("name"=>"frontend")));
+        $sessionManager->storePaymentData($additionalData);
+        //        $session->setData("wirecardEEAdditionalData", $additionalData);
     }
 }
