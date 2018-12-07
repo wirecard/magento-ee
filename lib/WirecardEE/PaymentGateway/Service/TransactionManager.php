@@ -170,6 +170,7 @@ class TransactionManager
                 return;
         }
 
+        $this->logger->error("Unable to create transaction due to unknown type ($type)");
         throw new \RuntimeException("Unknown transaction type");
     }
 
