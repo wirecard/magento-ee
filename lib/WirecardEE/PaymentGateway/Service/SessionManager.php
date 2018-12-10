@@ -27,11 +27,11 @@ class SessionManager
     }
 
     /**
-     * @param array $paymentData
+     * @param $paymentData
      *
      * @since 1.0.0
      */
-    public function storePaymentData(array $paymentData)
+    public function storePaymentData($paymentData)
     {
         $this->session->setData(self::PAYMENT_DATA, $paymentData);
     }

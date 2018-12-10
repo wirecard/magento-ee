@@ -352,6 +352,36 @@
                         </creditor_address>
                     </fields>
                 </wirecardee_paymentgateway_sepadirectdebit>
+                <wirecardee_paymentgateway_sepacredittransfer>
+                    <label>Wirecard SEPA Credit Transfer</label>
+                    <sort_order>1002</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <api_maid translate="label">
+                            <label>MAID</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </api_maid>
+                        <api_secret translate="label">
+                            <label>Secret</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </api_secret>
+                        <creditor_id>
+                            <label>Creditor ID</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </creditor_id>
+                    </fields>
+                </wirecardee_paymentgateway_sepacredittransfer>
             </groups>
         </payment>
     </sections>
