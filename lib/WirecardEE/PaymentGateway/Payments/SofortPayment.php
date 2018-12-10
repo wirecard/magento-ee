@@ -13,6 +13,7 @@ use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Config\SepaConfig;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\Operation;
+use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
@@ -22,6 +23,7 @@ use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 class SofortPayment extends Payment implements ProcessPaymentInterface
 {
     const NAME = SofortTransaction::NAME;
+    const BACKEND_NAME = SepaCreditTransferTransaction::NAME;
 
     /**
      * @var SofortTransaction
@@ -82,9 +84,25 @@ class SofortPayment extends Payment implements ProcessPaymentInterface
         $paymentConfig->setTransactionSecret($this->getPluginConfig('api_secret'));
         $paymentConfig->setTransactionOperation(Operation::PAY);
         // $paymentConfig->setSendDescriptor(true);
-        // $paymentConfig->setBackendTransactionMAID($this->getPluginConfig('SepaBackendMerchantId'));
-        // $paymentConfig->setBackendTransactionSecret($this->getPluginConfig('SepaBackendSecret'));
-        // $paymentConfig->setBackendCreditorId($this->getPluginConfig('SepaBackendCreditorId'));
+        $paymentConfig->setOrderIdentification(true);
+        $paymentConfig->setBackendTransactionMAID(
+            $this->getPluginConfig(
+                'api_maid',
+                Payment::CONFIG_PREFIX . self::BACKEND_NAME
+            )
+        );
+        $paymentConfig->setBackendTransactionSecret(
+            $this->getPluginConfig(
+                'api_secret',
+                Payment::CONFIG_PREFIX . self::BACKEND_NAME
+            )
+        );
+        $paymentConfig->setBackendCreditorId(
+            $this->getPluginConfig(
+                'creditor_id',
+                Payment::CONFIG_PREFIX . self::BACKEND_NAME
+            )
+        );
 
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
 
