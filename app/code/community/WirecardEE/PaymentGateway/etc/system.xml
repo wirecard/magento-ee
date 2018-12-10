@@ -249,6 +249,7 @@
                     <fields>
                         <title translate="label">
                             <label>Title</label>
+                            <sort_order>1</sort_order>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -256,6 +257,7 @@
                         </title>
                         <active translate="label">
                             <label>Enabled</label>
+                            <sort_order>2</sort_order>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <show_in_default>1</show_in_default>
@@ -264,6 +266,7 @@
                         </active>
                         <api_url translate="label">
                             <label>Base URL</label>
+                            <sort_order>3</sort_order>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -272,6 +275,7 @@
                         <api_user translate="label">
                             <label>HTTP User</label>
                             <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -279,6 +283,7 @@
                         <api_password translate="label">
                             <label>HTTP Password</label>
                             <frontend_type>text</frontend_type>
+                            <sort_order>5</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -287,10 +292,123 @@
                             <frontend_type>button</frontend_type>
                             <frontend_model>paymentgateway/adminhtml_system_config_credentialsButton</frontend_model>
                             <method>sepadirectdebit</method>
+                            <sort_order>6</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </api_test_button>
+                        <api_maid translate="label">
+                            <label>MAID</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </api_maid>
+                        <api_secret translate="label">
+                            <label>Secret</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>8</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </api_secret>
+                        <transaction_type translate="label">
+                            <label>Payment action</label>
+                            <source_model>paymentgateway/sepadirectdebit</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>9</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </transaction_type>
+                        <fraud_prevention translate="label">
+                            <label>Send additional data</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>10</sort_order>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </fraud_prevention>
+                        <show_bic translate="label">
+                            <label>BIC enabled</label>
+                            <sort_order>11</sort_order>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_bic>
+                        <creditor_id>
+                            <label>Creditor ID</label>
+                            <validate>required-entry</validate>
+                            <depends><active>1</active></depends>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </creditor_id>
+                        <creditor_name>
+                            <label>Creditor Name</label>
+                            <validate>required-entry</validate>
+                            <depends><active>1</active></depends>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>13</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </creditor_name>
+                        <creditor_street>
+                            <label>Creditor Street</label>
+                            <validate>required-entry</validate>
+                            <depends><active>1</active></depends>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>14</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </creditor_street>
+                        <creditor_zip>
+                            <label>Creditor Zip</label>
+                            <validate>required-entry</validate>
+                            <depends><active>1</active></depends>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </creditor_zip>
+                        <creditor_city>
+                            <label>Creditor City</label>
+                            <validate>required-entry</validate>
+                            <depends><active>1</active></depends>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>16</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </creditor_city>
+                        <creditor_country>
+                            <label>Creditor Country</label>
+                            <validate>required-entry</validate>
+                            <depends><active>1</active></depends>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>17</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </creditor_country>
+                    </fields>
+                </wirecardee_paymentgateway_sepadirectdebit>
+                <wirecardee_paymentgateway_sepacredit>
+                    <label>Wirecard SEPA Credit Transfer</label>
+                    <sort_order>1002</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
                         <api_maid translate="label">
                             <label>MAID</label>
                             <frontend_type>text</frontend_type>
@@ -305,30 +423,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </api_secret>
-                        <transaction_type translate="label">
-                            <label>Payment action</label>
-                            <source_model>paymentgateway/sepadirectdebit</source_model>
-                            <frontend_type>select</frontend_type>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </transaction_type>
-                        <fraud_prevention translate="label">
-                            <label>Send additional data</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </fraud_prevention>
-                        <show_bic translate="label">
-                            <label>BIC enabled</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </show_bic>
                         <creditor_id>
                             <label>Creditor ID</label>
                             <frontend_type>text</frontend_type>
@@ -336,22 +430,8 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </creditor_id>
-                        <creditor_name>
-                            <label>Creditor Name</label>
-                            <frontend_type>text</frontend_type>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </creditor_name>
-                        <creditor_address>
-                            <label>Creditor Address</label>
-                            <frontend_type>text</frontend_type>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </creditor_address>
                     </fields>
-                </wirecardee_paymentgateway_sepadirectdebit>
+                </wirecardee_paymentgateway_sepacredit>
                 <wirecardee_paymentgateway_sofortbanking>
                     <label>Sofort.</label>
                     <sort_order>1003</sort_order>

@@ -50,7 +50,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
         $payment     = (new PaymentFactory())->create($paymentName);
         $handler     = new PaymentHandler($this->getHelper()->getTransactionManager(), $this->getHelper()->getLogger());
         $order       = $this->getCheckoutSession()->getLastRealOrder();
-        $sessionManager = new SessionManager(Mage::getSingleton("core/session",  array("name"=>"frontend")));
+        $sessionManager = new SessionManager(Mage::getSingleton("core/session", array("name"=>"frontend")));
 
         $this->getHelper()->validateBasket();
 

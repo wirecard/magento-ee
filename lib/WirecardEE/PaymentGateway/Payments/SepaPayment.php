@@ -14,6 +14,7 @@ use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Mandate;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
+use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\SepaPaymentConfig;
@@ -23,6 +24,7 @@ use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 class SepaPayment extends Payment implements ProcessPaymentInterface, AdditionalViewAssignmentsInterface
 {
     const NAME = SepaDirectDebitTransaction::NAME;
+    const BACKEND_NAME = SepaCreditTransferTransaction::NAME;
 
     /**
      * @var SepaDirectDebitTransaction
@@ -100,10 +102,28 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
         $paymentConfig->setShowBic($this->getPluginConfig('show_bic'));
         $paymentConfig->setCreditorId($this->getPluginConfig('creditor_id'));
         $paymentConfig->setCreditorName($this->getPluginConfig('creditor_name'));
-        $paymentConfig->setCreditorAddress($this->getPluginConfig('creditor_address'));
-        // $paymentConfig->setBackendTransactionMAID($this->getPluginConfig('SepaBackendMerchantId'));
-        // $paymentConfig->setBackendTransactionSecret($this->getPluginConfig('SepaBackendSecret'));
-        // $paymentConfig->setBackendCreditorId($this->getPluginConfig('SepaBackendCreditorId'));
+        $paymentConfig->setCreditorStreet($this->getPluginConfig('creditor_street'));
+        $paymentConfig->setCreditorZip($this->getPluginConfig('creditor_zip'));
+        $paymentConfig->setCreditorCity($this->getPluginConfig('creditor_city'));
+        $paymentConfig->setCreditorCountry($this->getPluginConfig('creditor_country'));
+        $paymentConfig->setBackendTransactionMAID(
+            $this->getPluginConfig(
+                'api_maid',
+                Payment::CONFIG_PREFIX . self::BACKEND_NAME
+            )
+        );
+        $paymentConfig->setBackendTransactionSecret(
+            $this->getPluginConfig(
+                'api_secret',
+                Payment::CONFIG_PREFIX . self::BACKEND_NAME
+            )
+        );
+        $paymentConfig->setBackendCreditorId(
+            $this->getPluginConfig(
+                'creditor_id',
+                Payment::CONFIG_PREFIX . self::BACKEND_NAME
+            )
+        );
 
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
         return $paymentConfig;
@@ -115,12 +135,16 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
     public function getAdditionalViewAssignments()
     {
         $paymentConfig = $this->getPaymentConfig();
+
         return [
             'method'          => $this->getName(),
             'showBic'         => $paymentConfig->showBic(),
             'creditorId'      => $paymentConfig->getCreditorId(),
             'creditorName'    => $paymentConfig->getCreditorName(),
-            'creditorAddress' => $paymentConfig->getCreditorAddress(),
+            'creditorStreet'  => $paymentConfig->getCreditorStreet(),
+            'creditorZip'     => $paymentConfig->getCreditorZip(),
+            'creditorCity'    => $paymentConfig->getCreditorCity(),
+            'creditorCountry' => $paymentConfig->getCreditorCountry(),
         ];
     }
 
@@ -159,7 +183,7 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
         $transaction->setAccountHolder($accountHolder);
         $transaction->setIban($additionalPaymentData['sepaIban']);
 
-        if ($this->getPluginConfig('SepaShowBic') && isset($additionalPaymentData['sepaBic'])) {
+        if ($this->getPluginConfig('show_bic') && isset($additionalPaymentData['sepaBic'])) {
             $transaction->setBic($additionalPaymentData['sepaBic']);
         }
 
@@ -182,8 +206,8 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
      */
     private function generateMandateId(OrderSummary $orderSummary)
     {
-        return $this->getPluginConfig('SepaCreditorId') . '-' .
-               substr($orderSummary->getOrder()->getRealOrderId(), 10, 5) . '-' .
-               substr($orderSummary->getOrder()->getRealOrderId(), 0, 10);
+        $creditorId = $this->getPluginConfig('creditor_id');
+        $appendix = '-' . $orderSummary->getOrder()->getRealOrderId() . '-' . time();
+        return substr( $creditorId, 0, 35 - strlen( $appendix ) ) . $appendix;
     }
 }

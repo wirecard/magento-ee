@@ -12,6 +12,7 @@ use Wirecard\PaymentSdk\Transaction\Operation;
 
 /**
  * @since 1.0.0
+ * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Model_Sepadirectdebit extends WirecardEE_PaymentGateway_Model_Payment
 {
@@ -19,6 +20,8 @@ class WirecardEE_PaymentGateway_Model_Sepadirectdebit extends WirecardEE_Payment
     protected $_paymentMethod = SepaDirectDebitTransaction::NAME;
 
     protected $_formBlockType = 'paymentgateway/form_sepa';
+
+    // @codingStandardsIgnoreEnd
 
     /**
      * Return available transaction types for this payment.

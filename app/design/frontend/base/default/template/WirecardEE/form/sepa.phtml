@@ -65,7 +65,7 @@ if(!$mandateText) {
     <div>
         <label><?php echo $this->__('BIC') ?></label>
         <span>
-            <input type="text" id="wirecardee-sepa--bic wirecardee--form-field" name="wirecardElasticEngine[sepaBic]"
+            <input type="text" id="wirecardee-sepa--bic" class="wirecardee--form-field" name="wirecardElasticEngine[sepaBic]"
                    autocomplete="off" placeholder="<?php echo $this->__('BIC'); ?>"/>
         </span>
     </div>
@@ -75,13 +75,10 @@ if(!$mandateText) {
             <tr>
                 <td class="text11justify">
                     <i><?php echo $this->__("Creditor") ?></i><br/>
-                    <?php
-                    echo $additionalData['creditorName'];
-                    if ($additionalData['creditorName']  && $additionalData['creditorAddress']) {
-                    echo ',';
-                    }
-                    echo $additionalData['creditorAddress']
-                    ?>
+                    <?php echo $additionalData['creditorName'] ?><br />
+                    <?php echo $additionalData['creditorStreet'] ?><br />
+                    <?php echo $additionalData['creditorZip'] ?> <?php echo $additionalData['creditorCity'] ?><br />
+                    <?php echo $additionalData['creditorCountry'] ?><br />
                     <br/>
                     <?php echo $this->__('Creditor ID') ?>: <?php echo $additionalData['creditorId'] ?><br/>
                 </td>
@@ -111,7 +108,7 @@ if(!$mandateText) {
                         <tr>
                             <td class="text11justify">
                                 <?php
-                                echo $additionalData['creditorAddress'];
+                                echo $additionalData['creditorCity'];
                                 echo date(" d.m.Y");
                                 ?>
                                 <br/>
@@ -148,7 +145,7 @@ if(!$mandateText) {
              bic = $("#wirecardee-sepa--bic").val();
          $(".first_last_name").text(firstname + " " + lastname);
          $(".bank_iban").text(iban);
-         $(".bank_bic").text();
+         $(".bank_bic").text(bic);
      });
      Payment.prototype.save = Payment.prototype.save.wrap(function(save) {
          if($("[name=payment\\[method\\]]:checked").val() !== "wirecardee_paymentgateway_sepadirectdebit") {
