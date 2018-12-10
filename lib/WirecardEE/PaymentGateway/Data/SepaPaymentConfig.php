@@ -34,7 +34,20 @@ class SepaPaymentConfig extends PaymentConfig
     /**
      * @var string
      */
-    protected $creditorAddress;
+    protected $creditorStreet;
+
+    /**
+     * @var string
+     */
+    protected $creditorZip;
+    /**
+     * @var string
+     */
+    protected $creditorCity;
+    /**
+     * @var string
+     */
+    protected $creditorCountry;
 
     /**
      * @var string
@@ -116,9 +129,9 @@ class SepaPaymentConfig extends PaymentConfig
      *
      * @since 1.0.0
      */
-    public function setCreditorAddress($creditorAddress)
+    public function setCreditorStreet($creditorStreet)
     {
-        $this->creditorAddress = $creditorAddress;
+        $this->creditorStreet = $creditorStreet;
     }
 
     /**
@@ -126,9 +139,69 @@ class SepaPaymentConfig extends PaymentConfig
      *
      * @since 1.0.0
      */
-    public function getCreditorAddress()
+    public function getCreditorStreet()
     {
-        return $this->creditorAddress;
+        return $this->creditorStreet;
+    }
+
+    /**
+     * @param string
+     *
+     * @since 1.0.0
+     */
+    public function setCreditorZip($creditorZip)
+    {
+        $this->creditorZip = $creditorZip;
+    }
+
+    /**
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getCreditorZip()
+    {
+        return $this->creditorZip;
+    }
+
+    /**
+     * @param string
+     *
+     * @since 1.0.0
+     */
+    public function setCreditorCity($creditorCity)
+    {
+        $this->creditorCity = $creditorCity;
+    }
+
+    /**
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getCreditorCity()
+    {
+        return $this->creditorCity;
+    }
+
+    /**
+     * @param string
+     *
+     * @since 1.0.0
+     */
+    public function setCreditorCountry($creditorCountry)
+    {
+        $this->creditorCountry = $creditorCountry;
+    }
+
+    /**
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getCreditorCountry()
+    {
+        return $this->creditorCountry;
     }
 
     /**
@@ -214,7 +287,10 @@ class SepaPaymentConfig extends PaymentConfig
                 'showBic'                => $this->showBic(),
                 'creditorId'             => $this->getCreditorId(),
                 'creditorName'           => $this->getCreditorName(),
-                'creditorAddress'        => $this->getCreditorAddress(),
+                'creditorStreet'         => $this->getCreditorStreet(),
+                'creditorZip'            => $this->getCreditorZip(),
+                'creditorCity'           => $this->getCreditorCity(),
+                'creditorCountry'        => $this->getCreditorCountry(),
                 'backendTransactionMaid' => $this->getBackendTransactionMAID(),
                 'backendCreditorId'      => $this->getBackendCreditorId(),
             ]

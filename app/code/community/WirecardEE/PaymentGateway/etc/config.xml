@@ -101,7 +101,10 @@
                 <show_bic>0</show_bic>
                 <creditor_id>DE98ZZZ09999999999</creditor_id>
                 <creditor_name></creditor_name>
-                <creditor_address></creditor_address>
+                <creditor_street></creditor_street>
+                <creditor_zip></creditor_zip>
+                <creditor_city></creditor_city>
+                <creditor_country></creditor_country>
             </wirecardee_paymentgateway_sepadirectdebit>
             <wirecardee_paymentgateway_sepacredit>
                 <api_maid>59a01668-693b-49f0-8a1f-f3c1ba025d45</api_maid>

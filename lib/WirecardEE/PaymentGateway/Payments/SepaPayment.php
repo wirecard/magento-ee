@@ -102,7 +102,10 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
         $paymentConfig->setShowBic($this->getPluginConfig('show_bic'));
         $paymentConfig->setCreditorId($this->getPluginConfig('creditor_id'));
         $paymentConfig->setCreditorName($this->getPluginConfig('creditor_name'));
-        $paymentConfig->setCreditorAddress($this->getPluginConfig('creditor_address'));
+        $paymentConfig->setCreditorStreet($this->getPluginConfig('creditor_street'));
+        $paymentConfig->setCreditorZip($this->getPluginConfig('creditor_zip'));
+        $paymentConfig->setCreditorCity($this->getPluginConfig('creditor_city'));
+        $paymentConfig->setCreditorCountry($this->getPluginConfig('creditor_country'));
         $paymentConfig->setBackendTransactionMAID(
             $this->getPluginConfig(
                 'api_maid',
@@ -138,7 +141,10 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
             'showBic'         => $paymentConfig->showBic(),
             'creditorId'      => $paymentConfig->getCreditorId(),
             'creditorName'    => $paymentConfig->getCreditorName(),
-            'creditorAddress' => $paymentConfig->getCreditorAddress(),
+            'creditorStreet'  => $paymentConfig->getCreditorStreet(),
+            'creditorZip'     => $paymentConfig->getCreditorZip(),
+            'creditorCity'    => $paymentConfig->getCreditorCity(),
+            'creditorCountry' => $paymentConfig->getCreditorCountry(),
         ];
     }
 
@@ -177,7 +183,7 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
         $transaction->setAccountHolder($accountHolder);
         $transaction->setIban($additionalPaymentData['sepaIban']);
 
-        if ($this->getPluginConfig('SepaShowBic') && isset($additionalPaymentData['sepaBic'])) {
+        if ($this->getPluginConfig('show_bic') && isset($additionalPaymentData['sepaBic'])) {
             $transaction->setBic($additionalPaymentData['sepaBic']);
         }
 
@@ -200,8 +206,8 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
      */
     private function generateMandateId(OrderSummary $orderSummary)
     {
-        return $this->getPluginConfig('SepaCreditorId') . '-' .
-               substr($orderSummary->getOrder()->getRealOrderId(), 10, 5) . '-' .
-               substr($orderSummary->getOrder()->getRealOrderId(), 0, 10);
+        $creditorId = $this->getPluginConfig('creditor_id');
+        $appendix = '-' . $orderSummary->getOrder()->getRealOrderId() . '-' . time();
+        return substr( $creditorId, 0, 35 - strlen( $appendix ) ) . $appendix;
     }
 }
