@@ -47,7 +47,7 @@ class WirecardEE_PaymentGateway_Model_Observer
         //        var_dump(get_class(Mage::getSingleton("core/session",  array("name"=>"frontend"))));
         /** @var Mage_Sales_Model_Order $order */
         $additionalData = Mage::app()->getRequest()->getParam('wirecardElasticEngine');
-        $sessionManager = new SessionManager(Mage::getSingleton("core/session",  array("name"=>"frontend")));
+        $sessionManager = new SessionManager(Mage::getSingleton("core/session", array("name"=>"frontend")));
         $sessionManager->storePaymentData($additionalData);
         //        $session->setData("wirecardEEAdditionalData", $additionalData);
     }

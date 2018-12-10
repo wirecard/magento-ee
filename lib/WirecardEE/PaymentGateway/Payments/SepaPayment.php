@@ -14,6 +14,7 @@ use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Mandate;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
+use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\SepaPaymentConfig;
@@ -23,6 +24,7 @@ use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 class SepaPayment extends Payment implements ProcessPaymentInterface, AdditionalViewAssignmentsInterface
 {
     const NAME = SepaDirectDebitTransaction::NAME;
+    const BACKEND_NAME = SepaCreditTransferTransaction::NAME;
 
     /**
      * @var SepaDirectDebitTransaction
@@ -101,9 +103,24 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
         $paymentConfig->setCreditorId($this->getPluginConfig('creditor_id'));
         $paymentConfig->setCreditorName($this->getPluginConfig('creditor_name'));
         $paymentConfig->setCreditorAddress($this->getPluginConfig('creditor_address'));
-        // $paymentConfig->setBackendTransactionMAID($this->getPluginConfig('SepaBackendMerchantId'));
-        // $paymentConfig->setBackendTransactionSecret($this->getPluginConfig('SepaBackendSecret'));
-        // $paymentConfig->setBackendCreditorId($this->getPluginConfig('SepaBackendCreditorId'));
+        $paymentConfig->setBackendTransactionMAID(
+            $this->getPluginConfig(
+                'api_maid',
+                Payment::CONFIG_PREFIX . self::BACKEND_NAME
+            )
+        );
+        $paymentConfig->setBackendTransactionSecret(
+            $this->getPluginConfig(
+                'api_secret',
+                Payment::CONFIG_PREFIX . self::BACKEND_NAME
+            )
+        );
+        $paymentConfig->setBackendCreditorId(
+            $this->getPluginConfig(
+                'creditor_id',
+                Payment::CONFIG_PREFIX . self::BACKEND_NAME
+            )
+        );
 
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
         return $paymentConfig;
@@ -115,6 +132,7 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
     public function getAdditionalViewAssignments()
     {
         $paymentConfig = $this->getPaymentConfig();
+
         return [
             'method'          => $this->getName(),
             'showBic'         => $paymentConfig->showBic(),
