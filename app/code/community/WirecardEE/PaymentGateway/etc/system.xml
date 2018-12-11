@@ -433,7 +433,7 @@
                     </fields>
                 </wirecardee_paymentgateway_sepacredit>
                 <wirecardee_paymentgateway_sofortbanking>
-                    <label>Sofort.</label>
+                    <label>Wirecard Sofort.</label>
                     <sort_order>1003</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
