@@ -23,6 +23,7 @@ class TransactionManager
     const TYPE_INITIAL = 'initial';
     const TYPE_NOTIFY = 'notify';
     const TYPE_BACKEND = 'backend';
+    const TYPE_RETURN = 'return';
 
     // Key for type in additional information in transactions
     const TYPE_KEY = 'source_type';
@@ -72,6 +73,7 @@ class TransactionManager
 
         switch ($type) {
             case self::TYPE_INITIAL:
+            case self::TYPE_RETURN:
             case self::TYPE_BACKEND:
                 // Initial transactions are always saved as new transactions.
                 if ($mageTransactionModel->loadByTxnId($transactionId)->getId()) {
@@ -109,7 +111,8 @@ class TransactionManager
                 return;
 
             case self::TYPE_NOTIFY:
-                // Since notifies are the source of truth for transactions they're overwriting the initial transaction.
+                // Since notifications are the source of truth for transactions they're overwriting the
+                // initial transaction.
                 $mageTransactionModel->loadByTxnId($transactionId);
 
                 // Be sure not to overwrite notifications!
@@ -142,7 +145,7 @@ class TransactionManager
                     $mageTransactionModel->save();
                 } catch (\Exception $e) {
                     // Being unable to save at this point is very likely due to a transaction id collision, which means
-                    // a initial transaction with this id has been saved during the execution of this method. Let's
+                    // an initial transaction with this id has been saved during the execution of this method. Let's
                     // try again to find this transaction and overwrite it.
                     if ($mageTransactionModel->loadByTxnId($transactionId)->getId()) {
                         $mageTransactionModel->setTxnId($transactionId);
@@ -181,6 +184,7 @@ class TransactionManager
     {
         switch ($transactionType) {
             case Transaction::TYPE_DEBIT:
+            case Transaction::TYPE_PURCHASE:
                 return Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE;
             case Transaction::TYPE_AUTHORIZATION:
                 return Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH;

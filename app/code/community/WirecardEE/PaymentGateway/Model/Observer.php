@@ -11,12 +11,9 @@ use WirecardEE\PaymentGateway\Service\SessionManager;
 
 /**
  * @since 1.0.0
- * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Model_Observer
 {
-    // @codingStandardsIgnoreEnd
-
     /**
      * @since 1.0.0
      */

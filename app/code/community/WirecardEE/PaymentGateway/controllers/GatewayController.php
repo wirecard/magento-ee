@@ -27,12 +27,9 @@ use WirecardEE\PaymentGateway\Service\SessionManager;
 
 /**
  * @since 1.0.0
- * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_Front_Action
 {
-    // @codingStandardsIgnoreEnd
-
     /**
      * Gets payment from `PaymentFactory`, assembles the `OrderSummary` and executes the payment through the
      * `PaymentHandler` service. Further action depends on the response from the handler.
@@ -117,7 +114,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
 
             $action = $response instanceof SuccessResponse
                 ? $this->updateOrder($order)
-                : $returnHandler->handleResponse($response);
+                : $returnHandler->handleResponse($response, $order);
         } catch (\Exception $e) {
             $this->getHelper()->getLogger()->error($e->getMessage());
             $action = new ErrorAction(0, 'Return processing failed');

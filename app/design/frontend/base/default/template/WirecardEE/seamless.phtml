@@ -7,9 +7,17 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+use WirecardEE\PaymentGateway\Service\Logger;
+
 $wirecardUrl = $this->getData('wirecardUrl');
 $requestData = $this->getData('wirecardRequestData');
 $url         = $this->getData('url');
+
+if (! $wirecardUrl || ! $requestData || ! $url) {
+    (new Logger())->error('Unable to render template "' . $this->getTemplate() . '" due to missing variables"');
+    echo Mage::helper('catalog')->__('Unable to render template');
+    return;
+}
 ?>
 <div class="wirecardee-credit-card-error-message"
      style="display: none; margin-bottom: 20px; font-weight: bold; color: #ff0000;">
@@ -21,6 +29,10 @@ $url         = $this->getData('url');
                 class="button btn-cart" type="submit">
             <?php echo Mage::helper('catalog')->__('Send'); ?>
         </button>
+        <a class="button" style="background-color: #808080;"
+           href="<?php echo Mage::getUrl('paymentgateway/gateway/cancel'); ?>">
+            <?php echo Mage::helper('catalog')->__('Cancel'); ?>
+        </a>
     </form>
 </div>
 
