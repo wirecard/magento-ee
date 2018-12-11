@@ -16,6 +16,7 @@ use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\TransactionService;
+use WirecardEE\PaymentGateway\Exception\InsufficientDataException;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\SepaPaymentConfig;
 use WirecardEE\PaymentGateway\Payments\Contracts\AdditionalViewAssignmentsInterface;
@@ -169,10 +170,7 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
             || ! isset($additionalPaymentData['sepaFirstName'])
             || ! isset($additionalPaymentData['sepaLastName'])
         ) {
-            //throw new InsufficientDataException('Insufficient Data for SEPA Direct Debit Transaction');
-            // FIXXXME
-            var_dump($additionalPaymentData);
-            exit();
+            throw new InsufficientDataException($this->getName());
         }
 
         $transaction = $this->getTransaction();

@@ -29,18 +29,15 @@ class WirecardEE_PaymentGateway_Block_Form_Sepa extends WirecardEE_PaymentGatewa
      */
     public function getMethodLabelAfterHtml()
     {
-        try {
-            $paymentCode = $this->getMethodCode();
-            $paymentName = str_replace('wirecardee_paymentgateway_', '', $paymentCode);
-            $payment     = (new \WirecardEE\PaymentGateway\Service\PaymentFactory())->create($paymentName);
+        $paymentCode = $this->getMethodCode();
+        $paymentName = str_replace('wirecardee_paymentgateway_', '', $paymentCode);
+        $payment     = (new \WirecardEE\PaymentGateway\Service\PaymentFactory())->create($paymentName);
 
-            if ($payment instanceof \WirecardEE\PaymentGateway\Payments\Contracts\AdditionalViewAssignmentsInterface) {
-                $this->_wirecardEEHasAdditional = true;
+        if ($payment instanceof \WirecardEE\PaymentGateway\Payments\Contracts\AdditionalViewAssignmentsInterface) {
+            $this->_wirecardEEHasAdditional = true;
 
-                $additionalViewAssignments = $payment->getAdditionalViewAssignments();
-                $this->setData('WirecardEEAdditionalViewAssignments', $additionalViewAssignments);
-            }
-        } catch(\Exception $e) {
+            $additionalViewAssignments = $payment->getAdditionalViewAssignments();
+            $this->setData('WirecardEEAdditionalViewAssignments', $additionalViewAssignments);
         }
         return parent::_toHtml();
     }
