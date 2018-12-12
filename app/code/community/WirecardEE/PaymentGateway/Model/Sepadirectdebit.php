@@ -12,16 +12,11 @@ use Wirecard\PaymentSdk\Transaction\Operation;
 
 /**
  * @since 1.0.0
- * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Model_Sepadirectdebit extends WirecardEE_PaymentGateway_Model_Payment
 {
     protected $_code = 'wirecardee_paymentgateway_sepadirectdebit';
     protected $_paymentMethod = SepaDirectDebitTransaction::NAME;
-
-    protected $_formBlockType = 'paymentgateway/form_sepa';
-
-    // @codingStandardsIgnoreEnd
 
     /**
      * Return available transaction types for this payment.
@@ -44,6 +39,10 @@ class WirecardEE_PaymentGateway_Model_Sepadirectdebit extends WirecardEE_Payment
         ];
     }
 
+    /**
+     * @return $this
+     * @throws Mage_Core_Exception
+     */
     public function validate()
     {
         parent::validate();
@@ -53,15 +52,12 @@ class WirecardEE_PaymentGateway_Model_Sepadirectdebit extends WirecardEE_Payment
         if (empty($paymentData['sepaFirstName'])) {
             $errorMsg = $this->_getHelper()->__('First Name is a required field.' . PHP_EOL);
         }
-
         if (empty($paymentData['sepaLastName'])) {
             $errorMsg .= $this->_getHelper()->__('Last Name is a required field.' . PHP_EOL);
         }
-
         if (empty($paymentData['sepaIban'])) {
             $errorMsg .= $this->_getHelper()->__('IBAN is a required field.' . PHP_EOL);
         }
-
         if (empty($paymentData['sepaConfirmMandate']) || $paymentData['sepaConfirmMandate'] !== 'confirmed') {
             $errorMsg .= $this->_getHelper()->__('You have to confirm the mandate.' . PHP_EOL);
         }

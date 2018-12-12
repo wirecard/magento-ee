@@ -12,14 +12,11 @@ use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 
 /**
  * @since 1.0.0
- * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Model_Sofortbanking extends WirecardEE_PaymentGateway_Model_Payment
 {
     protected $_code = 'wirecardee_paymentgateway_sofortbanking';
     protected $_paymentMethod = SofortTransaction::NAME;
-
-    // @codingStandardsIgnoreEnd
 
     /**
      * Return available transaction types for this payment.
