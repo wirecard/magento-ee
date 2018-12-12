@@ -19,7 +19,7 @@ namespace WirecardEE\PaymentGateway\Exception;
 class InsufficientDataException extends \Exception
 {
     /**
-     * @param string $actionName
+     * @param string $paymentName
      *
      * @since 1.0.0
      */
