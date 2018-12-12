@@ -7,5 +7,15 @@
  */
 
 exports.config = {
-    url: 'http://magento-ee.localhost',
+  url: 'http://localhost:9000',
+  payments: {
+    creditCard: {
+      fields: {
+        last_name: 'Lastname',
+        account_number: '4012000300001003',
+        card_security_code: '003',
+        expirationYear: ((new Date()).getFullYear() + 1)
+      }
+    }
+  }
 };

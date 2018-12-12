@@ -24,6 +24,7 @@ class TransactionManager
     const TYPE_NOTIFY = 'notify';
     const TYPE_BACKEND = 'backend';
     const TYPE_RETURN = 'return';
+    const TYPE_INITIAL_REQUEST = 'initial-request';
 
     // Key for type in additional information in transactions
     const TYPE_KEY = 'source_type';
@@ -72,6 +73,7 @@ class TransactionManager
         $mageTransactionModel->setOrderPaymentObject($order->getPayment());
 
         switch ($type) {
+            case self::TYPE_INITIAL_REQUEST:
             case self::TYPE_INITIAL:
             case self::TYPE_RETURN:
             case self::TYPE_BACKEND:
@@ -170,6 +172,7 @@ class TransactionManager
                 return;
         }
 
+        $this->logger->error("Unable to create transaction due to unknown type ($type)");
         throw new \RuntimeException("Unknown transaction type");
     }
 
