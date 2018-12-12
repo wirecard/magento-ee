@@ -107,6 +107,7 @@
                 <creditor_zip></creditor_zip>
                 <creditor_city></creditor_city>
                 <creditor_country></creditor_country>
+                <sort_order>33</sort_order>
             </wirecardee_paymentgateway_sepadirectdebit>
             <wirecardee_paymentgateway_sepacredit>
                 <api_maid>59a01668-693b-49f0-8a1f-f3c1ba025d45</api_maid>
@@ -123,6 +124,7 @@
                 <api_maid>6c0e7efd-ee58-40f7-9bbd-5e7337a052cd</api_maid>
                 <api_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</api_secret>
                 <fraud_prevention>1</fraud_prevention>
+                <sort_order>36</sort_order>
             </wirecardee_paymentgateway_sofortbanking>
         </payment>
     </default>
