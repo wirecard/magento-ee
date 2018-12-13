@@ -42,6 +42,36 @@
                     </wirecard_ee_composer_autoload>
                 </observers>
             </controller_front_init_before>
+
+            <sales_order_payment_cancel>
+                <observers>
+                    <wirecard_ee_cancel>
+                        <type>singleton</type>
+                        <class>paymentgateway/backendOperation</class>
+                        <method>cancel</method>
+                    </wirecard_ee_cancel>
+                </observers>
+            </sales_order_payment_cancel>
+
+            <sales_order_invoice_pay>
+                <observers>
+                    <wirecard_ee_capture>
+                        <type>singleton</type>
+                        <class>paymentgateway/backendOperation</class>
+                        <method>capture</method>
+                    </wirecard_ee_capture>
+                </observers>
+            </sales_order_invoice_pay>
+
+            <controller_action_predispatch>
+                <observers>
+                    <check_session_messages>
+                        <type>singleton</type>
+                        <class>paymentgateway/backendOperation</class>
+                        <method>checkSessionMessage</method>
+                    </check_session_messages>
+                </observers>
+            </controller_action_predispatch>
         </events>
 
         <resources>

@@ -85,8 +85,8 @@ class TransactionManager
                 }
 
                 if ($parentTransactionId) {
-                    $parentTransactionMageModel = $mageTransactionModel->loadByTxnId($parentTransactionId);
-                    if ($parentTransactionMageModel->getId()) {
+                    $parentTransactionMageModel = $this->findTransactionById($order, $parentTransactionId);
+                    if ($parentTransactionMageModel && $parentTransactionMageModel->getId()) {
                         $mageTransactionModel->setParentId($parentTransactionMageModel->getId());
                     }
                 }
@@ -129,8 +129,8 @@ class TransactionManager
                 }
 
                 if ($parentTransactionId) {
-                    $parentTransactionMageModel = $mageTransactionModel->loadByTxnId($parentTransactionId);
-                    if ($parentTransactionMageModel->getId()) {
+                    $parentTransactionMageModel = $this->findTransactionById($order, $parentTransactionId);
+                    if ($parentTransactionMageModel && $parentTransactionMageModel->getId()) {
                         $mageTransactionModel->setParentId($parentTransactionMageModel->getId());
                     }
                 }
@@ -177,6 +177,44 @@ class TransactionManager
     }
 
     /**
+     * @param \Mage_Sales_Model_Order $order
+     *
+     * @return \Mage_Sales_Model_Order_Payment_Transaction|null
+     *
+     * @since 1.0.0
+     */
+    public function findInitialNotification(\Mage_Sales_Model_Order $order)
+    {
+        try {
+            /** @var \Mage_Sales_Model_Resource_Order_Payment_Transaction_Collection $transactions */
+            $transactions = \Mage::getResourceModel('sales/order_payment_transaction_collection');
+            $transactions->addOrderIdFilter($order->getId());
+            $transactions->setOrder('transaction_id', 'ASC');
+
+            if (! $transactions->count() === 0) {
+                return null;
+            }
+
+            foreach ($transactions as $transaction) {
+                /** @var \Mage_Sales_Model_Order_Payment_Transaction $transaction */
+                $additionalInformation = $transaction->getAdditionalInformation(
+                    \Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS
+                );
+                if (empty($additionalInformation[TransactionManager::TYPE_KEY])) {
+                    continue;
+                }
+                if ($additionalInformation[TransactionManager::TYPE_KEY] === TransactionManager::TYPE_NOTIFY) {
+                    return $transaction;
+                }
+            }
+        } catch (\Exception $e) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
      * @param $transactionType
      *
      * @return string
@@ -194,6 +232,35 @@ class TransactionManager
         }
 
         return Mage_Sales_Model_Order_Payment_Transaction::TYPE_PAYMENT;
+    }
+
+    /**
+     * @param \Mage_Sales_Model_Order $order
+     * @param string                  $transactionId
+     *
+     * @return bool|Mage_Sales_Model_Order_Payment_Transaction
+     *
+     * @since 1.0.0
+     */
+    protected function findTransactionById(\Mage_Sales_Model_Order $order, $transactionId)
+    {
+        try {
+            /** @var \Mage_Sales_Model_Resource_Order_Payment_Transaction_Collection $collection */
+            $transactions = \Mage::getResourceModel('sales/order_payment_transaction_collection');
+            $transactions->setOrderFilter($order);
+            $transactions->addPaymentIdFilter($order->getPayment()->getId());
+
+            foreach ($transactions as $transaction) {
+                /** @var \Mage_Sales_Model_Order_Payment_Transaction $transaction */
+                if ($transaction->getTxnId() === $transactionId) {
+                    return $transaction;
+                }
+            }
+        } catch(\Exception $e) {
+            return null;
+        }
+
+        return null;
     }
 
     /**

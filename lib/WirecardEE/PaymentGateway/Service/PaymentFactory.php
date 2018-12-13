@@ -42,6 +42,20 @@ class PaymentFactory
     }
 
     /**
+     * @param \Mage_Sales_Model_Order_Payment $magePayment
+     *
+     * @return PaymentInterface
+     * @throws UnknownPaymentException
+     *
+     * @since 1.0.0
+     */
+    public function createFromMagePayment(\Mage_Sales_Model_Order_Payment $magePayment)
+    {
+        $paymentName = str_replace('wirecardee_paymentgateway_', '', $magePayment->getData('method'));
+        return $this->create($paymentName);
+    }
+
+    /**
      * Contains a list of actual supported payments by the plugin.
      *
      * @return array
