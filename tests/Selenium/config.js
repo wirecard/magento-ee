@@ -14,7 +14,7 @@ exports.config = {
         last_name: 'Lastname',
         account_number: '4012000300001003',
         card_security_code: '003',
-        expirationYear: ((new Date()).getFullYear() + 1)
+        expiration_year_list: ((new Date()).getFullYear() + 1)
       }
     }
   }
