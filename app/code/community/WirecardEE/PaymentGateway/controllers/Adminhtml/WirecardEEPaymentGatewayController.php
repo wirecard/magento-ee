@@ -70,6 +70,18 @@ class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController ext
         );
     }
 
+    public function infoAction()
+    {
+        $block = $this->getLayout()
+               ->createBlock('adminhtml/template')
+               ->setTemplate('WirecardEE/info.phtml');
+        $this->loadLayout()
+            ->_setActiveMenu('WirecardEE_PaymentGateway/info')
+            ->_title($this->__('Information'))
+            ->_addContent($block);
+        $this->renderLayout();
+    }
+
     public function supportMailAction()
     {
         $this->loadLayout();
@@ -77,15 +89,6 @@ class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController ext
 
         $this->_addContent($this->getLayout()->createBlock('paymentgateway/adminhtml_supportMail'));
         $this->renderLayout();
-        // return;
-        // $block = $this->getLayout()
-        //        ->createBlock('adminhtml/template')
-        //        ->setTemplate('WirecardEE/supportMail.phtml');
-        // $this->loadLayout()
-        //     ->_setActiveMenu('WirecardEE_PaymentGateway/support')
-        //     ->_title($this->__('Support'))
-        //     ->_addContent($block);
-        // $this->renderLayout();
     }
 
     public function sendAction()
