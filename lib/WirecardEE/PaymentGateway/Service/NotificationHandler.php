@@ -14,6 +14,7 @@ use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Handles notification responses. Notification responses are server-to-server, meaning you must NEVER access session
@@ -80,6 +81,22 @@ class NotificationHandler extends Handler
         }
 
         $this->transactionManager->createTransaction(TransactionManager::TYPE_NOTIFY, $order, $response);
+
+        // Automatically invoice purchases.
+        if ($response->getTransactionType() === Transaction::TYPE_PURCHASE) {
+            if ($order->canInvoice()) {
+                /** @var \Mage_Sales_Model_Order_Invoice $invoice */
+                $invoice = $order->prepareInvoice()->register();
+                $invoice->capture();
+
+                /** @var \Mage_Core_Model_Resource_Transaction $resourceTransaction */
+                $resourceTransaction = \Mage::getModel('core/resource_transaction');
+                $resourceTransaction
+                    ->addObject($invoice)
+                    ->addObject($invoice->getOrder())
+                    ->save();
+            }
+        }
 
         if (in_array($order->getStatus(), [
             \Mage_Sales_Model_Order::STATE_COMPLETE,
