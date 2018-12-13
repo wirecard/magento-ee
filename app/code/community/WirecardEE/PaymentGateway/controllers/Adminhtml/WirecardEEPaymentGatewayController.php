@@ -9,6 +9,7 @@
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;
+use WirecardEE\PaymentGateway\Mail\SupportMail;
 
 /**
  * @since 1.0.0
@@ -85,5 +86,21 @@ class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController ext
         //     ->_title($this->__('Support'))
         //     ->_addContent($block);
         // $this->renderLayout();
+    }
+
+    public function sendAction()
+    {
+        $data = $this->getRequest()->getPost();
+
+        $mail = new SupportMail();
+        try {
+            $mail->send($data['sender_address'], $data['content'], $data['reply_to']);
+            Mage::getSingleton('core/session')->addSuccess('E-mail sent successfully');
+            $this->_redirect('');
+        }
+        catch (Exception $e) {
+            Mage::getSingleton('core/session')->addError('E-mail delivery error.');
+            $this->_redirect('');
+        }
     }
 }

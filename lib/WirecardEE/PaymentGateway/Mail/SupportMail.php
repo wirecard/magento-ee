@@ -73,7 +73,7 @@ class SupportMail
         $mail->setBody($message);
 
         $mail->setToName('Your Name');
-        return $mail->send();
+        $mail->send();
     }
 
     /**
