@@ -6,7 +6,7 @@ class WirecardEE_PaymentGateway_Block_Adminhtml_SupportMail_Form extends Mage_Ad
 	{
         $form = new Varien_Data_Form(array(
             'id' => 'edit_form',
-            'action' => $this->getUrl('*/*/save', array('id' => $this->getRequest()->getParam('id'))),
+            'action' => $this->getUrl('*/*/send'),
             'method' => 'post',
             'enctype' => 'multipart/form-data'
         )

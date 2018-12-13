@@ -46,6 +46,25 @@ class PaymentFactory
     }
 
     /**
+     * Used to get all payments for support mail
+     *
+     * @return PaymentInterface[]
+     * @throws UnknownPaymentException
+     *
+     * @since 1.0.0
+     */
+    public function getSupportedPayments()
+    {
+        $payments = [];
+
+        foreach (array_keys($this->getMappedPayments()) as $identifier) {
+            $payments[] = $this->create($identifier);
+        }
+
+        return $payments;
+    }
+
+    /**
      * Contains a list of actual supported payments by the plugin.
      *
      * @return array
