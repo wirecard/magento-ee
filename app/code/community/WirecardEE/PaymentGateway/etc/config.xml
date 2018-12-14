@@ -24,6 +24,11 @@
             <paymentgateway>
                 <class>WirecardEE_PaymentGateway_Block</class>
             </paymentgateway>
+            <adminhtml>
+                <rewrite>
+                    <page_head>WirecardEE_PaymentGateway_Block_Head</page_head>
+                </rewrite>
+            </adminhtml>
         </blocks>
 
         <models>
