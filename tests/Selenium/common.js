@@ -8,7 +8,7 @@
 
 const { expect } = require('chai');
 const { config } = require('./config');
-const { By, until } = require('selenium-webdriver');
+const { Builder, By, until } = require('selenium-webdriver');
 
 exports.addProductToCartAndGotoCheckout = async (driver, url) => {
   await driver.get(`${config.url}${url}`);
@@ -89,4 +89,14 @@ exports.asyncForEach = async (arr, cb) => {
   for (let i = 0; i < arr.length; i++) {
     await cb(arr[i], i, arr);
   }
+};
+
+exports.getDriver = () => {
+  if (global.driver) {
+    return global.driver;
+  }
+
+  return new Builder()
+    .forBrowser('chrome')
+    .build();
 };

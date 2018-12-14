@@ -6,8 +6,8 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-const { Builder } = require('selenium-webdriver');
 const {
+  getDriver,
   placeOrder,
   checkConfirmationPage,
   choosePaymentMethod,
@@ -17,9 +17,7 @@ const {
 } = require('../common');
 
 describe('default test', () => {
-  const driver = new Builder()
-    .forBrowser('chrome')
-    .build();
+  const driver = getDriver();
 
   it('should check the default checkout', async () => {
     await addProductToCartAndGotoCheckout(driver, '/accessories/eyewear/aviator-sunglasses.html');

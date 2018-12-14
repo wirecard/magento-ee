@@ -7,8 +7,8 @@
  */
 
 const { By, until, Key } = require('selenium-webdriver');
-const { Builder } = require('selenium-webdriver');
 const {
+  getDriver,
   placeOrder,
   checkConfirmationPage,
   choosePaymentMethod,
@@ -21,9 +21,7 @@ const {
 const { config } = require('../config');
 
 describe('PayPal test', () => {
-  const driver = new Builder()
-    .forBrowser('chrome')
-    .build();
+  const driver = getDriver();
 
   const paymentLabel = config.payments.paypal.label;
   const formFields = config.payments.paypal.fields;

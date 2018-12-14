@@ -7,8 +7,8 @@
  */
 
 const { By } = require('selenium-webdriver');
-const { Builder } = require('selenium-webdriver');
 const {
+  getDriver,
   asyncForEach,
   placeOrder,
   checkConfirmationPage,
@@ -20,9 +20,7 @@ const {
 const { config } = require('../config');
 
 describe('SEPA Direct Debit test', () => {
-  const driver = new Builder()
-    .forBrowser('chrome')
-    .build();
+  const driver = getDriver();
 
   const paymentLabel = config.payments.sepa.label;
   const formFields = config.payments.sepa.fields;
