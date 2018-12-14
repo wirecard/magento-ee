@@ -18,6 +18,16 @@ exports.config = {
       },
       expirationYear: ((new Date()).getFullYear() + 1)
     },
+    creditCard3ds: {
+      label: 'Wirecard Credit Card',
+      fields: {
+        last_name: 'Lastname',
+        account_number: '4012000300001003',
+        card_security_code: '003'
+      },
+      expirationYear: ((new Date()).getFullYear() + 1),
+      password: 'wirecard'
+    },
     paypal: {
       label: 'Wirecard PayPal',
       fields: {
@@ -253,7 +263,11 @@ exports.tests = [
     timeout: 120000
   },
   {
-    file: 'Payments/PaypalTest',
+    file: 'Payments/CreditCard3dsTest',
+    timeout: 120000
+  },
+  {
+    file: 'Payments/PayPalTest',
     timeout: 180000
   },
   {
