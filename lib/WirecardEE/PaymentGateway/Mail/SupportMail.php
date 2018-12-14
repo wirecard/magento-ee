@@ -161,7 +161,7 @@ class SupportMail
 
         $activeWirecardEEMethods = [];
         $wirecardPaymentName = 'wirecardee_paymentgateway_';
-        foreach($activePaymentMethods as $paymentMethod) {
+        foreach ($activePaymentMethods as $paymentMethod) {
             $paymentInfo = $paymentMethod->get();
             if (strpos($paymentInfo['id'], $wirecardPaymentName) === 0) {
                 $activeWirecardEEMethods[] = substr($paymentInfo['id'], strlen($wirecardPaymentName));
@@ -200,8 +200,7 @@ class SupportMail
         $modules = \Mage::getConfig()->getNode('modules')->children();
 
         $rows = [];
-        foreach ($modules as $key=>$plugin) {
-
+        foreach ($modules as $key => $plugin) {
             $rows[] = [
                 'name'     => $key,
                 'version'  => strval($plugin->version),

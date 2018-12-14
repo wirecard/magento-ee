@@ -100,8 +100,7 @@ class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController ext
             $mail->send($data['sender_address'], $data['content'], $data['reply_to']);
             Mage::getSingleton('core/session')->addSuccess('E-mail sent successfully');
             $this->_redirect('');
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             Mage::getSingleton('core/session')->addError('E-mail delivery error.');
             $this->_redirect('');
         }
