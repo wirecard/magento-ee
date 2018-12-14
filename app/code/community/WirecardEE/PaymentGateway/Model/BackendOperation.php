@@ -9,6 +9,7 @@
 
 use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\BackendService;
+use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Transaction\Operation;
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\SuccessAction;
@@ -63,51 +64,122 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
      *
      * @since 1.0.0
      */
+    public function capture(Varien_Event_Observer $observer)
+    {
+        $invoice = $observer->getData('invoice');
+
+        if (! ($invoice instanceof Mage_Sales_Model_Order_Invoice)) {
+            \Mage::throwException("Unable to process backend operation (capture)");
+            return;
+        }
+
+        $payment             = $this->paymentFactory->createFromMagePayment($invoice->getOrder()->getPayment());
+        $backendService      = new BackendService(
+            $payment->getTransactionConfig(Mage::app()->getLocale()->getCurrency()),
+            $this->logger
+        );
+        $initialNotification = $this->transactionManager->findInitialNotification($invoice->getOrder());
+
+        if (! $initialNotification) {
+            $invoice->getOrder()->setActionFlag(Mage_Sales_Model_Order::ACTION_FLAG_INVOICE, false);
+            $this->handleError("Capture failed (unable to find initial notification transaction)");
+            return;
+        }
+
+        $this->logger->info('Executing operation "capture" on transaction ' . $initialNotification->getTxnId()
+                            . " (ID: " . $initialNotification->getId() . ")");
+
+        $backendTransaction = $payment->getBackendTransaction();
+        $backendTransaction->setParentTransactionId($initialNotification->getTxnId());
+        $backendTransaction->setAmount(new Amount($invoice->getGrandTotal(), $invoice->getBaseCurrencyCode()));
+
+        if (! array_key_exists(Operation::PAY,
+            $backendService->retrieveBackendOperations($backendTransaction)
+        )) {
+            $invoice->getOrder()->setActionFlag(Mage_Sales_Model_Order::ACTION_FLAG_INVOICE, false);
+            $this->handleError("Operation (Capture) not allowed on transaction " . $initialNotification->getTxnId());
+            return;
+        }
+
+        $action = $this->backendOperationHandler->execute($backendTransaction, $backendService, Operation::PAY);
+
+        if ($action instanceof SuccessAction) {
+            $transactionId = $action->getContextItem('transaction_id');
+            $amount        = $action->getContextItem('amount');
+
+            $this->logger->info("Captured $amount from $transactionId");
+            return;
+        }
+        if ($action instanceof ErrorAction) {
+            $invoice->getOrder()->setActionFlag(Mage_Sales_Model_Order::ACTION_FLAG_INVOICE, false);
+            $this->handleError($action->getMessage(), ['code' => $action->getCode()]);
+            return;
+        }
+
+        $invoice->getOrder()->setActionFlag(Mage_Sales_Model_Order::ACTION_FLAG_INVOICE, false);
+        $this->handleError('Capture failed');
+    }
+
+    /**
+     * @param Varien_Event_Observer $observer
+     *
+     * @throws Mage_Core_Exception
+     * @throws \WirecardEE\PaymentGateway\Exception\UnknownPaymentException
+     *
+     * @since 1.0.0
+     */
     public function cancel(Varien_Event_Observer $observer)
     {
         $magePayment = $observer->getData('payment');
 
-        if (! ($magePayment instanceof Mage_Sales_Model_Order_Payment)) {
-            \Mage::throwException("Unable to process backend operation");
+        if (! ($magePayment instanceof Mage_Sales_Model_Order_Payment) || $magePayment->getOrder()->canCancel()) {
+            \Mage::throwException("Unable to process backend operation (cancel)");
         }
 
-        $payment        = $this->paymentFactory->createFromMagePayment($magePayment);
-        $backendService = new BackendService(
+        $payment             = $this->paymentFactory->createFromMagePayment($magePayment);
+        $backendService      = new BackendService(
             $payment->getTransactionConfig(Mage::app()->getLocale()->getCurrency()),
             $this->logger
         );
+        $initialNotification = $this->transactionManager->findInitialNotification($magePayment->getOrder());
 
-        if ($initialNotification = $this->transactionManager->findInitialNotification($magePayment->getOrder())) {
-            $this->logger->info('Executing operation "cancel" on transaction ' . $initialNotification->getTxnId());
+        if (! $initialNotification) {
+            $magePayment->getOrder()->setActionFlag(Mage_Sales_Model_Order::ACTION_FLAG_CANCEL, false);
+            $this->handleError("Cancellation failed (unable to find initial notification transaction)");
+            return;
+        }
 
-            $backendTransaction = $payment->getBackendTransaction();
-            $backendTransaction->setParentTransactionId($initialNotification->getTxnId());
+        $this->logger->info('Executing operation "cancel" on transaction ' . $initialNotification->getTxnId());
 
-            if (! array_key_exists(Operation::CANCEL,
-                $backendService->retrieveBackendOperations($backendTransaction)
-            )) {
-                $magePayment->getOrder()->setActionFlag(Mage_Sales_Model_Order::ACTION_FLAG_CANCEL, false);
-                $this->setError("Operation (Cancel) not allowed on transaction " . $initialNotification->getTxnId());
-                return;
-            }
+        $backendTransaction = $payment->getBackendTransaction();
+        $backendTransaction->setParentTransactionId($initialNotification->getTxnId());
 
-            $action = $this->backendOperationHandler->execute($backendTransaction, $backendService, Operation::CANCEL);
+        if (! array_key_exists(Operation::CANCEL,
+            $backendService->retrieveBackendOperations($backendTransaction)
+        )) {
+            $magePayment->getOrder()->setActionFlag(Mage_Sales_Model_Order::ACTION_FLAG_CANCEL, false);
+            $this->handleError("Operation (Cancel) not allowed on transaction " . $initialNotification->getTxnId(), [
+                'transaction_id'     => $initialNotification->getTxnId(),
+                'allowed_operations' => join(', ', $backendService->retrieveBackendOperations($backendTransaction)),
+            ]);
+            return;
+        }
 
-            if ($action instanceof SuccessAction) {
-                $transactionId = $action->getContextItem('transaction_id');
+        $action = $this->backendOperationHandler->execute($backendTransaction, $backendService, Operation::CANCEL);
 
-                $this->logger->info("Cancelled $transactionId");
-                return;
-            }
-            if ($action instanceof ErrorAction) {
-                $magePayment->getOrder()->setActionFlag(Mage_Sales_Model_Order::ACTION_FLAG_CANCEL, false);
-                $this->setError($action->getMessage());
-                return;
-            }
+        if ($action instanceof SuccessAction) {
+            $transactionId = $action->getContextItem('transaction_id');
+            $this->logger->info("Cancelled $transactionId");
+            return;
+        }
+        if ($action instanceof ErrorAction) {
+            $magePayment->getOrder()->setActionFlag(Mage_Sales_Model_Order::ACTION_FLAG_CANCEL, false);
+            $this->handleError($action->getMessage(), ['code' => $action->getCode()]);
+            return;
         }
 
         $magePayment->getOrder()->setActionFlag(Mage_Sales_Model_Order::ACTION_FLAG_CANCEL, false);
-        $this->setError('Cancellation failed');
+        $this->handleError('Cancellation failed');
     }
 
     /**
@@ -135,13 +207,16 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
 
     /**
      * @param string $message
+     * @param array  $context
+     *
+     * @throws Mage_Core_Exception
      *
      * @since 1.0.0
      */
-    private function setError($message)
+    private function handleError($message, array $context = [])
     {
-        $this->logger->error($message);
-        $this->getAdminSession()->setData(self::ERROR_MESSAGE_SESSION_KEY, $message);
+        $this->logger->error($message, $context);
+        \Mage::throwException($message);
     }
 
     /**

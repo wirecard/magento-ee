@@ -49,6 +49,7 @@ class BackendOperationsHandler extends Handler
                 return new SuccessAction([
                     'operation'      => $operation,
                     'transaction_id' => $response->getTransactionId(),
+                    'amount'         => $response->getRequestedAmount()
                 ]);
             }
         } catch (\Exception $e) {

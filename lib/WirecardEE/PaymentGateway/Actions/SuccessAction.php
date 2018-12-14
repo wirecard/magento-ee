@@ -15,7 +15,7 @@ namespace WirecardEE\PaymentGateway\Actions;
 class SuccessAction implements Action
 {
     /**
-     * @var string
+     * @var array
      */
     protected $context;
 
@@ -30,7 +30,7 @@ class SuccessAction implements Action
     }
 
     /**
-     * @return string
+     * @return array
      *
      * @since 1.0.0
      */

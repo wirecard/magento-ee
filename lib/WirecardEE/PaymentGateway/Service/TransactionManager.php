@@ -203,7 +203,8 @@ class TransactionManager
                 if (empty($additionalInformation[TransactionManager::TYPE_KEY])) {
                     continue;
                 }
-                if ($additionalInformation[TransactionManager::TYPE_KEY] === TransactionManager::TYPE_NOTIFY) {
+                if ($additionalInformation[TransactionManager::TYPE_KEY] === TransactionManager::TYPE_NOTIFY
+                    && $transaction->getTxnType() !== Mage_Sales_Model_Order_Payment_Transaction::TYPE_PAYMENT) {
                     return $transaction;
                 }
             }
@@ -234,6 +235,8 @@ class TransactionManager
             case Transaction::TYPE_VOID_DEBIT:
             case Transaction::TYPE_VOID_PURCHASE:
                 return Mage_Sales_Model_Order_Payment_Transaction::TYPE_VOID;
+            case Transaction::TYPE_CAPTURE_AUTHORIZATION:
+                return Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE;
         }
 
         return Mage_Sales_Model_Order_Payment_Transaction::TYPE_PAYMENT;
@@ -261,7 +264,7 @@ class TransactionManager
                     return $transaction;
                 }
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return null;
         }
 
