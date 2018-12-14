@@ -229,6 +229,11 @@ class TransactionManager
                 return Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE;
             case Transaction::TYPE_AUTHORIZATION:
                 return Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH;
+            case Transaction::TYPE_VOID_AUTHORIZATION:
+            case Transaction::TYPE_VOID_CAPTURE:
+            case Transaction::TYPE_VOID_DEBIT:
+            case Transaction::TYPE_VOID_PURCHASE:
+                return Mage_Sales_Model_Order_Payment_Transaction::TYPE_VOID;
         }
 
         return Mage_Sales_Model_Order_Payment_Transaction::TYPE_PAYMENT;
