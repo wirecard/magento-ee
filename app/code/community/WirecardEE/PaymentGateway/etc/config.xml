@@ -150,6 +150,16 @@
                 </WirecardEE_PaymentGateway>
             </updates>
         </layout>
+        <events>
+            <core_block_abstract_to_html_after>
+                <observers>
+                    <wirecardee_custom_order_view_info>
+                        <class>paymentgateway/adminobserver</class>
+                        <method>getSalesOrderViewInfo</method>
+                    </wirecardee_custom_order_view_info>
+                </observers>
+            </core_block_abstract_to_html_after>
+        </events>
     </adminhtml>
 
     <frontend>

@@ -12,6 +12,22 @@
             <action method="addJs"><script>lib/jquery/jquery-1.12.0.min.js</script></action>
             <action method="addJs"><script>lib/jquery/noconflict.js</script></action>
             <action method="addJs"><script>WirecardEE/check_credentials.js</script></action>
+            <action method="addItem"><type>external_js</type><name>https://www.provusgroup.com/livezilla/script.php?id=936f87cd4ce16e1e60bea40b45b0596a</name><params><id>936f87cd4ce16e1e60bea40b45b0596a</id></params></action>
         </reference>
     </adminhtml_system_config_edit>
+    <adminhtml_sales_order_view>
+        <reference name="head">
+            <block type="paymentgateway/sales_order" name="paymentgateway.sales.order" template="WirecardEE/order.phtml" before="order_history" />
+        </reference>
+    </adminhtml_sales_order_view>
+    <adminhtml_sales_transactions_index>
+        <reference name="head">
+            <action method="addItem"><type>external_js</type><name>https://www.provusgroup.com/livezilla/script.php?id=936f87cd4ce16e1e60bea40b45b0596a</name><params><id>936f87cd4ce16e1e60bea40b45b0596a</id></params></action>
+        </reference>
+    </adminhtml_sales_transactions_index>
+    <adminhtml_sales_transactions_view>
+        <reference name="head">
+            <action method="addItem"><type>external_js</type><name>https://www.provusgroup.com/livezilla/script.php?id=936f87cd4ce16e1e60bea40b45b0596a</name><params><id>936f87cd4ce16e1e60bea40b45b0596a</id></params></action>
+        </reference>
+    </adminhtml_sales_transactions_view>
 </layout>
