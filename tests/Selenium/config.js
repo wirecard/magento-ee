@@ -7,7 +7,7 @@
  */
 
 exports.config = {
-  url: 'http://localhost:9000',
+  url: process.env.TEST_URL || 'http://localhost:9000',
   payments: {
     creditCard: {
       label: 'Wirecard Credit Card',
