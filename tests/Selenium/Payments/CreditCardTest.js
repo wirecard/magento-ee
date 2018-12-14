@@ -24,13 +24,14 @@ describe('Credit Card test', () => {
     .forBrowser('chrome')
     .build();
 
+  const paymentLabel = config.payments.creditCard.label;
   const formFields = config.payments.creditCard.fields;
 
   it('should check the credit card payment process', async () => {
     await addProductToCartAndGotoCheckout(driver, '/accessories/jewelry/blue-horizons-bracelets.html');
     await fillOutGuestCheckout(driver);
     await chooseFlatRateShipping(driver);
-    await choosePaymentMethod(driver, 'p_method_wirecardee_paymentgateway_creditcard');
+    await choosePaymentMethod(driver, 'p_method_wirecardee_paymentgateway_creditcard', paymentLabel);
     await placeOrder(driver);
 
     // Fill out credit card iframe
@@ -41,7 +42,7 @@ describe('Credit Card test', () => {
       await driver.findElement(By.id(field)).sendKeys(formFields[field]);
     });
     await driver.findElement(By.css('#expiration_month_list > option[value=\'01\']')).click();
-    await driver.findElement(By.css('#expiration_year_list > option[value=\'' + config.payments.creditCard.fields.expirationYear + '\'')).click();
+    await driver.findElement(By.css('#expiration_year_list > option[value=\'' + config.payments.creditCard.expirationYear + '\'')).click();
     await driver.switchTo().defaultContent();
     await driver.wait(until.elementLocated(By.id('wirecardee-credit-card--form-submit')));
     await driver.findElement(By.id('wirecardee-credit-card--form-submit')).click();

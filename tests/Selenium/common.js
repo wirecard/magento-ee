@@ -41,10 +41,12 @@ exports.chooseFlatRateShipping = async (driver) => {
   await driver.findElement(By.id('co-shipping-method-form')).submit();
 };
 
-exports.choosePaymentMethod = async (driver, id) => {
+exports.choosePaymentMethod = async (driver, id, paymentLabel, additionalFieldsCallback) => {
   await driver.wait(until.elementLocated(By.id('checkout-step-payment')));
   await driver.wait(until.elementIsVisible(driver.findElement(By.id('co-payment-form'))));
+  await driver.findElement(By.xpath("//*[contains(text(), '" + paymentLabel + "')]")).click();
   await driver.findElement(By.id(id)).click();
+  additionalFieldsCallback && await additionalFieldsCallback();
   await driver.findElement(By.id('co-payment-form')).click();
 };
 
