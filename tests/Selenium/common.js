@@ -66,6 +66,25 @@ exports.placeOrder = async (driver) => {
   await driver.findElement(By.xpath('//*[@id="review-buttons-container"]/button')).click();
 };
 
+exports.waitUntilOverlayIsNotVisible = async function (driver, locator) {
+  const overlay = await driver.findElements(locator);
+  if (overlay.length) {
+    await driver.wait(until.elementIsNotVisible(overlay[0]));
+  }
+};
+
+exports.waitForAlert = async function (driver, timeout) {
+  try {
+    console.log('wait for alert');
+    const alert = await driver.wait(until.alertIsPresent(), timeout);
+    console.log('accept alert');
+    await alert.accept();
+    await driver.switchTo().defaultContent();
+  } catch (e) {
+    console.log('no alert popup');
+  }
+};
+
 exports.asyncForEach = async (arr, cb) => {
   for (let i = 0; i < arr.length; i++) {
     await cb(arr[i], i, arr);

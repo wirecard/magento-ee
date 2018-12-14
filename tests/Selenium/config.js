@@ -18,6 +18,13 @@ exports.config = {
       },
       expirationYear: ((new Date()).getFullYear() + 1)
     },
+    paypal: {
+      label: 'Wirecard PayPal',
+      fields: {
+        email: 'paypal.magento1.buyer@wirecard.com',
+        password: 'Wirecardbuyer'
+      }
+    },
     sepa: {
       label: 'Wirecard SEPA Direct Debit',
       fields: {
