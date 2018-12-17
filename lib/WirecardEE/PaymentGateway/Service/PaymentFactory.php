@@ -51,8 +51,7 @@ class PaymentFactory
      */
     public function createFromMagePayment(\Mage_Sales_Model_Order_Payment $magePayment)
     {
-        $paymentName = str_replace('wirecardee_paymentgateway_', '', $magePayment->getData('method'));
-        return $this->create($paymentName);
+        return $this->create($this->getMagePaymentName($magePayment));
     }
 
     /**
@@ -71,17 +70,29 @@ class PaymentFactory
     }
 
     /**
-     * Return true, if payment identifier matches a supported Wirecard payment
+     * Return true, if payment matches a supported Wirecard payment
      *
-     * @param string $identifier
+     * @param \Mage_Sales_Model_Order_Payment $magePayment
      *
      * @return bool
      *
      * @since 1.0.0
      */
-    public function isSupportedPayment($identifier)
+    public function isSupportedPayment(\Mage_Sales_Model_Order_Payment $magePayment)
     {
         $payments = $this->getMappedPayments();
-        return isset($payments[$identifier]);
+        return isset($payments[$this->getMagePaymentName($magePayment)]);
+    }
+
+    /**
+     * @param \Mage_Sales_Model_Order_Payment $magePayment
+     *
+     * @return mixed
+     *
+     * @since 1.0.0
+     */
+    private function getMagePaymentName(\Mage_Sales_Model_Order_Payment $magePayment)
+    {
+        return str_replace('wirecardee_paymentgateway_', '', $magePayment->getData('method'));
     }
 }

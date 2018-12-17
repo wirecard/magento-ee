@@ -28,6 +28,7 @@ class BackendOperationsHandler extends Handler
      * @param Transaction    $transaction
      * @param BackendService $transactionService
      * @param string         $operation
+     * @param array          $transactionContext
      *
      * @return ErrorAction|SuccessAction
      *
@@ -36,7 +37,8 @@ class BackendOperationsHandler extends Handler
     public function execute(
         Transaction $transaction,
         BackendService $transactionService,
-        $operation
+        $operation,
+        array $transactionContext = []
     ) {
         try {
             $response = $transactionService->process($transaction, $operation);
@@ -44,12 +46,17 @@ class BackendOperationsHandler extends Handler
             if ($response instanceof SuccessResponse) {
                 /** @var \Mage_Sales_Model_Order $order */
                 $order = \Mage::getModel('sales/order')->load($response->getCustomFields()->get('order-id'));
-                $this->transactionManager->createTransaction(TransactionManager::TYPE_BACKEND, $order, $response);
+                $this->transactionManager->createTransaction(
+                    TransactionManager::TYPE_BACKEND,
+                    $order,
+                    $response,
+                    $transactionContext
+                );
 
                 return new SuccessAction([
                     'operation'      => $operation,
                     'transaction_id' => $response->getTransactionId(),
-                    'amount'         => $response->getRequestedAmount()
+                    'amount'         => $response->getRequestedAmount(),
                 ]);
             }
         } catch (\Exception $e) {
