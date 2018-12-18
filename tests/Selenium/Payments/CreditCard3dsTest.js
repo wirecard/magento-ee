@@ -6,8 +6,9 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-const { By, until } = require('selenium-webdriver');
+const { By, until, Key } = require('selenium-webdriver');
 const {
+  waitForAlert,
   getDriver,
   asyncForEach,
   placeOrder,
@@ -19,14 +20,14 @@ const {
 } = require('../common');
 const { config } = require('../config');
 
-describe('Credit Card test', () => {
+describe('Credit Card 3-D Secure test', () => {
   const driver = getDriver();
 
-  const paymentLabel = config.payments.creditCard.label;
-  const formFields = config.payments.creditCard.fields;
+  const paymentLabel = config.payments.creditCard3ds.label;
+  const formFields = config.payments.creditCard3ds.fields;
 
-  it('should check the credit card payment process', async () => {
-    await addProductToCartAndGotoCheckout(driver, '/accessories/jewelry/blue-horizons-bracelets.html');
+  it('should check the credit card 3ds payment process', async () => {
+    await addProductToCartAndGotoCheckout(driver, '/flapover-briefcase.html');
     await fillOutGuestCheckout(driver);
     await chooseFlatRateShipping(driver);
     await choosePaymentMethod(driver, 'p_method_wirecardee_paymentgateway_creditcard', paymentLabel);
@@ -44,6 +45,12 @@ describe('Credit Card test', () => {
     await driver.switchTo().defaultContent();
     await driver.wait(until.elementLocated(By.id('wirecardee-credit-card--form-submit')));
     await driver.findElement(By.id('wirecardee-credit-card--form-submit')).click();
+
+    // Enter 3d secure password
+    await driver.wait(until.elementLocated(By.id('password')), 20000);
+    await driver.findElement(By.id('password')).sendKeys(config.payments.creditCard3ds.password, Key.ENTER);
+
+    await waitForAlert(driver, 10000);
 
     await checkConfirmationPage(driver, 'Thank you for your purchase!');
   });

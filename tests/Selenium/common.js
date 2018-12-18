@@ -8,7 +8,7 @@
 
 const { expect } = require('chai');
 const { config } = require('./config');
-const { By, until } = require('selenium-webdriver');
+const { Builder, By, until } = require('selenium-webdriver');
 
 exports.addProductToCartAndGotoCheckout = async (driver, url) => {
   await driver.get(`${config.url}${url}`);
@@ -41,10 +41,12 @@ exports.chooseFlatRateShipping = async (driver) => {
   await driver.findElement(By.id('co-shipping-method-form')).submit();
 };
 
-exports.choosePaymentMethod = async (driver, id) => {
+exports.choosePaymentMethod = async (driver, id, paymentLabel, additionalFieldsCallback) => {
   await driver.wait(until.elementLocated(By.id('checkout-step-payment')));
   await driver.wait(until.elementIsVisible(driver.findElement(By.id('co-payment-form'))));
+  await driver.findElement(By.xpath("//*[contains(text(), '" + paymentLabel + "')]")).click();
   await driver.findElement(By.id(id)).click();
+  additionalFieldsCallback && await additionalFieldsCallback();
   await driver.findElement(By.id('co-payment-form')).click();
 };
 
@@ -64,8 +66,37 @@ exports.placeOrder = async (driver) => {
   await driver.findElement(By.xpath('//*[@id="review-buttons-container"]/button')).click();
 };
 
+exports.waitUntilOverlayIsNotVisible = async function (driver, locator) {
+  const overlay = await driver.findElements(locator);
+  if (overlay.length) {
+    await driver.wait(until.elementIsNotVisible(overlay[0]));
+  }
+};
+
+exports.waitForAlert = async function (driver, timeout) {
+  try {
+    console.log('wait for alert');
+    const alert = await driver.wait(until.alertIsPresent(), timeout);
+    console.log('accept alert');
+    await alert.accept();
+    await driver.switchTo().defaultContent();
+  } catch (e) {
+    console.log('no alert popup');
+  }
+};
+
 exports.asyncForEach = async (arr, cb) => {
   for (let i = 0; i < arr.length; i++) {
     await cb(arr[i], i, arr);
   }
+};
+
+exports.getDriver = () => {
+  if (global.driver) {
+    return global.driver;
+  }
+
+  return new Builder()
+    .forBrowser('chrome')
+    .build();
 };

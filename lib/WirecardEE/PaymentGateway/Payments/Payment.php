@@ -19,6 +19,7 @@ use WirecardEE\PaymentGateway\Exception\UnknownTransactionTypeException;
  */
 abstract class Payment implements PaymentInterface
 {
+    const CONFIG_PREFIX = 'payment/wirecardee_paymentgateway_';
     /**
      * @param $selectedCurrency
      *
@@ -62,9 +63,12 @@ abstract class Payment implements PaymentInterface
      *
      * @since 1.0.0
      */
-    protected function getPluginConfig($name, $prefix = 'payment/wirecardee_paymentgateway_')
+    protected function getPluginConfig($name, $prefix = null)
     {
-        $config = \Mage::getStoreConfig($prefix . $this->getName());
+        $config = $prefix
+                ? \Mage::getStoreConfig($prefix)
+                : \Mage::getStoreConfig(self::CONFIG_PREFIX . $this->getName());
+
         return isset($config[$name]) ? $config[$name] : null;
     }
 

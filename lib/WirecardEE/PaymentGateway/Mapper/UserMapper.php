@@ -69,6 +69,8 @@ class UserMapper
     /**
      * @return AccountHolder
      *
+     * @throws \Exception
+     *
      * @since 1.0.0
      */
     public function getBillingAccountHolder()
