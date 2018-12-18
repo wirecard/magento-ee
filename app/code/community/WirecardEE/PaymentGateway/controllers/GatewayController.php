@@ -238,6 +238,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
 
     /**
      * @return bool
+     * @throws Exception
      */
     private function cancelOrderAndRestoreBasket()
     {
@@ -252,9 +253,15 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
                           ->setReservedOrderId(null)
                           ->save();
                     $this->getCheckoutSession()->replaceQuote($quote);
-
-                    return true;
                 }
+
+                if (Mage::getStoreConfig('wirecardee_paymentgateway/settings/delete_cancelled_orders')) {
+                    Mage::register('isSecureArea', true);
+                    $order->delete();
+                    Mage::unregister('isSecureArea');
+                }
+
+                return true;
             }
         }
 
