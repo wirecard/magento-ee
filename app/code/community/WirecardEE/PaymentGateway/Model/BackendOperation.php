@@ -130,6 +130,8 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             $transactionId = $action->getContextItem('transaction_id');
             $amount        = $action->getContextItem('amount');
 
+            $invoice->setTransactionId($transactionId);
+
             $this->logger->info("Captured $amount from $transactionId");
             return;
         }
