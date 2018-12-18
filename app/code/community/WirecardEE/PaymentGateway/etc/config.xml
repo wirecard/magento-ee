@@ -160,6 +160,15 @@
                 </observers>
             </core_block_abstract_to_html_after>
         </events>
+        <translate>
+            <modules>
+                <WirecardEE_Paymentgateway>
+                    <files>
+                        <default>WirecardEE_PaymentGateway.csv</default>
+                    </files>
+                </WirecardEE_Paymentgateway>
+            </modules>
+        </translate>
     </adminhtml>
 
     <frontend>
@@ -191,5 +200,14 @@
                 </observers>
             </checkout_type_onepage_save_order>
         </events>
+        <translate>
+            <modules>
+                <WirecardEE_PaymentGateway>
+                    <files>
+                        <default>WirecardEE_PaymentGateway.csv</default>
+                    </files>
+                </WirecardEE_PaymentGateway>
+            </modules>
+        </translate>
     </frontend>
 </config>
