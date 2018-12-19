@@ -25,8 +25,6 @@ use WirecardEE\PaymentGateway\Service\TransactionManager;
  */
 class WirecardEE_PaymentGateway_Model_BackendOperation
 {
-    const ERROR_MESSAGE_SESSION_KEY = 'wirecardee_backendoperation_error_message';
-
     /**
      * @var BackendOperationsHandler
      */
