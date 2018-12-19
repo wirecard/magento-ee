@@ -15,6 +15,7 @@ use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
 use WirecardEE\PaymentGateway\Payments\CreditCardPayment;
+use WirecardEE\PaymentGateway\Payments\IdealPayment;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 use WirecardEE\PaymentGateway\Payments\PaypalPayment;
 use WirecardEE\PaymentGateway\Payments\SepaPayment;
@@ -91,6 +92,7 @@ class PaymentFactory
             CreditCardTransaction::NAME      => CreditCardPayment::class,
             SepaDirectDebitTransaction::NAME => SepaPayment::class,
             SofortTransaction::NAME          => SofortPayment::class,
+            IdealPayment::NAME               => IdealPayment::class,
         ];
     }
 
