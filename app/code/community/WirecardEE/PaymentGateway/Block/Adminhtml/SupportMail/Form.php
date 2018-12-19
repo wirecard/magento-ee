@@ -29,7 +29,7 @@ class WirecardEE_PaymentGateway_Block_Adminhtml_SupportMail_Form extends Mage_Ad
 
         $fieldset = $form->addFieldset(
             'supportmail_form',
-            array('legend'=>Mage::helper('paymentgateway')->__('Item information'))
+            array('legend'=>Mage::helper('paymentgateway')->__('Mail information'))
         );
         $fieldset->addField('sender_address', 'text', array(
             'label' => Mage::helper('paymentgateway')->__('Sender Address'),

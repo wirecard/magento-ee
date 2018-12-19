@@ -28,6 +28,6 @@ class WirecardEE_PaymentGateway_Block_Adminhtml_SupportMail extends Mage_Adminht
 
     public function getHeaderText()
     {
-        return Mage::helper('paymentgateway')->__('My Form Container');
+        return Mage::helper('paymentgateway')->__('Wirecard Mail Support');
     }
 }
