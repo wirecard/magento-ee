@@ -19,6 +19,8 @@ class SessionManager
     private $session;
 
     /**
+     * @param \Mage_Core_Model_Session $session
+     *
      * @since 1.0.0
      */
     public function __construct(\Mage_Core_Model_Session $session)

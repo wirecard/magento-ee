@@ -14,12 +14,14 @@ use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\TransactionService;
+use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Actions\ViewAction;
 use WirecardEE\PaymentGateway\Data\CreditCardPaymentConfig;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessReturnInterface;
 use WirecardEE\PaymentGateway\Service\Logger;
+use WirecardEE\PaymentGateway\Service\TransactionManager;
 
 class CreditCardPayment extends Payment implements ProcessPaymentInterface, ProcessReturnInterface
 {
@@ -107,6 +109,7 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface, Proc
      * @return Amount
      *
      * @since 1.0.0
+     * @throws \Mage_Core_Model_Store_Exception
      */
     private function getLimit($selectedCurrency, $limitValue, $limitCurrency)
     {
@@ -114,6 +117,15 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface, Proc
         return new Amount($limitValue * $factor, $selectedCurrency);
     }
 
+    /**
+     * @param $selectedCurrency
+     * @param $limitCurrency
+     *
+     * @return float|int
+     * @throws \Mage_Core_Model_Store_Exception
+     *
+     * @since 1.0.0
+     */
     private function getCurrencyConversionFactor($selectedCurrency, $limitCurrency)
     {
         if ($selectedCurrency === $limitCurrency) {
@@ -175,13 +187,20 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface, Proc
 
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
 
-        // $paymentConfig->setVaultEnabled($this->getPluginConfig('CreditCardEnableVault'));
-        // $paymentConfig->setAllowAddressChanges($this->getPluginConfig('CreditCardAllowAddressChanges'));
-        // $paymentConfig->setThreeDUsageOnTokens($this->getPluginConfig('CreditCardThreeDUsageOnTokens'));
-
         return $paymentConfig;
     }
 
+    /**
+     * @param OrderSummary       $orderSummary
+     * @param TransactionService $transactionService
+     * @param Redirect           $redirect
+     *
+     * @return Action|null
+     *
+     * @throws \Exception
+     *
+     * @since 1.0.0
+     */
     public function processPayment(
         OrderSummary $orderSummary,
         TransactionService $transactionService,
@@ -195,6 +214,22 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface, Proc
             $orderSummary->getPayment()->getTransactionType(),
             \Mage::app()->getLocale()->getLocaleCode()
         );
+        $requestDataArray = json_decode($requestData, true);
+
+        /** @var \Mage_Sales_Model_Order_Payment_Transaction $transaction */
+        $transaction = \Mage::getModel('sales/order_payment_transaction');
+        $transaction->setTxnType(
+            TransactionManager::getMageTransactionType($requestDataArray['transaction_type'])
+        );
+        $transaction->setOrder($orderSummary->getOrder());
+        $transaction->setOrderPaymentObject($orderSummary->getOrder()->getPayment());
+        $transaction->setAdditionalInformation(
+            \Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS,
+            array_merge($requestDataArray, [
+                TransactionManager::TYPE_KEY => TransactionManager::TYPE_INITIAL_REQUEST
+            ])
+        );
+        $transaction->save();
 
         return new ViewAction('paymentgateway/seamless', [
             'wirecardUrl'         => $orderSummary->getPayment()->getPaymentConfig()->getBaseUrl(),
@@ -203,6 +238,14 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface, Proc
         ]);
     }
 
+    /**
+     * @param TransactionService                 $transactionService
+     * @param \Mage_Core_Controller_Request_Http $request
+     *
+     * @return \Wirecard\PaymentSdk\Response\Response|null
+     *
+     * @since 1.0.0
+     */
     public function processReturn(TransactionService $transactionService, \Mage_Core_Controller_Request_Http $request)
     {
         return null;

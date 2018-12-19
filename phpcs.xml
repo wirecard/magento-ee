@@ -7,4 +7,5 @@
     <exclude-pattern>./tests/*</exclude-pattern>
     <exclude-pattern>./node_modules/*</exclude-pattern>
     <exclude-pattern>./js/*</exclude-pattern>
+    <exclude-pattern>./app/*</exclude-pattern>
 </ruleset>

@@ -86,4 +86,12 @@ abstract class Payment implements PaymentInterface
         }
         throw new UnknownTransactionTypeException($operation);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBackendTransaction()
+    {
+        return $this->getTransaction();
+    }
 }

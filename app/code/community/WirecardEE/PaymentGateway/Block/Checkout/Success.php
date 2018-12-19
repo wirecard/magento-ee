@@ -9,12 +9,9 @@
 
 /**
  * @since 1.0.0
- * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Block_Checkout_Success extends Mage_Checkout_Block_Onepage_Success
 {
-    // @codingStandardsIgnoreEnd
-
     /**
      * @return string
      *

@@ -62,4 +62,9 @@ interface PaymentInterface
      * @since 1.0.0
      */
     public function getTransactionType();
+
+    /**
+     * @return \Wirecard\PaymentSdk\Transaction\Transaction|null
+     */
+    public function getBackendTransaction();
 }
