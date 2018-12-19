@@ -319,7 +319,11 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         $this->logger->info("Executing operation $operation on " . $transaction->getTxnId()
                             . " (ID: " . $transaction->getId() . ") " . ($amount ? " - Amount: $amount" : ""));
 
-        $backendTransaction = $payment->getBackendTransaction();
+        $backendTransaction = $payment->getBackendTransaction(
+            $transaction->getOrder(),
+            $operation,
+            $transaction
+        );
         $backendTransaction->setParentTransactionId($transaction->getTxnId());
         if ($amount) {
             $backendTransaction->setAmount($amount);

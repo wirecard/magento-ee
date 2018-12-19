@@ -102,13 +102,14 @@ class TransactionManager
                 }
 
                 $mageTransactionModel->setTxnType(self::getMageTransactionType($response->getTransactionType()));
+                $mageTransactionModel->setData('payment_method', $responseMapper->getPaymentMethod());
                 $mageTransactionModel->setAdditionalInformation(
                     Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS,
                     array_merge($response->getData(), [
                         self::TYPE_KEY => $type,
                     ], $context)
                 );
-                $mageTransactionModel->setOrderPaymentObject($order->getPayment());
+
                 try {
                     $mageTransactionModel->save();
                 } catch (\Exception $e) {
@@ -154,12 +155,14 @@ class TransactionManager
                 }
 
                 $mageTransactionModel->setTxnType(self::getMageTransactionType($response->getTransactionType()));
+                $mageTransactionModel->setData('payment_method', $responseMapper->getPaymentMethod());
                 $mageTransactionModel->setAdditionalInformation(
                     Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS,
                     array_merge($response->getData(), [
                         self::TYPE_KEY => $type,
                     ], $context)
                 );
+
                 try {
                     $mageTransactionModel->save();
                 } catch (\Exception $e) {
@@ -264,7 +267,11 @@ class TransactionManager
                     continue;
                 }
 
-                $backendTransaction = $payment->getBackendTransaction();
+                $backendTransaction = $payment->getBackendTransaction(
+                    $order,
+                    Operation::REFUND,
+                    $transaction
+                );
                 $backendTransaction->setParentTransactionId($transaction->getTxnId());
 
                 if (! array_key_exists(
@@ -309,6 +316,7 @@ class TransactionManager
             case Transaction::TYPE_REFUND_CAPTURE:
             case Transaction::TYPE_REFUND_DEBIT:
             case Transaction::TYPE_REFUND_PURCHASE:
+            case Transaction::TYPE_CREDIT:
                 return Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND;
         }
 
