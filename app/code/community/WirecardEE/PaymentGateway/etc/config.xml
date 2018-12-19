@@ -176,6 +176,18 @@
                 <fraud_prevention>1</fraud_prevention>
                 <sort_order>36</sort_order>
             </wirecardee_paymentgateway_sofortbanking>
+            <wirecardee_paymentgateway_ideal>
+                <active>0</active>
+                <model>paymentgateway/ideal</model>
+                <title>Wirecard iDEAL</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>16390-testing</api_user>
+                <api_password>3!3013=D3fD8X7</api_password>
+                <api_maid>4aeccf39-0d47-47f6-a399-c05c1f2fc819</api_maid>
+                <api_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</api_secret>
+                <fraud_prevention>1</fraud_prevention>
+                <sort_order>21</sort_order>
+            </wirecardee_paymentgateway_ideal>
         </payment>
     </default>
 
