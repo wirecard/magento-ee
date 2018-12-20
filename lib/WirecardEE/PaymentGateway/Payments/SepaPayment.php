@@ -13,6 +13,7 @@ use Wirecard\PaymentSdk\Config\SepaConfig;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Mandate;
 use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\TransactionService;
@@ -125,6 +126,23 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, CustomForm
 
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
         return $paymentConfig;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBackendTransaction(
+        \Mage_Sales_Model_Order $order,
+        $operation,
+        \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
+    ) {
+        if ($parentTransaction->getData('payment_method') === SepaCreditTransferTransaction::NAME
+            || $operation === Operation::CREDIT
+            || $parentTransaction->getTxnType() === \Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND
+        ) {
+            return new SepaCreditTransferTransaction();
+        }
+        return new SepaDirectDebitTransaction();
     }
 
     /**
