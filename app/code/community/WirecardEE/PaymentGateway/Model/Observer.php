@@ -39,13 +39,13 @@ class WirecardEE_PaymentGateway_Model_Observer
         require_once($vendorPath . 'autoload.php');
     }
 
-    public function checkoutTypeOnepageSaveOrder(Varien_Event_Observer $observer)
+    /**
+     * @since 1.0.0
+     */
+    public function checkoutTypeOnepageSaveOrder()
     {
-        //        var_dump(get_class(Mage::getSingleton("core/session",  array("name"=>"frontend"))));
-        /** @var Mage_Sales_Model_Order $order */
         $additionalData = Mage::app()->getRequest()->getParam('wirecardElasticEngine');
-        $sessionManager = new SessionManager(Mage::getSingleton("core/session", array("name"=>"frontend")));
+        $sessionManager = new SessionManager(Mage::getSingleton("core/session", ["name" => "frontend"]));
         $sessionManager->storePaymentData($additionalData);
-        //        $session->setData("wirecardEEAdditionalData", $additionalData);
     }
 }

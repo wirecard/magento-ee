@@ -13,16 +13,18 @@ use Wirecard\PaymentSdk\Config\SepaConfig;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Mandate;
 use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\TransactionService;
+use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Exception\InsufficientDataException;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\SepaPaymentConfig;
-use WirecardEE\PaymentGateway\Payments\Contracts\AdditionalViewAssignmentsInterface;
+use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplate;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
-class SepaPayment extends Payment implements ProcessPaymentInterface, AdditionalViewAssignmentsInterface
+class SepaPayment extends Payment implements ProcessPaymentInterface, CustomFormTemplate
 {
     const NAME = SepaDirectDebitTransaction::NAME;
     const BACKEND_NAME = SepaCreditTransferTransaction::NAME;
@@ -54,11 +56,7 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
     }
 
     /**
-     * @param $selectedCurrency
-     *
-     * @return Config
-     *
-     * @since 1.0.0
+     * {@inheritdoc}
      */
     public function getTransactionConfig($selectedCurrency)
     {
@@ -69,23 +67,23 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
             $this->getPaymentConfig()->getTransactionMAID(),
             $this->getPaymentConfig()->getTransactionSecret()
         );
-        
+
         $sepaDirectDebitConfig->setCreditorId($this->getPaymentConfig()->getCreditorId());
         $config->add($sepaDirectDebitConfig);
 
-        //  $sepaCreditTransferConfig = new SepaConfig(
-        //     SepaCreditTransferTransaction::NAME,
-        //     $this->getPaymentConfig()->getBackendTransactionMAID(),
-        //     $this->getPaymentConfig()->getBackendTransactionSecret()
-        // );
-        // $sepaCreditTransferConfig->setCreditorId($this->getPaymentConfig()->getBackendCreditorId());
-        // $config->add($sepaCreditTransferConfig);
+        $sepaCreditTransferConfig = new SepaConfig(
+            SepaCreditTransferTransaction::NAME,
+            $this->getPaymentConfig()->getBackendTransactionMAID(),
+            $this->getPaymentConfig()->getBackendTransactionSecret()
+        );
+        $sepaCreditTransferConfig->setCreditorId($this->getPaymentConfig()->getBackendCreditorId());
+        $config->add($sepaCreditTransferConfig);
 
         return $config;
     }
 
     /**
-     * @return PaymentConfig
+     * @return SepaPaymentConfig
      *
      * @since 1.0.0
      */
@@ -133,28 +131,28 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
     /**
      * {@inheritdoc}
      */
-    public function getAdditionalViewAssignments()
-    {
-        $paymentConfig = $this->getPaymentConfig();
-
-        return [
-            'method'          => $this->getName(),
-            'showBic'         => $paymentConfig->showBic(),
-            'creditorId'      => $paymentConfig->getCreditorId(),
-            'creditorName'    => $paymentConfig->getCreditorName(),
-            'creditorStreet'  => $paymentConfig->getCreditorStreet(),
-            'creditorZip'     => $paymentConfig->getCreditorZip(),
-            'creditorCity'    => $paymentConfig->getCreditorCity(),
-            'creditorCountry' => $paymentConfig->getCreditorCountry(),
-        ];
+    public function getBackendTransaction(
+        \Mage_Sales_Model_Order $order,
+        $operation,
+        \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
+    ) {
+        if ($parentTransaction->getData('payment_method') === SepaCreditTransferTransaction::NAME
+            || $operation === Operation::CREDIT
+            || $parentTransaction->getTxnType() === \Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND
+        ) {
+            return new SepaCreditTransferTransaction();
+        }
+        return new SepaDirectDebitTransaction();
     }
 
     /**
-     * @param OrderSummary $orderSummary
+     * @param OrderSummary       $orderSummary
      * @param TransactionService $transactionService
-     * @param Redirect $redirect
+     * @param Redirect           $redirect
      *
      * @return null|Action
+     *
+     * @throws InsufficientDataException
      *
      * @since 1.0.0
      */
@@ -164,9 +162,7 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
         Redirect $redirect
     ) {
         $additionalPaymentData = $orderSummary->getAdditionalPaymentData();
-        if (/*! isset($additionalPaymentData['sepaConfirmMandate'])
-              || $additionalPaymentData['sepaConfirmMandate'] !== 'confirmed'
-            || */! isset($additionalPaymentData['sepaIban'])
+        if (! isset($additionalPaymentData['sepaIban'])
             || ! isset($additionalPaymentData['sepaFirstName'])
             || ! isset($additionalPaymentData['sepaLastName'])
         ) {
@@ -190,11 +186,9 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
 
         return null;
     }
-    
+
     /**
      * Generate sepa mandate id: Format "[creditorId]-[orderNumber]-[timestamp]"
-     * [timestamp] is already part of the paymentUniqueId (first 10 characters). The remaining 5 characters of
-     * paymentUniqueId can be used as [orderNumber], which has a max length of 5 anyway.
      *
      * @param OrderSummary $orderSummary
      *
@@ -205,7 +199,17 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, Additional
     private function generateMandateId(OrderSummary $orderSummary)
     {
         $creditorId = $this->getPluginConfig('creditor_id');
-        $appendix = '-' . $orderSummary->getOrder()->getRealOrderId() . '-' . time();
-        return substr( $creditorId, 0, 35 - strlen( $appendix ) ) . $appendix;
+        $appendix   = '-' . $orderSummary->getOrder()->getRealOrderId() . '-' . time();
+        return substr($creditorId, 0, 35 - strlen($appendix)) . $appendix;
+    }
+
+    /**
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getFormTemplateName()
+    {
+        return 'WirecardEE/form/sepa.phtml';
     }
 }

@@ -68,7 +68,7 @@ class OrderSummary
         BasketMapper $basketMapper,
         UserMapper $userMapper,
         $deviceFingerprintId,
-        $additionalPaymentData = array()
+        $additionalPaymentData = []
     ) {
         $this->payment               = $payment;
         $this->order                 = $order;

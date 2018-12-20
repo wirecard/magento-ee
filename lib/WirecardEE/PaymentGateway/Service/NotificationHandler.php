@@ -14,6 +14,7 @@ use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Handles notification responses. Notification responses are server-to-server, meaning you must NEVER access session
@@ -79,7 +80,40 @@ class NotificationHandler extends Handler
             throw new \Exception("Order not found");
         }
 
-        $this->transactionManager->createTransaction(TransactionManager::TYPE_NOTIFY, $order, $response);
+        $refundableBasket = [];
+
+        // Automatically invoice purchases.
+        if ($response->getTransactionType() === Transaction::TYPE_PURCHASE) {
+            if ($order->canInvoice()) {
+                /** @var \Mage_Sales_Model_Order_Invoice $invoice */
+                $invoice = $order->prepareInvoice()->register();
+                $invoice->setData('auto_capture', true);
+                $invoice->setTransactionId($response->getTransactionId());
+                $invoice->capture();
+
+                /** @var \Mage_Core_Model_Resource_Transaction $resourceTransaction */
+                $resourceTransaction = \Mage::getModel('core/resource_transaction');
+                $resourceTransaction
+                    ->addObject($invoice)
+                    ->addObject($invoice->getOrder())
+                    ->save();
+
+                foreach ($order->getAllVisibleItems() as $item) {
+                    /** @var \Mage_Sales_Model_Order_Item $item */
+                    $refundableBasket[$item->getProductId()] = (int)$item->getQtyOrdered();
+                }
+                if ($order->getShippingAmount() > 0.0) {
+                    $refundableBasket[TransactionManager::ADDITIONAL_AMOUNT_KEY] = $order->getShippingAmount();
+                }
+            }
+        }
+
+        $this->transactionManager->createTransaction(
+            TransactionManager::TYPE_NOTIFY,
+            $order,
+            $response,
+            [TransactionManager::REFUNDABLE_BASKET_KEY => json_encode($refundableBasket)]
+        );
 
         if (in_array($order->getStatus(), [
             \Mage_Sales_Model_Order::STATE_COMPLETE,

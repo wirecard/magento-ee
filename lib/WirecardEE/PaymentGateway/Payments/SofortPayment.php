@@ -61,13 +61,13 @@ class SofortPayment extends Payment implements ProcessPaymentInterface
             $this->getPaymentConfig()->getTransactionSecret()
         ));
 
-        // $sepaCreditTransferConfig = new SepaConfig(
-        //     SepaCreditTransferTransaction::NAME,
-        //     $this->getPaymentConfig()->getBackendTransactionMAID(),
-        //     $this->getPaymentConfig()->getBackendTransactionSecret()
-        // );
-        // $sepaCreditTransferConfig->setCreditorId($this->getPaymentConfig()->getBackendCreditorId());
-        // $config->add($sepaCreditTransferConfig);
+        $sepaCreditTransferConfig = new SepaConfig(
+            SepaCreditTransferTransaction::NAME,
+            $this->getPaymentConfig()->getBackendTransactionMAID(),
+            $this->getPaymentConfig()->getBackendTransactionSecret()
+        );
+        $sepaCreditTransferConfig->setCreditorId($this->getPaymentConfig()->getBackendCreditorId());
+        $config->add($sepaCreditTransferConfig);
 
         return $config;
     }
@@ -83,7 +83,6 @@ class SofortPayment extends Payment implements ProcessPaymentInterface
         $paymentConfig->setTransactionMAID($this->getPluginConfig('api_maid'));
         $paymentConfig->setTransactionSecret($this->getPluginConfig('api_secret'));
         $paymentConfig->setTransactionOperation(Operation::PAY);
-        // $paymentConfig->setSendDescriptor(true);
         $paymentConfig->setOrderIdentification(true);
         $paymentConfig->setBackendTransactionMAID(
             $this->getPluginConfig(
@@ -107,6 +106,24 @@ class SofortPayment extends Payment implements ProcessPaymentInterface
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
 
         return $paymentConfig;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBackendTransaction(
+        \Mage_Sales_Model_Order $order,
+        $operation,
+        \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
+    ) {
+        if ($parentTransaction->getData('payment_method') === SepaCreditTransferTransaction::NAME
+            || $operation === Operation::CREDIT
+            || $operation === Operation::CANCEL
+            || $parentTransaction->getTxnType() === \Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND
+        ) {
+            return new SepaCreditTransferTransaction();
+        }
+        return new SofortTransaction();
     }
 
     /**

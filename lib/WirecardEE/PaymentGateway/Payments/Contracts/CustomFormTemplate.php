@@ -12,14 +12,14 @@ namespace WirecardEE\PaymentGateway\Payments\Contracts;
 /**
  * @since 1.0.0
  */
-interface AdditionalViewAssignmentsInterface
+interface CustomFormTemplate
 {
     /**
-     * Some payments (e.g. SEPA) require additional view assignments (e.g. for displaying additional input fields).
+     * Some payments (e.g. SEPA) require custom form templates.
      *
-     * @return array
+     * @return string
      *
      * @since 1.0.0
      */
-    public function getAdditionalViewAssignments();
+    public function getFormTemplateName();
 }

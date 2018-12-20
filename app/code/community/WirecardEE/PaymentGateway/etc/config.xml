@@ -42,6 +42,36 @@
                     </wirecard_ee_composer_autoload>
                 </observers>
             </controller_front_init_before>
+
+            <sales_order_payment_cancel>
+                <observers>
+                    <wirecard_ee_cancel>
+                        <type>singleton</type>
+                        <class>paymentgateway/backendOperation</class>
+                        <method>cancel</method>
+                    </wirecard_ee_cancel>
+                </observers>
+            </sales_order_payment_cancel>
+
+            <sales_order_invoice_pay>
+                <observers>
+                    <wirecard_ee_capture>
+                        <type>singleton</type>
+                        <class>paymentgateway/backendOperation</class>
+                        <method>capture</method>
+                    </wirecard_ee_capture>
+                </observers>
+            </sales_order_invoice_pay>
+
+            <sales_order_payment_refund>
+                <observers>
+                    <wirecard_ee_refund>
+                        <type>singleton</type>
+                        <class>paymentgateway/backendOperation</class>
+                        <method>refund</method>
+                    </wirecard_ee_refund>
+                </observers>
+            </sales_order_payment_refund>
         </events>
 
         <resources>
@@ -114,6 +144,7 @@
                 <creditor_zip></creditor_zip>
                 <creditor_city></creditor_city>
                 <creditor_country></creditor_country>
+                <sort_order>33</sort_order>
             </wirecardee_paymentgateway_sepadirectdebit>
             <wirecardee_paymentgateway_sepacredit>
                 <api_maid>59a01668-693b-49f0-8a1f-f3c1ba025d45</api_maid>
@@ -130,6 +161,7 @@
                 <api_maid>6c0e7efd-ee58-40f7-9bbd-5e7337a052cd</api_maid>
                 <api_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</api_secret>
                 <fraud_prevention>1</fraud_prevention>
+                <sort_order>36</sort_order>
             </wirecardee_paymentgateway_sofortbanking>
         </payment>
     </default>

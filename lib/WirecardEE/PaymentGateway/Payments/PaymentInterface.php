@@ -62,4 +62,22 @@ interface PaymentInterface
      * @since 1.0.0
      */
     public function getTransactionType();
+
+    /**
+     * Returns payment specific transaction object for backend operations (always returns a new instance!).
+     * Returns null, if no backend operations are allowed on this payment
+     *
+     * @param \Mage_Sales_Model_Order                     $order
+     * @param string                                      $operation
+     * @param \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
+     *
+     * @return Transaction|null
+     *
+     * @since 1.0.0
+     */
+    public function getBackendTransaction(
+        \Mage_Sales_Model_Order $order,
+        $operation,
+        \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
+    );
 }
