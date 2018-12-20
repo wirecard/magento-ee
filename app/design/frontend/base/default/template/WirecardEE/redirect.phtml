@@ -7,9 +7,17 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+use WirecardEE\PaymentGateway\Service\Logger;
+
 $method     = $this->getData('method');
 $formFields = $this->getData('formFields');
 $url        = $this->getData('url');
+
+if (! $method || ! $formFields || ! $url) {
+    (new Logger())->error('Unable to render template "' . $this->getTemplate() . '" due to missing variables"');
+    echo Mage::helper('catalog')->__('Unable to render template');
+    return;
+}
 ?>
 
 <div class="wirecardee-redirect" style="padding-top: 50px;">
@@ -23,7 +31,7 @@ $url        = $this->getData('url');
                 <?php
             }
             ?>
-            <button class="btn is--primary is--large right is--icon-right" type="submit">
+            <button class="button btn-cart" type="submit">
                 <?php echo Mage::helper('catalog')->__('Send'); ?>
             </button>
         </form>

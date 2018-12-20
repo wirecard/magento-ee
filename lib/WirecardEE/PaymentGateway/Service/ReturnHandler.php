@@ -65,15 +65,19 @@ class ReturnHandler extends Handler
     }
 
     /**
-     * @param Response $response
+     * @param Response                $response
+     * @param \Mage_Sales_Model_Order $order
      *
      * @return Action
      *
+     * @throws \Mage_Core_Exception
      * @since 1.0.0
      */
-    public function handleResponse(Response $response)
+    public function handleResponse(Response $response, \Mage_Sales_Model_Order $order)
     {
         if ($response instanceof FormInteractionResponse) {
+            $this->transactionManager->createTransaction(TransactionManager::TYPE_RETURN, $order, $response);
+
             return new ViewAction('paymentgateway/redirect', [
                 'method'     => $response->getMethod(),
                 'formFields' => $response->getFormFields(),
@@ -81,6 +85,8 @@ class ReturnHandler extends Handler
             ]);
         }
         if ($response instanceof InteractionResponse) {
+            $this->transactionManager->createTransaction(TransactionManager::TYPE_RETURN, $order, $response);
+
             return new RedirectAction($response->getRedirectUrl());
         }
         return $this->handleFailure($response);

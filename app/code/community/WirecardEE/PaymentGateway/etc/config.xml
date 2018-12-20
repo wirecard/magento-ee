@@ -54,6 +54,13 @@
     </global>
 
     <default>
+        <wirecardee_paymentgateway>
+            <settings>
+                <notify_mail></notify_mail>
+                <pending_mail>0</pending_mail>
+                <delete_cancelled_orders>0</delete_cancelled_orders>
+            </settings>
+        </wirecardee_paymentgateway>
         <payment>
             <wirecardee_paymentgateway_paypal>
                 <active>0</active>
@@ -68,6 +75,7 @@
                 <send_basket>1</send_basket>
                 <fraud_prevention>1</fraud_prevention>
                 <order_identification>1</order_identification>
+                <sort_order>26</sort_order>
             </wirecardee_paymentgateway_paypal>
             <wirecardee_paymentgateway_creditcard>
                 <active>0</active>
@@ -86,6 +94,7 @@
                 <ssl_max_limit_currency>EUR</ssl_max_limit_currency>
                 <three_d_min_limit>100</three_d_min_limit>
                 <three_d_min_limit_currency>EUR</three_d_min_limit_currency>
+                <sort_order>1</sort_order>
             </wirecardee_paymentgateway_creditcard>
             <wirecardee_paymentgateway_sepadirectdebit>
                 <active>0</active>

@@ -8,6 +8,65 @@
 -->
 <config>
     <sections>
+        <wirecardee_paymentgateway translate="label" module="paymentgateway">
+            <label>Wirecard Payment Gateway</label>
+            <tab>sales</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>1000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <settings translate="label">
+                    <label>Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>100</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <!--<comment>-->
+                        <!--<![CDATA[-->
+                        <!--WIRECARD...-->
+                    <!--]]>-->
+                    <!--</comment>-->
+                    <expanded>1</expanded>
+                    <fields>
+                        <notify_mail translate="label">
+                            <label>E-mail for payment notifications</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <tooltip>Enter your e-mail address to receive a payment notification for each incoming payment confirmation
+                                via e-mail.
+                            </tooltip>
+                        </notify_mail>
+                        <pending_mail translate="label">
+                            <label>Send pending status mails</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <tooltip>If enabled, consumers get an e-mail containing the information that the payment is not yet finalized.</tooltip>
+                        </pending_mail>
+                        <delete_cancelled_orders translate="label">
+                            <label>Explicitly delete cancelled orders</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </delete_cancelled_orders>
+                    </fields>
+                </settings>
+            </groups>
+        </wirecardee_paymentgateway>
+    </sections>
+    <sections>
         <payment>
             <groups>
                 <wirecardee_paymentgateway_paypal translate="label" module="paymentgateway">
@@ -23,6 +82,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>0</sort_order>
                         </title>
                         <active translate="label">
                             <label>Enabled</label>
@@ -31,6 +91,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>10</sort_order>
                         </active>
                         <api_url translate="label">
                             <label>Base URL</label>
@@ -38,6 +99,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>20</sort_order>
                         </api_url>
                         <api_user translate="label">
                             <label>HTTP User</label>
@@ -45,6 +107,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>30</sort_order>
                         </api_user>
                         <api_password translate="label">
                             <label>HTTP Password</label>
@@ -52,6 +115,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>40</sort_order>
                         </api_password>
                         <api_test_button>
                             <frontend_type>button</frontend_type>
@@ -60,6 +124,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>50</sort_order>
                         </api_test_button>
                         <api_maid translate="label">
                             <label>MAID</label>
@@ -67,6 +132,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>60</sort_order>
                         </api_maid>
                         <api_secret translate="label">
                             <label>Secret</label>
@@ -74,6 +140,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>70</sort_order>
                         </api_secret>
                         <transaction_type translate="label">
                             <label>Payment action</label>
@@ -82,6 +149,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>80</sort_order>
                         </transaction_type>
                         <send_basket translate="label">
                             <label>Send basket</label>
@@ -90,6 +158,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>90</sort_order>
                         </send_basket>
                         <fraud_prevention translate="label">
                             <label>Send additional data</label>
@@ -98,6 +167,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>100</sort_order>
                         </fraud_prevention>
                         <order_identification translate="label">
                             <label>Send order identification</label>
@@ -106,11 +176,21 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>110</sort_order>
                         </order_identification>
+                        <sort_order translate="label">
+                            <label>Sort Order</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <frontend_class>validate-number</frontend_class>
+                            <sort_order>120</sort_order>
+                        </sort_order>
                     </fields>
                 </wirecardee_paymentgateway_paypal>
                 <wirecardee_paymentgateway_creditcard translate="label" module="paymentgateway">
-                    <label>Wirecard CreditCard</label>
+                    <label>Wirecard Credit Card</label>
                     <sort_order>999</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -122,6 +202,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>0</sort_order>
                         </title>
                         <active translate="label">
                             <label>Enabled</label>
@@ -130,6 +211,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>10</sort_order>
                         </active>
                         <api_url translate="label">
                             <label>Base URL</label>
@@ -137,6 +219,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>20</sort_order>
                         </api_url>
                         <api_user translate="label">
                             <label>HTTP User</label>
@@ -144,6 +227,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>30</sort_order>
                         </api_user>
                         <api_password translate="label">
                             <label>HTTP Password</label>
@@ -151,6 +235,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>40</sort_order>
                         </api_password>
                         <api_test_button>
                             <frontend_type>button</frontend_type>
@@ -159,6 +244,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>50</sort_order>
                         </api_test_button>
                         <api_maid translate="label">
                             <label>MAID</label>
@@ -166,6 +252,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>60</sort_order>
                         </api_maid>
                         <api_secret translate="label">
                             <label>Secret</label>
@@ -173,6 +260,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>70</sort_order>
                         </api_secret>
                         <threeds_maid translate="label">
                             <label>3-D Secure MAID</label>
@@ -180,6 +268,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>80</sort_order>
                         </threeds_maid>
                         <threeds_secret translate="label">
                             <label>3-D Secure Secret</label>
@@ -187,6 +276,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>90</sort_order>
                         </threeds_secret>
                         <transaction_type translate="label">
                             <label>Payment action</label>
@@ -195,6 +285,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>100</sort_order>
                         </transaction_type>
                         <fraud_prevention translate="label">
                             <label>Send additional data</label>
@@ -203,6 +294,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>110</sort_order>
                         </fraud_prevention>
                         <ssl_max_limit translate="label comment tooltip">
                             <label>Non 3-D Secure Max. Limit</label>
@@ -212,6 +304,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>120</sort_order>
                         </ssl_max_limit>
                         <ssl_max_limit_currency translate="label">
                             <label>Non 3-D Secure Max. Limit Currency</label>
@@ -220,15 +313,17 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>130</sort_order>
                         </ssl_max_limit_currency>
                         <three_d_min_limit translate="label comment tooltip">
                             <label>3-D Secure Min. Limit</label>
                             <comment><![CDATA[<a href="https://raw.githubusercontent.com/wiki/wirecard/shopware-ee/img/creditcard-ssl-3d-new.png" target="_blank">Click here</a> for an explanation regarding Non 3-D Secure and 3-D Secure limits]]></comment>
-                            <tooltip>This amount attempts 3-D Secure transactions. Leave blank to disable the 3-D Secure Min. Limit. </tooltip>
+                            <tooltip>This amount attempts 3-D Secure transactions. Leave blank to disable the 3-D Secure Min. Limit.</tooltip>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>140</sort_order>
                         </three_d_min_limit>
                         <three_d_min_limit_currency translate="label">
                             <label>3-D Secure Min. Limit Currency</label>
@@ -237,7 +332,17 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <sort_order>150</sort_order>
                         </three_d_min_limit_currency>
+                        <sort_order translate="label">
+                            <label>Sort Order</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <frontend_class>validate-number</frontend_class>
+                            <sort_order>160</sort_order>
+                        </sort_order>
                     </fields>
                 </wirecardee_paymentgateway_creditcard>
                 <wirecardee_paymentgateway_sepadirectdebit translate="label" module="paymentgateway">
