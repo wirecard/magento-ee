@@ -101,7 +101,10 @@ class ReturnHandler extends Handler
      */
     protected function handleFailure($response)
     {
+        $message = 'Unexpected response';
+
         if ($response instanceof FailureResponse) {
+            $message = 'Failure response';
             $orderId = $response->getCustomFields()->get('order-id');
             if ($orderId) {
                 /** @var \Mage_Sales_Model_Order $order */
@@ -115,12 +118,8 @@ class ReturnHandler extends Handler
             }
         }
 
-        $message = 'Unexpected response';
         $context = [get_class($response)];
 
-        if ($response instanceof FailureResponse) {
-            $message = 'Failure response';
-        }
         if ($response instanceof Response) {
             $context = $response->getData();
         }

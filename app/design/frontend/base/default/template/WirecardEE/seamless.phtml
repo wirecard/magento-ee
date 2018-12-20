@@ -29,6 +29,10 @@ if (! $wirecardUrl || ! $requestData || ! $url) {
                 class="button btn-cart" type="submit">
             <?php echo Mage::helper('catalog')->__('Send'); ?>
         </button>
+        <a class="button" style="background-color: #808080;"
+           href="<?php echo Mage::getUrl('paymentgateway/gateway/cancel'); ?>">
+            <?php echo Mage::helper('catalog')->__('Cancel'); ?>
+        </a>
     </form>
 </div>
 

@@ -35,5 +35,9 @@ interface ProcessPaymentInterface
      *
      * @since 1.0.0
      */
-    public function processPayment(OrderSummary $orderSummary, TransactionService $transactionService, Redirect $redirect);
+    public function processPayment(
+        OrderSummary $orderSummary,
+        TransactionService $transactionService,
+        Redirect $redirect
+    );
 }

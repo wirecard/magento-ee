@@ -9,7 +9,6 @@
 
 /**
  * @since 1.0.0
- * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Block_Seamless extends Mage_Core_Block_Template
 {
