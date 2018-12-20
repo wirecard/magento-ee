@@ -269,8 +269,8 @@ class TransactionManager
 
                 if (! array_key_exists(
                     Operation::REFUND,
-                    $backendService->retrieveBackendOperations($backendTransaction))
-                ) {
+                    $backendService->retrieveBackendOperations($backendTransaction)
+                )) {
                     continue;
                 }
 
