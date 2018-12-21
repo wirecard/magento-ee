@@ -47,10 +47,6 @@ class SupportMail
      */
     public function send($senderAddress, $message, $replyTo = null)
     {
-        if (\Mage::getStoreConfigFlag('system/smtp/disable')) {
-            return;
-        }
-
         $message .= PHP_EOL . PHP_EOL . PHP_EOL;
         $message .= '*** Server Info: ***';
         $message .= $this->arrayToText($this->getServerInfo());
