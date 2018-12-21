@@ -12,7 +12,7 @@ namespace WirecardEE\PaymentGateway\Mail;
 use WirecardEE\PaymentGateway\Service\PaymentFactory;
 
 /**
- * @since   1.0.0
+ * @since 1.0.0
  */
 class SupportMail
 {
@@ -24,33 +24,32 @@ class SupportMail
     private $paymentFactory;
 
     /**
-     * @param \Enlight_Components_Mail $mail
-     * @param EntityManagerInterface   $em
-     * @param InstallerService         $installerService
-     * @param PaymentFactory           $paymentFactory
+     * @param PaymentFactory $paymentFactory
      *
      * @since 1.0.0
      */
-    public function __construct()
+    public function __construct(PaymentFactory $paymentFactory)
     {
-        $this->paymentFactory   = new PaymentFactory();
+        $this->paymentFactory = $paymentFactory;
     }
 
     /**
      * Sends Email to Wirecard Support
      *
-     * @param string                $senderAddress
-     * @param string                $message
-     * @param string                $replyTo
-     *
-     * @return \Zend_Mail
-     * @throws \Zend_Mail_Exception
-     * @throws \WirecardElasticEngine\Exception\UnknownPaymentException
+     * @param string $senderAddress
+     * @param string $message
+     * @param string $replyTo
      *
      * @since 1.0.0
+     * @throws \WirecardEE\PaymentGateway\Exception\UnknownPaymentException
+     * @throws \Zend_Mail_Exception
      */
     public function send($senderAddress, $message, $replyTo = null)
     {
+        if (\Mage::getStoreConfigFlag('system/smtp/disable')) {
+            return;
+        }
+
         $message .= PHP_EOL . PHP_EOL . PHP_EOL;
         $message .= '*** Server Info: ***';
         $message .= $this->arrayToText($this->getServerInfo());
@@ -64,15 +63,14 @@ class SupportMail
         $message .= '*** Plugin List: ***';
         $message .= $this->arrayToText($this->getPluginList());
 
-        $mail = \Mage::getModel('core/email');
+        $mail = new \Zend_Mail();
         $mail->setFrom($senderAddress);
-        $mail->setReplyTo($replyTo ?: $senderAddress);
-        $mail->setToEmail($this->getRecipientMail());
-
+        $mail->addTo($this->getRecipientMail(), 'Wirecard Support');
+        if ($replyTo) {
+            $mail->setReplyTo($replyTo);
+        }
         $mail->setSubject('Magento support request');
-        $mail->setBody($message);
-
-        $mail->setToName('Your Name');
+        $mail->setBodyText($message);
         $mail->send();
     }
 
@@ -83,10 +81,6 @@ class SupportMail
      */
     private function getRecipientMail()
     {
-        if (in_array(getenv('SHOPWARE_ENV'), ['dev', 'development', 'testing', 'test'])) {
-            return 'test@example.com';
-        }
-
         return self::SUPPORT_MAIL;
     }
 
@@ -139,53 +133,43 @@ class SupportMail
     protected function getShopInfo()
     {
         return [
-            'name'        => 'Magento ' . \Mage::getEdition(),
-            'version'     => \Mage::getVersion(),
+            'name'    => 'Magento ' . \Mage::getEdition(),
+            'version' => \Mage::getVersion(),
         ];
     }
 
     /**
      * @return array
-     *
-     * @throws \WirecardElasticEngine\Exception\UnknownPaymentException
+     * @throws \WirecardEE\PaymentGateway\Exception\UnknownPaymentException
      *
      * @since 1.0.0
      */
     protected function getPluginInfo()
     {
+        /** @var \Mage_Payment_Model_Config $paymentConfig */
+        $paymentConfig = \Mage::getModel('payment/config');
+        $paymentName   = 'wirecardee_paymentgateway_';
+        $activeMethods = [];
 
-        $payments       = $this->paymentFactory->getSupportedPayments();
-        $paymentConfigs = [];
-
-        $activePaymentMethods =\Mage::getModel('payment/config')->getActiveMethods();
-
-        $activeWirecardEEMethods = [];
-        $wirecardPaymentName = 'wirecardee_paymentgateway_';
-        foreach ($activePaymentMethods as $paymentMethod) {
-            $paymentInfo = $paymentMethod->get();
-            if (strpos($paymentInfo['id'], $wirecardPaymentName) === 0) {
-                $activeWirecardEEMethods[] = substr($paymentInfo['id'], strlen($wirecardPaymentName));
+        /** @var \WirecardEE_PaymentGateway_Model_Payment $paymentMethod */
+        foreach ($paymentConfig->getActiveMethods() as $paymentMethod) {
+            $paymentInfo = $paymentMethod->getData();
+            if (strpos($paymentInfo['id'], $paymentName) === 0) {
+                $activeMethods[] = substr($paymentInfo['id'], strlen($paymentName));
             }
         }
 
-        foreach ($payments as $payment) {
-            // $paymentModel = $this->em->getRepository(Payment::class)
-            //                          ->findOneBy(['name' => $payment->getName()]);
-
-            // if (! $paymentModel) {
-            //     continue;
-            // }
-            $paymentConfigs[$payment->getName()] = array_merge(
-                [ 'active'  => in_array($payment->getName(), $activeWirecardEEMethods)],
-                $payment->getPaymentConfig()->toArray()
-            );
+        $paymentConfigs = [];
+        foreach ($this->paymentFactory->getSupportedPayments() as $payment) {
+            $paymentConfigs[$payment->getName()]           = $payment->getPaymentConfig()->toArray();
+            $paymentConfigs[$payment->getName()]['active'] = in_array($payment->getName(), $activeMethods);
         }
 
-        $modules = \Mage::getConfig()->getNode('modules')->children();
-
+        /** @var \WirecardEE_PaymentGateway_Helper_Data $paymentHelper */
+        $paymentHelper = \Mage::helper('paymentgateway');
         return [
-            'name'     => \Mage::helper('paymentgateway')->getPluginName(),
-            'version'  => \Mage::helper('paymentgateway')->getPluginVersion(),
+            'name'     => $paymentHelper->getPluginName(),
+            'version'  => $paymentHelper->getPluginVersion(),
             'payments' => $paymentConfigs,
         ];
     }
@@ -198,17 +182,18 @@ class SupportMail
     protected function getPluginList()
     {
         $modules = \Mage::getConfig()->getNode('modules')->children();
+        $plugins = [];
 
-        $rows = [];
+        /** @var \Mage_Core_Model_Config_Element $plugin */
         foreach ($modules as $key => $plugin) {
-            $rows[] = [
+            $plugins[] = [
                 'name'     => $key,
-                'version'  => strval($plugin->version),
+                'version'  => isset($plugin->version) ? (string)$plugin->version : null,
                 'active'   => $plugin->is('active') ? 'Yes' : 'No',
-                'codePool' => strval($plugin->codePool),
+                'codePool' => isset($plugin->codePool) ? (string)$plugin->codePool : null,
             ];
         }
 
-        return $rows;
+        return $plugins;
     }
 }
