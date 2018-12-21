@@ -53,13 +53,13 @@ class TransactionManager
      * and overwritten by notifications.
      *
      * @param string                  $type
-     *
      * @param \Mage_Sales_Model_Order $order
      * @param Response                $response
      * @param array                   $context
      *
-     * @return void
+     * @return \Mage_Sales_Model_Order_Payment_Transaction|null
      * @throws \Mage_Core_Exception
+     *
      * @since 1.0.0
      */
     public function createTransaction(
@@ -87,9 +87,9 @@ class TransactionManager
             case self::TYPE_BACKEND:
                 // Initial transactions are always saved as new transactions.
                 if ($mageTransactionModel->loadByTxnId($transactionId)->getId()) {
-                    // In some rare cases a notification might has already been arrived before the initial transaction.
+                    // In some rare cases a notification has already arrived before the initial transaction.
                     // Since we don't want initial transactions to overwrite notifications we're going to leave here.
-                    return;
+                    return null;
                 }
 
                 $mageTransactionModel->setTxnId($transactionId);
@@ -120,7 +120,7 @@ class TransactionManager
 
                 $this->logger->info("Created transaction (type: $type) for transaction $transactionId");
 
-                return;
+                return $mageTransactionModel;
 
             case self::TYPE_NOTIFY:
                 // Since notifications are the source of truth for transactions they're overwriting the
@@ -134,7 +134,7 @@ class TransactionManager
                     );
                     if (! empty($additionalInformation[self::TYPE_KEY])
                         && $additionalInformation[self::TYPE_KEY] === self::TYPE_NOTIFY) {
-                        return;
+                        return null;
                     }
                     // Be sure to keep refundable basket information
                     if (isset($additionalInformation[self::REFUNDABLE_BASKET_KEY])) {
@@ -189,7 +189,7 @@ class TransactionManager
 
                 $this->logger->info("Replaced transaction (" . $mageTransactionModel->getId() . ") from notify");
 
-                return;
+                return $mageTransactionModel;
         }
 
         $this->logger->error("Unable to create transaction due to unknown type ($type)");
@@ -276,8 +276,8 @@ class TransactionManager
 
                 if (! array_key_exists(
                     Operation::REFUND,
-                    $backendService->retrieveBackendOperations($backendTransaction))
-                ) {
+                    $backendService->retrieveBackendOperations($backendTransaction)
+                )) {
                     continue;
                 }
 

@@ -17,6 +17,7 @@ use WirecardEE\PaymentGateway\Actions\RedirectAction;
 use WirecardEE\PaymentGateway\Actions\ViewAction;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Exception\UnknownActionException;
+use WirecardEE\PaymentGateway\Mail\MerchantNotificationMail;
 use WirecardEE\PaymentGateway\Mapper\BasketMapper;
 use WirecardEE\PaymentGateway\Mapper\UserMapper;
 use WirecardEE\PaymentGateway\Service\NotificationHandler;
@@ -43,14 +44,17 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      */
     public function indexAction()
     {
-        $paymentName    = $this->getRequest()->getParam('method');
-        $payment        = (new PaymentFactory())->create($paymentName);
-        $handler        = new PaymentHandler(
+        $paymentName = $this->getRequest()->getParam('method');
+        $payment     = (new PaymentFactory())->create($paymentName);
+        $handler     = new PaymentHandler(
             $this->getHelper()->getTransactionManager(),
             $this->getHelper()->getLogger()
         );
-        $order          = $this->getCheckoutSession()->getLastRealOrder();
-        $sessionManager = new SessionManager(Mage::getSingleton("core/session", ["name" => "frontend"]));
+        $order       = $this->getCheckoutSession()->getLastRealOrder();
+
+        /** @var Mage_Core_Model_Session $session */
+        $session        = Mage::getSingleton("core/session", ["name" => "frontend"]);
+        $sessionManager = new SessionManager($session);
 
         $this->getHelper()->validateBasket();
 
@@ -166,7 +170,11 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
             );
             $notification   = $backendService->handleNotification($request->getRawBody());
 
-            $notificationHandler->handleResponse($notification, $backendService);
+            $notifyTransaction = $notificationHandler->handleResponse($notification, $backendService);
+            if ($notifyTransaction) {
+                $notificationMail = new MerchantNotificationMail($this->getHelper());
+                $notificationMail->send($notification, $notifyTransaction);
+            }
         } catch (\Exception $e) {
             $this->logException('Notification handling failed', $e);
         }
@@ -177,6 +185,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      * cancelled!) and redirects the user to the checkout.
      *
      * @return Mage_Core_Controller_Varien_Action
+     *
+     * @throws Exception
      *
      * @since 1.0.0
      */
