@@ -12,13 +12,13 @@
             <title>Wirecard</title>
             <sort_order>100</sort_order>
             <children>
-                <support>
+                <support translate="title">
                     <title>Support</title>
                     <sort_order>1</sort_order>
                     <action>adminhtml/WirecardEEPaymentGateway/supportMail</action>
                 </support>
-                <info>
-                    <title>General Information</title>
+                <info translate="title">
+                    <title>General Information regarding Wirecard Shop Plugins</title>
                     <sort_order>2</sort_order>
                     <action>adminhtml/WirecardEEPaymentGateway/info</action>
                 </info>

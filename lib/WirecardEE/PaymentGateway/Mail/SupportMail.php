@@ -40,9 +40,10 @@ class SupportMail
      * @param string $message
      * @param string $replyTo
      *
-     * @since 1.0.0
      * @throws \WirecardEE\PaymentGateway\Exception\UnknownPaymentException
      * @throws \Zend_Mail_Exception
+     *
+     * @since 1.0.0
      */
     public function send($senderAddress, $message, $replyTo = null)
     {

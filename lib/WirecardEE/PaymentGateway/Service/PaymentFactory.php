@@ -59,7 +59,7 @@ class PaymentFactory
     }
 
     /**
-     * Used to get all payments for support mail
+     * Create and return all supported payments
      *
      * @return PaymentInterface[]
      * @throws UnknownPaymentException

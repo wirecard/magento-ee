@@ -34,6 +34,8 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface, Proc
 
     /**
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getName()
     {
@@ -107,9 +109,9 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface, Proc
      * @param string       $limitCurrency
      *
      * @return Amount
+     * @throws \Mage_Core_Model_Store_Exception
      *
      * @since 1.0.0
-     * @throws \Mage_Core_Model_Store_Exception
      */
     private function getLimit($selectedCurrency, $limitValue, $limitCurrency)
     {
@@ -196,7 +198,6 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface, Proc
      * @param Redirect           $redirect
      *
      * @return Action|null
-     *
      * @throws \Exception
      *
      * @since 1.0.0

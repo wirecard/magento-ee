@@ -36,6 +36,8 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, CustomForm
 
     /**
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getName()
     {
@@ -151,7 +153,6 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, CustomForm
      * @param Redirect           $redirect
      *
      * @return null|Action
-     *
      * @throws InsufficientDataException
      *
      * @since 1.0.0

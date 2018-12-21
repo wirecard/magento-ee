@@ -10,6 +10,7 @@
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Mail\SupportMail;
+use WirecardEE\PaymentGateway\Service\PaymentFactory;
 
 /**
  * @since 1.0.0
@@ -67,38 +68,58 @@ class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController ext
         );
     }
 
+    /**
+     * Render general information admin page
+     *
+     * @since 1.0.0
+     */
     public function infoAction()
     {
-        $block = $this->getLayout()
-               ->createBlock('adminhtml/template')
-               ->setTemplate('WirecardEE/info.phtml');
-        $this->loadLayout()
-            ->_setActiveMenu('WirecardEE_PaymentGateway/info')
-            ->_title($this->__('Information'))
-            ->_addContent($block);
+        $this->loadLayout();
+        $this->_setActiveMenu('WirecardEE_PaymentGateway/info');
+        $this->_title($this->__('General Information regarding Wirecard Shop Plugins'));
+
+        /** @var Mage_Core_Block_Template $block */
+        $block = $this->getLayout()->createBlock('adminhtml/template');
+        $block->setTemplate('WirecardEE/info.phtml');
+        $this->_addContent($block);
         $this->renderLayout();
     }
 
+    /**
+     * Render support mail form on support admin page
+     *
+     * @since 1.0.0
+     */
     public function supportMailAction()
     {
         $this->loadLayout();
         $this->_setActiveMenu('WirecardEE_PaymentGateway/support');
+        $this->_title($this->__('Wirecard Support'));
 
         $this->_addContent($this->getLayout()->createBlock('paymentgateway/adminhtml_supportMail'));
         $this->renderLayout();
     }
 
+    /**
+     * Send support mail
+     *
+     * @since 1.0.0
+     */
     public function sendAction()
     {
         $data = $this->getRequest()->getPost();
 
-        $mail = new SupportMail();
+        /** @var Mage_Core_Model_Session $session */
+        $session = Mage::getSingleton('core/session');
+
+        $mail = new SupportMail(new PaymentFactory());
         try {
             $mail->send($data['sender_address'], $data['content'], $data['reply_to']);
-            Mage::getSingleton('core/session')->addSuccess('E-mail sent successfully');
+            $session->addSuccess($this->__('E-mail sent successfully'));
             $this->_redirect('');
         } catch (Exception $e) {
-            Mage::getSingleton('core/session')->addError('E-mail delivery error.');
+            $session->addError($this->__('E-mail delivery error: ' . $e->getMessage()));
             $this->_redirect('');
         }
     }
