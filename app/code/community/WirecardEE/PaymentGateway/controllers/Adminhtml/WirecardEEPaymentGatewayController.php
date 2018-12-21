@@ -95,10 +95,10 @@ class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController ext
         $mail = new SupportMail();
         try {
             $mail->send($data['sender_address'], $data['content'], $data['reply_to']);
-            Mage::getSingleton('core/session')->addSuccess('E-mail sent successfully');
+            Mage::getSingleton('core/session')->addSuccess($this->__('Email sent successfully.'));
             $this->_redirect('');
         } catch (Exception $e) {
-            Mage::getSingleton('core/session')->addError('E-mail delivery error.');
+            Mage::getSingleton('core/session')->addError($this->__('Email delivery error.'));
             $this->_redirect('');
         }
     }
