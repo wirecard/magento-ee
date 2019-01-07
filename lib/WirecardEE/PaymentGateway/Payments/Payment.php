@@ -41,7 +41,7 @@ abstract class Payment implements PaymentInterface
             \Mage::getVersion()
         );
 
-        $config->setPluginInfo($this->getHelper()->getPluginName(), $this->getHelper()->getPluginName());
+        $config->setPluginInfo($this->getHelper()->getPluginName(), $this->getHelper()->getPluginVersion());
 
         return $config;
     }
