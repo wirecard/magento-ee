@@ -24,6 +24,11 @@
             <paymentgateway>
                 <class>WirecardEE_PaymentGateway_Block</class>
             </paymentgateway>
+            <adminhtml>
+                <rewrite>
+                    <page_head>WirecardEE_PaymentGateway_Block_Head</page_head>
+                </rewrite>
+            </adminhtml>
         </blocks>
 
         <models>
@@ -186,6 +191,16 @@
                 </WirecardEE_PaymentGateway>
             </updates>
         </layout>
+        <events>
+            <core_block_abstract_to_html_after>
+                <observers>
+                    <wirecardee_custom_order_view_info>
+                        <class>paymentgateway/adminobserver</class>
+                        <method>getSalesOrderViewInfo</method>
+                    </wirecardee_custom_order_view_info>
+                </observers>
+            </core_block_abstract_to_html_after>
+        </events>
     </adminhtml>
 
     <frontend>
