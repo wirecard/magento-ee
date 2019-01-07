@@ -86,21 +86,17 @@ class MerchantNotificationMail
         SuccessResponse $notification,
         \Mage_Sales_Model_Order_Payment_Transaction $notifyTransaction
     ) {
-        $orderNumber     = $notifyTransaction->getOrder()->getId() ?: '-';
-        $transactionId   = $notification->getTransactionId();
-        $transactionType = $notification->getTransactionType();
-        $amount          = $notification->getRequestedAmount()->getValue();
-        $currency        = $notification->getRequestedAmount()->getCurrency();
-
-        $orderNumberLabel     = $this->paymentHelper->__('OrderNumber');
-        $transactionIdLabel   = $this->paymentHelper->__('TransactionId');
-        $transactionTypeLabel = $this->paymentHelper->__('TransactionType');
-        $amountLabel          = $this->paymentHelper->__('Amount');
-
-        $message = $orderNumberLabel . ': ' . $orderNumber . PHP_EOL;
-        $message .= $transactionIdLabel . ': ' . $transactionId . PHP_EOL;
-        $message .= $transactionTypeLabel . ': ' . $transactionType . PHP_EOL;
-        $message .= $amountLabel . ': ' . $amount . ' ' . $currency . PHP_EOL;
+        $amount  = $notification->getRequestedAmount();
+        $infos   = [
+            'OrderNumber'     => $notifyTransaction->getOrder()->getRealOrderId() ?: '-',
+            'TransactionId'   => $notification->getTransactionId(),
+            'TransactionType' => $notification->getTransactionType(),
+            'Amount'          => $amount->getValue() . ' ' . $amount->getCurrency(),
+        ];
+        $message = '';
+        foreach ($infos as $label => $value) {
+            $message .= $this->paymentHelper->__($label) . ': ' . $value . PHP_EOL;
+        }
 
         $message .= PHP_EOL . PHP_EOL;
         $message .= $this->paymentHelper->__('Response', 'Response data ID') . ': ' . PHP_EOL;
