@@ -184,6 +184,13 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, CustomForm
         $mandate = new Mandate($this->generateMandateId($orderSummary));
         $transaction->setMandate($mandate);
 
+        /** @var \WirecardEE_PaymentGateway_Model_Sepadirectdebit $sepaModel */
+        $sepaModel = \Mage::getModel('paymentgateway/sepadirectdebit');
+        $orderSummary->getOrder()->addStatusHistoryComment(
+            "<strong>" . \Mage::helper('catalog')->__('Mandate Text') . "</strong>: <br>" . $sepaModel->getMandateText()
+        );
+        $orderSummary->getOrder()->save();
+
         return null;
     }
 
