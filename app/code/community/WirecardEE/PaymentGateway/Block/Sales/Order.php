@@ -9,35 +9,36 @@
 
 /**
  * @since 1.0.0
- * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Block_Sales_Order extends Mage_Core_Block_Template
 {
-    protected $order;
-
-    public function getOrder() {
-        if (is_null($this->order)) {
-            if (Mage::registry('current_order')) {
-                $order = Mage::registry('current_order');
-            }
-            elseif (Mage::registry('order')) {
-                $order = Mage::registry('order');
-            }
-            else {
-                $order = new Varien_Object();
-            }
-            $this->order = $order;
+    /**
+     * @return Mage_Sales_Model_Order
+     *
+     * @since 1.0.0
+     */
+    public function getOrder()
+    {
+        if (Mage::registry('current_order')) {
+            return Mage::registry('current_order');
+        } elseif (Mage::registry('order')) {
+            return Mage::registry('order');
         }
-        return $this->order;
+        return null;
     }
 
-    public function isWirecardOrder() {
-        if (is_null($this->order)) {
-            $this->getOrder();
-        }
-
-        $payment = $this->order->getPayment()->getMethodInstance();
-
-        return $payment instanceof WirecardEE_PaymentGateway_Model_Payment;
+    /**
+     * Check if the current order has a wirecard payment method.
+     * Used in app/design/adminhtml/default/default/template/WirecardEE/order.phtml
+     *
+     * @return bool
+     * @throws Mage_Core_Exception
+     *
+     * @since 1.0.0
+     */
+    public function isWirecardOrder()
+    {
+        $order = $this->getOrder();
+        return $order && $order->getPayment()->getMethodInstance() instanceof WirecardEE_PaymentGateway_Model_Payment;
     }
 }
