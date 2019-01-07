@@ -38,14 +38,7 @@ class NotificationHandler extends Handler
     public function handleResponse(Response $response, BackendService $backendService)
     {
         if ($response instanceof SuccessResponse) {
-            /** @var Mage_Sales_Model_Order $order */
-            $order = \Mage::getModel('sales/order')->load($response->getCustomFields()->get('order-id'));
-            $this->handleSuccess($response, $backendService);
-            return $this->transactionManager->createTransaction(
-                TransactionManager::TYPE_NOTIFY,
-                $order,
-                $response
-            );
+            return $this->handleSuccess($response, $backendService);
         }
 
         if ($response instanceof FailureResponse) {
@@ -64,6 +57,7 @@ class NotificationHandler extends Handler
      * @param SuccessResponse $response
      * @param BackendService  $backendService
      *
+     * @return \Mage_Sales_Model_Order_Payment_Transaction|null
      * @throws \Exception
      *
      * @since 1.0.0
@@ -107,7 +101,7 @@ class NotificationHandler extends Handler
             }
         }
 
-        $this->transactionManager->createTransaction(
+        $transaction = $this->transactionManager->createTransaction(
             TransactionManager::TYPE_NOTIFY,
             $order,
             $response,
@@ -118,16 +112,18 @@ class NotificationHandler extends Handler
             \Mage_Sales_Model_Order::STATE_COMPLETE,
             \Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW,
         ])) {
-            return;
+            return $transaction;
         }
 
         $status = $this->getOrderStatus($backendService, $response);
         if ($status === \Mage_Sales_Model_Order::STATE_PENDING_PAYMENT) {
-            return;
+            return $transaction;
         }
 
         $order->addStatusHistoryComment('Status updated by notification', $status);
         $order->save();
+
+        return $transaction;
     }
 
     /**
