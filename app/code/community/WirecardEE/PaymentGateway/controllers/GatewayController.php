@@ -27,6 +27,8 @@ use WirecardEE\PaymentGateway\Service\ReturnHandler;
 use WirecardEE\PaymentGateway\Service\SessionManager;
 
 /**
+ * Frontend controller to handle payment processing/return/notify/cancel actions.
+ *
  * @since 1.0.0
  */
 class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_Front_Action

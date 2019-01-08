@@ -8,6 +8,8 @@
  */
 
 /**
+ * Append html from block 'paymentgateway.sales.order' to sales order view
+ *
  * @since 1.0.0
  */
 class WirecardEE_PaymentGateway_Model_Adminobserver

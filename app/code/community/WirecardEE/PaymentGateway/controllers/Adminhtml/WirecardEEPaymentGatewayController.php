@@ -13,6 +13,8 @@ use WirecardEE\PaymentGateway\Mail\SupportMail;
 use WirecardEE\PaymentGateway\Service\PaymentFactory;
 
 /**
+ * Admin controller to handle backend actions.
+ *
  * @since 1.0.0
  */
 class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController extends Mage_Adminhtml_Controller_Action

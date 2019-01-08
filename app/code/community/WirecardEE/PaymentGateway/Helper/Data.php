@@ -12,6 +12,8 @@ use WirecardEE\PaymentGateway\Service\Logger;
 use WirecardEE\PaymentGateway\Service\TransactionManager;
 
 /**
+ * Payment helper object, can be accessed with Mage::helper('paymentgateway')
+ *
  * @since 1.0.0
  */
 class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data

@@ -8,6 +8,8 @@
  */
 
 /**
+ * Used to display blocks only for orders with a Wirecard payment method.
+ *
  * @since 1.0.0
  */
 class WirecardEE_PaymentGateway_Block_Sales_Order extends Mage_Core_Block_Template
@@ -28,7 +30,7 @@ class WirecardEE_PaymentGateway_Block_Sales_Order extends Mage_Core_Block_Templa
     }
 
     /**
-     * Check if the current order has a wirecard payment method.
+     * Check if the current order has a Wirecard payment method.
      * Used in app/design/adminhtml/default/default/template/WirecardEE/order.phtml
      *
      * @return bool

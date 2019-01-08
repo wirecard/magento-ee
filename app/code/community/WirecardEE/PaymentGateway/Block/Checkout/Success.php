@@ -8,6 +8,8 @@
  */
 
 /**
+ * Return payment status to output on Checkout Success page
+ *
  * @since 1.0.0
  */
 class WirecardEE_PaymentGateway_Block_Checkout_Success extends Mage_Checkout_Block_Onepage_Success

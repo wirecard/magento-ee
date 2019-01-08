@@ -8,6 +8,8 @@
  */
 
 /**
+ * Display plugin version in Admin Wirecard Settings page
+ *
  * @since 1.0.0
  */
 class WirecardEE_PaymentGateway_Block_Adminhtml_System_Config_PluginVersion

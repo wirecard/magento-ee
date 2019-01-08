@@ -8,6 +8,8 @@
  */
 
 /**
+ * Generate support mail form for Admin Support page
+ *
  * @since 1.0.0
  */
 class WirecardEE_PaymentGateway_Block_Adminhtml_SupportMail_Form extends Mage_Adminhtml_Block_Widget_Form

@@ -8,6 +8,8 @@
  */
 
 /**
+ * Render the seamless.phtml template
+ *
  * @since 1.0.0
  */
 class WirecardEE_PaymentGateway_Block_Seamless extends Mage_Core_Block_Template

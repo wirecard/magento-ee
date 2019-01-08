@@ -8,6 +8,9 @@
  */
 
 /**
+ * Allows to load external javascript files by inserting a script tag.
+ * Used to load the live support chat.
+ *
  * @since 1.0.0
  */
 class WirecardEE_PaymentGateway_Block_Head extends Mage_Adminhtml_Block_Page_Head
