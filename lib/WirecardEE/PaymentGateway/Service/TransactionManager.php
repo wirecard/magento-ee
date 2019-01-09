@@ -211,7 +211,7 @@ class TransactionManager
             $transactions->addOrderIdFilter($order->getId());
             $transactions->setOrder('transaction_id', 'ASC');
 
-            if (! $transactions->count() === 0) {
+            if ($transactions->count() === 0) {
                 return null;
             }
 
@@ -236,7 +236,6 @@ class TransactionManager
 
     /**
      * @param \Mage_Sales_Model_Order $order
-     *
      * @param PaymentInterface        $payment
      * @param BackendService          $backendService
      *
@@ -253,8 +252,8 @@ class TransactionManager
             $transactions->addOrderIdFilter($order->getId());
             $transactions->setOrder('transaction_id', 'ASC');
 
-            if (! $transactions->count() === 0) {
-                return null;
+            if ($transactions->count() === 0) {
+                return [];
             }
 
             foreach ($transactions as $transaction) {
