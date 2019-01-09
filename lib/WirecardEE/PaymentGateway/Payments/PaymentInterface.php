@@ -83,16 +83,22 @@ interface PaymentInterface
 
     /**
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getCancelOperation();
 
     /**
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getRefundOperation();
 
     /**
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getCaptureOperation();
 }
