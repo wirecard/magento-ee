@@ -116,11 +116,7 @@ class SofortPayment extends Payment implements ProcessPaymentInterface
         $operation,
         \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
     ) {
-        if ($parentTransaction->getData('payment_method') === SepaCreditTransferTransaction::NAME
-            || $operation === Operation::CREDIT
-            || $operation === Operation::CANCEL
-            || $parentTransaction->getTxnType() === \Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND
-        ) {
+        if (in_array($operation, [Operation::CREDIT, Operation::CANCEL])) {
             return new SepaCreditTransferTransaction();
         }
         return new SofortTransaction();
@@ -138,5 +134,15 @@ class SofortPayment extends Payment implements ProcessPaymentInterface
         $transaction->setOrderNumber($orderSummary->getOrder()->getRealOrderId());
 
         return null;
+    }
+
+    /**
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getRefundOperation()
+    {
+        return Operation::CREDIT;
     }
 }

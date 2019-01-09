@@ -98,4 +98,28 @@ abstract class Payment implements PaymentInterface
     ) {
         return $this->getTransaction();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCancelOperation()
+    {
+        return Operation::CANCEL;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRefundOperation()
+    {
+        return Operation::REFUND;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCaptureOperation()
+    {
+        return Operation::PAY;
+    }
 }

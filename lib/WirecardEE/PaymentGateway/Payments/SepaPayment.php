@@ -136,10 +136,7 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, CustomForm
         $operation,
         \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
     ) {
-        if ($parentTransaction->getData('payment_method') === SepaCreditTransferTransaction::NAME
-            || $operation === Operation::CREDIT
-            || $parentTransaction->getTxnType() === \Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND
-        ) {
+        if ($operation === Operation::CREDIT) {
             return new SepaCreditTransferTransaction();
         }
         return new SepaDirectDebitTransaction();
