@@ -11,14 +11,15 @@ namespace WirecardEE\Tests\Unit\Actions;
 
 use PHPUnit\Framework\TestCase;
 use WirecardEE\PaymentGateway\Actions\Action;
-use WirecardEE\PaymentGateway\Actions\RedirectAction;
+use WirecardEE\PaymentGateway\Actions\ViewAction;
 
-class RedirectActionTest extends TestCase
+class ViewActionTest extends TestCase
 {
     public function testInstance()
     {
-        $redirect = new RedirectAction('https://localhost/redirect');
-        $this->assertInstanceOf(Action::class, $redirect);
-        $this->assertEquals('https://localhost/redirect', $redirect->getUrl());
+        $view = new ViewAction('block/bar', ['foo' => 'bar']);
+        $this->assertInstanceOf(Action::class, $view);
+        $this->assertEquals('block/bar', $view->getBlockName());
+        $this->assertEquals(['foo' => 'bar'], $view->getAssignments());
     }
 }

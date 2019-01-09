@@ -28,7 +28,9 @@ function fix_error_handler()
 
 fix_error_handler();
 
-Mage::app();
+Mage::app('', 'store', [
+    'config_model' => 'WirecardEE\Tests\Stubs\Config'
+]);
 Mage::setIsDeveloperMode(true);
 
 fix_error_handler();
