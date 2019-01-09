@@ -9,6 +9,7 @@
 
 namespace WirecardEE\Tests\Functional\Controller;
 
+use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
@@ -60,9 +61,8 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $controller->indexAction();
     }
 
-    private function prepareForAction($method, $expectTransaction = true)
+    private function prepareForIndexAction($method, $expectTransaction = true)
     {
-        /** @var \Mage_Core_Controller_Request_Http|\PHPUnit_Framework_MockObject_MockObject $request */
         $request = new \Mage_Core_Controller_Request_Http();
         $request->setParams(['method' => $method]);
 
@@ -145,7 +145,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
 
     public function testIndexActionWithCreditCard()
     {
-        list($controller, $order, $transaction, $coreSession) = $this->prepareForAction(CreditCardTransaction::NAME);
+        list($controller, $order, $transaction, $coreSession) = $this->prepareForIndexAction(CreditCardTransaction::NAME);
 
         $transaction->expects($this->once())->method('setTxnType')->with('capture');
         $transaction->expects($this->once())->method('setOrder')->with($order);
@@ -169,7 +169,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
 
     public function testIndexActionWithPayPal()
     {
-        list($controller, , $transaction, $coreSession) = $this->prepareForAction(PayPalTransaction::NAME);
+        list($controller, , $transaction, $coreSession) = $this->prepareForIndexAction(PayPalTransaction::NAME);
 
         $transaction->expects($this->once())->method('setTxnType')->with('payment');
 
@@ -188,7 +188,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
 
     public function testIndexActionWithSepaDirectDebit()
     {
-        list($controller, , $transaction, $coreSession) = $this->prepareForAction(
+        list($controller, , $transaction, $coreSession) = $this->prepareForIndexAction(
             SepaDirectDebitTransaction::NAME
         );
 
@@ -221,7 +221,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
 
     public function testInsufficientDataExceptionIndexActionWithSepaDirectDebit()
     {
-        list($controller, , , $coreSession) = $this->prepareForAction(
+        list($controller, , , $coreSession) = $this->prepareForIndexAction(
             SepaDirectDebitTransaction::NAME,
             false
         );
@@ -239,7 +239,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
 
     public function testIndexActionWithSofort()
     {
-        list($controller, , $transaction, $coreSession) = $this->prepareForAction(SofortTransaction::NAME);
+        list($controller, , $transaction, $coreSession) = $this->prepareForIndexAction(SofortTransaction::NAME);
 
         $transaction->expects($this->once())->method('setTxnType')->with('payment');
 
@@ -268,5 +268,164 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $this->expectException(UnknownPaymentException::class);
         $this->expectExceptionMessage("Unknown payment ''");
         $controller->returnAction();
+    }
+
+    private function prepareForReturnAction($params)
+    {
+        $request = new \Mage_Core_Controller_Request_Http();
+        $request->setParams($params);
+
+        /** @var \Mage_Core_Controller_Response_Http|\PHPUnit_Framework_MockObject_MockObject $response */
+        $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
+
+        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        \Mage::app()->setRequest($request);
+
+        /** @var \Mage_Directory_Model_Currency|\PHPUnit_Framework_MockObject_MockObject $order */
+        $currency = $this->createMock(\Mage_Directory_Model_Currency::class);
+        $currency->method('getCode')->willReturn('EUR');
+
+        /** @var \Mage_Sales_Model_Order|\PHPUnit_Framework_MockObject_MockObject $order */
+        $order = $this->createMock(\Mage_Sales_Model_Order::class);
+        $order->method('getBaseCurrency')->willReturn($currency);
+        $order->method('getRealOrderId')->willReturn('145000001');
+        $order->method('getId')->willReturn("1");
+
+        /** @var \Mage_Checkout_Model_Session|\PHPUnit_Framework_MockObject_MockObject $checkoutSession */
+        $checkoutSession = $this->createMock(\Mage_Checkout_Model_Session::class);
+        $checkoutSession->method('getLastRealOrder')->willReturn($order);
+
+        /** @var \Mage_Core_Model_Session|\PHPUnit_Framework_MockObject_MockObject $checkoutSession */
+        $coreSession = $this->createMock(\Mage_Core_Model_Session::class);
+
+        $this->replaceMageSingleton('checkout/session', $checkoutSession);
+        $this->replaceMageSingleton('core/session', $coreSession);
+        $this->replaceMageHelper('paymentgateway', new PaymentHelperData());
+
+        return [$controller, $order, $coreSession];
+    }
+
+    public function testReturnActionPayloadFailure()
+    {
+        list($controller) = $this->prepareForReturnAction(['method' => CreditCardTransaction::NAME]);
+
+        /** @var ErrorAction $error */
+        $error = $controller->returnAction();
+        $this->assertInstanceOf(ErrorAction::class, $error);
+        $this->assertEquals('Return processing failed', $error->getMessage());
+    }
+
+    public function testReturnActionWithCreditCard()
+    {
+        $payload = json_decode(file_get_contents(__DIR__ . '/../fixtures/creditcard_return.json'), true);
+        list($controller) = $this->prepareForReturnAction($payload);
+
+        /** @var RedirectAction $action */
+        $action = $controller->returnAction();
+        $this->assertInstanceOf(RedirectAction::class, $action);
+        $this->assertStringEndsWith('/checkout/onepage/success/', $action->getUrl());
+    }
+
+    public function testCancelAction()
+    {
+        $request = new \Mage_Core_Controller_Request_Http();
+
+        /** @var \Mage_Core_Controller_Response_Http|\PHPUnit_Framework_MockObject_MockObject $response */
+        $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
+
+        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        \Mage::app()->setRequest($request);
+
+        $this->assertTrue($controller->cancelAction());
+    }
+
+    public function testCancelFailsAction()
+    {
+        $request = new \Mage_Core_Controller_Request_Http();
+
+        /** @var \Mage_Core_Controller_Response_Http|\PHPUnit_Framework_MockObject_MockObject $response */
+        $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
+
+        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        \Mage::app()->setRequest($request);
+
+        /** @var \Mage_Checkout_Model_Session|\PHPUnit_Framework_MockObject_MockObject $checkoutSession */
+        $checkoutSession = $this->createMock(\Mage_Checkout_Model_Session::class);
+        $checkoutSession->method('getLastRealOrder')->willReturn(null);
+
+        $this->replaceMageSingleton('checkout/session', $checkoutSession);
+
+        $this->assertFalse($controller->cancelAction());
+    }
+
+    public function testNotifyActionWithNoParams()
+    {
+        /** @var \Zend_Controller_Request_Abstract|\PHPUnit_Framework_MockObject_MockObject $request */
+        $request = $this->getMockForAbstractClass(\Zend_Controller_Request_Abstract::class);
+        /** @var \Zend_Controller_Response_Abstract|\PHPUnit_Framework_MockObject_MockObject $response */
+        $response = $this->getMockForAbstractClass(\Zend_Controller_Response_Abstract::class);
+
+        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+
+        $this->expectException(UnknownPaymentException::class);
+        $this->expectExceptionMessage("Unknown payment ''");
+        $controller->notifyAction();
+    }
+
+    private function prepareForNotifyAction($method, $payload)
+    {
+        /** @var \Mage_Core_Controller_Request_Http|\PHPUnit_Framework_MockObject_MockObject $request */
+        $request = $this->createMock(\Mage_Core_Controller_Request_Http::class);
+        $request->method('getParam')->willReturn($method);
+        $request->method('getRawBody')->willReturn($payload);
+
+        /** @var \Mage_Core_Controller_Response_Http|\PHPUnit_Framework_MockObject_MockObject $response */
+        $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
+
+        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        \Mage::app()->setRequest($request);
+
+        /** @var \Mage_Directory_Model_Currency|\PHPUnit_Framework_MockObject_MockObject $order */
+        $currency = $this->createMock(\Mage_Directory_Model_Currency::class);
+        $currency->method('getCode')->willReturn('EUR');
+
+        /** @var \Mage_Sales_Model_Order|\PHPUnit_Framework_MockObject_MockObject $order */
+        $order = $this->createMock(\Mage_Sales_Model_Order::class);
+        $order->method('getBaseCurrency')->willReturn($currency);
+        $order->method('getRealOrderId')->willReturn('145000001');
+        $order->method('getId')->willReturn("1");
+
+        /** @var \Mage_Checkout_Model_Session|\PHPUnit_Framework_MockObject_MockObject $checkoutSession */
+        $checkoutSession = $this->createMock(\Mage_Checkout_Model_Session::class);
+        $checkoutSession->method('getLastRealOrder')->willReturn($order);
+
+        /** @var \Mage_Core_Model_Session|\PHPUnit_Framework_MockObject_MockObject $checkoutSession */
+        $coreSession = $this->createMock(\Mage_Core_Model_Session::class);
+
+        $this->replaceMageSingleton('checkout/session', $checkoutSession);
+        $this->replaceMageSingleton('core/session', $coreSession);
+        $this->replaceMageHelper('paymentgateway', new PaymentHelperData());
+        $this->replaceMageModel('sales/order', $order);
+
+        return [$controller, $order, $coreSession];
+    }
+
+    public function testNotifyActionMalformedResponseFailure()
+    {
+        list($controller) = $this->prepareForNotifyAction(CreditCardTransaction::NAME, null);
+
+        $this->assertNull($controller->notifyAction());
+    }
+
+    public function testNotifyActionWithCreditCard()
+    {
+        $payload = file_get_contents(__DIR__ . '/../fixtures/creditcard_notify.xml');
+        list($controller) = $this->prepareForNotifyAction(CreditCardTransaction::NAME, $payload);
+
+        /** @var SuccessResponse $notification */
+        $notification = $controller->notifyAction();
+        $this->assertInstanceOf(SuccessResponse::class, $notification);
+        $this->assertEquals('abcdefgh-abcd-1234-4321-abc123cba321', $notification->getTransactionId());
+        $this->assertEquals('purchase', $notification->getTransactionType());
     }
 }
