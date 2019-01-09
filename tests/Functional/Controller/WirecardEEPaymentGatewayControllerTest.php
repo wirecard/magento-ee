@@ -31,9 +31,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
 
     public function testIndexActionWithNoParams()
     {
-        /** @var \Zend_Controller_Request_Abstract|\PHPUnit_Framework_MockObject_MockObject $request */
-        $request = $this->getMockForAbstractClass(\Zend_Controller_Request_Abstract::class);
-        /** @var \Zend_Controller_Response_Abstract|\PHPUnit_Framework_MockObject_MockObject $response */
+        $request  = $this->getMockForAbstractClass(\Zend_Controller_Request_Abstract::class);
         $response = $this->getMockForAbstractClass(\Zend_Controller_Response_Abstract::class);
 
         $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
@@ -45,11 +43,8 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
 
     public function testIndexActionWithUnknownPaymentMethod()
     {
-        /** @var \Zend_Controller_Request_Abstract|\PHPUnit_Framework_MockObject_MockObject $request */
-        $request = $this->getMockForAbstractClass(\Zend_Controller_Request_Abstract::class);
-        /** @var \Zend_Controller_Response_Abstract|\PHPUnit_Framework_MockObject_MockObject $response */
+        $request  = $this->getMockForAbstractClass(\Zend_Controller_Request_Abstract::class);
         $response = $this->getMockForAbstractClass(\Zend_Controller_Response_Abstract::class);
-
         $request->setParams([
             'method' => 'foo',
         ]);
@@ -66,17 +61,14 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $request = new \Mage_Core_Controller_Request_Http();
         $request->setParams(['method' => $method]);
 
-        /** @var \Mage_Core_Controller_Response_Http|\PHPUnit_Framework_MockObject_MockObject $response */
         $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
 
         $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
         \Mage::app()->setRequest($request);
 
-        /** @var \Mage_Directory_Model_Currency|\PHPUnit_Framework_MockObject_MockObject $order */
         $currency = $this->createMock(\Mage_Directory_Model_Currency::class);
         $currency->method('getCode')->willReturn('EUR');
 
-        /** @var \Mage_Sales_Model_Order_Address|\PHPUnit_Framework_MockObject_MockObject $order */
         $address = $this->createMock(\Mage_Sales_Model_Order_Address::class);
         $address->method('__call')->willReturnMap([
             ['getFirstname', [], 'firstname'],
@@ -100,7 +92,6 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $item->setTaxAmount(2);
         $item->setTaxPercent("10.0");
 
-        /** @var \Mage_Sales_Model_Order|\PHPUnit_Framework_MockObject_MockObject $order */
         $order = $this->createMock(\Mage_Sales_Model_Order::class);
         $order->method('__call')->willReturnMap([
             ['getBaseGrandTotal', [], 25],
@@ -117,16 +108,13 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $order->method('getRealOrderId')->willReturn('145000001');
         $order->method('getId')->willReturn("1");
 
-        /** @var \Mage_Checkout_Model_Session|\PHPUnit_Framework_MockObject_MockObject $checkoutSession */
         $checkoutSession = $this->createMock(\Mage_Checkout_Model_Session::class);
         $checkoutSession->method('getLastRealOrder')->willReturn($order);
 
-        /** @var \Mage_Core_Model_Session|\PHPUnit_Framework_MockObject_MockObject $checkoutSession */
         $coreSession = $this->createMock(\Mage_Core_Model_Session::class);
 
         $transaction = null;
         if ($expectTransaction) {
-            /** @var \Mage_Sales_Model_Order_Payment_Transaction|\PHPUnit_Framework_MockObject_MockObject $session */
             $transaction = $this->createMock(\Mage_Sales_Model_Order_Payment_Transaction::class);
             $transaction->expects($this->once())->method('setOrderPaymentObject')->with($payment);
             $transaction->expects($this->once())->method('setAdditionalInformation');
@@ -258,9 +246,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
 
     public function testReturnActionWithNoParams()
     {
-        /** @var \Zend_Controller_Request_Abstract|\PHPUnit_Framework_MockObject_MockObject $request */
-        $request = $this->getMockForAbstractClass(\Zend_Controller_Request_Abstract::class);
-        /** @var \Zend_Controller_Response_Abstract|\PHPUnit_Framework_MockObject_MockObject $response */
+        $request  = $this->getMockForAbstractClass(\Zend_Controller_Request_Abstract::class);
         $response = $this->getMockForAbstractClass(\Zend_Controller_Response_Abstract::class);
 
         $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
@@ -275,27 +261,22 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $request = new \Mage_Core_Controller_Request_Http();
         $request->setParams($params);
 
-        /** @var \Mage_Core_Controller_Response_Http|\PHPUnit_Framework_MockObject_MockObject $response */
         $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
 
         $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
         \Mage::app()->setRequest($request);
 
-        /** @var \Mage_Directory_Model_Currency|\PHPUnit_Framework_MockObject_MockObject $order */
         $currency = $this->createMock(\Mage_Directory_Model_Currency::class);
         $currency->method('getCode')->willReturn('EUR');
 
-        /** @var \Mage_Sales_Model_Order|\PHPUnit_Framework_MockObject_MockObject $order */
         $order = $this->createMock(\Mage_Sales_Model_Order::class);
         $order->method('getBaseCurrency')->willReturn($currency);
         $order->method('getRealOrderId')->willReturn('145000001');
         $order->method('getId')->willReturn("1");
 
-        /** @var \Mage_Checkout_Model_Session|\PHPUnit_Framework_MockObject_MockObject $checkoutSession */
         $checkoutSession = $this->createMock(\Mage_Checkout_Model_Session::class);
         $checkoutSession->method('getLastRealOrder')->willReturn($order);
 
-        /** @var \Mage_Core_Model_Session|\PHPUnit_Framework_MockObject_MockObject $checkoutSession */
         $coreSession = $this->createMock(\Mage_Core_Model_Session::class);
 
         $this->replaceMageSingleton('checkout/session', $checkoutSession);
@@ -328,9 +309,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
 
     public function testCancelAction()
     {
-        $request = new \Mage_Core_Controller_Request_Http();
-
-        /** @var \Mage_Core_Controller_Response_Http|\PHPUnit_Framework_MockObject_MockObject $response */
+        $request  = new \Mage_Core_Controller_Request_Http();
         $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
 
         $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
@@ -341,15 +320,12 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
 
     public function testCancelFailsAction()
     {
-        $request = new \Mage_Core_Controller_Request_Http();
-
-        /** @var \Mage_Core_Controller_Response_Http|\PHPUnit_Framework_MockObject_MockObject $response */
+        $request  = new \Mage_Core_Controller_Request_Http();
         $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
 
         $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
         \Mage::app()->setRequest($request);
 
-        /** @var \Mage_Checkout_Model_Session|\PHPUnit_Framework_MockObject_MockObject $checkoutSession */
         $checkoutSession = $this->createMock(\Mage_Checkout_Model_Session::class);
         $checkoutSession->method('getLastRealOrder')->willReturn(null);
 
@@ -360,9 +336,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
 
     public function testNotifyActionWithNoParams()
     {
-        /** @var \Zend_Controller_Request_Abstract|\PHPUnit_Framework_MockObject_MockObject $request */
-        $request = $this->getMockForAbstractClass(\Zend_Controller_Request_Abstract::class);
-        /** @var \Zend_Controller_Response_Abstract|\PHPUnit_Framework_MockObject_MockObject $response */
+        $request  = $this->getMockForAbstractClass(\Zend_Controller_Request_Abstract::class);
         $response = $this->getMockForAbstractClass(\Zend_Controller_Response_Abstract::class);
 
         $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
@@ -372,35 +346,57 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $controller->notifyAction();
     }
 
-    private function prepareForNotifyAction($method, $payload)
+    private function prepareForNotifyAction($method, $payload, $expectInvoice = false, $expectTransaction = false)
     {
-        /** @var \Mage_Core_Controller_Request_Http|\PHPUnit_Framework_MockObject_MockObject $request */
         $request = $this->createMock(\Mage_Core_Controller_Request_Http::class);
         $request->method('getParam')->willReturn($method);
         $request->method('getRawBody')->willReturn($payload);
 
-        /** @var \Mage_Core_Controller_Response_Http|\PHPUnit_Framework_MockObject_MockObject $response */
         $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
 
         $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
         \Mage::app()->setRequest($request);
 
-        /** @var \Mage_Directory_Model_Currency|\PHPUnit_Framework_MockObject_MockObject $order */
+        $payment = new \Mage_Sales_Model_Order_Payment();
+
         $currency = $this->createMock(\Mage_Directory_Model_Currency::class);
         $currency->method('getCode')->willReturn('EUR');
 
-        /** @var \Mage_Sales_Model_Order|\PHPUnit_Framework_MockObject_MockObject $order */
         $order = $this->createMock(\Mage_Sales_Model_Order::class);
+        $order->method('getPayment')->willReturn($payment);
         $order->method('getBaseCurrency')->willReturn($currency);
         $order->method('getRealOrderId')->willReturn('145000001');
+        $order->method('getAllVisibleItems')->willReturn([]);
         $order->method('getId')->willReturn("1");
+        $order->method('load')->willReturnSelf();
+        $order->method('canInvoice')->willReturn(true);
 
-        /** @var \Mage_Checkout_Model_Session|\PHPUnit_Framework_MockObject_MockObject $checkoutSession */
+        if ($expectInvoice) {
+            $invoice = $this->createMock(\Mage_Sales_Model_Order_Invoice::class);
+            $invoice->method('register')->willReturnSelf();
+            $invoice->method('getOrder')->willReturn($order);
+            $order->expects($this->once())->method('prepareInvoice')->willReturn($invoice);
+        }
+
+        $resourceTransaction = $this->createMock(\Mage_Core_Model_Resource_Transaction::class);
+        $resourceTransaction->method('addObject')->willReturn($resourceTransaction);
+        $this->replaceMageModel('core/resource_transaction', $resourceTransaction);
+
         $checkoutSession = $this->createMock(\Mage_Checkout_Model_Session::class);
         $checkoutSession->method('getLastRealOrder')->willReturn($order);
 
-        /** @var \Mage_Core_Model_Session|\PHPUnit_Framework_MockObject_MockObject $checkoutSession */
         $coreSession = $this->createMock(\Mage_Core_Model_Session::class);
+
+        $transaction = null;
+        if ($expectTransaction) {
+            $transaction = $this->createMock(\Mage_Sales_Model_Order_Payment_Transaction::class);
+            $transaction->expects($this->once())->method('setOrderPaymentObject')->with($payment);
+            $transaction->expects($this->once())->method('setAdditionalInformation');
+            $transaction->expects($this->once())->method('save');
+            $transaction->method('loadByTxnId')->willReturn($transaction);
+
+            $this->replaceMageModel('sales/order_payment_transaction', $transaction);
+        }
 
         $this->replaceMageSingleton('checkout/session', $checkoutSession);
         $this->replaceMageSingleton('core/session', $coreSession);
@@ -420,7 +416,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
     public function testNotifyActionWithCreditCard()
     {
         $payload = file_get_contents(__DIR__ . '/../fixtures/creditcard_notify.xml');
-        list($controller) = $this->prepareForNotifyAction(CreditCardTransaction::NAME, $payload);
+        list($controller) = $this->prepareForNotifyAction(CreditCardTransaction::NAME, $payload, true, true);
 
         /** @var SuccessResponse $notification */
         $notification = $controller->notifyAction();

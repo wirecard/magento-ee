@@ -50,6 +50,13 @@ abstract class MagentoTestCase extends TestCase
         $config->rewriteModelInstance($modelClass, $className);
     }
 
+    protected function replaceMageResourceModel($modelClass, $className)
+    {
+        /** @var Config $config */
+        $config = \Mage::getConfig();
+        $config->rewriteResourceModelInstance($modelClass, $className);
+    }
+
     /**
      * @param string $modelClass
      * @param mixed  $instance

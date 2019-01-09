@@ -12,15 +12,22 @@ namespace WirecardEE\Tests\Stubs;
 class Config extends \Mage_Core_Model_Config
 {
     private $modelClassInstances = [];
+    private $resourceModelClassInstances = [];
 
     public function rewriteModelInstance($modalClass, $instance)
     {
         $this->modelClassInstances[$modalClass] = $instance;
     }
 
+    public function rewriteResourceModelInstance($modalClass, $instance)
+    {
+        $this->resourceModelClassInstances[$modalClass] = $instance;
+    }
+
     public function restore()
     {
-        $this->modelClassInstances = [];
+        $this->modelClassInstances         = [];
+        $this->resourceModelClassInstances = [];
     }
 
     public function getModelInstance($modelClass = '', $constructArguments = [])
@@ -29,5 +36,13 @@ class Config extends \Mage_Core_Model_Config
             return $this->modelClassInstances[$modelClass];
         }
         return parent::getModelInstance($modelClass, $constructArguments);
+    }
+
+    public function getResourceModelInstance($modelClass = '', $constructArguments = [])
+    {
+        if (isset($this->resourceModelClassInstances[$modelClass])) {
+            return $this->resourceModelClassInstances[$modelClass];
+        }
+        return parent::getResourceModelInstance($modelClass, $constructArguments);
     }
 }
