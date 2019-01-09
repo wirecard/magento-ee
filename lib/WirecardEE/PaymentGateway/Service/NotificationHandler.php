@@ -27,6 +27,11 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 class NotificationHandler extends Handler
 {
     /**
+     * Transaction types which automatically will be invoiced
+     */
+    const AUTO_INVOICE_TRANSACTION_TYPES = [Transaction::TYPE_PURCHASE, Transaction::TYPE_DEBIT];
+
+    /**
      * @param Response       $response
      * @param BackendService $backendService
      *
@@ -76,28 +81,29 @@ class NotificationHandler extends Handler
         $refundableBasket = [];
 
         // Automatically invoice purchases.
-        if ($response->getTransactionType() === Transaction::TYPE_PURCHASE) {
-            if ($order->canInvoice()) {
-                /** @var \Mage_Sales_Model_Order_Invoice $invoice */
-                $invoice = $order->prepareInvoice()->register();
-                $invoice->setData('auto_capture', true);
-                $invoice->setTransactionId($response->getTransactionId());
-                $invoice->capture();
+        if (in_array($response->getTransactionType(), self::AUTO_INVOICE_TRANSACTION_TYPES) && $order->canInvoice()) {
+            /** @var \Mage_Sales_Model_Order_Invoice $invoice */
+            $invoice = $order->prepareInvoice()->register();
+            $invoice->setData('auto_capture', true);
+            $invoice->capture();
 
-                /** @var \Mage_Core_Model_Resource_Transaction $resourceTransaction */
-                $resourceTransaction = \Mage::getModel('core/resource_transaction');
-                $resourceTransaction
-                    ->addObject($invoice)
-                    ->addObject($invoice->getOrder())
-                    ->save();
+            /** @var \Mage_Core_Model_Resource_Transaction $resourceTransaction */
+            $resourceTransaction = \Mage::getModel('core/resource_transaction');
+            $resourceTransaction
+                ->addObject($invoice)
+                ->addObject($invoice->getOrder())
+                ->save();
 
-                foreach ($order->getAllVisibleItems() as $item) {
-                    /** @var \Mage_Sales_Model_Order_Item $item */
-                    $refundableBasket[$item->getProductId()] = (int)$item->getQtyOrdered();
-                }
-                if ($order->getShippingAmount() > 0.0) {
-                    $refundableBasket[TransactionManager::ADDITIONAL_AMOUNT_KEY] = $order->getShippingAmount();
-                }
+            $order->addStatusHistoryComment(
+                \Mage::helper('catalog')->__('Automatically invoiced by the Wirecard Payment Gateway plugin.')
+            );
+
+            foreach ($order->getAllVisibleItems() as $item) {
+                /** @var \Mage_Sales_Model_Order_Item $item */
+                $refundableBasket[$item->getProductId()] = (int)$item->getQtyOrdered();
+            }
+            if ($order->getShippingAmount() > 0.0) {
+                $refundableBasket[TransactionManager::ADDITIONAL_AMOUNT_KEY] = $order->getShippingAmount();
             }
         }
 

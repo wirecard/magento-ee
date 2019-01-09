@@ -40,6 +40,29 @@ class WirecardEE_PaymentGateway_Model_Sepadirectdebit extends WirecardEE_Payment
     }
 
     /**
+     * @return string
+     */
+    public function getMandateText()
+    {
+        /** @var Mage_Adminhtml_Block_Abstract $mandateBlock */
+        $mandateBlock = Mage::app()->getLayout()->createBlock('cms/block')
+                            ->setData('block_id', 'wirecardee_sepa_mandate_text');
+        $mandateText  = $mandateBlock->toHtml();
+
+        if (! $mandateText) {
+            $mandateTextForm = Mage::helper('catalog')
+                                   ->__('I authorize the creditor %1$s to send instructions to my bank to collect one single direct debit from my account. At the same time I instruct my bank to debit my account in accordance with the instructions from the creditor %1$s<br /><br />Note: As part of my rights, I am entitled to a refund under the terms and conditions of my agreement with my bank. A refund must be claimed within 8 weeks starting from the date on which my account was debited.<br /><br />I irrevocably agree that, in the event that the direct debit is not honored, or objection against the direct debit exists, my bank will disclose to the creditor %1$s my full name, address and date of birth.');
+
+            $mandateText = sprintf(
+                $mandateTextForm,
+                Mage::getStoreConfig('payment/wirecardee_paymentgateway_sepadirectdebit/creditor_name')
+            );
+        }
+
+        return $mandateText;
+    }
+
+    /**
      * @return $this
      * @throws Mage_Core_Exception
      */
@@ -47,7 +70,7 @@ class WirecardEE_PaymentGateway_Model_Sepadirectdebit extends WirecardEE_Payment
     {
         parent::validate();
         $paymentData = Mage::app()->getRequest()->getParam('wirecardElasticEngine');
-        $errorMsg = "";
+        $errorMsg    = "";
 
         if (empty($paymentData['sepaFirstName'])) {
             $errorMsg = $this->_getHelper()->__('First Name is a required field.' . PHP_EOL);

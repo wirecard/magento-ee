@@ -80,4 +80,25 @@ interface PaymentInterface
         $operation,
         \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
     );
+
+    /**
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getCancelOperation();
+
+    /**
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getRefundOperation();
+
+    /**
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getCaptureOperation();
 }

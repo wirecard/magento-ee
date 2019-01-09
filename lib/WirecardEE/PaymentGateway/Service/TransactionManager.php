@@ -13,7 +13,6 @@ use Mage_Sales_Model_Order_Payment_Transaction;
 use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Response\Response;
-use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 use WirecardEE\PaymentGateway\Mapper\ResponseMapper;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
@@ -268,14 +267,14 @@ class TransactionManager
 
                 $backendTransaction = $payment->getBackendTransaction(
                     $order,
-                    Operation::REFUND,
+                    null,
                     $transaction
                 );
                 $backendTransaction->setParentTransactionId($transaction->getTxnId());
 
                 if (! array_key_exists(
-                    Operation::REFUND,
-                    $backendService->retrieveBackendOperations($backendTransaction)
+                    $payment->getRefundOperation(),
+                    $backendService->retrieveBackendOperations($backendTransaction, true)
                 )) {
                     continue;
                 }

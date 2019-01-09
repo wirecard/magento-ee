@@ -41,7 +41,7 @@ abstract class Payment implements PaymentInterface
             \Mage::getVersion()
         );
 
-        $config->setPluginInfo($this->getHelper()->getPluginName(), $this->getHelper()->getPluginName());
+        $config->setPluginInfo($this->getHelper()->getPluginName(), $this->getHelper()->getPluginVersion());
 
         return $config;
     }
@@ -97,5 +97,29 @@ abstract class Payment implements PaymentInterface
         \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
     ) {
         return $this->getTransaction();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCancelOperation()
+    {
+        return Operation::CANCEL;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRefundOperation()
+    {
+        return Operation::REFUND;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCaptureOperation()
+    {
+        return Operation::PAY;
     }
 }

@@ -10,7 +10,6 @@
 use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Amount;
-use Wirecard\PaymentSdk\Transaction\Operation;
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\SuccessAction;
 use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
@@ -104,17 +103,15 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                 $payment->getTransactionConfig(Mage::app()->getLocale()->getCurrency()),
                 $this->logger
             ),
-            Operation::PAY,
+            $payment->getCaptureOperation(),
             new Amount($invoice->getGrandTotal(), $invoice->getBaseCurrencyCode()),
             [TransactionManager::REFUNDABLE_BASKET_KEY => json_encode($refundableBasket)]
         );
 
         if ($action instanceof SuccessAction) {
-            $transactionId = $action->getContextItem('transaction_id');
-            $amount        = $action->getContextItem('amount');
+            $amount = $action->getContextItem('amount');
 
-            $invoice->setTransactionId($transactionId);
-
+            $invoice->save();
             $this->logger->info("Captured $amount from {$initialNotification->getTxnId()}");
             return;
         }
@@ -195,7 +192,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                 $transaction,
                 $payment,
                 $backendService,
-                Operation::REFUND,
+                $payment->getRefundOperation(),
                 new Amount($amount, $creditMemo->getBaseCurrencyCode())
             );
 
@@ -263,7 +260,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                 $payment->getTransactionConfig(Mage::app()->getLocale()->getCurrency()),
                 $this->logger
             ),
-            Operation::CANCEL
+            $payment->getCancelOperation()
         );
 
         if ($action instanceof SuccessAction) {
@@ -291,7 +288,9 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
     private function throwError($message, array $context = [])
     {
         $this->logger->error($message, $context);
-        \Mage::throwException($message);
+        \Mage::throwException(\Mage::helper('catalog')
+                                   ->__('An error has occurred during executing your request. ' .
+                                        'Check log files for further information.'));
     }
 
     /**
@@ -303,8 +302,6 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
      * @param array                                      $transactionContext
      *
      * @return ErrorAction|SuccessAction
-     *
-     * @throws Mage_Core_Exception
      *
      * @since 1.0.0
      */
@@ -327,10 +324,6 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         $backendTransaction->setParentTransactionId($transaction->getTxnId());
         if ($amount) {
             $backendTransaction->setAmount($amount);
-        }
-
-        if (! array_key_exists($operation, $backendService->retrieveBackendOperations($backendTransaction))) {
-            $this->throwError("Operation ($operation) not allowed on transaction " . $transaction->getTxnId());
         }
 
         $action = $this->backendOperationHandler->execute(
