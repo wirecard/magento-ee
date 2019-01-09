@@ -40,12 +40,13 @@ class SupportMail
      * @param string $message
      * @param string $replyTo
      *
+     * @return \Zend_Mail
      * @throws \WirecardEE\PaymentGateway\Exception\UnknownPaymentException
      * @throws \Zend_Mail_Exception
      *
      * @since 1.0.0
      */
-    public function send($senderAddress, $message, $replyTo = null)
+    public function create($senderAddress, $message, $replyTo = null)
     {
         $message .= PHP_EOL . PHP_EOL . PHP_EOL;
         $message .= '*** Server Info: ***';
@@ -68,7 +69,7 @@ class SupportMail
         }
         $mail->setSubject('Magento support request');
         $mail->setBodyText($message);
-        $mail->send();
+        return $mail;
     }
 
     /**

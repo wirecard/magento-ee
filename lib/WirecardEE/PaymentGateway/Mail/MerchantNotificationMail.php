@@ -36,21 +36,25 @@ class MerchantNotificationMail
      * Send payment notification e-mail to merchant, if transaction is "authorization" or "purchase" and
      * notify_mail has been entered in plugin settings.
      *
+     * @param string|null                                 $notifyMailAddress
      * @param SuccessResponse                             $notification
      * @param \Mage_Sales_Model_Order_Payment_Transaction $notifyTransaction
      *
+     * @return \Zend_Mail|null
      * @throws \Zend_Mail_Exception
      *
      * @since 1.0.0
      */
-    public function send(SuccessResponse $notification, \Mage_Sales_Model_Order_Payment_Transaction $notifyTransaction)
-    {
-        $notifyMailAddress = \Mage::getStoreConfig('wirecardee_paymentgateway/settings/notify_mail');
+    public function create(
+        $notifyMailAddress,
+        SuccessResponse $notification,
+        \Mage_Sales_Model_Order_Payment_Transaction $notifyTransaction
+    ) {
         if (! $notifyMailAddress
             || ($notification->getTransactionType() !== Transaction::TYPE_AUTHORIZATION
                 && $notification->getTransactionType() !== Transaction::TYPE_PURCHASE)
         ) {
-            return;
+            return null;
         }
 
         $mail = new \Zend_Mail();
@@ -61,7 +65,7 @@ class MerchantNotificationMail
         $mail->addTo($notifyMailAddress);
         $mail->setSubject($this->getSubject());
         $mail->setBodyText($this->getMessage($notification, $notifyTransaction));
-        $mail->send();
+        return $mail;
     }
 
     /**

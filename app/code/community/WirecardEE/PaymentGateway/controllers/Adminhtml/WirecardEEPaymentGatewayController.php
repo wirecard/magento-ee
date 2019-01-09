@@ -117,7 +117,8 @@ class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController ext
 
         $mail = new SupportMail(new PaymentFactory());
         try {
-            $mail->send($data['sender_address'], $data['content'], $data['reply_to']);
+            $mail->create($data['sender_address'], $data['content'], $data['reply_to'])
+                 ->send();
             $session->addSuccess($this->__('E-mail sent successfully'));
             $this->_redirect('');
         } catch (Exception $e) {

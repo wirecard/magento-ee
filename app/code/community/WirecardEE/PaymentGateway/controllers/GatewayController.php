@@ -180,13 +180,35 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
 
             $notifyTransaction = $notificationHandler->handleResponse($notification, $backendService);
             if ($notifyTransaction) {
-                $notificationMail = new MerchantNotificationMail($this->getHelper());
-                $notificationMail->send($notification, $notifyTransaction);
+                $this->sendNotificationMail($notification, $notifyTransaction);
             }
         } catch (\Exception $e) {
             $this->logException('Notification handling failed', $e);
         }
         return $notification;
+    }
+
+    /**
+     * @param SuccessResponse                            $notification
+     * @param Mage_Sales_Model_Order_Payment_Transaction $notifyTransaction
+     *
+     * @throws Zend_Mail_Exception
+     *
+     * @since 1.0.0
+     */
+    private function sendNotificationMail(
+        SuccessResponse $notification,
+        \Mage_Sales_Model_Order_Payment_Transaction $notifyTransaction
+    ) {
+        $notificationMail = new MerchantNotificationMail($this->getHelper());
+        $mail             = $notificationMail->create(
+            \Mage::getStoreConfig('wirecardee_paymentgateway/settings/notify_mail'),
+            $notification,
+            $notifyTransaction
+        );
+        if ($mail) {
+            $mail->send();
+        }
     }
 
     /**
