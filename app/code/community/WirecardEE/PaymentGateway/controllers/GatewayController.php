@@ -284,12 +284,13 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      */
     private function cancelOrderAndRestoreBasket()
     {
-        $order = $this->getCheckoutSession()->getLastRealOrder();
-        if (! $order || $order->getStatus() === Mage_Sales_Model_Order::STATE_CANCELED) {
+        $order       = $this->getCheckoutSession()->getLastRealOrder();
+        $cancelState = Mage_Sales_Model_Order::STATE_CANCELED;
+        if (! $order || $order->getState() === $cancelState) {
             return false;
         }
 
-        $order->addStatusHistoryComment('Payment canceled by consumer', Mage_Sales_Model_Order::STATE_CANCELED);
+        $order->setState($cancelState, $cancelState, 'Payment canceled by consumer');
 
         /** @var Mage_Sales_Model_Quote $quote */
         $quote = Mage::getModel('sales/quote')->load($order->getQuoteId());
