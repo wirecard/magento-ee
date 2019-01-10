@@ -28,6 +28,11 @@ use WirecardEE\PaymentGateway\Payments\SofortPayment;
 class PaymentFactory
 {
     /**
+     * Prefix for the payments provided by this plugin
+     */
+    const PAYMENT_PREFIX = 'wirecardee_paymentgateway_';
+
+    /**
      * @param string $paymentName
      *
      * @return PaymentInterface
@@ -105,6 +110,10 @@ class PaymentFactory
      */
     public function isSupportedPayment(\Mage_Sales_Model_Order_Payment $magePayment)
     {
+        if (strpos($magePayment->getData('method'), self::PAYMENT_PREFIX) !== 0) {
+            return false;
+        }
+
         $payments = $this->getMappedPayments();
         return isset($payments[$this->getMagePaymentName($magePayment)]);
     }
@@ -118,6 +127,6 @@ class PaymentFactory
      */
     private function getMagePaymentName(\Mage_Sales_Model_Order_Payment $magePayment)
     {
-        return str_replace('wirecardee_paymentgateway_', '', $magePayment->getData('method'));
+        return str_replace(self::PAYMENT_PREFIX, '', $magePayment->getData('method'));
     }
 }

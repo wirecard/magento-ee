@@ -52,6 +52,7 @@ install:
 script:
   - composer cs-check
   - composer test-coverage
+  - build/bin/find-sensitive-data
 
 after_script:
   - travis_retry composer upload-coverage
