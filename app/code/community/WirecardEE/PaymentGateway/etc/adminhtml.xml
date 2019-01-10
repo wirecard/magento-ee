@@ -17,11 +17,11 @@
                     <sort_order>1</sort_order>
                     <action>adminhtml/WirecardEEPaymentGateway/supportMail</action>
                 </support>
-                <info translate="title">
+                <termsofuse translate="title">
                     <title>General Information regarding Wirecard Shop Plugins</title>
                     <sort_order>2</sort_order>
-                    <action>adminhtml/WirecardEEPaymentGateway/info</action>
-                </info>
+                    <action>adminhtml/WirecardEEPaymentGateway/termsofuse</action>
+                </termsofuse>
                 <settings translate="title">
                     <title>Settings</title>
                     <sort_order>3</sort_order>
