@@ -86,6 +86,7 @@ class NotificationHandler extends Handler
             $invoice = $order->prepareInvoice()->register();
             $invoice->setData('auto_capture', true);
             $invoice->capture();
+            $invoice->save();
 
             /** @var \Mage_Core_Model_Resource_Transaction $resourceTransaction */
             $resourceTransaction = \Mage::getModel('core/resource_transaction');
