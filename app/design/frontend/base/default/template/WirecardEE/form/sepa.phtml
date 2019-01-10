@@ -78,7 +78,9 @@
             <tr>
                 <td class="text11justify" style="text-align: justify; padding: 10px 0;">
                     <?php
-                    echo Mage::getModel('paymentgateway/sepadirectdebit')->getMandateText();
+                    /** @var WirecardEE_PaymentGateway_Model_Sepadirectdebit $sepaModel */
+                    $sepaModel = Mage::getModel('paymentgateway/sepadirectdebit');
+                    echo $sepaModel->getMandateText();
                     ?>
                 </td>
             </tr>
