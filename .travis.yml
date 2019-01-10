@@ -3,26 +3,58 @@ dist: trusty
 language: php
 
 php:
+  - 7.2
   - 7.1
   - 7.0
   - 5.6
 
-  env:
-    global:
-      - COMPOSER_ARGS="--no-interaction"
-      - github_token:
-          secure: "D4Kx568TZU1w8YPJ/yCCbJjNGvuOfJ/xhKTJ7mG2Yide4+OrDvoRw4KrQ6Eku68ceMNAnziEtGcPEauCoxAyrC4Dykvkq2tCXOZfg//Vaoj/VepNUfrmqVQe0OgZeBHlchvDUr/ygdBDGLQDJc3bF1+s0VHljiZCoRO/POLELiN7Wd2yNtELfH+LIRlO1E1VVz7yib8fgJeB3G6WL/klHj0nW5fzFRDvWN5fcCELWUA659wI7ehdhzaLKnNAc1uhZPTA2XDKqTU0Nsu5y3f58ugfcXFNtd7G1LCwrsTwrUYk/pXBUWMbeQSg8CIhgc65dZeWADkHiiEr0/CF1Vgu2yjexncTbAlnJYyqz9AO9LP4zMN3OGaqmOC0Kf9lhc5NVqVsjSQk2yYYSjGiTrjKZ2E2zIqyGS7C+JzAzcrAkfc92zH7+4OoPcicxQkfSXyUpcSW2yk9GUqCjG0H6YzHHudVUh9cCVCeXtPaxm6ePiboTc0DvIJea2qMob8Sb40/MxMOjlPsnu+1JCq6WwJLez2Evc8t0ZWujQYr4N2iHUmdHWRfOl9s/QdcrI3ispzEx3C5h46XIt0QzigY3cc7aLKbpGFSd7bGM/gYJepeOK1R2KY8EbNJ12/PHlLn26fw2fPa+ZxAKpscB1aDOV7plDWh1jVX1wi9KjFydJdcAIo="
+cache:
+  directories:
+    - $HOME/.composer/cache/files
 
-  install:
-    - travis_retry composer install $COMPOSER_ARGS
-    - composer show
+services:
+  - mysql
 
-  script:
-    - composer test-coverage
-    - composer cs-check
+env:
+  global:
+    - COMPOSER_ARGS="--no-interaction"
+    - MAGENTO_DIRECTORY=${HOME}/magento
+    - MAGENTO_VERSION=1.9.4.0
+    - EXTENSION_NAME="wirecard-ee"
+    - n98="php ${TRAVIS_BUILD_DIR}/n98-magerun.phar -n --root-dir=${MAGENTO_DIRECTORY}"
+    - github_token:
+        secure: "D4Kx568TZU1w8YPJ/yCCbJjNGvuOfJ/xhKTJ7mG2Yide4+OrDvoRw4KrQ6Eku68ceMNAnziEtGcPEauCoxAyrC4Dykvkq2tCXOZfg//Vaoj/VepNUfrmqVQe0OgZeBHlchvDUr/ygdBDGLQDJc3bF1+s0VHljiZCoRO/POLELiN7Wd2yNtELfH+LIRlO1E1VVz7yib8fgJeB3G6WL/klHj0nW5fzFRDvWN5fcCELWUA659wI7ehdhzaLKnNAc1uhZPTA2XDKqTU0Nsu5y3f58ugfcXFNtd7G1LCwrsTwrUYk/pXBUWMbeQSg8CIhgc65dZeWADkHiiEr0/CF1Vgu2yjexncTbAlnJYyqz9AO9LP4zMN3OGaqmOC0Kf9lhc5NVqVsjSQk2yYYSjGiTrjKZ2E2zIqyGS7C+JzAzcrAkfc92zH7+4OoPcicxQkfSXyUpcSW2yk9GUqCjG0H6YzHHudVUh9cCVCeXtPaxm6ePiboTc0DvIJea2qMob8Sb40/MxMOjlPsnu+1JCq6WwJLez2Evc8t0ZWujQYr4N2iHUmdHWRfOl9s/QdcrI3ispzEx3C5h46XIt0QzigY3cc7aLKbpGFSd7bGM/gYJepeOK1R2KY8EbNJ12/PHlLn26fw2fPa+ZxAKpscB1aDOV7plDWh1jVX1wi9KjFydJdcAIo="
 
-  after_script:
-    - travis_retry composer upload-coverage
+before_install:
+  - wget https://files.magerun.net/n98-magerun.phar
+  - $n98 --version
+  - mysql -e 'CREATE DATABASE magento;'
+
+install:
+  - travis_retry composer install $COMPOSER_ARGS
+  - composer show
+  # Download proper Magento version
+  - git clone https://github.com/OpenMage/magento-mirror.git ${MAGENTO_DIRECTORY}
+  - cd ${MAGENTO_DIRECTORY}
+  - git tag -l
+  - git checkout tags/${MAGENTO_VERSION}
+  # Install Magento
+  - $n98 sys:check
+  - $n98 install --dbUser=travis --dbHost=127.0.0.1 --dbName=magento --baseUrl="http://127.0.0.1" --installationFolder=${MAGENTO_DIRECTORY} --noDownload --forceUseDb
+  - wget https://raw.github.com/colinmollenhour/modman/master/modman
+  - chmod +x modman
+  - ./modman init
+  # Install the extension
+  - cp -r ${TRAVIS_BUILD_DIR} ${MAGENTO_DIRECTORY}/.modman/${EXTENSION_NAME}
+  - ./modman deploy ${EXTENSION_NAME}
+  - cd ${MAGENTO_DIRECTORY}/.modman/${EXTENSION_NAME}
+
+script:
+  - composer cs-check
+  - composer test-coverage
+
+after_script:
+  - travis_retry composer upload-coverage
 
 notifications:
   email: false
