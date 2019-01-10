@@ -10,6 +10,7 @@
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Mail\SupportMail;
+use WirecardEE\PaymentGateway\Service\Logger;
 use WirecardEE\PaymentGateway\Service\PaymentFactory;
 
 /**
@@ -51,7 +52,7 @@ class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController ext
                 $params[$prefix . 'HttpPassword']
             );
 
-            $transactionService = new TransactionService($testConfig);
+            $transactionService = new TransactionService($testConfig, new Logger());
 
             $success = $transactionService->checkCredentials();
         } catch (\Exception $e) {
