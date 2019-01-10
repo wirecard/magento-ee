@@ -19,10 +19,20 @@ class WirecardEE_PaymentGateway_Block_Checkout_Success extends Mage_Checkout_Blo
      *
      * @since 1.0.0
      */
-    public function getPaymentStatus()
+    public function getOrderStatusLabel()
     {
         $order = $this->getCheckoutSession()->getLastRealOrder();
         return $order->getStatusLabel();
+    }
+
+    /**
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getOrderState()
+    {
+        return $this->getCheckoutSession()->getLastRealOrder()->getState();
     }
 
     /**
