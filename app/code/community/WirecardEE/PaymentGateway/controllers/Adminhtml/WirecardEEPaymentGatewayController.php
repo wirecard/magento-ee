@@ -84,7 +84,7 @@ class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController ext
 
         /** @var Mage_Core_Block_Template $block */
         $block = $this->getLayout()->createBlock('adminhtml/template');
-        $block->setTemplate('WirecardEE/info.phtml');
+        $block->setTemplate('WirecardEE/terms_of_use.phtml');
         $this->_addContent($block);
         $this->renderLayout();
     }
