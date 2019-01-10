@@ -69,6 +69,7 @@ class TransactionManagerTest extends MagentoTestCase
         $manager = new TransactionManager(new Logger());
 
         $payment = $this->createMock(PaymentInterface::class);
+        $payment->method('getRefundOperation')->willReturn(Operation::REFUND);
         $payment->method('getBackendTransaction')->willReturn($this->createMock(Transaction::class));
 
         $backendService = $this->createMock(BackendService::class);
