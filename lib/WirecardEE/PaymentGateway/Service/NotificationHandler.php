@@ -86,6 +86,9 @@ class NotificationHandler extends Handler
             $invoice = $order->prepareInvoice()->register();
             $invoice->setData('auto_capture', true);
             $invoice->capture();
+            $invoice->addComment(
+                \Mage::helper('catalog')->__('Automatically created invoice by the Wirecard Payment Gateway plugin.')
+            );
             $invoice->save();
 
             /** @var \Mage_Core_Model_Resource_Transaction $resourceTransaction */
@@ -94,10 +97,6 @@ class NotificationHandler extends Handler
                 ->addObject($invoice)
                 ->addObject($invoice->getOrder())
                 ->save();
-
-            $order->addStatusHistoryComment(
-                \Mage::helper('catalog')->__('Automatically invoiced by the Wirecard Payment Gateway plugin.')
-            );
 
             foreach ($order->getAllVisibleItems() as $item) {
                 /** @var \Mage_Sales_Model_Order_Item $item */
