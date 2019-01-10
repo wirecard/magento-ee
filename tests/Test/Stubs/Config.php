@@ -7,7 +7,7 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-namespace WirecardEE\Tests\Stubs;
+namespace WirecardEE\Tests\Test\Stubs;
 
 class Config extends \Mage_Core_Model_Config
 {

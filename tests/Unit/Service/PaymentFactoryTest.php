@@ -10,6 +10,7 @@
 namespace WirecardEE\Tests\Unit\Service;
 
 use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 use WirecardEE\PaymentGateway\Data\PaymentConfig;
 use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
@@ -24,19 +25,27 @@ class PaymentFactoryTest extends MagentoTestCase
     {
         $factory = new PaymentFactory();
         $this->assertNotEmpty($factory->getSupportedPayments());
+
+        $operation  = new \ReflectionClass(Operation::class);
+        $operations = $operation->getConstants();
+
         foreach ($factory->getSupportedPayments() as $payment) {
             $this->assertInstanceOf(PaymentInterface::class, $payment);
             $this->assertNotEmpty($payment->getName());
             $this->assertInstanceOf(Transaction::class, $payment->getTransaction());
             $this->assertInstanceOf(Config::class, $payment->getTransactionConfig('EUR'));
             $this->assertInstanceOf(PaymentConfig::class, $payment->getPaymentConfig());
+            $this->assertNotEmpty($payment->getPaymentConfig()->toArray());
+            $this->assertTrue(in_array($payment->getCancelOperation(), $operations, true));
+            $this->assertTrue(in_array($payment->getCaptureOperation(), $operations, true));
+            $this->assertTrue(in_array($payment->getRefundOperation(), $operations, true));
         }
     }
 
     public function testIsSupportedPayments()
     {
         $magePayment = new \Mage_Sales_Model_Order_Payment();
-        $factory = new PaymentFactory();
+        $factory     = new PaymentFactory();
         $this->assertFalse($factory->isSupportedPayment($magePayment));
 
         $magePayment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);

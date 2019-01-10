@@ -94,6 +94,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>0</sort_order>
+                            <tooltip>Payment method name as displayed for the consumer during checkout.</tooltip>
                         </title>
                         <active translate="label">
                             <label>Enabled</label>
@@ -103,6 +104,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>10</sort_order>
+                            <tooltip>Activate payment method PayPal to make it available for your consumers.</tooltip>
                         </active>
                         <api_url translate="label">
                             <label>Base URL</label>
@@ -111,6 +113,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>20</sort_order>
+                            <tooltip>The Wirecard Server Address (e.g. https://api.wirecard.com).</tooltip>
                         </api_url>
                         <api_user translate="label">
                             <label>HTTP User</label>
@@ -119,6 +122,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>30</sort_order>
+                            <tooltip>HTTP User as provided in your Wirecard contract.</tooltip>
                         </api_user>
                         <api_password translate="label">
                             <label>HTTP Password</label>
@@ -127,6 +131,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>40</sort_order>
+                            <tooltip>HTTP Password as provided in your Wirecard contract.</tooltip>
                         </api_password>
                         <api_test_button>
                             <frontend_type>button</frontend_type>
@@ -144,6 +149,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>60</sort_order>
+                            <tooltip>Unique identifier assigned to your merchant account.</tooltip>
                         </api_maid>
                         <api_secret translate="label">
                             <label>Secret</label>
@@ -152,6 +158,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>70</sort_order>
+                            <tooltip>Secret Key is mandatory to calculate the Digital Signature for payments.</tooltip>
                         </api_secret>
                         <transaction_type translate="label">
                             <label>Payment action</label>
@@ -161,15 +168,17 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>80</sort_order>
+                            <tooltip>Select between "Purchase" to capture/invoice your order automatically or "Authorization" to capture/invoice manually.</tooltip>
                         </transaction_type>
                         <send_basket translate="label">
-                            <label>Send basket</label>
+                            <label>Shopping Basket</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>90</sort_order>
+                            <tooltip>For the purpose of confirmation, payment supports shopping basket display during checkout. To enable this feature, activate Shopping Basket.</tooltip>
                         </send_basket>
                         <fraud_prevention translate="label">
                             <label>Send additional data</label>
@@ -179,6 +188,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>100</sort_order>
+                            <tooltip>Additional data will be sent for the purpose of fraud protection. This additional data includes billing/shipping address, shopping basket and descriptor.</tooltip>
                         </fraud_prevention>
                         <order_identification translate="label">
                             <label>Send order identification</label>
@@ -197,6 +207,7 @@
                             <show_in_store>0</show_in_store>
                             <frontend_class>validate-number</frontend_class>
                             <sort_order>120</sort_order>
+                            <tooltip>Order of payment methods as displayed on payment page.</tooltip>
                         </sort_order>
                     </fields>
                 </wirecardee_paymentgateway_paypal>
@@ -214,6 +225,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>0</sort_order>
+                            <tooltip>Payment method name as displayed for the consumer during checkout.</tooltip>
                         </title>
                         <active translate="label">
                             <label>Enabled</label>
@@ -231,6 +243,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>20</sort_order>
+                            <tooltip>The Wirecard Server Address (e.g. https://api.wirecard.com).</tooltip>
                         </api_url>
                         <api_user translate="label">
                             <label>HTTP User</label>
@@ -239,6 +252,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>30</sort_order>
+                            <tooltip>HTTP User as provided in your Wirecard contract.</tooltip>
                         </api_user>
                         <api_password translate="label">
                             <label>HTTP Password</label>
@@ -247,6 +261,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>40</sort_order>
+                            <tooltip>HTTP Password as provided in your Wirecard contract.</tooltip>
                         </api_password>
                         <api_test_button>
                             <frontend_type>button</frontend_type>
@@ -264,6 +279,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>60</sort_order>
+                            <tooltip>Unique identifier assigned to your merchant account.</tooltip>
                         </api_maid>
                         <api_secret translate="label">
                             <label>Secret</label>
@@ -272,6 +288,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>70</sort_order>
+                            <tooltip>Secret Key is mandatory to calculate the Digital Signature for payments.</tooltip>
                         </api_secret>
                         <threeds_maid translate="label">
                             <label>3-D Secure MAID</label>
@@ -280,6 +297,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>80</sort_order>
+                            <tooltip>Unique identifier assigned to your 3-D Secure merchant account.</tooltip>
                         </threeds_maid>
                         <threeds_secret translate="label">
                             <label>3-D Secure Secret</label>
@@ -288,6 +306,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>90</sort_order>
+                            <tooltip>Secret Key is mandatory to calculate the Digital Signature for the 3-D Secure payment.</tooltip>
                         </threeds_secret>
                         <transaction_type translate="label">
                             <label>Payment action</label>
@@ -297,6 +316,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>100</sort_order>
+                            <tooltip>Select between "Purchase" to capture/invoice your order automatically or "Authorization" to capture/invoice manually.</tooltip>
                         </transaction_type>
                         <fraud_prevention translate="label">
                             <label>Send additional data</label>
@@ -306,6 +326,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>110</sort_order>
+                            <tooltip>Additional data will be sent for the purpose of fraud protection. This additional data includes billing/shipping address, shopping basket and descriptor.</tooltip>
                         </fraud_prevention>
                         <ssl_max_limit translate="label comment tooltip">
                             <label>Non 3-D Secure Max. Limit</label>
@@ -353,6 +374,7 @@
                             <show_in_store>0</show_in_store>
                             <frontend_class>validate-number</frontend_class>
                             <sort_order>160</sort_order>
+                            <tooltip>Order of payment methods as displayed on payment page.</tooltip>
                         </sort_order>
                     </fields>
                 </wirecardee_paymentgateway_creditcard>
@@ -370,6 +392,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>Payment method name as displayed for the consumer during checkout.</tooltip>
                         </title>
                         <active translate="label">
                             <label>Enabled</label>
@@ -379,6 +402,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>Activate payment method SEPA Direct Debit to make it available for your consumers.</tooltip>
                         </active>
                         <api_url translate="label">
                             <label>Base URL</label>
@@ -387,6 +411,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>The Wirecard Server Address (e.g. https://api.wirecard.com).</tooltip>
                         </api_url>
                         <api_user translate="label">
                             <label>HTTP User</label>
@@ -395,6 +420,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>HTTP User as provided in your Wirecard contract.</tooltip>
                         </api_user>
                         <api_password translate="label">
                             <label>HTTP Password</label>
@@ -403,6 +429,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>HTTP Password as provided in your Wirecard contract.</tooltip>
                         </api_password>
                         <api_test_button>
                             <frontend_type>button</frontend_type>
@@ -420,6 +447,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>Unique identifier assigned to your merchant account.</tooltip>
                         </api_maid>
                         <api_secret translate="label">
                             <label>Secret</label>
@@ -428,6 +456,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>Secret Key is mandatory to calculate the Digital Signature for payments.</tooltip>
                         </api_secret>
                         <transaction_type translate="label">
                             <label>Payment action</label>
@@ -437,6 +466,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>Select between "Purchase" to capture/invoice your order automatically or "Authorization" to capture/invoice manually.</tooltip>
                         </transaction_type>
                         <fraud_prevention translate="label">
                             <label>Send additional data</label>
@@ -446,6 +476,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>Additional data will be sent for the purpose of fraud protection. This additional data includes billing/shipping address, shopping basket and descriptor.</tooltip>
                         </fraud_prevention>
                         <show_bic translate="label">
                             <label>BIC enabled</label>
@@ -455,6 +486,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>If BIC is enabled, consumer must enter a BIC during checkout.</tooltip>
                         </show_bic>
                         <creditor_id translate="label">
                             <label>Creditor ID</label>
@@ -465,6 +497,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>SEPA Direct Debit requires Creditor ID to create SEPA Direct Debit Mandate. You may apply for a Creditor ID at your financial institution.</tooltip>
                         </creditor_id>
                         <creditor_name translate="label">
                             <label>Creditor Name</label>
@@ -475,6 +508,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>SEPA Direct Debit requires a Creditor Name for the SEPA Direct Debit Mandate page.</tooltip>
                         </creditor_name>
                         <creditor_street translate="label">
                             <label>Creditor Street</label>
@@ -505,6 +539,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>SEPA Direct Debit requires a Creditor City for the SEPA Direct Debit Mandate page.</tooltip>
                         </creditor_city>
                         <creditor_country translate="label">
                             <label>Creditor Country</label>
@@ -524,6 +559,7 @@
                             <show_in_store>0</show_in_store>
                             <frontend_class>validate-number</frontend_class>
                             <sort_order>180</sort_order>
+                            <tooltip>Order of payment methods as displayed on payment page.</tooltip>
                         </sort_order>
                     </fields>
                 </wirecardee_paymentgateway_sepadirectdebit>
@@ -540,6 +576,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>Unique identifier assigned to your merchant account.</tooltip>
                         </api_maid>
                         <api_secret translate="label">
                             <label>Secret</label>
@@ -547,6 +584,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>Secret Key is mandatory to calculate the Digital Signature for payments.</tooltip>
                         </api_secret>
                         <creditor_id translate="label">
                             <label translate="label">Creditor ID</label>
@@ -571,6 +609,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>10</sort_order>
+                            <tooltip>Payment method name as displayed for the consumer during checkout.</tooltip>
                         </title>
                         <active translate="label">
                             <label>Enabled</label>
@@ -580,6 +619,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>20</sort_order>
+                            <tooltip>Activate payment method Sofort. to make it available for your consumers.</tooltip>
                         </active>
                         <api_url translate="label">
                             <label>Base URL</label>
@@ -588,6 +628,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>30</sort_order>
+                            <tooltip>The Wirecard Server Address (e.g. https://api.wirecard.com).</tooltip>
                         </api_url>
                         <api_user translate="label">
                             <label>HTTP User</label>
@@ -596,6 +637,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>40</sort_order>
+                            <tooltip>HTTP User as provided in your Wirecard contract.</tooltip>
                         </api_user>
                         <api_password translate="label">
                             <label>HTTP Password</label>
@@ -604,6 +646,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>50</sort_order>
+                            <tooltip>HTTP Password as provided in your Wirecard contract.</tooltip>
                         </api_password>
                         <api_test_button>
                             <frontend_type>button</frontend_type>
@@ -621,6 +664,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>70</sort_order>
+                            <tooltip>Unique identifier assigned to your merchant account.</tooltip>
                         </api_maid>
                         <api_secret translate="label">
                             <label>Secret</label>
@@ -629,6 +673,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>80</sort_order>
+                            <tooltip>Secret Key is mandatory to calculate the Digital Signature for payments.</tooltip>
                         </api_secret>
                         <fraud_prevention translate="label">
                             <label>Send additional data</label>
@@ -638,6 +683,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>90</sort_order>
+                            <tooltip>Additional data will be sent for the purpose of fraud protection. This additional data includes billing/shipping address, shopping basket and descriptor.</tooltip>
                         </fraud_prevention>
                         <sort_order translate="label">
                             <label>Sort Order</label>
@@ -647,6 +693,7 @@
                             <show_in_store>0</show_in_store>
                             <frontend_class>validate-number</frontend_class>
                             <sort_order>100</sort_order>
+                            <tooltip>Order of payment methods as displayed on payment page.</tooltip>
                         </sort_order>
                     </fields>
                 </wirecardee_paymentgateway_sofortbanking>

@@ -7,7 +7,7 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-namespace WirecardEE\Tests\Stubs;
+namespace WirecardEE\Tests\Test\Stubs;
 
 class PaymentHelperData extends \WirecardEE_PaymentGateway_Helper_Data
 {

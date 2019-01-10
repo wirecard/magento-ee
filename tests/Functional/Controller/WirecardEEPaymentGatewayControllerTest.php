@@ -19,7 +19,7 @@ use WirecardEE\PaymentGateway\Actions\RedirectAction;
 use WirecardEE\PaymentGateway\Actions\ViewAction;
 use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
 use WirecardEE\PaymentGateway\Service\SessionManager;
-use WirecardEE\Tests\Stubs\PaymentHelperData;
+use WirecardEE\Tests\Test\Stubs\PaymentHelperData;
 use WirecardEE\Tests\Test\MagentoTestCase;
 
 class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase

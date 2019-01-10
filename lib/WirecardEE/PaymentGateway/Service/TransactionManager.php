@@ -359,14 +359,4 @@ class TransactionManager
     {
         return \Mage::getModel('sales/order_payment_transaction');
     }
-
-    /**
-     * @return \Mage_Core_Helper_Abstract|\WirecardEE_PaymentGateway_Helper_Data
-     *
-     * @since 1.0.0
-     */
-    protected function getHelper()
-    {
-        return \Mage::helper('paymentgateway');
-    }
 }

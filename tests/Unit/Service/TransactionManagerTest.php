@@ -10,6 +10,7 @@
 namespace WirecardEE\Tests\Unit\Service;
 
 use Wirecard\PaymentSdk\BackendService;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
@@ -19,6 +20,67 @@ use WirecardEE\Tests\Test\MagentoTestCase;
 
 class TransactionManagerTest extends MagentoTestCase
 {
+    public function testCreateTransactionWithoutTransactionId()
+    {
+        $order    = $this->createMock(\Mage_Sales_Model_Order::class);
+        $response = $this->createMock(SuccessResponse::class);
+
+        $manager = new TransactionManager(new Logger());
+        $this->assertNull($manager->createTransaction(TransactionManager::TYPE_INITIAL, $order, $response));
+    }
+
+    public function testCreateTransactionWithExistingTransactionModel()
+    {
+        $order = $this->createMock(\Mage_Sales_Model_Order::class);
+
+        $response = $this->createMock(SuccessResponse::class);
+        $response->method('getTransactionId')->willReturn('transaction-id');
+
+        $payment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
+        $order->method('getPayment')->willReturn($payment);
+
+        $transaction = $this->createMock(\Mage_Sales_Model_Order_Payment_Transaction::class);
+        $transaction->method('loadByTxnId')->willReturnSelf();
+        $transaction->method('getId')->willReturn(1);
+        $this->replaceMageModel('sales/order_payment_transaction', $transaction);
+
+        $manager = new TransactionManager(new Logger());
+        $this->assertNull($manager->createTransaction(TransactionManager::TYPE_INITIAL, $order, $response));
+    }
+
+    public function testCreateTransactionInitial()
+    {
+        $order = $this->createMock(\Mage_Sales_Model_Order::class);
+
+        $response = $this->createMock(SuccessResponse::class);
+        $response->method('getTransactionId')->willReturn('transaction-id');
+        $response->method('getParentTransactionId')->willReturn('parent-id');
+        $response->method('getData')->willReturn([]);
+
+        $payment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
+        $order->method('getPayment')->willReturn($payment);
+
+        $transaction = $this->createMock(\Mage_Sales_Model_Order_Payment_Transaction::class);
+        $transaction->method('loadByTxnId')->willReturnSelf();
+        $transaction->method('__call')->willReturnMap([['getTxnId', [], 'transaction-id']]);
+        $transaction->expects($this->atLeastOnce())->method('setParentTxnId')->with('parent-id', 'transaction-id');
+        $this->replaceMageModel('sales/order_payment_transaction', $transaction);
+
+        $parentTransaction = $this->createMock(\Mage_Sales_Model_Order_Payment_Transaction::class);
+        $parentTransaction->method('getId')->willReturn(2);
+        $parentTransaction->method('__call')->willReturnMap([['getTxnId', [], 'parent-id']]);
+
+        $transactions = $this->createMock(\Mage_Sales_Model_Resource_Order_Payment_Transaction_Collection::class);
+        $transactions->method('getIterator')->willReturn(new \ArrayIterator([$parentTransaction]));
+        $this->replaceMageResourceModel('sales/order_payment_transaction_collection', $transactions);
+
+        $manager = new TransactionManager(new Logger());
+        $this->assertSame(
+            $transaction,
+            $manager->createTransaction(TransactionManager::TYPE_INITIAL, $order, $response)
+        );
+    }
+
     public function testFindInitialNotification()
     {
         $order = $this->createMock(\Mage_Sales_Model_Order::class);

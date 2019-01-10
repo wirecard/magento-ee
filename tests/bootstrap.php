@@ -29,7 +29,7 @@ function fix_error_handler()
 fix_error_handler();
 
 Mage::app('', 'store', [
-    'config_model' => 'WirecardEE\Tests\Stubs\Config'
+    'config_model' => 'WirecardEE\Tests\Test\Stubs\Config',
 ]);
 Mage::setIsDeveloperMode(true);
 
@@ -37,6 +37,6 @@ fix_error_handler();
 
 $_SESSION = [];
 
-if(!Mage::getConfig()->getModuleConfig('WirecardEE_PaymentGateway')->is('active', true)) {
+if (! Mage::getConfig()->getModuleConfig('WirecardEE_PaymentGateway')->is('active', true)) {
     throw new \RuntimeException('The Wirecard Elastic Engine extension is not enabled!');
 }

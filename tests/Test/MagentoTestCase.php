@@ -10,7 +10,7 @@
 namespace WirecardEE\Tests\Test;
 
 use PHPUnit\Framework\TestCase;
-use WirecardEE\Tests\Stubs\Config;
+use WirecardEE\Tests\Test\Stubs\Config;
 
 abstract class MagentoTestCase extends TestCase
 {
