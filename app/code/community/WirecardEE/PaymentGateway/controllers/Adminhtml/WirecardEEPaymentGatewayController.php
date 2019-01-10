@@ -76,10 +76,10 @@ class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController ext
      *
      * @since 1.0.0
      */
-    public function infoAction()
+    public function termsofuseAction()
     {
         $this->loadLayout();
-        $this->_setActiveMenu('WirecardEE_PaymentGateway/info');
+        $this->_setActiveMenu('WirecardEE_PaymentGateway/termsofuse');
         $this->_title($this->__('General Information regarding Wirecard Shop Plugins'));
 
         /** @var Mage_Core_Block_Template $block */
