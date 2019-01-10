@@ -30,13 +30,14 @@ class PaymentFactoryTest extends MagentoTestCase
             $this->assertInstanceOf(Transaction::class, $payment->getTransaction());
             $this->assertInstanceOf(Config::class, $payment->getTransactionConfig('EUR'));
             $this->assertInstanceOf(PaymentConfig::class, $payment->getPaymentConfig());
+            $this->assertNotEmpty($payment->getPaymentConfig()->toArray());
         }
     }
 
     public function testIsSupportedPayments()
     {
         $magePayment = new \Mage_Sales_Model_Order_Payment();
-        $factory = new PaymentFactory();
+        $factory     = new PaymentFactory();
         $this->assertFalse($factory->isSupportedPayment($magePayment));
 
         $magePayment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
