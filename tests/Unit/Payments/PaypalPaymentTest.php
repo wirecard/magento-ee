@@ -48,6 +48,7 @@ class PaypalPaymentTest extends MagentoTestCase
         $payment     = new PaypalPayment();
         $transaction = $payment->getTransaction();
         $transaction->setOperation(Operation::PAY);
+        $transaction->setLocale('en_US');
         $this->assertArrayNotHasKey('order-detail', $transaction->mappedProperties());
 
         $orderSummary       = $this->createMock(OrderSummary::class);
