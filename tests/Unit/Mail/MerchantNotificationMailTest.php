@@ -14,7 +14,7 @@ use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 use WirecardEE\PaymentGateway\Mail\MerchantNotificationMail;
-use WirecardEE\Tests\Stubs\PaymentHelperData;
+use WirecardEE\Tests\Test\Stubs\PaymentHelperData;
 
 class MerchantNotificationMailTest extends TestCase
 {

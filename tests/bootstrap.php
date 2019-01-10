@@ -29,7 +29,7 @@ function fix_error_handler()
 fix_error_handler();
 
 Mage::app('', 'store', [
-    'config_model' => 'WirecardEE\Tests\Stubs\Config',
+    'config_model' => 'WirecardEE\Tests\Test\Stubs\Config',
 ]);
 Mage::setIsDeveloperMode(true);
 
