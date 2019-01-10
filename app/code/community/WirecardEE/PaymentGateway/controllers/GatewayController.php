@@ -291,6 +291,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
 
         $order->addStatusHistoryComment('Payment canceled by consumer', Mage_Sales_Model_Order::STATE_CANCELED);
 
+        /** @var Mage_Sales_Model_Quote $quote */
         $quote = Mage::getModel('sales/quote')->load($order->getQuoteId());
 
         if ($quote->getId()) {
