@@ -31,14 +31,13 @@ class WirecardEE_PaymentGateway_Block_Head extends Mage_Adminhtml_Block_Page_Hea
     {
         parent::_separateOtherHtmlHeadElements($lines, $itemIf, $itemType, $itemParams, $itemName, $itemThe);
 
+        $params = $itemParams ? $itemParams : '';
         if (is_array($itemParams)) {
             $params = [];
             foreach ($itemParams as $key => $val) {
                 $params[] = $key . '="' . $val . '"';
             }
             $params = implode(' ', $params);
-        } else {
-            $params = $itemParams ? $itemParams : '';
         }
 
         switch ($itemType) {
