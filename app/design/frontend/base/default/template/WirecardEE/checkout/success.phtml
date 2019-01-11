@@ -17,7 +17,7 @@ if (! $this->isWirecardPayment()) {
 
     <?php
     if ($this->getOrderStatusLabel() === Mage_Sales_Model_Order::STATE_PENDING_PAYMENT) {
-        echo '<p>' . Mage::helper('catalog')->__('Awaiting payment from Wirecard. You will receive an e-mail once the payment has been finalized.') . '</p>';
+        echo '<p>' . Mage::helper('catalog')->__('payment_pending_message') . '</p>';
     }
     ?>
 </div>

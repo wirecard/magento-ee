@@ -34,7 +34,7 @@
                     </comment>
                     <fields>
                         <plugin_version translate="label">
-                            <label>Plugin version</label>
+                            <label>text_plugin_version</label>
                             <frontend_model>paymentgateway/adminhtml_system_config_pluginVersion</frontend_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -42,35 +42,34 @@
                             <sort_order>1</sort_order>
                         </plugin_version>
                         <notify_mail translate="label">
-                            <label>E-mail for payment notifications</label>
+                            <label>config_email_notification</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <tooltip>Enter your e-mail address to receive a payment notification for each incoming payment confirmation
-                                via e-mail.
-                            </tooltip>
+                            <tooltip>config_email_notification_desc</tooltip>
                         </notify_mail>
                         <pending_mail translate="label">
-                            <label>Send pending status mails</label>
+                            <label>config_pendig_status_mails</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>20</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <tooltip>If enabled, consumers get an e-mail containing the information that the payment is not yet finalized.</tooltip>
+                            <tooltip>config_pendig_status_mails_desc</tooltip>
                         </pending_mail>
                         <delete_cancelled_orders translate="label comment">
-                            <label>Explicitly delete cancelled orders</label>
+                            <label>config_delete_cancel_order</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>30</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment><![CDATA[<strong>Warning</strong>: Keep in mind that deleted orders will leave gaps within your order numbers!]]></comment>
+                            <comment>config_delete_cancel_order_warning</comment>
+                            <tooltip>config_delete_cancel_order_desc</tooltip>
                         </delete_cancelled_orders>
                     </fields>
                 </settings>
@@ -190,14 +189,15 @@
                             <sort_order>100</sort_order>
                             <tooltip>config_additional_info_desc</tooltip>
                         </fraud_prevention>
-                        <order_identification translate="label">
-                            <label>Send order identification</label>
+                        <order_identification translate="label tooltip">
+                            <label>config_descriptor</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>110</sort_order>
+                            <tooltip>config_descriptor_desc</tooltip>
                         </order_identification>
                         <sort_order translate="label tooltip">
                             <label>config_sort_order</label>
@@ -298,7 +298,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>80</sort_order>
-                            <tooltip>config_merchant_account_id_cc_desc</tooltip>
+                            <tooltip>config_merchant_account_id_three_d_desc</tooltip>
                         </threeds_maid>
                         <threeds_secret translate="label tooltip">
                             <label>config_three_d_merchant_secret</label>
@@ -307,7 +307,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>90</sort_order>
-                            <tooltip>Secret Key is mandatory to calculate the Digital Signature for the 3-D Secure payment.</tooltip>
+                            <tooltip>config_merchant_secret_three_d_desc</tooltip>
                         </threeds_secret>
                         <transaction_type translate="label tooltip">
                             <label>config_payment_action</label>
@@ -331,41 +331,43 @@
                         </fraud_prevention>
                         <ssl_max_limit translate="label comment tooltip">
                             <label>config_ssl_max_limit</label>
-                            <comment><![CDATA[<a href="https://raw.githubusercontent.com/wiki/wirecard/shopware-ee/img/creditcard-ssl-3d-new.png" target="_blank">Click here</a> for an explanation regarding Non 3-D Secure and 3-D Secure limits]]></comment>
-                            <tooltip>This amount forces 3-D Secure transactions. Leave blank to disable the Non 3-D Secure Maximal Limit.</tooltip>
+                            <comment>config_three_d_explantion_url</comment>
+                            <tooltip>config_ssl_max_limit_desc</tooltip>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>120</sort_order>
                         </ssl_max_limit>
-                        <ssl_max_limit_currency translate="label">
-                            <label>Non 3-D Secure Max. Limit Currency</label>
+                        <ssl_max_limit_currency translate="label tooltip">
+                            <label>config_ssl_max_limit_currency</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_currency</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>130</sort_order>
+                            <tooltip>config_ssl_max_limit_currency_desc</tooltip>
                         </ssl_max_limit_currency>
                         <three_d_min_limit translate="label comment tooltip">
                             <label>config_three_d_min_limit</label>
-                            <comment><![CDATA[<a href="https://raw.githubusercontent.com/wiki/wirecard/shopware-ee/img/creditcard-ssl-3d-new.png" target="_blank">Click here</a> for an explanation regarding Non 3-D Secure and 3-D Secure limits]]></comment>
-                            <tooltip>This amount attempts 3-D Secure transactions. Leave blank to disable the 3-D Secure Min. Limit.</tooltip>
+                            <comment>config_three_d_explantion_url</comment>
+                            <tooltip>config_three_d_min_limit_desc</tooltip>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>140</sort_order>
                         </three_d_min_limit>
-                        <three_d_min_limit_currency translate="label">
-                            <label>3-D Secure Min. Limit Currency</label>
+                        <three_d_min_limit_currency translate="label tooltip">
+                            <label>config_three_d_min_limit_currency</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_currency</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>150</sort_order>
+                            <tooltip>config_three_d_min_limit_currency_desc</tooltip>
                         </three_d_min_limit_currency>
                         <sort_order translate="label tooltip">
                             <label>config_sort_order</label>
@@ -512,7 +514,7 @@
                             <tooltip>config_creditor_name_desc</tooltip>
                         </creditor_name>
                         <creditor_street translate="label tooltip">
-                            <label>Creditor Street</label>
+                            <label>config_creditor_street</label>
                             <validate>required-entry</validate>
                             <depends><active>1</active></depends>
                             <frontend_type>text</frontend_type>
@@ -520,10 +522,10 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <tooltip>SEPA Direct Debit requires a Creditor Street for the SEPA Direct Debit Mandate page.</tooltip>
+                            <tooltip>config_creditor_street_desc</tooltip>
                         </creditor_street>
                         <creditor_zip translate="label tooltip">
-                            <label>Creditor ZIP Code</label>
+                            <label>config_creditor_zip</label>
                             <validate>required-entry</validate>
                             <depends><active>1</active></depends>
                             <frontend_type>text</frontend_type>
@@ -531,7 +533,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <tooltip>SEPA Direct Debit requires a Creditor ZIP Code for the SEPA Direct Debit Mandate page.</tooltip>
+                            <tooltip>config_creditor_zip_desc</tooltip>
                         </creditor_zip>
                         <creditor_city translate="label tooltip">
                             <label>config_creditor_city</label>
@@ -545,7 +547,7 @@
                             <tooltip>config_creditor_city_desc</tooltip>
                         </creditor_city>
                         <creditor_country translate="label tooltip">
-                            <label>Creditor Country</label>
+                            <label>config_creditor_country</label>
                             <validate>required-entry</validate>
                             <depends><active>1</active></depends>
                             <frontend_type>text</frontend_type>
@@ -553,7 +555,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <tooltip>SEPA Direct Debit requires a Creditor Country for the SEPA Direct Debit Mandate page.</tooltip>
+                            <tooltip>config_creditor_country_desc</tooltip>
                         </creditor_country>
                         <sort_order translate="label tooltip">
                             <label>config_sort_order</label>

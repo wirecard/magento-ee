@@ -80,7 +80,7 @@ class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController ext
     {
         $this->loadLayout();
         $this->_setActiveMenu('WirecardEE_PaymentGateway/termsofuse');
-        $this->_title($this->__('General Information regarding Wirecard Shop Plugins'));
+        $this->_title($this->__('terms_of_use_title'));
 
         /** @var Mage_Core_Block_Template $block */
         $block = $this->getLayout()->createBlock('adminhtml/template');

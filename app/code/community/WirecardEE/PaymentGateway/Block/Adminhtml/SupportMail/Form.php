@@ -34,23 +34,23 @@ class WirecardEE_PaymentGateway_Block_Adminhtml_SupportMail_Form extends Mage_Ad
         $paymentHelper = Mage::helper('paymentgateway');
 
         $fieldset = $form->addFieldset('supportmail_form', [
-            'legend' => $paymentHelper->__('Support Mail'),
+            'legend' => $paymentHelper->__('support_email_title'),
         ]);
         $fieldset->addField('sender_address', 'text', [
-            'label'    => $paymentHelper->__('Sender Address'),
+            'label'    => $paymentHelper->__('support_email_sender_address'),
             'class'    => 'required-entry',
             'required' => true,
             'name'     => 'sender_address',
         ]);
         $fieldset->addField('reply_to', 'text', [
-            'label'    => $paymentHelper->__('Reply To'),
+            'label'    => $paymentHelper->__('support_email_reply_to'),
             'required' => false,
             'name'     => 'reply_to',
         ]);
         $fieldset->addField('content', 'editor', [
             'name'     => 'content',
-            'label'    => $paymentHelper->__('Content'),
-            'title'    => $paymentHelper->__('Content'),
+            'label'    => $paymentHelper->__('config_message'),
+            'title'    => $paymentHelper->__('config_message'),
             'style'    => 'width:700px; height:500px;',
             'wysiwyg'  => false,
             'required' => true,

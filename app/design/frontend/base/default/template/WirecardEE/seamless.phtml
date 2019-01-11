@@ -15,7 +15,7 @@ $url         = $this->getData('url');
 
 if (! $wirecardUrl || ! $requestData || ! $url) {
     (new Logger())->error('Unable to render template "' . $this->getTemplate() . '" due to missing variables"');
-    echo Mage::helper('catalog')->__('Unable to render template');
+    echo Mage::helper('catalog')->__('error_render_template');
     return;
 }
 ?>
