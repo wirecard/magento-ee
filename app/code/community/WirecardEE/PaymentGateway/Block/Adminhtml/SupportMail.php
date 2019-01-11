@@ -25,8 +25,8 @@ class WirecardEE_PaymentGateway_Block_Adminhtml_SupportMail extends Mage_Adminht
         $this->_blockGroup = 'paymentgateway';
         $this->_controller = 'adminhtml';
         $this->_mode       = "supportMail";
-        $this->_updateButton('save', 'label', Mage::helper('paymentgateway')->__('Send'));
-        $this->_updateButton('delete', 'label', Mage::helper('paymentgateway')->__('Delete'));
+        $this->_updateButton('save', 'label', Mage::helper('paymentgateway')->__('send_email'));
+        $this->_updateButton('delete', 'label', Mage::helper('paymentgateway')->__('text_delete'));
     }
 
     /**
@@ -36,6 +36,6 @@ class WirecardEE_PaymentGateway_Block_Adminhtml_SupportMail extends Mage_Adminht
      */
     public function getHeaderText()
     {
-        return Mage::helper('paymentgateway')->__('Wirecard Support');
+        return Mage::helper('paymentgateway')->__('heading_title_support');
     }
 }
