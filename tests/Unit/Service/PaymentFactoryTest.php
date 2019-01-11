@@ -55,6 +55,10 @@ class PaymentFactoryTest extends MagentoTestCase
         $magePayment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
         $magePayment->method('getData')->willReturn('foobar_payment');
         $this->assertFalse($factory->isSupportedPayment($magePayment));
+
+        $magePayment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
+        $magePayment->method('getData')->willReturn('paypal');
+        $this->assertFalse($factory->isSupportedPayment($magePayment));
     }
 
     public function testCreateFromMagePayment()

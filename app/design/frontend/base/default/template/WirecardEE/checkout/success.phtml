@@ -8,6 +8,9 @@
  */
 
 /** @var $this WirecardEE_PaymentGateway_Block_Checkout_Success */
+if (! $this->isWirecardPayment()) {
+    return;
+}
 ?>
 <div class="wirecardee_checkout_payment_status">
     <?php echo Mage::helper('catalog')->__('config_status'); ?>: <?php echo $this->getOrderStatusLabel(); ?>

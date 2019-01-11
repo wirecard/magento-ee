@@ -7,6 +7,8 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+use WirecardEE\PaymentGateway\Service\PaymentFactory;
+
 /**
  * Return payment status to output on Checkout Success page
  *
@@ -33,6 +35,18 @@ class WirecardEE_PaymentGateway_Block_Checkout_Success extends Mage_Checkout_Blo
     public function getOrderState()
     {
         return $this->getCheckoutSession()->getLastRealOrder()->getState();
+    }
+
+    /**
+     * @return bool
+     *
+     * @since 1.0.0
+     */
+    public function isWirecardPayment()
+    {
+        return (new PaymentFactory())->isSupportedPayment($this->getCheckoutSession()
+                                                               ->getLastRealOrder()
+                                                               ->getPayment());
     }
 
     /**
