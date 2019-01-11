@@ -20,19 +20,19 @@ class ResponseMapperTest extends TestCase
 {
     public function testSuccessResponse()
     {
-        $respone = $this->createMock(SuccessResponse::class);
-        $respone->method('getRequestId')->willReturn('req-id');
-        $respone->method('getTransactionType')->willReturn('auth');
-        $respone->method('getTransactionId')->willReturn('trans-id');
-        $respone->method('getParentTransactionId')->willReturn('parent-id');
-        $respone->method('getProviderTransactionId')->willReturn('prov-trans-id');
-        $respone->method('getProviderTransactionReference')->willReturn('prov-trans-ref');
-        $respone->method('getRequestedAmount')->willReturn($amount = new Amount(1, 'EUR'));
-        $respone->method('getData')->willReturn(['data']);
-        $respone->method('getBasket')->willReturn($basket = new Basket());
-        $respone->method('getPaymentMethod')->willReturn('method');
+        $response = $this->createMock(SuccessResponse::class);
+        $response->method('getRequestId')->willReturn('req-id');
+        $response->method('getTransactionType')->willReturn('auth');
+        $response->method('getTransactionId')->willReturn('trans-id');
+        $response->method('getParentTransactionId')->willReturn('parent-id');
+        $response->method('getProviderTransactionId')->willReturn('prov-trans-id');
+        $response->method('getProviderTransactionReference')->willReturn('prov-trans-ref');
+        $response->method('getRequestedAmount')->willReturn($amount = new Amount(1, 'EUR'));
+        $response->method('getData')->willReturn(['data']);
+        $response->method('getBasket')->willReturn($basket = new Basket());
+        $response->method('getPaymentMethod')->willReturn('method');
 
-        $mapper = new ResponseMapper($respone);
+        $mapper = new ResponseMapper($response);
         $this->assertSame('req-id', $mapper->getRequestId());
         $this->assertSame('auth', $mapper->getTransactionType());
         $this->assertSame('trans-id', $mapper->getTransactionId());
@@ -47,17 +47,17 @@ class ResponseMapperTest extends TestCase
 
     public function testResponse()
     {
-        $respone = $this->createMock(Response::class);
-        $respone->method('getRequestId')->willReturn('req-id');
-        $respone->method('getTransactionType')->willReturn('auth');
-        $respone->method('getRequestedAmount')->willReturn($amount = new Amount(1, 'EUR'));
-        $respone->method('getData')->willReturn($data = [
+        $response = $this->createMock(Response::class);
+        $response->method('getRequestId')->willReturn('req-id');
+        $response->method('getTransactionType')->willReturn('auth');
+        $response->method('getRequestedAmount')->willReturn($amount = new Amount(1, 'EUR'));
+        $response->method('getData')->willReturn($data = [
             'provider-transaction-reference-id' => 'prov-trans-ref',
             'payment-methods.0.name'            => 'pay-method',
         ]);
-        $respone->method('getBasket')->willReturn($basket = new Basket());
+        $response->method('getBasket')->willReturn($basket = new Basket());
 
-        $mapper = new ResponseMapper($respone);
+        $mapper = new ResponseMapper($response);
         $this->assertSame('req-id', $mapper->getRequestId());
         $this->assertSame('auth', $mapper->getTransactionType());
         $this->assertSame(null, $mapper->getTransactionId());
