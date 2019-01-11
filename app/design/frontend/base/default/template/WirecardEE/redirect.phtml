@@ -22,7 +22,7 @@ if (! $method || ! $formFields || ! $url) {
 
 <div class="wirecardee-redirect" style="padding-top: 50px;">
     <div class="content content--checkout confirm--content">
-        <h2><?php echo Mage::helper('catalog')->__('You will be redirect'); ?></h2>
+        <h2><?php echo Mage::helper('catalog')->__('redirect_text'); ?></h2>
         <form id="wirecardee-redirect--form" method="<?php echo $method; ?>" action="<?php echo $url; ?>">
             <?php
             foreach ($formFields as $key => $value) {
@@ -32,7 +32,7 @@ if (! $method || ! $formFields || ! $url) {
             }
             ?>
             <button class="button btn-cart" type="submit">
-                <?php echo Mage::helper('catalog')->__('Send'); ?>
+                <?php echo Mage::helper('catalog')->__('submit_button'); ?>
             </button>
         </form>
         <script type="text/javascript">

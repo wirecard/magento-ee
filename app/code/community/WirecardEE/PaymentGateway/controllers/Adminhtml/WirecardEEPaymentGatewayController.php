@@ -98,7 +98,7 @@ class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController ext
     {
         $this->loadLayout();
         $this->_setActiveMenu('WirecardEE_PaymentGateway/support');
-        $this->_title($this->__('Wirecard Support'));
+        $this->_title($this->__('heading_title_support'));
 
         $this->_addContent($this->getLayout()->createBlock('paymentgateway/adminhtml_supportMail'));
         $this->renderLayout();
@@ -120,10 +120,10 @@ class WirecardEE_PaymentGateway_Adminhtml_WirecardEEPaymentGatewayController ext
         try {
             $mail->create($data['sender_address'], $data['content'], $data['reply_to'])
                  ->send();
-            $session->addSuccess($this->__('E-mail sent successfully'));
+            $session->addSuccess($this->__('success_email'));
             $this->_redirect('');
         } catch (Exception $e) {
-            $session->addError($this->__('E-mail delivery error: ' . $e->getMessage()));
+            $session->addError($this->__('error_email') . ' ' . $e->getMessage());
             $this->_redirect('');
         }
     }

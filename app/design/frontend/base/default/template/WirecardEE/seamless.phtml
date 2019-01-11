@@ -27,11 +27,11 @@ if (! $wirecardUrl || ! $requestData || ! $url) {
         <div id="wirecardee-credit-card--iframe-div" style="width: 100%; height: 550px;"></div>
         <button id="wirecardee-credit-card--form-submit"
                 class="button btn-cart" type="submit">
-            <?php echo Mage::helper('catalog')->__('Send'); ?>
+            <?php echo Mage::helper('catalog')->__('submit_button'); ?>
         </button>
         <a class="button" style="background-color: #808080;"
            href="<?php echo Mage::getUrl('paymentgateway/gateway/cancel'); ?>">
-            <?php echo Mage::helper('catalog')->__('Cancel'); ?>
+            <?php echo Mage::helper('catalog')->__('cancel'); ?>
         </a>
     </form>
 </div>

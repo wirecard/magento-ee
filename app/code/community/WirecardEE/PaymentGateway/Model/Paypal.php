@@ -30,11 +30,11 @@ class WirecardEE_PaymentGateway_Model_Paypal extends WirecardEE_PaymentGateway_M
         return [
             [
                 'value' => Operation::RESERVE,
-                'label' => Mage::helper('catalog')->__('Authorization'),
+                'label' => Mage::helper('catalog')->__('text_payment_action_reserve'),
             ],
             [
                 'value' => Operation::PAY,
-                'label' => Mage::helper('catalog')->__('Purchase'),
+                'label' => Mage::helper('catalog')->__('text_payment_action_pay'),
             ],
         ];
     }

@@ -30,7 +30,7 @@ class WirecardEE_PaymentGateway_Model_Sofortbanking extends WirecardEE_PaymentGa
         return [
             [
                 'value' => Operation::PAY,
-                'label' => Mage::helper('catalog')->__('Purchase'),
+                'label' => Mage::helper('catalog')->__('text_payment_action_pay'),
             ],
         ];
     }

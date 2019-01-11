@@ -12,37 +12,37 @@
 <ul class="form-list" id="payment_form_<?php echo $this->getMethodCode(); ?>" style="display: none;">
     <li>
         <p class="required"><?php echo $this->__('* Required fields'); ?></p>
-        <label for="wirecardee-sepa--first-name" class="required"><em>*</em><?php echo $this->__('First Name'); ?>
+        <label for="wirecardee-sepa--first-name" class="required"><em>*</em><?php echo $this->__('first_name_input'); ?>
         </label>
         <div class="input-box">
             <input class="is--required wirecardee--form-field" id="wirecardee-sepa--first-name" type="text"
                    name="wirecardElasticEngine[sepaFirstName]" autocomplete="off"
-                   required="required" placeholder="<?php echo $this->__('First Name'); ?>"/>
+                   required="required" placeholder="<?php echo $this->__('first_name_input'); ?>"/>
         </div>
     </li>
     <li>
-        <label for="wirecardee-sepa--last-name" class="required"><?php echo $this->__('Last Name'); ?></label>
+        <label for="wirecardee-sepa--last-name" class="required"><?php echo $this->__('last_name_input'); ?></label>
         <div class="input-box">
             <input class="is--required wirecardee--form-field" id="wirecardee-sepa--last-name" type="text"
                    name="wirecardElasticEngine[sepaLastName]" autocomplete="off"
-                   required="required" placeholder="<?php echo $this->__('Last Name'); ?>"/>
+                   required="required" placeholder="<?php echo $this->__('last_name_input'); ?>"/>
         </div>
     </li>
     <li>
-        <label for="wirecardee-sepa--iban" class="required"><?php echo $this->__('IBAN'); ?></label>
+        <label for="wirecardee-sepa--iban" class="required"><?php echo $this->__('iban_input'); ?></label>
         <div class="input-box">
             <input class="is--required wirecardee--form-field" id="wirecardee-sepa--iban" type="text"
                    name="wirecardElasticEngine[sepaIban]" autocomplete="off"
-                   required="required" placeholder="<?php echo $this->__('IBAN'); ?>"/>
+                   required="required" placeholder="<?php echo $this->__('iban_input'); ?>"/>
         </div>
     </li>
     <?php if ($this->getMethod()->getConfigData('show_bic')) : ?>
         <li>
-            <label for="wirecardee-sepa--bic"><?php echo $this->__('BIC'); ?></label>
+            <label for="wirecardee-sepa--bic"><?php echo $this->__('bic_input'); ?></label>
             <div class="input-box">
                 <input type="text" id="wirecardee-sepa--bic" class="wirecardee--form-field"
                        name="wirecardElasticEngine[sepaBic]"
-                       autocomplete="off" placeholder="<?php echo $this->__('BIC'); ?>"/>
+                       autocomplete="off" placeholder="<?php echo $this->__('bic_input'); ?>"/>
             </div>
         </li>
     <?php endif; ?>
@@ -50,26 +50,26 @@
         <table border="0" cellpadding="0" cellspacing="0" class="stretch">
             <tr>
                 <td class="text11justify">
-                    <i><?php echo $this->__("Creditor"); ?></i><br/>
+                    <i><?php echo $this->__("creditor"); ?></i><br/>
                     <?php echo $this->getMethod()->getConfigData('creditor_name'); ?><br/>
                     <?php echo $this->getMethod()->getConfigData('creditor_street'); ?><br/>
                     <?php echo $this->getMethod()->getConfigData('creditor_zip'); ?> <?php echo $this->getMethod()
                                                                                                      ->getConfigData('creditor_zip'); ?>
                     <br/>
                     <?php echo $this->getMethod()->getConfigData('creditor_country'); ?><br/>
-                    <?php echo $this->__('Creditor ID'); ?>: <?php echo $this->getMethod()
-                                                                             ->getConfigData('creditor_id'); ?><br/>
+                    <?php echo $this->__('config_creditor_id'); ?>: <?php echo $this->getMethod()
+                                                                                    ->getConfigData('creditor_id'); ?><br/>
                 </td>
             </tr>
             <tr>
                 <td class="text11">
-                    <i><?php echo $this->__('Debtor'); ?></i><br/>
-                    <?php echo $this->__('Account owner'); ?>:
+                    <i><?php echo $this->__('debtor'); ?></i><br/>
+                    <?php echo $this->__('debtor_acc_owner'); ?>:
                     <span id="wirecardee-sepa--first-last-name" class="first_last_name"></span><br/>
-                    <?php echo $this->__('IBAN'); ?>:
+                    <?php echo $this->__('iban_input'); ?>:
                     <span id="wirecardee-sepa--bank-iban"></span><br/>
                     <?php if ($this->getMethod()->getConfigData('show_bic')): ?>
-                        <?php echo $this->__('BIC'); ?>:
+                        <?php echo $this->__('bic_input'); ?>:
                         <span id="wirecardee-sepa--bank-bic"></span>
                         <br/>
                     <?php endif; ?>
@@ -94,7 +94,7 @@
 
         <label
             for="wirecardee-sepa--confirm-mandate"
-            class="required"><?php echo $this->__('I have read and accepted the SEPA Direct Debit Mandate information.'); ?></label>
+            class="required"><?php echo $this->__('sepa_text_6'); ?></label>
     </li>
 </ul>
 <script>
