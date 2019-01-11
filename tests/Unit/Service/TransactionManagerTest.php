@@ -154,7 +154,7 @@ class TransactionManagerTest extends MagentoTestCase
         $transaction = new \Mage_Sales_Model_Order_Payment_Transaction();
         $transaction->setAdditionalInformation(\Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS, [
             TransactionManager::TYPE_KEY              => TransactionManager::TYPE_NOTIFY,
-            TransactionManager::REFUNDABLE_BASKET_KEY => ['item'],
+            TransactionManager::REFUNDABLE_BASKET_KEY => json_encode(['item']),
         ]);
         $transaction->setTxnType(\Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE);
         $transactions = $this->createMock(\Mage_Sales_Model_Resource_Order_Payment_Transaction_Collection::class);
@@ -163,5 +163,33 @@ class TransactionManagerTest extends MagentoTestCase
         $this->replaceMageResourceModel('sales/order_payment_transaction_collection', $transactions);
 
         $this->assertSame([$transaction], $manager->findRefundableTransactions($order, $payment, $backendService));
+    }
+
+    public function testGetAdditionalInformationFromTransaction()
+    {
+        $transaction = new \Mage_Sales_Model_Order_Payment_Transaction();
+
+        $this->assertNull(TransactionManager::getAdditionalInformationFromTransaction($transaction));
+
+        $data = ['foo' => 'bar'];
+        $transaction->setAdditionalInformation(\Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS, $data);
+
+        $this->assertSame($data, TransactionManager::getAdditionalInformationFromTransaction($transaction));
+    }
+
+    public function testGetRefundableBasketFromTransaction()
+    {
+        $transaction = new \Mage_Sales_Model_Order_Payment_Transaction();
+
+        $this->assertNull(TransactionManager::getRefundableBasketFromTransaction($transaction));
+
+        $data = ['item' => 1];
+        $transaction->setAdditionalInformation(\Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS, [
+            TransactionManager::REFUNDABLE_BASKET_KEY => json_encode($data)
+        ]);
+
+        $refundableBasket = TransactionManager::getRefundableBasketFromTransaction($transaction);
+
+        $this->assertSame($data, $refundableBasket);
     }
 }

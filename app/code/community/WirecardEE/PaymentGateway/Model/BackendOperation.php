@@ -226,8 +226,8 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                 $transactionId = $action->getContextItem('transaction_id');
                 $this->logger->info("Refunded $amount from $transactionId");
 
-                $additionalInformation = $this->getAdditionalInformationFromTransaction($transaction);
-                $refundableBasket      = $this->getRefundableBasketFromTransaction($transaction);
+                $additionalInformation = TransactionManager::getAdditionalInformationFromTransaction($transaction);
+                $refundableBasket      = TransactionManager::getRefundableBasketFromTransaction($transaction);
 
                 $transaction->setOrderPaymentObject($creditMemo->getOrder()->getPayment());
 
@@ -386,7 +386,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         }
 
         foreach ($refundableTransactions as $refundableTransaction) {
-            if (! $refundableBasket = $this->getRefundableBasketFromTransaction($refundableTransaction)) {
+            if (! $refundableBasket = TransactionManager::getRefundableBasketFromTransaction($refundableTransaction)) {
                 continue;
             }
 
@@ -442,11 +442,11 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             return [];
         }
 
-        foreach ($items as $key => $item) {
+        foreach ($items as $item) {
             $remainingQuantity = $item->getQty();
 
             foreach ($refundableTransactions as $refundableTransaction) {
-                if (! $refundableBasket = $this->getRefundableBasketFromTransaction($refundableTransaction)) {
+                if (! $refundableBasket = TransactionManager::getRefundableBasketFromTransaction($refundableTransaction)) {
                     continue;
                 }
 
@@ -486,44 +486,5 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         }
 
         return $suitableTransactions;
-    }
-
-    /**
-     * @param Mage_Sales_Model_Order_Payment_Transaction $transaction
-     *
-     * @return array|null
-     *
-     * @since 1.0.0
-     */
-    private function getRefundableBasketFromTransaction(Mage_Sales_Model_Order_Payment_Transaction $transaction)
-    {
-        $additionalInformation = $this->getAdditionalInformationFromTransaction($transaction);
-
-        if (empty($additionalInformation[TransactionManager::REFUNDABLE_BASKET_KEY])) {
-            return null;
-        }
-
-        $refundableBasket = json_decode(
-            $additionalInformation[TransactionManager::REFUNDABLE_BASKET_KEY],
-            true
-        );
-
-        if (! $refundableBasket || ! is_array($refundableBasket)) {
-            return null;
-        }
-
-        return $refundableBasket;
-    }
-
-    /**
-     * @param Mage_Sales_Model_Order_Payment_Transaction $transaction
-     *
-     * @return array|mixed|null
-     */
-    private function getAdditionalInformationFromTransaction(Mage_Sales_Model_Order_Payment_Transaction $transaction)
-    {
-        return $transaction->getAdditionalInformation(
-            \Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS
-        );
     }
 }
