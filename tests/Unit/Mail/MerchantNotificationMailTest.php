@@ -24,8 +24,11 @@ class MerchantNotificationMailTest extends TestCase
         $notification->method('getTransactionType')->willReturn(Transaction::TYPE_AUTHORIZATION);
         $notification->method('getRequestedAmount')->willReturn(new Amount(10, 'EUR'));
 
+        $order = $this->createMock(\Mage_Sales_Model_Order::class);
+        $order->method('getRealOrderId')->willReturn('1450010101');
+
         $notifyTransaction = $this->createMock(\Mage_Sales_Model_Order_Payment_Transaction::class);
-        $notifyTransaction->method('getOrder')->willReturn(new \Mage_Sales_Model_Order());
+        $notifyTransaction->method('getOrder')->willReturn($order);
 
         $notifyMail = new MerchantNotificationMail(new PaymentHelperData());
         $mail       = $notifyMail->create('recipient@example.com', $notification, $notifyTransaction);
@@ -34,8 +37,8 @@ class MerchantNotificationMailTest extends TestCase
         $this->assertEquals('owner@example.com', $mail->getFrom());
         $this->assertEquals('', $mail->getReplyTo());
         $this->assertEquals(['recipient@example.com'], $mail->getRecipients());
-        $this->assertEquals('Payment notification received', $mail->getSubject());
-        $this->assertStringStartsWith('OrderNumber:', $mail->getBodyText(true));
+        $this->assertNotEmpty($mail->getSubject());
+        $this->assertRegExp('/1450010101/', $mail->getBodyText(true));
     }
 
     public function testPurchaseMail()
@@ -44,8 +47,11 @@ class MerchantNotificationMailTest extends TestCase
         $notification->method('getTransactionType')->willReturn(Transaction::TYPE_PURCHASE);
         $notification->method('getRequestedAmount')->willReturn(new Amount(10, 'EUR'));
 
+        $order = $this->createMock(\Mage_Sales_Model_Order::class);
+        $order->method('getRealOrderId')->willReturn('1450010101');
+
         $notifyTransaction = $this->createMock(\Mage_Sales_Model_Order_Payment_Transaction::class);
-        $notifyTransaction->method('getOrder')->willReturn(new \Mage_Sales_Model_Order());
+        $notifyTransaction->method('getOrder')->willReturn($order);
 
         $notifyMail = new MerchantNotificationMail(new PaymentHelperData());
         $mail       = $notifyMail->create('recipient@example.com', $notification, $notifyTransaction);
@@ -54,8 +60,8 @@ class MerchantNotificationMailTest extends TestCase
         $this->assertEquals('owner@example.com', $mail->getFrom());
         $this->assertEquals('', $mail->getReplyTo());
         $this->assertEquals(['recipient@example.com'], $mail->getRecipients());
-        $this->assertEquals('Payment notification received', $mail->getSubject());
-        $this->assertStringStartsWith('OrderNumber:', $mail->getBodyText(true));
+        $this->assertNotEmpty($mail->getSubject());
+        $this->assertRegExp('/1450010101/', $mail->getBodyText(true));
     }
 
     public function testNoSenderMail()

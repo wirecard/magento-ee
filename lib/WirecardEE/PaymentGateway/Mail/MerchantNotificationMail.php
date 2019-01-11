@@ -75,7 +75,7 @@ class MerchantNotificationMail
      */
     private function getSubject()
     {
-        return $this->paymentHelper->__('Payment notification received');
+        return $this->paymentHelper->__('payment_notification_email_subject');
     }
 
     /**
@@ -92,10 +92,10 @@ class MerchantNotificationMail
     ) {
         $amount  = $notification->getRequestedAmount();
         $infos   = [
-            'OrderNumber'     => $notifyTransaction->getOrder()->getRealOrderId() ?: '-',
-            'TransactionId'   => $notification->getTransactionId(),
-            'TransactionType' => $notification->getTransactionType(),
-            'Amount'          => $amount->getValue() . ' ' . $amount->getCurrency(),
+            'orderNumber'     => $notifyTransaction->getOrder()->getRealOrderId() ?: '-',
+            'transactionID'   => $notification->getTransactionId(),
+            'transactionType' => $notification->getTransactionType(),
+            'amount'          => $amount->getValue() . ' ' . $amount->getCurrency(),
         ];
         $message = '';
         foreach ($infos as $label => $value) {
@@ -103,7 +103,7 @@ class MerchantNotificationMail
         }
 
         $message .= PHP_EOL . PHP_EOL;
-        $message .= $this->paymentHelper->__('Response', 'Response data ID') . ': ' . PHP_EOL;
+        $message .= $this->paymentHelper->__('text_response_data') . ': ' . PHP_EOL;
         $message .= print_r($notification->getData(), true);
 
         return $message;

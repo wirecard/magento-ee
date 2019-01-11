@@ -12,6 +12,7 @@
 "debtor","Debtor"
 "debtor_acc_owner","Account Owner"
 "sepa_text_6","I have read and accepted the SEPA Direct Debit Mandate information."
+"sepadd_mandate","SEPA Direct Debit Mandate"
 "redirect_text","You are being redirected. Please wait."
 "submit_button","Submit"
 "send_email","Send"
@@ -74,7 +75,12 @@
 "config_descriptor_desc","Send text which is displayed on the bank statement issued to your consumer by the financial service provider."
 "support_email_title","Send support request"
 "config_message","Your message"
-
+"orderNumber","Order Number"
+"transactionID","Transaction ID"
+"transactionType","Transaction Type"
+"order_cancelled","Order was canceled."
+"amount","Amount"
+"text_response_data","Response Data"
 
 
 "support_email_sender_address","Sender Address"
@@ -109,3 +115,7 @@
 "sepa_iban_required","IBAN is a required field."
 "sepa_mandate_not_confirmed","You have to confirm the mandate."
 "payment_pending_message","Awaiting payment from Wirecard. You will receive an e-mail once the payment has been finalized."
+"payment_notification_email_subject","Payment notification received"
+"order_status_updated","Status updated by notification"
+"basket_verification_failed","Basket verification failed"
+"invoice_created","Automatically created invoice by Wirecard Payment Gateway extension."

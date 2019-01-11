@@ -87,7 +87,7 @@ class NotificationHandler extends Handler
             $invoice->setData('auto_capture', true);
             $invoice->capture();
             $invoice->addComment(
-                \Mage::helper('catalog')->__('Automatically created invoice by the Wirecard Payment Gateway plugin.')
+                \Mage::helper('catalog')->__('invoice_created')
             );
             $invoice->save();
 
@@ -130,10 +130,11 @@ class NotificationHandler extends Handler
             return $transaction;
         }
 
-        $order->setState($state, $state, \Mage::helper('catalog')->__('Status updated by notification'));
+        $sendEmail = $this->shouldSendOrderUpdateEmail($order);
+        $order->setState($state, $state, \Mage::helper('paymentgateway')->__('order_status_updated'), $sendEmail);
         $order->save();
 
-        if ($this->shouldSendOrderUpdateEmail($order)) {
+        if ($sendEmail) {
             $order->sendOrderUpdateEmail();
         }
 

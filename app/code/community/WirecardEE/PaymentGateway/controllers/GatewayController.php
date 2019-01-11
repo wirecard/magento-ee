@@ -290,7 +290,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
             return false;
         }
 
-        $order->setState($cancelState, $cancelState, 'Payment canceled by consumer');
+        $order->setState($cancelState, $cancelState, $this->getHelper()->__('order_cancelled'));
 
         /** @var Mage_Sales_Model_Quote $quote */
         $quote = Mage::getModel('sales/quote')->load($order->getQuoteId());
