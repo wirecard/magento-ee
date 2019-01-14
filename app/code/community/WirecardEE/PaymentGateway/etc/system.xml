@@ -331,7 +331,7 @@
                         </fraud_prevention>
                         <ssl_max_limit translate="label comment tooltip">
                             <label>config_ssl_max_limit</label>
-                            <comment>config_three_d_explantion_url</comment>
+                            <comment>config_three_d_explanation_url</comment>
                             <tooltip>config_ssl_max_limit_desc</tooltip>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
@@ -351,7 +351,7 @@
                         </ssl_max_limit_currency>
                         <three_d_min_limit translate="label comment tooltip">
                             <label>config_three_d_min_limit</label>
-                            <comment>config_three_d_explantion_url</comment>
+                            <comment>config_three_d_explanation_url</comment>
                             <tooltip>config_three_d_min_limit_desc</tooltip>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
