@@ -161,12 +161,12 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                                      - $creditMemo->getAdjustmentNegative();
 
         $transactionEntries = [];
-        $this->findTransactionsForAdditionalAmount(
+        $transactionEntries = $this->findTransactionsForAdditionalAmount(
             $transactionEntries,
             $refundableTransactions,
             $remainingAdditionalAmount
         );
-        $this->findTransactionsForItems(
+        $transactionEntries = $this->findTransactionsForItems(
             $transactionEntries,
             $refundableTransactions,
             $creditMemo->getAllItems()
@@ -339,7 +339,6 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
     /**
      * @param array                                        $suitableTransactions
      * @param Mage_Sales_Model_Order_Payment_Transaction[] $refundableTransactions
-     *
      * @param float                                        $remainingAdditionalAmount
      *
      * @return array
@@ -349,12 +348,12 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
      * @since 1.0.0
      */
     private function findTransactionsForAdditionalAmount(
-        array &$suitableTransactions,
+        array $suitableTransactions,
         array $refundableTransactions,
         $remainingAdditionalAmount
     ) {
         if ($remainingAdditionalAmount <= 0) {
-            return [];
+            return $suitableTransactions;
         }
 
         foreach ($refundableTransactions as $refundableTransaction) {
@@ -408,10 +407,10 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
      *
      * @since 1.0.0
      */
-    private function findTransactionsForItems(array &$suitableTransactions, array $refundableTransactions, array $items)
+    private function findTransactionsForItems(array $suitableTransactions, array $refundableTransactions, array $items)
     {
         if (! $items) {
-            return [];
+            return $suitableTransactions;
         }
 
         foreach ($items as $key => $item) {
