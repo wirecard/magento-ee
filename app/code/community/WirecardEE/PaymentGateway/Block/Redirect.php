@@ -8,6 +8,8 @@
  */
 
 /**
+ * Render the redirect.phtml template
+ *
  * @since 1.0.0
  */
 class WirecardEE_PaymentGateway_Block_Redirect extends Mage_Core_Block_Template

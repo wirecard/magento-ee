@@ -13,7 +13,6 @@ use Mage_Sales_Model_Order_Payment_Transaction;
 use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Response\Response;
-use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 use WirecardEE\PaymentGateway\Mapper\ResponseMapper;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
@@ -53,13 +52,13 @@ class TransactionManager
      * and overwritten by notifications.
      *
      * @param string                  $type
-     *
      * @param \Mage_Sales_Model_Order $order
      * @param Response                $response
      * @param array                   $context
      *
-     * @return void
+     * @return \Mage_Sales_Model_Order_Payment_Transaction|null
      * @throws \Mage_Core_Exception
+     *
      * @since 1.0.0
      */
     public function createTransaction(
@@ -71,7 +70,6 @@ class TransactionManager
         $mageTransactionModel = $this->getOrderPaymentTransactionModel();
         $responseMapper       = new ResponseMapper($response);
         $transactionId        = $responseMapper->getTransactionId();
-        $parentTransactionId  = $responseMapper->getParentTransactionId();
 
         if (! $transactionId) {
             // We're not handling responses without transaction ids at all.
@@ -87,28 +85,13 @@ class TransactionManager
             case self::TYPE_BACKEND:
                 // Initial transactions are always saved as new transactions.
                 if ($mageTransactionModel->loadByTxnId($transactionId)->getId()) {
-                    // In some rare cases a notification might has already been arrived before the initial transaction.
+                    // In some rare cases a notification has already arrived before the initial transaction.
                     // Since we don't want initial transactions to overwrite notifications we're going to leave here.
-                    return;
+                    return null;
                 }
 
-                $mageTransactionModel->setTxnId($transactionId);
-                if ($parentTransactionId) {
-                    $parentTransactionMageModel = $this->findTransactionById($order, $parentTransactionId);
-                    if ($parentTransactionMageModel && $parentTransactionMageModel->getId()) {
-                        $mageTransactionModel->setParentId($parentTransactionMageModel->getId());
-                        $mageTransactionModel->setParentTxnId($parentTransactionId, $mageTransactionModel->getTxnId());
-                    }
-                }
+                $this->populateMageTransactionModel($type, $order, $mageTransactionModel, $responseMapper, $context);
 
-                $mageTransactionModel->setTxnType(self::getMageTransactionType($response->getTransactionType()));
-                $mageTransactionModel->setAdditionalInformation(
-                    Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS,
-                    array_merge($response->getData(), [
-                        self::TYPE_KEY => $type,
-                    ], $context)
-                );
-                $mageTransactionModel->setOrderPaymentObject($order->getPayment());
                 try {
                     $mageTransactionModel->save();
                 } catch (\Exception $e) {
@@ -119,7 +102,7 @@ class TransactionManager
 
                 $this->logger->info("Created transaction (type: $type) for transaction $transactionId");
 
-                return;
+                return $mageTransactionModel;
 
             case self::TYPE_NOTIFY:
                 // Since notifications are the source of truth for transactions they're overwriting the
@@ -128,15 +111,14 @@ class TransactionManager
 
                 // Be sure not to overwrite notifications!
                 if ($mageTransactionModel->getId()) {
-                    $additionalInformation = $mageTransactionModel->getAdditionalInformation(
-                        Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS
-                    );
+                    $additionalInformation = self::getAdditionalInformationFromTransaction($mageTransactionModel);
+                    $refundableBasket      = self::getRefundableBasketFromTransaction($mageTransactionModel);
                     if (! empty($additionalInformation[self::TYPE_KEY])
                         && $additionalInformation[self::TYPE_KEY] === self::TYPE_NOTIFY) {
-                        return;
+                        return null;
                     }
                     // Be sure to keep refundable basket information
-                    if (isset($additionalInformation[self::REFUNDABLE_BASKET_KEY])) {
+                    if ($refundableBasket) {
                         $context = array_merge(
                             $context,
                             [self::REFUNDABLE_BASKET_KEY => $additionalInformation[self::REFUNDABLE_BASKET_KEY]]
@@ -144,22 +126,8 @@ class TransactionManager
                     }
                 }
 
-                $mageTransactionModel->setTxnId($transactionId);
-                if ($parentTransactionId) {
-                    $parentTransactionMageModel = $this->findTransactionById($order, $parentTransactionId);
-                    if ($parentTransactionMageModel && $parentTransactionMageModel->getId()) {
-                        $mageTransactionModel->setParentId($parentTransactionMageModel->getId());
-                        $mageTransactionModel->setParentTxnId($parentTransactionId, $mageTransactionModel->getTxnId());
-                    }
-                }
+                $this->populateMageTransactionModel($type, $order, $mageTransactionModel, $responseMapper, $context);
 
-                $mageTransactionModel->setTxnType(self::getMageTransactionType($response->getTransactionType()));
-                $mageTransactionModel->setAdditionalInformation(
-                    Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS,
-                    array_merge($response->getData(), [
-                        self::TYPE_KEY => $type,
-                    ], $context)
-                );
                 try {
                     $mageTransactionModel->save();
                 } catch (\Exception $e) {
@@ -186,7 +154,7 @@ class TransactionManager
 
                 $this->logger->info("Replaced transaction (" . $mageTransactionModel->getId() . ") from notify");
 
-                return;
+                return $mageTransactionModel;
         }
 
         $this->logger->error("Unable to create transaction due to unknown type ($type)");
@@ -208,15 +176,13 @@ class TransactionManager
             $transactions->addOrderIdFilter($order->getId());
             $transactions->setOrder('transaction_id', 'ASC');
 
-            if (! $transactions->count() === 0) {
+            if ($transactions->count() === 0) {
                 return null;
             }
 
             foreach ($transactions as $transaction) {
                 /** @var \Mage_Sales_Model_Order_Payment_Transaction $transaction */
-                $additionalInformation = $transaction->getAdditionalInformation(
-                    \Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS
-                );
+                $additionalInformation = self::getAdditionalInformationFromTransaction($transaction);
                 if (empty($additionalInformation[TransactionManager::TYPE_KEY])) {
                     continue;
                 }
@@ -233,7 +199,6 @@ class TransactionManager
 
     /**
      * @param \Mage_Sales_Model_Order $order
-     *
      * @param PaymentInterface        $payment
      * @param BackendService          $backendService
      *
@@ -250,27 +215,27 @@ class TransactionManager
             $transactions->addOrderIdFilter($order->getId());
             $transactions->setOrder('transaction_id', 'ASC');
 
-            if (! $transactions->count() === 0) {
-                return null;
+            if ($transactions->count() === 0) {
+                return [];
             }
 
             foreach ($transactions as $transaction) {
                 /** @var \Mage_Sales_Model_Order_Payment_Transaction $transaction */
-                $additionalInformation = $transaction->getAdditionalInformation(
-                    \Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS
-                );
-                if ($additionalInformation[self::TYPE_KEY] !== self::TYPE_NOTIFY
-                    || empty($additionalInformation[self::REFUNDABLE_BASKET_KEY])) {
+                if (! self::getRefundableBasketFromTransaction($transaction)) {
                     continue;
                 }
 
-                $backendTransaction = $payment->getBackendTransaction();
+                $backendTransaction = $payment->getBackendTransaction(
+                    $order,
+                    null,
+                    $transaction
+                );
                 $backendTransaction->setParentTransactionId($transaction->getTxnId());
 
                 if (! array_key_exists(
-                    Operation::REFUND,
-                    $backendService->retrieveBackendOperations($backendTransaction))
-                ) {
+                    $payment->getRefundOperation(),
+                    $backendService->retrieveBackendOperations($backendTransaction, true)
+                )) {
                     continue;
                 }
 
@@ -309,10 +274,53 @@ class TransactionManager
             case Transaction::TYPE_REFUND_CAPTURE:
             case Transaction::TYPE_REFUND_DEBIT:
             case Transaction::TYPE_REFUND_PURCHASE:
+            case Transaction::TYPE_CREDIT:
                 return Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND;
         }
 
         return Mage_Sales_Model_Order_Payment_Transaction::TYPE_PAYMENT;
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order_Payment_Transaction $transaction
+     *
+     * @return array|mixed|null
+     *
+     * @since 1.0.0
+     */
+    public static function getAdditionalInformationFromTransaction(
+        Mage_Sales_Model_Order_Payment_Transaction $transaction
+    ) {
+        return $transaction->getAdditionalInformation(
+            \Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS
+        );
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order_Payment_Transaction $transaction
+     *
+     * @return array|null
+     *
+     * @since 1.0.0
+     */
+    public static function getRefundableBasketFromTransaction(Mage_Sales_Model_Order_Payment_Transaction $transaction)
+    {
+        $additionalInformation = self::getAdditionalInformationFromTransaction($transaction);
+
+        if (empty($additionalInformation[TransactionManager::REFUNDABLE_BASKET_KEY])) {
+            return null;
+        }
+
+        $refundableBasket = json_decode(
+            $additionalInformation[TransactionManager::REFUNDABLE_BASKET_KEY],
+            true
+        );
+
+        if (! $refundableBasket || ! is_array($refundableBasket)) {
+            return null;
+        }
+
+        return $refundableBasket;
     }
 
     /**
@@ -345,6 +353,53 @@ class TransactionManager
     }
 
     /**
+     * @param string                                     $type
+     * @param \Mage_Sales_Model_Order                    $order
+     * @param Mage_Sales_Model_Order_Payment_Transaction $mageTransaction
+     * @param ResponseMapper                             $responseMapper
+     * @param array                                      $context
+     *
+     * @return Mage_Sales_Model_Order_Payment_Transaction
+     *
+     * @throws \Mage_Core_Exception
+     *
+     * @since 1.0.0
+     */
+    protected function populateMageTransactionModel(
+        $type,
+        \Mage_Sales_Model_Order $order,
+        \Mage_Sales_Model_Order_Payment_Transaction $mageTransaction,
+        ResponseMapper $responseMapper,
+        array $context = []
+    ) {
+        $transactionId       = $responseMapper->getTransactionId();
+        $parentTransactionId = $responseMapper->getParentTransactionId();
+
+        $mageTransaction->setTxnId($transactionId);
+        if ($parentTransactionId) {
+            $parentTransactionMageModel = $this->findTransactionById(
+                $order,
+                $parentTransactionId
+            );
+            if ($parentTransactionMageModel && $parentTransactionMageModel->getId()) {
+                $mageTransaction->setParentId($parentTransactionMageModel->getId());
+                $mageTransaction->setParentTxnId($parentTransactionId, $mageTransaction->getTxnId());
+            }
+        }
+
+        $mageTransaction->setTxnType(self::getMageTransactionType($responseMapper->getTransactionType()));
+        $mageTransaction->setData('payment_method', $responseMapper->getPaymentMethod());
+        $mageTransaction->setAdditionalInformation(
+            Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS,
+            array_merge($responseMapper->getData(), [
+                self::TYPE_KEY => $type,
+            ], $context)
+        );
+
+        return $mageTransaction;
+    }
+
+    /**
      * @return Mage_Sales_Model_Order_Payment_Transaction|\Mage_Core_Model_Abstract
      *
      * @since 1.0.0
@@ -352,15 +407,5 @@ class TransactionManager
     protected function getOrderPaymentTransactionModel()
     {
         return \Mage::getModel('sales/order_payment_transaction');
-    }
-
-    /**
-     * @return \Mage_Core_Helper_Abstract|\WirecardEE_PaymentGateway_Helper_Data
-     *
-     * @since 1.0.0
-     */
-    protected function getHelper()
-    {
-        return \Mage::helper('paymentgateway');
     }
 }

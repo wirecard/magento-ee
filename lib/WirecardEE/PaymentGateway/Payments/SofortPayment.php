@@ -32,6 +32,8 @@ class SofortPayment extends Payment implements ProcessPaymentInterface
 
     /**
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getName()
     {
@@ -61,17 +63,22 @@ class SofortPayment extends Payment implements ProcessPaymentInterface
             $this->getPaymentConfig()->getTransactionSecret()
         ));
 
-         $sepaCreditTransferConfig = new SepaConfig(
-             SepaCreditTransferTransaction::NAME,
-             $this->getPaymentConfig()->getBackendTransactionMAID(),
-             $this->getPaymentConfig()->getBackendTransactionSecret()
-         );
-         $sepaCreditTransferConfig->setCreditorId($this->getPaymentConfig()->getBackendCreditorId());
-         $config->add($sepaCreditTransferConfig);
+        $sepaCreditTransferConfig = new SepaConfig(
+            SepaCreditTransferTransaction::NAME,
+            $this->getPaymentConfig()->getBackendTransactionMAID(),
+            $this->getPaymentConfig()->getBackendTransactionSecret()
+        );
+        $sepaCreditTransferConfig->setCreditorId($this->getPaymentConfig()->getBackendCreditorId());
+        $config->add($sepaCreditTransferConfig);
 
         return $config;
     }
 
+    /**
+     * @return SofortPaymentConfig
+     *
+     * @since 1.0.0
+     */
     public function getPaymentConfig()
     {
         $paymentConfig = new SofortPaymentConfig(
@@ -111,6 +118,20 @@ class SofortPayment extends Payment implements ProcessPaymentInterface
     /**
      * {@inheritdoc}
      */
+    public function getBackendTransaction(
+        \Mage_Sales_Model_Order $order,
+        $operation,
+        \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
+    ) {
+        if (in_array($operation, [Operation::CREDIT, Operation::CANCEL])) {
+            return new SepaCreditTransferTransaction();
+        }
+        return new SofortTransaction();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function processPayment(
         OrderSummary $orderSummary,
         TransactionService $transactionService,
@@ -120,5 +141,15 @@ class SofortPayment extends Payment implements ProcessPaymentInterface
         $transaction->setOrderNumber($orderSummary->getOrder()->getRealOrderId());
 
         return null;
+    }
+
+    /**
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getRefundOperation()
+    {
+        return Operation::CREDIT;
     }
 }

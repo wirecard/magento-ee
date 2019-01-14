@@ -9,7 +9,7 @@
 <config>
     <modules>
         <WirecardEE_PaymentGateway>
-            <version>0.1.0</version>
+            <version>1.0.0</version>
         </WirecardEE_PaymentGateway>
     </modules>
 
@@ -77,16 +77,6 @@
                     </wirecard_ee_refund>
                 </observers>
             </sales_order_payment_refund>
-
-            <controller_action_predispatch>
-                <observers>
-                    <check_session_messages>
-                        <type>singleton</type>
-                        <class>paymentgateway/backendOperation</class>
-                        <method>checkSessionMessage</method>
-                    </check_session_messages>
-                </observers>
-            </controller_action_predispatch>
         </events>
 
         <resources>
@@ -101,6 +91,8 @@
     <default>
         <wirecardee_paymentgateway>
             <settings>
+                <notify_mail></notify_mail>
+                <pending_mail>0</pending_mail>
                 <delete_cancelled_orders>0</delete_cancelled_orders>
             </settings>
         </wirecardee_paymentgateway>

@@ -36,8 +36,11 @@ exports.fillOutGuestCheckout = async (driver) => {
 
 exports.chooseFlatRateShipping = async (driver) => {
   await driver.wait(until.elementLocated(By.id('s_method_flatrate_flatrate')));
-  await driver.wait(until.elementIsVisible(driver.findElement(By.id('s_method_flatrate_flatrate'))));
-  await driver.findElement(By.id('s_method_flatrate_flatrate')).click();
+  const element = driver.findElement(By.id('s_method_flatrate_flatrate'));
+  if (!await element.getAttribute('checked')) {
+    await driver.wait(until.elementIsVisible(element));
+    await element.click();
+  }
   await driver.findElement(By.id('co-shipping-method-form')).submit();
 };
 

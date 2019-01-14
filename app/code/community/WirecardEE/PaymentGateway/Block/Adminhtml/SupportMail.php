@@ -8,26 +8,34 @@
  */
 
 /**
+ * Defines support mail form widget in Admin Support page
+ *
  * @since 1.0.0
- * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Block_Adminhtml_SupportMail extends Mage_Adminhtml_Block_Widget_Form_Container
 {
-    // @codingStandardsIgnoreEnd
+    /**
+     * @since 1.0.0
+     */
     public function __construct()
     {
         parent::__construct();
 
-        $this->_objectId = 'id';
+        $this->_objectId   = 'id';
         $this->_blockGroup = 'paymentgateway';
         $this->_controller = 'adminhtml';
-        $this->_mode = "supportMail";
-        $this->_updateButton('save', 'label', Mage::helper('paymentgateway')->__('Submit'));
-        $this->_updateButton('delete', 'label', Mage::helper('paymentgateway')->__('Delete'));
+        $this->_mode       = "supportMail";
+        $this->_updateButton('save', 'label', Mage::helper('paymentgateway')->__('send_email'));
+        $this->_updateButton('delete', 'label', Mage::helper('paymentgateway')->__('text_delete'));
     }
 
+    /**
+     * @return string
+     *
+     * @since 1.0.0
+     */
     public function getHeaderText()
     {
-        return Mage::helper('paymentgateway')->__('Wirecard Mail Support');
+        return Mage::helper('paymentgateway')->__('heading_title_support');
     }
 }

@@ -12,6 +12,8 @@ use WirecardEE\PaymentGateway\Service\Logger;
 use WirecardEE\PaymentGateway\Service\TransactionManager;
 
 /**
+ * Payment helper object, can be accessed with Mage::helper('paymentgateway')
+ *
  * @since 1.0.0
  */
 class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
@@ -72,7 +74,8 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
 
         if (json_encode($checkoutOrder->getAllItems()) !== json_encode($order->getAllItems())) {
             $this->getLogger()->warning("Basket verification failed for order id: " . $checkoutOrder->getId());
-            $order->addStatusHistoryComment('Basket verification failed', Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW);
+            $state = Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW;
+            $order->setState($state, $state, $this->__('basket_verification_failed'));
         }
     }
 

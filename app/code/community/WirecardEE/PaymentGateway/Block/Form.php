@@ -10,6 +10,8 @@
 use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplate;
 
 /**
+ * Allows for a payment method to display a custom form during the checkout process by implementing CustomFormTemplate.
+ *
  * @since 1.0.0
  */
 class WirecardEE_PaymentGateway_Block_Form extends Mage_Payment_Block_Form

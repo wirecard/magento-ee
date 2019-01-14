@@ -7,24 +7,29 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-use WirecardEE\PaymentGateway\Service\SessionManager;
-
 /**
+ * Append html from block 'paymentgateway.sales.order' to sales order view
+ *
  * @since 1.0.0
- * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Model_Adminobserver
 {
-    // @codingStandardsIgnoreEnd
+    /**
+     * Append html from block 'paymentgateway.sales.order' to sales order view
+     * See app/design/adminhtml/default/default/template/WirecardEE/order.phtml
+     *
+     * @param Varien_Event_Observer $observer
+     *
+     * @since 1.0.0
+     */
     public function getSalesOrderViewInfo(Varien_Event_Observer $observer)
     {
-        $block = $observer->getBlock();
+        /** @var Mage_Core_Block_Template $block */
+        $block = $observer->getData('block');
         if (($child = $block->getChild('paymentgateway.sales.order'))) {
-            $transport = $observer->getTransport();
+            $transport = $observer->getData('transport');
             if ($transport) {
-                $html = $transport->getHtml();
-                $html .= $child->toHtml();
-                $transport->setHtml($html);
+                $transport->setHtml($transport->getHtml() . $child->toHtml());
             }
         }
     }

@@ -64,7 +64,41 @@ interface PaymentInterface
     public function getTransactionType();
 
     /**
-     * @return \Wirecard\PaymentSdk\Transaction\Transaction|null
+     * Returns payment specific transaction object for backend operations (always returns a new instance!).
+     * Returns null, if no backend operations are allowed on this payment
+     *
+     * @param \Mage_Sales_Model_Order                     $order
+     * @param string                                      $operation
+     * @param \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
+     *
+     * @return Transaction|null
+     *
+     * @since 1.0.0
      */
-    public function getBackendTransaction();
+    public function getBackendTransaction(
+        \Mage_Sales_Model_Order $order,
+        $operation,
+        \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
+    );
+
+    /**
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getCancelOperation();
+
+    /**
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getRefundOperation();
+
+    /**
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getCaptureOperation();
 }

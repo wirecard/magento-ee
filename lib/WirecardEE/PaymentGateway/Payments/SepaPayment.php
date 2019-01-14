@@ -13,6 +13,7 @@ use Wirecard\PaymentSdk\Config\SepaConfig;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Mandate;
 use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\TransactionService;
@@ -35,6 +36,8 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, CustomForm
 
     /**
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getName()
     {
@@ -128,12 +131,25 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, CustomForm
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getBackendTransaction(
+        \Mage_Sales_Model_Order $order,
+        $operation,
+        \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
+    ) {
+        if ($operation === Operation::CREDIT) {
+            return new SepaCreditTransferTransaction();
+        }
+        return new SepaDirectDebitTransaction();
+    }
+
+    /**
      * @param OrderSummary       $orderSummary
      * @param TransactionService $transactionService
      * @param Redirect           $redirect
      *
      * @return null|Action
-     *
      * @throws InsufficientDataException
      *
      * @since 1.0.0
@@ -165,6 +181,14 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, CustomForm
 
         $mandate = new Mandate($this->generateMandateId($orderSummary));
         $transaction->setMandate($mandate);
+
+        /** @var \WirecardEE_PaymentGateway_Model_Sepadirectdebit $sepaModel */
+        $sepaModel = \Mage::getModel('paymentgateway/sepadirectdebit');
+        $orderSummary->getOrder()->addStatusHistoryComment(
+            "<strong>" . \Mage::helper('catalog')->__('sepadd_mandate') . "</strong>: <br>"
+            . $sepaModel->getMandateText()
+        );
+        $orderSummary->getOrder()->save();
 
         return null;
     }

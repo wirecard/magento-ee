@@ -8,6 +8,8 @@
  */
 
 /**
+ * Attaches the fingerprint id iframe in the checkout process in case the payment has fraud prevention enabled.
+ *
  * @since 1.0.0
  */
 class WirecardEE_PaymentGateway_Block_Info extends Mage_Payment_Block_Info

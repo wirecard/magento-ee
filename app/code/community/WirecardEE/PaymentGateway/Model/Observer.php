@@ -45,7 +45,9 @@ class WirecardEE_PaymentGateway_Model_Observer
     public function checkoutTypeOnepageSaveOrder()
     {
         $additionalData = Mage::app()->getRequest()->getParam('wirecardElasticEngine');
-        $sessionManager = new SessionManager(Mage::getSingleton("core/session", ["name" => "frontend"]));
+        /** @var Mage_Core_Model_Session $session */
+        $session        = Mage::getSingleton("core/session", ["name" => "frontend"]);
+        $sessionManager = new SessionManager($session);
         $sessionManager->storePaymentData($additionalData);
     }
 }

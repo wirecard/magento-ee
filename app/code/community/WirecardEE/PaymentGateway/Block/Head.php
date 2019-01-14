@@ -8,44 +8,46 @@
  */
 
 /**
+ * Allows to load external javascript files by inserting a script tag.
+ * Used to load the live support chat.
+ *
  * @since 1.0.0
- * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Block_Head extends Mage_Adminhtml_Block_Page_Head
 {
     /**
-     * Initialize template
-     *
-     */
-    protected function _construct()
-    {
-        $this->setTemplate('page/html/head.phtml');
-    }
-
-    /**
      * Classify HTML head item and queue it into "lines" array
      *
-     * @param array &$lines
-     * @param string $itemIf
-     * @param string $itemType
-     * @param string $itemParams
-     * @param string $itemName
-     * @param array $itemThe
+     * @param array        &$lines
+     * @param string       $itemIf
+     * @param string       $itemType
+     * @param string|array $itemParams
+     * @param string       $itemName
+     * @param array        $itemThe
+     *
+     * @since 1.0.0
      */
     protected function _separateOtherHtmlHeadElements(&$lines, $itemIf, $itemType, $itemParams, $itemName, $itemThe)
     {
-        $params = array();
-        foreach ($itemParams as $key=>$val) {
-            $params[] = $key . '="' . $val . '"';
+        parent::_separateOtherHtmlHeadElements($lines, $itemIf, $itemType, $itemParams, $itemName, $itemThe);
+
+        $params = $itemParams ? $itemParams : '';
+        if (is_array($itemParams)) {
+            $params = [];
+            foreach ($itemParams as $key => $val) {
+                $params[] = $key . '="' . $val . '"';
+            }
+            $params = implode(' ', $params);
         }
 
-        $href   = $itemName;
-
         switch ($itemType) {
-           	case 'external_js':
-                $lines[$itemIf]['other'][] = sprintf('<script type="text/javascript" src="%s" %s></script>', $itemName, implode(' ', $params));
+            case 'external_js':
+                $lines[$itemIf]['other'][] = sprintf(
+                    '<script type="text/javascript" src="%s" %s></script>',
+                    $itemName,
+                    $params
+                );
                 break;
         }
     }
-
 }

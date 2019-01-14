@@ -14,3 +14,4 @@ js/WirecardEE/*                                                             js/W
 lib/WirecardEE/*                                                            lib/WirecardEE
 
 skin/frontend/base/default/images/WirecardEE                                skin/frontend/base/default/images/WirecardEE
+skin/adminhtml/default/default/images/WirecardEE                            skin/adminhtml/default/default/images/WirecardEE

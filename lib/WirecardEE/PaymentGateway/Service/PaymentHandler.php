@@ -74,7 +74,7 @@ class PaymentHandler extends Handler
             );
         } catch (\Exception $e) {
             (new Logger())->error('Transaction service process failed: ' . $e->getMessage());
-            return new ErrorAction(0, 'Transaction processing failed');
+            return new ErrorAction(ErrorAction::PROCESSING_FAILED, 'order_error');
         }
 
         if ($response instanceof FormInteractionResponse) {
@@ -99,9 +99,9 @@ class PaymentHandler extends Handler
         }
         if ($response instanceof FailureResponse) {
             $this->logger->error('Failure response', $response->getData());
-            return new ErrorAction(ErrorAction::FAILURE_RESPONSE, 'Failure response');
+            return new ErrorAction(ErrorAction::FAILURE_RESPONSE, 'order_error');
         }
-        return new ErrorAction(ErrorAction::PROCESSING_FAILED, 'Payment processing failed');
+        return new ErrorAction(ErrorAction::PROCESSING_FAILED, 'order_error');
     }
 
     /**

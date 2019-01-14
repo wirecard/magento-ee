@@ -17,6 +17,7 @@ use WirecardEE\PaymentGateway\Actions\RedirectAction;
 use WirecardEE\PaymentGateway\Actions\ViewAction;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Exception\UnknownActionException;
+use WirecardEE\PaymentGateway\Mail\MerchantNotificationMail;
 use WirecardEE\PaymentGateway\Mapper\BasketMapper;
 use WirecardEE\PaymentGateway\Mapper\UserMapper;
 use WirecardEE\PaymentGateway\Service\NotificationHandler;
@@ -26,6 +27,8 @@ use WirecardEE\PaymentGateway\Service\ReturnHandler;
 use WirecardEE\PaymentGateway\Service\SessionManager;
 
 /**
+ * Frontend controller to handle payment processing/return/notify/cancel actions.
+ *
  * @since 1.0.0
  */
 class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_Front_Action
@@ -34,7 +37,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      * Gets payment from `PaymentFactory`, assembles the `OrderSummary` and executes the payment through the
      * `PaymentHandler` service. Further action depends on the response from the handler.
      *
-     * @return Mage_Core_Controller_Varien_Action
+     * @return Action
      * @throws UnknownActionException
      * @throws Mage_Core_Exception
      * @throws \WirecardEE\PaymentGateway\Exception\UnknownPaymentException
@@ -43,14 +46,17 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      */
     public function indexAction()
     {
-        $paymentName    = $this->getRequest()->getParam('method');
-        $payment        = (new PaymentFactory())->create($paymentName);
-        $handler        = new PaymentHandler(
+        $paymentName = $this->getRequest()->getParam('method');
+        $payment     = (new PaymentFactory())->create($paymentName);
+        $handler     = new PaymentHandler(
             $this->getHelper()->getTransactionManager(),
             $this->getHelper()->getLogger()
         );
-        $order          = $this->getCheckoutSession()->getLastRealOrder();
-        $sessionManager = new SessionManager(Mage::getSingleton("core/session", ["name" => "frontend"]));
+        $order       = $this->getCheckoutSession()->getLastRealOrder();
+
+        /** @var Mage_Core_Model_Session $session */
+        $session        = Mage::getSingleton("core/session", ["name" => "frontend"]);
+        $sessionManager = new SessionManager($session);
 
         $this->getHelper()->validateBasket();
 
@@ -78,14 +84,15 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
             $this->getUrl('paymentgateway/gateway/notify', ['method' => $paymentName])
         );
 
-        return $this->handleAction($action);
+        $this->handleAction($action);
+        return $action;
     }
 
     /**
      * After paying the user gets redirected to this action, where the `ReturnHandler` takes care about what to do
      * next (e.g. redirecting to the "Thank you" page, rendering templates, ...).
      *
-     * @return Mage_Core_Controller_Varien_Action
+     * @return Action
      * @throws UnknownActionException
      * @throws \WirecardEE\PaymentGateway\Exception\UnknownPaymentException
      *
@@ -123,7 +130,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
             $action = new ErrorAction(0, 'Return processing failed');
         }
 
-        return $this->handleAction($action);
+        $this->handleAction($action);
+        return $action;
     }
 
     /**
@@ -149,6 +157,9 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      * source of truth regarding orders, meaning the `NotificationHandler` will most likely overwrite things
      * by the `ReturnHandler`.
      *
+     * @return \Wirecard\PaymentSdk\Response\Response
+     * @throws \WirecardEE\PaymentGateway\Exception\UnknownPaymentException
+     *
      * @since 1.0.0
      */
     public function notifyAction()
@@ -159,6 +170,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
         );
         $request             = $this->getRequest();
         $payment             = (new PaymentFactory())->create($request->getParam('method'));
+        $notification        = null;
 
         try {
             $backendService = new BackendService(
@@ -166,9 +178,36 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
             );
             $notification   = $backendService->handleNotification($request->getRawBody());
 
-            $notificationHandler->handleResponse($notification, $backendService);
+            $notifyTransaction = $notificationHandler->handleResponse($notification, $backendService);
+            if ($notifyTransaction) {
+                $this->sendNotificationMail($notification, $notifyTransaction);
+            }
         } catch (\Exception $e) {
             $this->logException('Notification handling failed', $e);
+        }
+        return $notification;
+    }
+
+    /**
+     * @param SuccessResponse                            $notification
+     * @param Mage_Sales_Model_Order_Payment_Transaction $notifyTransaction
+     *
+     * @throws Zend_Mail_Exception
+     *
+     * @since 1.0.0
+     */
+    private function sendNotificationMail(
+        SuccessResponse $notification,
+        \Mage_Sales_Model_Order_Payment_Transaction $notifyTransaction
+    ) {
+        $notificationMail = new MerchantNotificationMail($this->getHelper());
+        $mail             = $notificationMail->create(
+            \Mage::getStoreConfig('wirecardee_paymentgateway/settings/notify_mail'),
+            $notification,
+            $notifyTransaction
+        );
+        if ($mail) {
+            $mail->send();
         }
     }
 
@@ -176,14 +215,17 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      * In case a payment has been canceled this action is called. It basically restores the basket (if it has not been
      * cancelled!) and redirects the user to the checkout.
      *
-     * @return Mage_Core_Controller_Varien_Action
+     * @return bool
+     *
+     * @throws Exception
      *
      * @since 1.0.0
      */
     public function cancelAction()
     {
-        $this->cancelOrderAndRestoreBasket();
-        return $this->_redirect('checkout/onepage');
+        $success = $this->cancelOrderAndRestoreBasket();
+        $this->_redirect('checkout/onepage');
+        return $success;
     }
 
     /**
@@ -242,30 +284,31 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      */
     private function cancelOrderAndRestoreBasket()
     {
-        if ($order = $this->getCheckoutSession()->getLastRealOrder()) {
-            if ($order->getStatus() !== Mage_Sales_Model_Order::STATE_CANCELED) {
-                $order->addStatusHistoryComment('Payment canceled by consumer', Mage_Sales_Model_Order::STATE_CANCELED);
-
-                $quote = Mage::getModel('sales/quote')->load($order->getQuoteId());
-
-                if ($quote->getId()) {
-                    $quote->setIsActive(1)
-                          ->setReservedOrderId(null)
-                          ->save();
-                    $this->getCheckoutSession()->replaceQuote($quote);
-                }
-
-                if (Mage::getStoreConfig('wirecardee_paymentgateway/settings/delete_cancelled_orders')) {
-                    Mage::register('isSecureArea', true);
-                    $order->delete();
-                    Mage::unregister('isSecureArea');
-                }
-
-                return true;
-            }
+        $order       = $this->getCheckoutSession()->getLastRealOrder();
+        $cancelState = Mage_Sales_Model_Order::STATE_CANCELED;
+        if (! $order || $order->getState() === $cancelState) {
+            return false;
         }
 
-        return false;
+        $order->setState($cancelState, $cancelState, $this->getHelper()->__('order_cancelled'));
+
+        /** @var Mage_Sales_Model_Quote $quote */
+        $quote = Mage::getModel('sales/quote')->load($order->getQuoteId());
+
+        if ($quote->getId()) {
+            $quote->setIsActive(1)
+                  ->setReservedOrderId(null)
+                  ->save();
+            $this->getCheckoutSession()->replaceQuote($quote);
+        }
+
+        if (Mage::getStoreConfig('wirecardee_paymentgateway/settings/delete_cancelled_orders')) {
+            Mage::register('isSecureArea', true);
+            $order->delete();
+            Mage::unregister('isSecureArea');
+        }
+
+        return true;
     }
 
     /**

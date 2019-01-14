@@ -29,6 +29,11 @@ use WirecardEE\PaymentGateway\Payments\SofortPayment;
 class PaymentFactory
 {
     /**
+     * Prefix for the payments provided by this plugin
+     */
+    const PAYMENT_PREFIX = 'wirecardee_paymentgateway_';
+
+    /**
      * @param string $paymentName
      *
      * @return PaymentInterface
@@ -47,7 +52,20 @@ class PaymentFactory
     }
 
     /**
-     * Used to get all payments for support mail
+     * @param \Mage_Sales_Model_Order_Payment $magePayment
+     *
+     * @return PaymentInterface
+     * @throws UnknownPaymentException
+     *
+     * @since 1.0.0
+     */
+    public function createFromMagePayment(\Mage_Sales_Model_Order_Payment $magePayment)
+    {
+        return $this->create($this->getMagePaymentName($magePayment));
+    }
+
+    /**
+     * Create and return all supported payments
      *
      * @return PaymentInterface[]
      * @throws UnknownPaymentException
@@ -63,19 +81,6 @@ class PaymentFactory
         }
 
         return $payments;
-    }
-
-    /**
-     * @param \Mage_Sales_Model_Order_Payment $magePayment
-     *
-     * @return PaymentInterface
-     * @throws UnknownPaymentException
-     *
-     * @since 1.0.0
-     */
-    public function createFromMagePayment(\Mage_Sales_Model_Order_Payment $magePayment)
-    {
-        return $this->create($this->getMagePaymentName($magePayment));
     }
 
     /**
@@ -107,6 +112,10 @@ class PaymentFactory
      */
     public function isSupportedPayment(\Mage_Sales_Model_Order_Payment $magePayment)
     {
+        if (strpos($magePayment->getData('method'), self::PAYMENT_PREFIX) !== 0) {
+            return false;
+        }
+
         $payments = $this->getMappedPayments();
         return isset($payments[$this->getMagePaymentName($magePayment)]);
     }
@@ -120,6 +129,6 @@ class PaymentFactory
      */
     private function getMagePaymentName(\Mage_Sales_Model_Order_Payment $magePayment)
     {
-        return str_replace('wirecardee_paymentgateway_', '', $magePayment->getData('method'));
+        return str_replace(self::PAYMENT_PREFIX, '', $magePayment->getData('method'));
     }
 }

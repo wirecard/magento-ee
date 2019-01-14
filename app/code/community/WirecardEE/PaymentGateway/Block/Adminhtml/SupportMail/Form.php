@@ -8,49 +8,53 @@
  */
 
 /**
+ * Generate support mail form for Admin Support page
+ *
  * @since 1.0.0
- * @codingStandardsIgnoreStart
  */
 class WirecardEE_PaymentGateway_Block_Adminhtml_SupportMail_Form extends Mage_Adminhtml_Block_Widget_Form
 {
+    /**
+     * @return Mage_Adminhtml_Block_Widget_Form
+     *
+     * @since 1.0.0
+     */
     protected function _prepareForm()
     {
-        // @codingStandardsIgnoreEnd
-        $form = new Varien_Data_Form(
-            array(
-                'id' => 'edit_form',
-                'action' => $this->getUrl('*/*/send'),
-                'method' => 'post',
-                'enctype' => 'multipart/form-data',
-            )
-        );
-        $form->setUseContainer(true);
+        $form = new Varien_Data_Form([
+            'id'      => 'edit_form',
+            'action'  => $this->getUrl('*/*/send'),
+            'method'  => 'post',
+            'enctype' => 'multipart/form-data',
+        ]);
+        $form->setData('use_container', true);
         $this->setForm($form);
 
-        $fieldset = $form->addFieldset(
-            'supportmail_form',
-            array('legend'=>Mage::helper('paymentgateway')->__('Mail information'))
-        );
-        $fieldset->addField('sender_address', 'text', array(
-            'label' => Mage::helper('paymentgateway')->__('Sender Address'),
-            'class' => 'required-entry',
-            'required' => true,
-            'name' => 'sender_address',
-        ));
-        $fieldset->addField('reply_to', 'text', array(
-            'label' => Mage::helper('paymentgateway')->__('Reply To'),
-            'required' => false,
-            'name' => 'reply_to',
-        ));
+        /** @var WirecardEE_PaymentGateway_Helper_Data $paymentHelper */
+        $paymentHelper = Mage::helper('paymentgateway');
 
-        $fieldset->addField('content', 'editor', array(
-            'name' => 'content',
-            'label' => Mage::helper('paymentgateway')->__('Content'),
-            'title' => Mage::helper('paymentgateway')->__('Content'),
-            'style' => 'width:700px; height:500px;',
-            'wysiwyg' => false,
+        $fieldset = $form->addFieldset('supportmail_form', [
+            'legend' => $paymentHelper->__('support_email_title'),
+        ]);
+        $fieldset->addField('sender_address', 'text', [
+            'label'    => $paymentHelper->__('support_email_sender_address'),
+            'class'    => 'required-entry',
             'required' => true,
-        ));
+            'name'     => 'sender_address',
+        ]);
+        $fieldset->addField('reply_to', 'text', [
+            'label'    => $paymentHelper->__('support_email_reply_to'),
+            'required' => false,
+            'name'     => 'reply_to',
+        ]);
+        $fieldset->addField('content', 'editor', [
+            'name'     => 'content',
+            'label'    => $paymentHelper->__('config_message'),
+            'title'    => $paymentHelper->__('config_message'),
+            'style'    => 'width:700px; height:500px;',
+            'wysiwyg'  => false,
+            'required' => true,
+        ]);
 
         return parent::_prepareForm();
     }
