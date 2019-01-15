@@ -180,6 +180,18 @@
                 <fraud_prevention>1</fraud_prevention>
                 <sort_order>21</sort_order>
             </wirecardee_paymentgateway_ideal>
+            <wirecardee_paymentgateway_poi>
+                <active>0</active>
+                <model>paymentgateway/poi</model>
+                <title>Wirecard Payment on Invoice</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>70000-APITEST-AP</api_user>
+                <api_password>qD2wzQ_hrc!8</api_password>
+                <api_maid>105ab3e8-d16b-4fa0-9f1f-18dd9b390c94</api_maid>
+                <api_secret>2d96596b-9d10-4c98-ac47-4d56e22fd878</api_secret>
+                <fraud_prevention>1</fraud_prevention>
+                <sort_order>32</sort_order>
+            </wirecardee_paymentgateway_poi>
         </payment>
     </default>
 
