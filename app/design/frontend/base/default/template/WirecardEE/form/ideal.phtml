@@ -15,9 +15,6 @@ $idealBanks = $idealBic->getConstants();
 ?>
 <ul class="form-list" id="payment_form_<?php echo $this->getMethodCode(); ?>" style="display: none;">
     <li>
-        <p class="required"><?php echo $this->__('* Required fields'); ?></p>
-        <label for="wirecardee-sepa--first-name" class="required"><em>*</em><?php echo $this->__('First Name'); ?>
-        </label>
         <div class="input-box">
             <select class="is--required" name="wirecardElasticEngine[idealBank]">
                 <?php foreach ($idealBanks as $bankKey=>$bankLabel) : ?>
