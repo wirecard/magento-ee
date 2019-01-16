@@ -57,6 +57,20 @@ class IdealPayment extends Payment implements ProcessPaymentInterface, CustomFor
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getBackendTransaction(
+        \Mage_Sales_Model_Order $order,
+        $operation,
+        \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
+    ) {
+        if ($operation === Operation::CREDIT) {
+            return new SepaCreditTransferTransaction();
+        }
+        return new IdealTransaction();
+    }
+
+    /**
      * @param $selectedCurrency
      *
      * @return Config
@@ -156,5 +170,15 @@ class IdealPayment extends Payment implements ProcessPaymentInterface, CustomFor
     public function getFormTemplateName()
     {
         return 'WirecardEE/form/ideal.phtml';
+    }
+
+    /**
+     * @return string
+     *
+     * @since 1.1.0
+     */
+    public function getRefundOperation()
+    {
+        return Operation::CREDIT;
     }
 }
