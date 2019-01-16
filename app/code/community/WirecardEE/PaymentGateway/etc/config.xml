@@ -9,7 +9,7 @@
 <config>
     <modules>
         <WirecardEE_PaymentGateway>
-            <version>0.1.0</version>
+            <version>1.0.0</version>
         </WirecardEE_PaymentGateway>
     </modules>
 
@@ -24,6 +24,11 @@
             <paymentgateway>
                 <class>WirecardEE_PaymentGateway_Block</class>
             </paymentgateway>
+            <adminhtml>
+                <rewrite>
+                    <page_head>WirecardEE_PaymentGateway_Block_Head</page_head>
+                </rewrite>
+            </adminhtml>
         </blocks>
 
         <models>
@@ -86,6 +91,8 @@
     <default>
         <wirecardee_paymentgateway>
             <settings>
+                <notify_mail></notify_mail>
+                <pending_mail>0</pending_mail>
                 <delete_cancelled_orders>0</delete_cancelled_orders>
             </settings>
         </wirecardee_paymentgateway>
@@ -184,6 +191,25 @@
                 </WirecardEE_PaymentGateway>
             </updates>
         </layout>
+        <events>
+            <core_block_abstract_to_html_after>
+                <observers>
+                    <wirecardee_custom_order_view_info>
+                        <class>paymentgateway/adminobserver</class>
+                        <method>getSalesOrderViewInfo</method>
+                    </wirecardee_custom_order_view_info>
+                </observers>
+            </core_block_abstract_to_html_after>
+        </events>
+        <translate>
+            <modules>
+                <WirecardEE_Paymentgateway>
+                    <files>
+                        <default>WirecardEE_PaymentGateway.csv</default>
+                    </files>
+                </WirecardEE_Paymentgateway>
+            </modules>
+        </translate>
     </adminhtml>
 
     <frontend>
@@ -215,5 +241,14 @@
                 </observers>
             </checkout_type_onepage_save_order>
         </events>
+        <translate>
+            <modules>
+                <WirecardEE_PaymentGateway>
+                    <files>
+                        <default>WirecardEE_PaymentGateway.csv</default>
+                    </files>
+                </WirecardEE_PaymentGateway>
+            </modules>
+        </translate>
     </frontend>
 </config>

@@ -19,11 +19,10 @@ use WirecardEE\PaymentGateway\Actions\ViewAction;
 use WirecardEE\PaymentGateway\Data\CreditCardPaymentConfig;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
-use WirecardEE\PaymentGateway\Payments\Contracts\ProcessReturnInterface;
 use WirecardEE\PaymentGateway\Service\Logger;
 use WirecardEE\PaymentGateway\Service\TransactionManager;
 
-class CreditCardPayment extends Payment implements ProcessPaymentInterface, ProcessReturnInterface
+class CreditCardPayment extends Payment implements ProcessPaymentInterface
 {
     const NAME = CreditCardTransaction::NAME;
 
@@ -34,6 +33,8 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface, Proc
 
     /**
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getName()
     {
@@ -107,9 +108,9 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface, Proc
      * @param string       $limitCurrency
      *
      * @return Amount
+     * @throws \Mage_Core_Model_Store_Exception
      *
      * @since 1.0.0
-     * @throws \Mage_Core_Model_Store_Exception
      */
     private function getLimit($selectedCurrency, $limitValue, $limitCurrency)
     {
@@ -196,7 +197,6 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface, Proc
      * @param Redirect           $redirect
      *
      * @return Action|null
-     *
      * @throws \Exception
      *
      * @since 1.0.0
@@ -236,18 +236,5 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface, Proc
             'wirecardRequestData' => $requestData,
             'url'                 => \Mage::getUrl('paymentgateway/gateway/return', ['method' => self::NAME]),
         ]);
-    }
-
-    /**
-     * @param TransactionService                 $transactionService
-     * @param \Mage_Core_Controller_Request_Http $request
-     *
-     * @return \Wirecard\PaymentSdk\Response\Response|null
-     *
-     * @since 1.0.0
-     */
-    public function processReturn(TransactionService $transactionService, \Mage_Core_Controller_Request_Http $request)
-    {
-        return null;
     }
 }

@@ -10,6 +10,7 @@
 use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Amount;
+use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\SuccessAction;
 use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
@@ -56,8 +57,29 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
     }
 
     /**
+     * @param BackendOperationsHandler $backendOperationHandler
+     *
+     * @since 1.0.0
+     */
+    public function setBackendOperationHandler(BackendOperationsHandler $backendOperationHandler)
+    {
+        $this->backendOperationHandler = $backendOperationHandler;
+    }
+
+    /**
+     * @param TransactionManager $transactionManager
+     *
+     * @since 1.0.0
+     */
+    public function setTransactionManager(TransactionManager $transactionManager)
+    {
+        $this->transactionManager = $transactionManager;
+    }
+
+    /**
      * @param Varien_Event_Observer $observer
      *
+     * @return Action|null
      * @throws Mage_Core_Exception
      * @throws UnknownPaymentException
      *
@@ -72,12 +94,12 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         }
 
         if (! $this->paymentFactory->isSupportedPayment($invoice->getOrder()->getPayment())) {
-            return;
+            return null;
         }
 
         // Skip auto-generated invoices.
         if ($invoice->getData('auto_capture')) {
-            return;
+            return null;
         }
 
         $payment             = $this->paymentFactory->createFromMagePayment($invoice->getOrder()->getPayment());
@@ -113,13 +135,14 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
 
             $invoice->save();
             $this->logger->info("Captured $amount from {$initialNotification->getTxnId()}");
-            return;
+            return $action;
         }
         if ($action instanceof ErrorAction) {
             $this->throwError($action->getMessage(), ['code' => $action->getCode()]);
         }
 
         $this->throwError('Capture failed');
+        return $action;
     }
 
     /**
@@ -127,6 +150,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
      *
      * @param Varien_Event_Observer $observer
      *
+     * @return Action[]
      * @throws Mage_Core_Exception
      * @throws \WirecardEE\PaymentGateway\Exception\UnknownPaymentException
      *
@@ -141,7 +165,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         }
 
         if (! $this->paymentFactory->isSupportedPayment($creditMemo->getOrder()->getPayment())) {
-            return;
+            return [];
         }
 
         $payment        = $this->paymentFactory->createFromMagePayment($creditMemo->getOrder()->getPayment());
@@ -179,6 +203,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         $this->logger->info('Executing operation "refund" on order #' . $creditMemo->getOrder()->getRealOrderId()
                             . ' (split across ' . count($transactionEntries) . ' transactions)');
 
+        $actions = [];
         foreach ($transactionEntries as $transactionEntry) {
             /** @var Mage_Sales_Model_Order_Payment_Transaction $transaction */
             $transaction = $transactionEntry['transaction'];
@@ -188,20 +213,21 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                 continue;
             }
 
-            $action = $this->processBackendOperation(
+            $action    = $this->processBackendOperation(
                 $transaction,
                 $payment,
                 $backendService,
                 $payment->getRefundOperation(),
                 new Amount($amount, $creditMemo->getBaseCurrencyCode())
             );
+            $actions[] = $action;
 
             if ($action instanceof SuccessAction) {
                 $transactionId = $action->getContextItem('transaction_id');
                 $this->logger->info("Refunded $amount from $transactionId");
 
-                $additionalInformation = $this->getAdditionalInformationFromTransaction($transaction);
-                $refundableBasket      = $this->getRefundableBasketFromTransaction($transaction);
+                $additionalInformation = TransactionManager::getAdditionalInformationFromTransaction($transaction);
+                $refundableBasket      = TransactionManager::getRefundableBasketFromTransaction($transaction);
 
                 $transaction->setOrderPaymentObject($creditMemo->getOrder()->getPayment());
 
@@ -224,11 +250,14 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                 $this->throwError($action->getMessage(), ['code' => $action->getCode()]);
             }
         }
+
+        return $actions;
     }
 
     /**
      * @param Varien_Event_Observer $observer
      *
+     * @return Action|null
      * @throws Mage_Core_Exception
      * @throws \WirecardEE\PaymentGateway\Exception\UnknownPaymentException
      *
@@ -243,7 +272,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         }
 
         if (! $this->paymentFactory->isSupportedPayment($magePayment)) {
-            return;
+            return null;
         }
 
         $payment             = $this->paymentFactory->createFromMagePayment($magePayment);
@@ -266,13 +295,14 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         if ($action instanceof SuccessAction) {
             $transactionId = $action->getContextItem('transaction_id');
             $this->logger->info("Cancelled $transactionId");
-            return;
+            return $action;
         }
         if ($action instanceof ErrorAction) {
             $this->throwError($action->getMessage(), ['code' => $action->getCode()]);
         }
 
         $this->throwError('Cancellation failed');
+        return $action;
     }
 
     /**
@@ -280,7 +310,6 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
      * @param array  $context
      *
      * @return void
-     *
      * @throws Mage_Core_Exception
      *
      * @since 1.0.0
@@ -313,8 +342,9 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         Amount $amount = null,
         $transactionContext = []
     ) {
+        $amountText = $amount ? ($amount->getValue() . ' ' . $amount->getCurrency()) : '';
         $this->logger->info("Executing operation $operation on " . $transaction->getTxnId()
-                            . " (ID: " . $transaction->getId() . ") " . ($amount ? " - Amount: $amount" : ""));
+                            . " (ID: " . $transaction->getId() . ") " . ($amountText ? " - Amount: $amountText" : ""));
 
         $backendTransaction = $payment->getBackendTransaction(
             $transaction->getOrder(),
@@ -342,7 +372,6 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
      * @param float                                        $remainingAdditionalAmount
      *
      * @return array
-     *
      * @throws Mage_Core_Exception
      *
      * @since 1.0.0
@@ -357,7 +386,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         }
 
         foreach ($refundableTransactions as $refundableTransaction) {
-            if (! $refundableBasket = $this->getRefundableBasketFromTransaction($refundableTransaction)) {
+            if (! $refundableBasket = TransactionManager::getRefundableBasketFromTransaction($refundableTransaction)) {
                 continue;
             }
 
@@ -413,11 +442,11 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             return $suitableTransactions;
         }
 
-        foreach ($items as $key => $item) {
+        foreach ($items as $item) {
             $remainingQuantity = $item->getQty();
 
             foreach ($refundableTransactions as $refundableTransaction) {
-                if (! $refundableBasket = $this->getRefundableBasketFromTransaction($refundableTransaction)) {
+                if (! $refundableBasket = TransactionManager::getRefundableBasketFromTransaction($refundableTransaction)) {
                     continue;
                 }
 
@@ -457,44 +486,5 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         }
 
         return $suitableTransactions;
-    }
-
-    /**
-     * @param Mage_Sales_Model_Order_Payment_Transaction $transaction
-     *
-     * @return array|null
-     *
-     * @since 1.0.0
-     */
-    private function getRefundableBasketFromTransaction(Mage_Sales_Model_Order_Payment_Transaction $transaction)
-    {
-        $additionalInformation = $this->getAdditionalInformationFromTransaction($transaction);
-
-        if (empty($additionalInformation[TransactionManager::REFUNDABLE_BASKET_KEY])) {
-            return null;
-        }
-
-        $refundableBasket = json_decode(
-            $additionalInformation[TransactionManager::REFUNDABLE_BASKET_KEY],
-            true
-        );
-
-        if (! $refundableBasket || ! is_array($refundableBasket)) {
-            return null;
-        }
-
-        return $refundableBasket;
-    }
-
-    /**
-     * @param Mage_Sales_Model_Order_Payment_Transaction $transaction
-     *
-     * @return array|mixed|null
-     */
-    private function getAdditionalInformationFromTransaction(Mage_Sales_Model_Order_Payment_Transaction $transaction)
-    {
-        return $transaction->getAdditionalInformation(
-            \Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS
-        );
     }
 }

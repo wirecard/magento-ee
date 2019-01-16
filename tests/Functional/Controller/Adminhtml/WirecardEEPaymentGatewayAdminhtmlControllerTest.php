@@ -7,7 +7,7 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-namespace WirecardEE\Tests\Unit\Controller\Adminhtml;
+namespace WirecardEE\Tests\Functional\Controller\Adminhtml;
 
 use WirecardEE\Tests\Test\MagentoTestCase;
 
@@ -20,9 +20,9 @@ class WirecardEEPaymentGatewayAdminhtmlControllerTest extends MagentoTestCase
 
     public function testCredentialsAction()
     {
-        /** @var \Zend_Controller_Request_Abstract $request */
+        /** @var \Zend_Controller_Request_Abstract|\PHPUnit_Framework_MockObject_MockObject $request */
         $request = $this->getMockForAbstractClass(\Zend_Controller_Request_Abstract::class);
-        /** @var \Zend_Controller_Response_Abstract $response */
+        /** @var \Zend_Controller_Response_Abstract|\PHPUnit_Framework_MockObject_MockObject $response */
         $response = $this->getMockForAbstractClass(\Zend_Controller_Response_Abstract::class);
 
         $request->setParams([

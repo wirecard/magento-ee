@@ -8,6 +8,7 @@ npm-debug.log
 
 
 clover.xml
+build/coverage/
 build/coverage.xml
 
 lib/WirecardEE/vendor

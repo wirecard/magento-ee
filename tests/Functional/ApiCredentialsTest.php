@@ -12,6 +12,7 @@ namespace WirecardEE\Tests\Functional;
 use PHPUnit\Framework\TestCase;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;
+use WirecardEE\PaymentGateway\Service\Logger;
 
 class ApiCredentialsTest extends TestCase
 {
@@ -22,7 +23,7 @@ class ApiCredentialsTest extends TestCase
             getenv('API_HTTP_USER'),
             getenv('API_HTTP_PASSWORD')
         );
-        $transactionService = new TransactionService($testConfig);
+        $transactionService = new TransactionService($testConfig, new Logger());
 
         $this->assertTrue($transactionService->checkCredentials());
     }

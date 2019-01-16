@@ -22,7 +22,7 @@ abstract class Payment implements PaymentInterface
     const CONFIG_PREFIX = 'payment/wirecardee_paymentgateway_';
 
     /**
-     * @param $selectedCurrency
+     * @param string $selectedCurrency
      *
      * @return Config
      *

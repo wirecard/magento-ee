@@ -6,7 +6,7 @@
   "prefer-stable": true,
   "require": {
     "php": ">=5.6",
-    "wirecard/payment-sdk-php": "3.5.*",
+    "wirecard/payment-sdk-php": "3.6.*",
     "php-http/guzzle5-adapter": "^1.0.1",
     "guzzlehttp/psr7": "^1.4",
     "ext-json": "*"
@@ -18,7 +18,7 @@
   },
   "type": "magento-extension",
   "scripts": {
-    "upload-coverage": "codacycoverage clover build/coverage/xml",
+    "upload-coverage": "codacycoverage clover build/coverage.xml",
     "cs-check": "phpcs --standard=phpcs.xml -s",
     "cs-fix": "phpcbf --standard=phpcs.xml",
     "test-coverage": "phpunit --colors=always --coverage-clover build/coverage.xml"

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+data=(
+    "70000-APITEST-AP"
+    "16390-testing"
+    "qD2wzQ_hrc!8"
+    "dbc5a498-9a66-43b9-bf1d-a618dd399684"
+    "3!3013=D3fD8X7"
+    "ecdf5990-0372-47cd-a55d-037dccfe9d25"
+)
+
+cd "$(dirname "$0")"
+
+IFS=$'\n'
+if grep -- "${data[*]}" $(pwd)/../../../../var/log/*.log; then
+    exit 1
+fi
+
+exit 0

@@ -31,6 +31,8 @@ class PaypalPayment extends Payment implements ProcessPaymentInterface
 
     /**
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getName()
     {

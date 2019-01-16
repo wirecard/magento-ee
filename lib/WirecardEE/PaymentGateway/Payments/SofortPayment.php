@@ -32,6 +32,8 @@ class SofortPayment extends Payment implements ProcessPaymentInterface
 
     /**
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getName()
     {
@@ -72,6 +74,11 @@ class SofortPayment extends Payment implements ProcessPaymentInterface
         return $config;
     }
 
+    /**
+     * @return SofortPaymentConfig
+     *
+     * @since 1.0.0
+     */
     public function getPaymentConfig()
     {
         $paymentConfig = new SofortPaymentConfig(

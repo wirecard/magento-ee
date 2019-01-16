@@ -99,26 +99,6 @@ class OrderSummary
     }
 
     /**
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    public function getCurrency()
-    {
-        return $this->order->getBaseCurrencyCode();
-    }
-
-    /**
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    public function getAmount()
-    {
-        return number_format($this->order->getBaseGrandTotal(), 2);
-    }
-
-    /**
      * @return BasketMapper
      *
      * @since 1.0.0

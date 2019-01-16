@@ -9,7 +9,7 @@
 <config>
     <sections>
         <wirecardee_paymentgateway translate="label" module="paymentgateway">
-            <label>Wirecard Payment Gateway</label>
+            <label>title_payment_gateway</label>
             <tab>sales</tab>
             <frontend_type>text</frontend_type>
             <sort_order>1000</sort_order>
@@ -18,77 +18,119 @@
             <show_in_store>1</show_in_store>
             <groups>
                 <settings translate="label">
-                    <label>Settings</label>
+                    <label>text_settings</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>100</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <expanded>1</expanded>
+                    <comment>
+                        <![CDATA[
+                            <div>
+                            <img src="/skin/adminhtml/default/default/images/WirecardEE/PaymentGateway/wirecard-logo.png" alt="Wirecard" />
+                            </div>
+                        ]]>
+                    </comment>
                     <fields>
+                        <plugin_version translate="label">
+                            <label>text_plugin_version</label>
+                            <frontend_model>paymentgateway/adminhtml_system_config_pluginVersion</frontend_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>1</sort_order>
+                        </plugin_version>
+                        <notify_mail translate="label">
+                            <label>config_email_notification</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <tooltip>config_email_notification_desc</tooltip>
+                        </notify_mail>
+                        <pending_mail translate="label">
+                            <label>config_pendig_status_mails</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <tooltip>config_pendig_status_mails_desc</tooltip>
+                        </pending_mail>
                         <delete_cancelled_orders translate="label comment">
-                            <label>Explicitly delete cancelled orders</label>
+                            <label>config_delete_cancel_order</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>30</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment><![CDATA[<strong>Warning</strong>: Keep in mind that deleted orders will leave gaps within your order numbers!]]></comment>
+                            <comment>config_delete_cancel_order_warning</comment>
+                            <tooltip>config_delete_cancel_order_desc</tooltip>
                         </delete_cancelled_orders>
                     </fields>
                 </settings>
             </groups>
         </wirecardee_paymentgateway>
+    </sections>
+    <sections>
         <payment>
             <groups>
                 <wirecardee_paymentgateway_paypal translate="label" module="paymentgateway">
-                    <label>Wirecard PayPal</label>
+                    <label>heading_title_paypal</label>
                     <sort_order>1000</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
-                        <title translate="label">
-                            <label>Title</label>
+                        <title translate="label tooltip">
+                            <label>config_title</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>0</sort_order>
+                            <tooltip>config_title_desc</tooltip>
                         </title>
-                        <active translate="label">
-                            <label>Enabled</label>
+                        <active translate="label tooltip">
+                            <label>text_enabled</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>10</sort_order>
+                            <tooltip>config_status_desc_paypal</tooltip>
                         </active>
-                        <api_url translate="label">
-                            <label>Base URL</label>
+                        <api_url translate="label tooltip">
+                            <label>config_base_url</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>20</sort_order>
+                            <tooltip>config_base_url_desc</tooltip>
                         </api_url>
-                        <api_user translate="label">
-                            <label>HTTP User</label>
+                        <api_user translate="label tooltip">
+                            <label>config_http_user</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>30</sort_order>
+                            <tooltip>config_http_user_desc</tooltip>
                         </api_user>
-                        <api_password translate="label">
-                            <label>HTTP Password</label>
+                        <api_password translate="label tooltip">
+                            <label>config_http_password</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>40</sort_order>
+                            <tooltip>config_http_password_desc</tooltip>
                         </api_password>
                         <api_test_button>
                             <frontend_type>button</frontend_type>
@@ -99,116 +141,128 @@
                             <show_in_store>1</show_in_store>
                             <sort_order>50</sort_order>
                         </api_test_button>
-                        <api_maid translate="label">
-                            <label>MAID</label>
+                        <api_maid translate="label tooltip">
+                            <label>config_merchant_account_id</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>60</sort_order>
+                            <tooltip>config_merchant_account_id_desc</tooltip>
                         </api_maid>
-                        <api_secret translate="label">
-                            <label>Secret</label>
+                        <api_secret translate="label tooltip">
+                            <label>config_merchant_secret</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>70</sort_order>
+                            <tooltip>config_merchant_secret_desc</tooltip>
                         </api_secret>
-                        <transaction_type translate="label">
-                            <label>Payment action</label>
+                        <transaction_type translate="label tooltip">
+                            <label>config_payment_action</label>
                             <source_model>paymentgateway/paypal</source_model>
                             <frontend_type>select</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>80</sort_order>
+                            <tooltip>config_payment_action_desc</tooltip>
                         </transaction_type>
-                        <send_basket translate="label">
-                            <label>Send basket</label>
+                        <send_basket translate="label tooltip">
+                            <label>config_shopping_basket</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>90</sort_order>
+                            <tooltip>config_shopping_basket_desc</tooltip>
                         </send_basket>
-                        <fraud_prevention translate="label">
-                            <label>Send additional data</label>
+                        <fraud_prevention translate="label tooltip">
+                            <label>config_additional_info</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>100</sort_order>
+                            <tooltip>config_additional_info_desc</tooltip>
                         </fraud_prevention>
-                        <order_identification translate="label">
-                            <label>Send order identification</label>
+                        <order_identification translate="label tooltip">
+                            <label>config_descriptor</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>110</sort_order>
+                            <tooltip>config_descriptor_desc</tooltip>
                         </order_identification>
-                        <sort_order translate="label">
-                            <label>Sort Order</label>
+                        <sort_order translate="label tooltip">
+                            <label>config_sort_order</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                             <frontend_class>validate-number</frontend_class>
                             <sort_order>120</sort_order>
+                            <tooltip>config_sort_order_desc</tooltip>
                         </sort_order>
                     </fields>
                 </wirecardee_paymentgateway_paypal>
                 <wirecardee_paymentgateway_creditcard translate="label" module="paymentgateway">
-                    <label>Wirecard Credit Card</label>
+                    <label>heading_title_creditcard</label>
                     <sort_order>999</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
-                        <title translate="label">
-                            <label>Title</label>
+                        <title translate="label tooltip">
+                            <label>config_title</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>0</sort_order>
+                            <tooltip>config_title_desc</tooltip>
                         </title>
-                        <active translate="label">
-                            <label>Enabled</label>
+                        <active translate="label tooltip">
+                            <label>text_enabled</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>10</sort_order>
+                            <tooltip>config_status_desc_creditcard</tooltip>
                         </active>
-                        <api_url translate="label">
-                            <label>Base URL</label>
+                        <api_url translate="label tooltip">
+                            <label>config_base_url</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>20</sort_order>
+                            <tooltip>config_base_url_desc</tooltip>
                         </api_url>
-                        <api_user translate="label">
-                            <label>HTTP User</label>
+                        <api_user translate="label tooltip">
+                            <label>config_http_user</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>30</sort_order>
+                            <tooltip>config_http_user_desc</tooltip>
                         </api_user>
-                        <api_password translate="label">
-                            <label>HTTP Password</label>
+                        <api_password translate="label tooltip">
+                            <label>config_http_password</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>40</sort_order>
+                            <tooltip>config_http_password_desc</tooltip>
                         </api_password>
                         <api_test_button>
                             <frontend_type>button</frontend_type>
@@ -219,152 +273,166 @@
                             <show_in_store>1</show_in_store>
                             <sort_order>50</sort_order>
                         </api_test_button>
-                        <api_maid translate="label">
-                            <label>MAID</label>
+                        <api_maid translate="label tooltip">
+                            <label>config_merchant_account_id</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>60</sort_order>
+                            <tooltip>config_merchant_account_id_desc</tooltip>
                         </api_maid>
-                        <api_secret translate="label">
-                            <label>Secret</label>
+                        <api_secret translate="label tooltip">
+                            <label>config_merchant_secret</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>70</sort_order>
+                            <tooltip>config_merchant_secret_desc</tooltip>
                         </api_secret>
-                        <threeds_maid translate="label">
-                            <label>3-D Secure MAID</label>
+                        <threeds_maid translate="label tooltip">
+                            <label>three_d_merchant_account_id</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>80</sort_order>
+                            <tooltip>config_merchant_account_id_three_d_desc</tooltip>
                         </threeds_maid>
-                        <threeds_secret translate="label">
-                            <label>3-D Secure Secret</label>
+                        <threeds_secret translate="label tooltip">
+                            <label>config_three_d_merchant_secret</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>90</sort_order>
+                            <tooltip>config_merchant_secret_three_d_desc</tooltip>
                         </threeds_secret>
-                        <transaction_type translate="label">
-                            <label>Payment action</label>
+                        <transaction_type translate="label tooltip">
+                            <label>config_payment_action</label>
                             <source_model>paymentgateway/paypal</source_model>
                             <frontend_type>select</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>100</sort_order>
+                            <tooltip>config_payment_action_desc</tooltip>
                         </transaction_type>
-                        <fraud_prevention translate="label">
-                            <label>Send additional data</label>
+                        <fraud_prevention translate="label tooltip">
+                            <label>config_additional_info</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>110</sort_order>
+                            <tooltip>config_additional_info_desc</tooltip>
                         </fraud_prevention>
                         <ssl_max_limit translate="label comment tooltip">
-                            <label>Non 3-D Secure Max. Limit</label>
-                            <comment><![CDATA[<a href="https://raw.githubusercontent.com/wiki/wirecard/shopware-ee/img/creditcard-ssl-3d-new.png" target="_blank">Click here</a> for an explanation regarding Non 3-D Secure and 3-D Secure limits]]></comment>
-                            <tooltip>This amount forces 3-D Secure transactions. Leave blank to disable the Non 3-D Secure Maximal Limit.</tooltip>
+                            <label>config_ssl_max_limit</label>
+                            <comment>config_three_d_explanation_url</comment>
+                            <tooltip>config_ssl_max_limit_desc</tooltip>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>120</sort_order>
                         </ssl_max_limit>
-                        <ssl_max_limit_currency translate="label">
-                            <label>Non 3-D Secure Max. Limit Currency</label>
+                        <ssl_max_limit_currency translate="label tooltip">
+                            <label>config_ssl_max_limit_currency</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_currency</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>130</sort_order>
+                            <tooltip>config_ssl_max_limit_currency_desc</tooltip>
                         </ssl_max_limit_currency>
                         <three_d_min_limit translate="label comment tooltip">
-                            <label>3-D Secure Min. Limit</label>
-                            <comment><![CDATA[<a href="https://raw.githubusercontent.com/wiki/wirecard/shopware-ee/img/creditcard-ssl-3d-new.png" target="_blank">Click here</a> for an explanation regarding Non 3-D Secure and 3-D Secure limits]]></comment>
-                            <tooltip>This amount attempts 3-D Secure transactions. Leave blank to disable the 3-D Secure Min. Limit. </tooltip>
+                            <label>config_three_d_min_limit</label>
+                            <comment>config_three_d_explanation_url</comment>
+                            <tooltip>config_three_d_min_limit_desc</tooltip>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>140</sort_order>
                         </three_d_min_limit>
-                        <three_d_min_limit_currency translate="label">
-                            <label>3-D Secure Min. Limit Currency</label>
+                        <three_d_min_limit_currency translate="label tooltip">
+                            <label>config_three_d_min_limit_currency</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_currency</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>150</sort_order>
+                            <tooltip>config_three_d_min_limit_currency_desc</tooltip>
                         </three_d_min_limit_currency>
-                        <sort_order translate="label">
-                            <label>Sort Order</label>
+                        <sort_order translate="label tooltip">
+                            <label>config_sort_order</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                             <frontend_class>validate-number</frontend_class>
                             <sort_order>160</sort_order>
+                            <tooltip>config_sort_order_desc</tooltip>
                         </sort_order>
                     </fields>
                 </wirecardee_paymentgateway_creditcard>
                 <wirecardee_paymentgateway_sepadirectdebit translate="label" module="paymentgateway">
-                    <label>Wirecard SEPA Direct Debit</label>
+                    <label>heading_title_sepadd</label>
                     <sort_order>1002</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
-                        <title translate="label">
-                            <label>Title</label>
+                        <title translate="label tooltip">
+                            <label>config_title</label>
                             <sort_order>10</sort_order>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>config_title_desc</tooltip>
                         </title>
-                        <active translate="label">
-                            <label>Enabled</label>
+                        <active translate="label tooltip">
+                            <label>text_enabled</label>
                             <sort_order>20</sort_order>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>config_status_desc_sepadd</tooltip>
                         </active>
-                        <api_url translate="label">
-                            <label>Base URL</label>
+                        <api_url translate="label tooltip">
+                            <label>config_base_url</label>
                             <sort_order>30</sort_order>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>config_base_url_desc</tooltip>
                         </api_url>
-                        <api_user translate="label">
-                            <label>HTTP User</label>
+                        <api_user translate="label tooltip">
+                            <label>config_http_user</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>40</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>config_http_user_desc</tooltip>
                         </api_user>
-                        <api_password translate="label">
-                            <label>HTTP Password</label>
+                        <api_password translate="label tooltip">
+                            <label>config_http_password</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>50</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>config_http_password_desc</tooltip>
                         </api_password>
                         <api_test_button>
                             <frontend_type>button</frontend_type>
@@ -375,51 +443,56 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </api_test_button>
-                        <api_maid translate="label">
-                            <label>MAID</label>
+                        <api_maid translate="label tooltip">
+                            <label>config_merchant_account_id</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>70</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>config_merchant_account_id_desc</tooltip>
                         </api_maid>
-                        <api_secret translate="label">
-                            <label>Secret</label>
+                        <api_secret translate="label tooltip">
+                            <label>config_merchant_secret</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>80</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>config_merchant_secret_desc</tooltip>
                         </api_secret>
-                        <transaction_type translate="label">
-                            <label>Payment action</label>
+                        <transaction_type translate="label tooltip">
+                            <label>config_payment_action</label>
                             <source_model>paymentgateway/sepadirectdebit</source_model>
                             <frontend_type>select</frontend_type>
                             <sort_order>90</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>config_payment_action_desc</tooltip>
                         </transaction_type>
-                        <fraud_prevention translate="label">
-                            <label>Send additional data</label>
+                        <fraud_prevention translate="label tooltip">
+                            <label>config_additional_info</label>
                             <frontend_type>select</frontend_type>
                             <sort_order>100</sort_order>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>config_additional_info_desc</tooltip>
                         </fraud_prevention>
-                        <show_bic translate="label">
-                            <label>BIC enabled</label>
+                        <show_bic translate="label tooltip">
+                            <label>config_enable_bic</label>
                             <sort_order>110</sort_order>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>config_enable_bic_desc</tooltip>
                         </show_bic>
-                        <creditor_id translate="label">
-                            <label>Creditor ID</label>
+                        <creditor_id translate="label tooltip">
+                            <label>config_creditor_id</label>
                             <validate>required-entry</validate>
                             <depends><active>1</active></depends>
                             <frontend_type>text</frontend_type>
@@ -427,9 +500,10 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>config_creditor_id_desc</tooltip>
                         </creditor_id>
-                        <creditor_name translate="label">
-                            <label>Creditor Name</label>
+                        <creditor_name translate="label tooltip">
+                            <label>config_creditor_name</label>
                             <validate>required-entry</validate>
                             <depends><active>1</active></depends>
                             <frontend_type>text</frontend_type>
@@ -437,9 +511,10 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>config_creditor_name_desc</tooltip>
                         </creditor_name>
-                        <creditor_street translate="label">
-                            <label>Creditor Street</label>
+                        <creditor_street translate="label tooltip">
+                            <label>config_creditor_street</label>
                             <validate>required-entry</validate>
                             <depends><active>1</active></depends>
                             <frontend_type>text</frontend_type>
@@ -447,9 +522,10 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>config_creditor_street_desc</tooltip>
                         </creditor_street>
-                        <creditor_zip translate="label">
-                            <label>Creditor Zip</label>
+                        <creditor_zip translate="label tooltip">
+                            <label>config_creditor_zip</label>
                             <validate>required-entry</validate>
                             <depends><active>1</active></depends>
                             <frontend_type>text</frontend_type>
@@ -457,9 +533,10 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>config_creditor_zip_desc</tooltip>
                         </creditor_zip>
-                        <creditor_city translate="label">
-                            <label>Creditor City</label>
+                        <creditor_city translate="label tooltip">
+                            <label>config_creditor_city</label>
                             <validate>required-entry</validate>
                             <depends><active>1</active></depends>
                             <frontend_type>text</frontend_type>
@@ -467,9 +544,10 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>config_creditor_city_desc</tooltip>
                         </creditor_city>
-                        <creditor_country translate="label">
-                            <label>Creditor Country</label>
+                        <creditor_country translate="label tooltip">
+                            <label>config_creditor_country</label>
                             <validate>required-entry</validate>
                             <depends><active>1</active></depends>
                             <frontend_type>text</frontend_type>
@@ -477,38 +555,42 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>config_creditor_country_desc</tooltip>
                         </creditor_country>
-                        <sort_order translate="label">
-                            <label>Sort Order</label>
+                        <sort_order translate="label tooltip">
+                            <label>config_sort_order</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                             <frontend_class>validate-number</frontend_class>
                             <sort_order>180</sort_order>
+                            <tooltip>config_sort_order_desc</tooltip>
                         </sort_order>
                     </fields>
                 </wirecardee_paymentgateway_sepadirectdebit>
-                <wirecardee_paymentgateway_sepacredit>
-                    <label>Wirecard SEPA Credit Transfer</label>
+                <wirecardee_paymentgateway_sepacredit translate="label" module="paymentgateway">
+                    <label>heading_title_sepact</label>
                     <sort_order>1003</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
-                        <api_maid translate="label">
-                            <label>MAID</label>
+                        <api_maid translate="label tooltip">
+                            <label>config_merchant_account_id</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>config_merchant_account_id_desc</tooltip>
                         </api_maid>
-                        <api_secret translate="label">
-                            <label>Secret</label>
+                        <api_secret translate="label tooltip">
+                            <label>config_merchant_secret</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <tooltip>config_merchant_secret_desc</tooltip>
                         </api_secret>
                         <creditor_id translate="label">
                             <label translate="label">Creditor ID</label>
@@ -519,53 +601,58 @@
                         </creditor_id>
                     </fields>
                 </wirecardee_paymentgateway_sepacredit>
-                <wirecardee_paymentgateway_sofortbanking>
-                    <label>Wirecard Sofort.</label>
+                <wirecardee_paymentgateway_sofortbanking translate="label" module="paymentgateway">
+                    <label>heading_title_sofortbanking</label>
                     <sort_order>1004</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
-                        <title translate="label">
-                            <label>Title</label>
+                        <title translate="label tooltip">
+                            <label>config_title</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>10</sort_order>
+                            <tooltip>config_title_desc</tooltip>
                         </title>
-                        <active translate="label">
-                            <label>Enabled</label>
+                        <active translate="label tooltip">
+                            <label>text_enabled</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>20</sort_order>
+                            <tooltip>config_status_desc_sofortbanking</tooltip>
                         </active>
-                        <api_url translate="label">
-                            <label>Base URL</label>
+                        <api_url translate="label tooltip">
+                            <label>config_base_url</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>30</sort_order>
+                            <tooltip>config_base_url_desc</tooltip>
                         </api_url>
-                        <api_user translate="label">
-                            <label>HTTP User</label>
+                        <api_user translate="label tooltip">
+                            <label>config_http_user</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>40</sort_order>
+                            <tooltip>config_http_user_desc</tooltip>
                         </api_user>
-                        <api_password translate="label">
-                            <label>HTTP Password</label>
+                        <api_password translate="label tooltip">
+                            <label>config_http_password</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>50</sort_order>
+                            <tooltip>config_http_password_desc</tooltip>
                         </api_password>
                         <api_test_button>
                             <frontend_type>button</frontend_type>
@@ -576,39 +663,43 @@
                             <show_in_store>1</show_in_store>
                             <sort_order>60</sort_order>
                         </api_test_button>
-                        <api_maid translate="label">
-                            <label>MAID</label>
+                        <api_maid translate="label tooltip">
+                            <label>config_merchant_account_id</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>70</sort_order>
+                            <tooltip>config_merchant_account_id_desc</tooltip>
                         </api_maid>
-                        <api_secret translate="label">
-                            <label>Secret</label>
+                        <api_secret translate="label tooltip">
+                            <label>config_merchant_secret</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>80</sort_order>
+                            <tooltip>config_merchant_secret_desc</tooltip>
                         </api_secret>
-                        <fraud_prevention translate="label">
-                            <label>Send additional data</label>
+                        <fraud_prevention translate="label tooltip">
+                            <label>config_additional_info</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>90</sort_order>
+                            <tooltip>config_additional_info_desc</tooltip>
                         </fraud_prevention>
-                        <sort_order translate="label">
-                            <label>Sort Order</label>
+                        <sort_order translate="label tooltip">
+                            <label>config_sort_order</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                             <frontend_class>validate-number</frontend_class>
                             <sort_order>100</sort_order>
+                            <tooltip>config_sort_order_desc</tooltip>
                         </sort_order>
                     </fields>
                 </wirecardee_paymentgateway_sofortbanking>

@@ -6,7 +6,18 @@
  * - License can be found under:
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
+
+/** @var $this WirecardEE_PaymentGateway_Block_Checkout_Success */
+if (! $this->isWirecardPayment()) {
+    return;
+}
 ?>
 <div class="wirecardee_checkout_payment_status">
-    <?php echo Mage::helper('catalog')->__('Status'); ?>: <?php echo $this->getPaymentStatus(); ?>
+    <?php echo Mage::helper('catalog')->__('config_status'); ?>: <?php echo $this->getOrderStatusLabel(); ?>
+
+    <?php
+    if ($this->getOrderStatusLabel() === Mage_Sales_Model_Order::STATE_PENDING_PAYMENT) {
+        echo '<p>' . Mage::helper('catalog')->__('payment_pending_message') . '</p>';
+    }
+    ?>
 </div>

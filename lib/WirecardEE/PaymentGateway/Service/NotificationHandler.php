@@ -35,7 +35,7 @@ class NotificationHandler extends Handler
      * @param Response       $response
      * @param BackendService $backendService
      *
-     * @return null
+     * @return \Mage_Sales_Model_Order_Payment_Transaction|null
      * @throws \Exception
      *
      * @since 1.0.0
@@ -43,33 +43,26 @@ class NotificationHandler extends Handler
     public function handleResponse(Response $response, BackendService $backendService)
     {
         if ($response instanceof SuccessResponse) {
-            /** @var Mage_Sales_Model_Order $order */
-            $order = \Mage::getModel('sales/order')->load($response->getCustomFields()->get('order-id'));
-            $this->handleSuccess($response, $backendService);
-            $this->transactionManager->createTransaction(
-                TransactionManager::TYPE_NOTIFY,
-                $order,
-                $response
-            );
-            return;
+            return $this->handleSuccess($response, $backendService);
         }
 
         if ($response instanceof FailureResponse) {
             $this->logger->error("Failure response", ['response' => $response->getRawData()]);
-            return;
+            return null;
         }
 
         $this->logger->error("Unexpected notification response", [
             'class'    => get_class($response),
             'response' => $response->getData(),
         ]);
-        return;
+        return null;
     }
 
     /**
      * @param SuccessResponse $response
      * @param BackendService  $backendService
      *
+     * @return \Mage_Sales_Model_Order_Payment_Transaction|null
      * @throws \Exception
      *
      * @since 1.0.0
@@ -93,6 +86,10 @@ class NotificationHandler extends Handler
             $invoice = $order->prepareInvoice()->register();
             $invoice->setData('auto_capture', true);
             $invoice->capture();
+            $invoice->addComment(
+                \Mage::helper('catalog')->__('invoice_created')
+            );
+            $invoice->save();
 
             /** @var \Mage_Core_Model_Resource_Transaction $resourceTransaction */
             $resourceTransaction = \Mage::getModel('core/resource_transaction');
@@ -100,10 +97,6 @@ class NotificationHandler extends Handler
                 ->addObject($invoice)
                 ->addObject($invoice->getOrder())
                 ->save();
-
-            $order->addStatusHistoryComment(
-                \Mage::helper('catalog')->__('Automatically invoiced by the Wirecard Payment Gateway plugin.')
-            );
 
             foreach ($order->getAllVisibleItems() as $item) {
                 /** @var \Mage_Sales_Model_Order_Item $item */
@@ -114,27 +107,38 @@ class NotificationHandler extends Handler
             }
         }
 
-        $this->transactionManager->createTransaction(
+        $transaction = $this->transactionManager->createTransaction(
             TransactionManager::TYPE_NOTIFY,
             $order,
             $response,
             [TransactionManager::REFUNDABLE_BASKET_KEY => json_encode($refundableBasket)]
         );
 
-        if (in_array($order->getStatus(), [
+        if (in_array($order->getState(), [
             \Mage_Sales_Model_Order::STATE_COMPLETE,
             \Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW,
+            \Mage_Sales_Model_Order::STATE_CLOSED,
         ])) {
-            return;
+            return $transaction;
         }
 
-        $status = $this->getOrderStatus($backendService, $response);
-        if ($status === \Mage_Sales_Model_Order::STATE_PENDING_PAYMENT) {
-            return;
+        $state = $this->getOrderState($backendService, $response);
+        // Don't update if state equals order state or back to pending
+        if ($state === $order->getState()
+            || ($order->getState() !== \Mage_Sales_Model_Order::STATE_PROCESSING
+                && $state === \Mage_Sales_Model_Order::STATE_PENDING_PAYMENT)) {
+            return $transaction;
         }
 
-        $order->addStatusHistoryComment('Status updated by notification', $status);
+        $sendEmail = $this->shouldSendOrderUpdateEmail($order);
+        $order->setState($state, $state, \Mage::helper('paymentgateway')->__('order_status_updated'), $sendEmail);
         $order->save();
+
+        if ($sendEmail) {
+            $order->sendOrderUpdateEmail();
+        }
+
+        return $transaction;
     }
 
     /**
@@ -145,7 +149,7 @@ class NotificationHandler extends Handler
      *
      * @since 1.0.0
      */
-    private function getOrderStatus($backendService, $response)
+    private function getOrderState($backendService, $response)
     {
         if ($response->getTransactionType() === 'check-payer-response') {
             return \Mage_Sales_Model_Order::STATE_PENDING_PAYMENT;
@@ -159,5 +163,21 @@ class NotificationHandler extends Handler
             default:
                 return \Mage_Sales_Model_Order::STATE_PENDING_PAYMENT;
         }
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     *
+     * @return bool
+     *
+     * @since 1.0.0
+     */
+    private function shouldSendOrderUpdateEmail(\Mage_Sales_Model_Order $order)
+    {
+        if ($order->getState() === \Mage_Sales_Model_Order::STATE_PENDING_PAYMENT
+            && ! \Mage::getStoreConfig('wirecardee_paymentgateway/settings/pending_mail')) {
+            return false;
+        }
+        return true;
     }
 }

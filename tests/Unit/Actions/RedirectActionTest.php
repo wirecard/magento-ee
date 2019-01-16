@@ -7,7 +7,7 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-namespace WirecardElasticEngine\Tests\Unit\Components\Data;
+namespace WirecardEE\Tests\Unit\Actions;
 
 use PHPUnit\Framework\TestCase;
 use WirecardEE\PaymentGateway\Actions\Action;
