@@ -10,7 +10,7 @@
 use Wirecard\PaymentSdk\Transaction\EpsTransaction;
 
 /**
- * @since 1.0.0
+ * @since 1.1.0
  */
 class WirecardEE_PaymentGateway_Model_Eps extends WirecardEE_PaymentGateway_Model_Payment
 {
