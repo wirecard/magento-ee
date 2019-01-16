@@ -30,6 +30,11 @@ class ErrorAction implements Action
     const PAYMENT_CANCELED = 3;
 
     /**
+     * Backend-operation failed (e.g. due to an exception)
+     */
+    const BACKEND_OPERATION_FAILED = 4;
+
+    /**
      * @var int
      */
     protected $code;

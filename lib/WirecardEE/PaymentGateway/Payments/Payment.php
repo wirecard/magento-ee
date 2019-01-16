@@ -19,6 +19,8 @@ use WirecardEE\PaymentGateway\Exception\UnknownTransactionTypeException;
  */
 abstract class Payment implements PaymentInterface
 {
+    const CONFIG_PREFIX = 'payment/wirecardee_paymentgateway_';
+
     /**
      * @param $selectedCurrency
      *
@@ -39,7 +41,7 @@ abstract class Payment implements PaymentInterface
             \Mage::getVersion()
         );
 
-        $config->setPluginInfo($this->getHelper()->getPluginName(), $this->getHelper()->getPluginName());
+        $config->setPluginInfo($this->getHelper()->getPluginName(), $this->getHelper()->getPluginVersion());
 
         return $config;
     }
@@ -62,9 +64,12 @@ abstract class Payment implements PaymentInterface
      *
      * @since 1.0.0
      */
-    protected function getPluginConfig($name, $prefix = 'payment/wirecardee_paymentgateway_')
+    protected function getPluginConfig($name, $prefix = null)
     {
-        $config = \Mage::getStoreConfig($prefix . $this->getName());
+        $config = $prefix
+            ? \Mage::getStoreConfig($prefix)
+            : \Mage::getStoreConfig(self::CONFIG_PREFIX . $this->getName());
+
         return isset($config[$name]) ? $config[$name] : null;
     }
 
@@ -81,5 +86,40 @@ abstract class Payment implements PaymentInterface
             return Transaction::TYPE_AUTHORIZATION;
         }
         throw new UnknownTransactionTypeException($operation);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBackendTransaction(
+        \Mage_Sales_Model_Order $order,
+        $operation,
+        \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
+    ) {
+        return $this->getTransaction();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCancelOperation()
+    {
+        return Operation::CANCEL;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRefundOperation()
+    {
+        return Operation::REFUND;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCaptureOperation()
+    {
+        return Operation::PAY;
     }
 }

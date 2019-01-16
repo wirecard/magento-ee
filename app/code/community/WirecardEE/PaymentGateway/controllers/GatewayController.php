@@ -23,6 +23,7 @@ use WirecardEE\PaymentGateway\Service\NotificationHandler;
 use WirecardEE\PaymentGateway\Service\PaymentFactory;
 use WirecardEE\PaymentGateway\Service\PaymentHandler;
 use WirecardEE\PaymentGateway\Service\ReturnHandler;
+use WirecardEE\PaymentGateway\Service\SessionManager;
 
 /**
  * @since 1.0.0
@@ -42,10 +43,14 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      */
     public function indexAction()
     {
-        $paymentName = $this->getRequest()->getParam('method');
-        $payment     = (new PaymentFactory())->create($paymentName);
-        $handler     = new PaymentHandler($this->getHelper()->getTransactionManager(), $this->getHelper()->getLogger());
-        $order       = $this->getCheckoutSession()->getLastRealOrder();
+        $paymentName    = $this->getRequest()->getParam('method');
+        $payment        = (new PaymentFactory())->create($paymentName);
+        $handler        = new PaymentHandler(
+            $this->getHelper()->getTransactionManager(),
+            $this->getHelper()->getLogger()
+        );
+        $order          = $this->getCheckoutSession()->getLastRealOrder();
+        $sessionManager = new SessionManager(Mage::getSingleton("core/session", ["name" => "frontend"]));
 
         $this->getHelper()->validateBasket();
 
@@ -59,7 +64,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
                     $this->getHelper()->getClientIp(),
                     Mage::app()->getLocale()->getLocaleCode()
                 ),
-                $this->getHelper()->getDeviceFingerprintId($payment->getPaymentConfig()->getTransactionMAID())
+                $this->getHelper()->getDeviceFingerprintId($payment->getPaymentConfig()->getTransactionMAID()),
+                $sessionManager->getPaymentData()
             ),
             new TransactionService(
                 $payment->getTransactionConfig($order->getBaseCurrency()->getCode()),
@@ -232,6 +238,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
 
     /**
      * @return bool
+     * @throws Exception
      */
     private function cancelOrderAndRestoreBasket()
     {
@@ -246,9 +253,15 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
                           ->setReservedOrderId(null)
                           ->save();
                     $this->getCheckoutSession()->replaceQuote($quote);
-
-                    return true;
                 }
+
+                if (Mage::getStoreConfig('wirecardee_paymentgateway/settings/delete_cancelled_orders')) {
+                    Mage::register('isSecureArea', true);
+                    $order->delete();
+                    Mage::unregister('isSecureArea');
+                }
+
+                return true;
             }
         }
 

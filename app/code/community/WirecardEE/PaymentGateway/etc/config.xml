@@ -42,6 +42,36 @@
                     </wirecard_ee_composer_autoload>
                 </observers>
             </controller_front_init_before>
+
+            <sales_order_payment_cancel>
+                <observers>
+                    <wirecard_ee_cancel>
+                        <type>singleton</type>
+                        <class>paymentgateway/backendOperation</class>
+                        <method>cancel</method>
+                    </wirecard_ee_cancel>
+                </observers>
+            </sales_order_payment_cancel>
+
+            <sales_order_invoice_pay>
+                <observers>
+                    <wirecard_ee_capture>
+                        <type>singleton</type>
+                        <class>paymentgateway/backendOperation</class>
+                        <method>capture</method>
+                    </wirecard_ee_capture>
+                </observers>
+            </sales_order_invoice_pay>
+
+            <sales_order_payment_refund>
+                <observers>
+                    <wirecard_ee_refund>
+                        <type>singleton</type>
+                        <class>paymentgateway/backendOperation</class>
+                        <method>refund</method>
+                    </wirecard_ee_refund>
+                </observers>
+            </sales_order_payment_refund>
         </events>
 
         <resources>
@@ -54,6 +84,11 @@
     </global>
 
     <default>
+        <wirecardee_paymentgateway>
+            <settings>
+                <delete_cancelled_orders>0</delete_cancelled_orders>
+            </settings>
+        </wirecardee_paymentgateway>
         <payment>
             <wirecardee_paymentgateway_paypal>
                 <active>0</active>
@@ -89,6 +124,43 @@
                 <three_d_min_limit_currency>EUR</three_d_min_limit_currency>
                 <sort_order>1</sort_order>
             </wirecardee_paymentgateway_creditcard>
+            <wirecardee_paymentgateway_sepadirectdebit>
+                <active>0</active>
+                <model>paymentgateway/sepadirectdebit</model>
+                <title>Wirecard SEPA Direct Debit</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>16390-testing</api_user>
+                <api_password>3!3013=D3fD8X7</api_password>
+                <api_maid>933ad170-88f0-4c3d-a862-cff315ecfbc0</api_maid>
+                <api_secret>ecdf5990-0372-47cd-a55d-037dccfe9d25</api_secret>
+                <transaction_type>pay</transaction_type>
+                <fraud_prevention>1</fraud_prevention>
+                <show_bic>0</show_bic>
+                <creditor_id>DE98ZZZ09999999999</creditor_id>
+                <creditor_name></creditor_name>
+                <creditor_street></creditor_street>
+                <creditor_zip></creditor_zip>
+                <creditor_city></creditor_city>
+                <creditor_country></creditor_country>
+                <sort_order>33</sort_order>
+            </wirecardee_paymentgateway_sepadirectdebit>
+            <wirecardee_paymentgateway_sepacredit>
+                <api_maid>59a01668-693b-49f0-8a1f-f3c1ba025d45</api_maid>
+                <api_secret>ecdf5990-0372-47cd-a55d-037dccfe9d25</api_secret>
+                <creditor_id>DE98ZZZ09999999999</creditor_id>
+            </wirecardee_paymentgateway_sepacredit>
+            <wirecardee_paymentgateway_sofortbanking>
+                <active>0</active>
+                <model>paymentgateway/sofortbanking</model>
+                <title>Wirecard Sofort.</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>16390-testing</api_user>
+                <api_password>3!3013=D3fD8X7</api_password>
+                <api_maid>6c0e7efd-ee58-40f7-9bbd-5e7337a052cd</api_maid>
+                <api_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</api_secret>
+                <fraud_prevention>1</fraud_prevention>
+                <sort_order>36</sort_order>
+            </wirecardee_paymentgateway_sofortbanking>
         </payment>
     </default>
 
@@ -132,5 +204,16 @@
                 </paymentgateway>
             </updates>
         </layout>
+        <events>
+            <checkout_type_onepage_save_order>
+                <observers>
+                    <wirecard_ee_reviewfield>
+                        <type>model</type>
+                        <class>paymentgateway/observer</class>
+                        <method>checkoutTypeOnepageSaveOrder</method>
+                    </wirecard_ee_reviewfield>
+                </observers>
+            </checkout_type_onepage_save_order>
+        </events>
     </frontend>
 </config>

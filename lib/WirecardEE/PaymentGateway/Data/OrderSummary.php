@@ -48,11 +48,17 @@ class OrderSummary
     protected $userMapper;
 
     /**
+     * @var array
+     */
+    protected $additionalPaymentData;
+
+    /**
      * @param PaymentInterface        $payment
      * @param \Mage_Sales_Model_Order $order
      * @param BasketMapper            $basketMapper
      * @param UserMapper              $userMapper
      * @param string                  $deviceFingerprintId
+     * @param array                   $additionalPaymentData
      *
      * @since 1.0.0
      */
@@ -61,13 +67,15 @@ class OrderSummary
         \Mage_Sales_Model_Order $order,
         BasketMapper $basketMapper,
         UserMapper $userMapper,
-        $deviceFingerprintId
+        $deviceFingerprintId,
+        $additionalPaymentData = []
     ) {
-        $this->payment             = $payment;
-        $this->order               = $order;
-        $this->deviceFingerprintId = $deviceFingerprintId;
-        $this->basketMapper        = $basketMapper;
-        $this->userMapper          = $userMapper;
+        $this->payment               = $payment;
+        $this->order                 = $order;
+        $this->deviceFingerprintId   = $deviceFingerprintId;
+        $this->basketMapper          = $basketMapper;
+        $this->userMapper            = $userMapper;
+        $this->additionalPaymentData = $additionalPaymentData;
     }
 
     /**
@@ -150,5 +158,13 @@ class OrderSummary
         $device = new Device();
         $device->setFingerprint($this->getDeviceFingerprintId());
         return $device;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAdditionalPaymentData()
+    {
+        return $this->additionalPaymentData;
     }
 }

@@ -12,6 +12,7 @@ namespace WirecardEE\PaymentGateway\Payments;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\Action;
@@ -114,5 +115,15 @@ class PaypalPayment extends Payment implements ProcessPaymentInterface
         ));
 
         return null;
+    }
+
+    /**
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getRefundOperation()
+    {
+        return Operation::CANCEL;
     }
 }
