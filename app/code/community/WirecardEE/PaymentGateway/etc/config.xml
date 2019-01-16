@@ -180,6 +180,18 @@
                 <fraud_prevention>1</fraud_prevention>
                 <sort_order>9</sort_order>
             </wirecardee_paymentgateway_eps>
+            <wirecardee_paymentgateway_giropay>
+                <active>0</active>
+                <model>paymentgateway/giropay</model>
+                <title>Wirecard Giropay</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>16390-testing</api_user>
+                <api_password>3!3013=D3fD8X7</api_password>
+                <api_maid>9b4b0e5f-1bc8-422e-be42-d0bad2eadabc</api_maid>
+                <api_secret>0c8c6f3a-1534-4fa1-99d9-d1c644d43709</api_secret>
+                <fraud_prevention>1</fraud_prevention>
+                <sort_order>11</sort_order>
+            </wirecardee_paymentgateway_giropay>
         </payment>
     </default>
 

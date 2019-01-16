@@ -57,6 +57,16 @@ exports.config = {
       fields: {
         'wirecardee-eps--bic': 'BWFBATW1XXX'
       }
+    },
+    giropay: {
+      label: 'Wirecard Giropay',
+      fields: {
+        'wirecardee-giropay--bic': 'GENODETT488'
+      },
+      simulatorFields: {
+        sc: 10,
+        extensionSc: 4000
+      }
     }
   }
 };
