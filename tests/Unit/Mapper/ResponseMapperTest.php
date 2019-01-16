@@ -43,6 +43,7 @@ class ResponseMapperTest extends TestCase
         $this->assertSame(['data'], $mapper->getData());
         $this->assertSame($basket, $mapper->getBasket());
         $this->assertSame('method', $mapper->getPaymentMethod());
+        $this->assertNull($mapper->getOrderNumber());
     }
 
     public function testResponse()
@@ -54,6 +55,7 @@ class ResponseMapperTest extends TestCase
         $response->method('getData')->willReturn($data = [
             'provider-transaction-reference-id' => 'prov-trans-ref',
             'payment-methods.0.name'            => 'pay-method',
+            'order-number'                      => 1
         ]);
         $response->method('getBasket')->willReturn($basket = new Basket());
 
@@ -68,5 +70,6 @@ class ResponseMapperTest extends TestCase
         $this->assertSame($data, $mapper->getData());
         $this->assertSame($basket, $mapper->getBasket());
         $this->assertSame('pay-method', $mapper->getPaymentMethod());
+        $this->assertsame(1, $mapper->getOrderNumber());
     }
 }

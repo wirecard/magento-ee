@@ -168,6 +168,18 @@
                 <fraud_prevention>1</fraud_prevention>
                 <sort_order>36</sort_order>
             </wirecardee_paymentgateway_sofortbanking>
+            <wirecardee_paymentgateway_eps>
+                <active>0</active>
+                <model>paymentgateway/eps</model>
+                <title>Wirecard eps-Überweisung</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>16390-testing</api_user>
+                <api_password>3!3013=D3fD8X7</api_password>
+                <api_maid>1f629760-1a66-4f83-a6b4-6a35620b4a6d</api_maid>
+                <api_secret>20c6a95c-e39b-4e6a-971f-52cfb347d359</api_secret>
+                <fraud_prevention>1</fraud_prevention>
+                <sort_order>9</sort_order>
+            </wirecardee_paymentgateway_eps>
         </payment>
     </default>
 

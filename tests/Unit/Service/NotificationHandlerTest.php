@@ -10,8 +10,10 @@
 namespace WirecardEE\Tests\Unit\Service;
 
 use Wirecard\PaymentSdk\BackendService;
+use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
 use WirecardEE\PaymentGateway\Service\Logger;
 use WirecardEE\PaymentGateway\Service\NotificationHandler;
 use WirecardEE\PaymentGateway\Service\TransactionManager;
@@ -31,5 +33,43 @@ class NotificationHandlerTest extends MagentoTestCase
 
         $unexpectedResponse = $this->createMock(InteractionResponse::class);
         $this->assertNull($notificationHandler->handleResponse($unexpectedResponse, $backendService));
+    }
+
+    public function testHandleSuccessWithInvalidOrderId()
+    {
+        $transactionManager = $this->createMock(TransactionManager::class);
+
+        $backendService  = $this->createMock(BackendService::class);
+        $successResponse = $this->createMock(SuccessResponse::class);
+        $successResponse->method('getCustomFields')->willReturn(new CustomFieldCollection());
+
+        $order = $this->createMock(\Mage_Sales_Model_Order::class);
+        $order->method('load')->willReturnSelf();
+        $this->replaceMageModel('sales/order', $order);
+
+        $notificationHandler = new NotificationHandler($transactionManager, new Logger());
+
+        $this->expectException(\Exception::class);
+
+        $notificationHandler->handleResponse($successResponse, $backendService);
+    }
+
+    public function testHandleSuccessWithOrderNumberFromResponse()
+    {
+        $transactionManager = $this->createMock(TransactionManager::class);
+
+        $backendService  = $this->createMock(BackendService::class);
+        $successResponse = $this->createMock(SuccessResponse::class);
+        $successResponse->method('getCustomFields')->willReturn(new CustomFieldCollection());
+        $successResponse->method('getData')->willreturn(['order-number' => 1]);
+
+        $order = $this->createMock(\Mage_Sales_Model_Order::class);
+        $order->method('load')->willReturnSelf();
+        $order->method('getId')->willReturn(null);
+        $order->expects($this->once())->method('loadByIncrementId')->willReturnSelf();
+        $this->replaceMageModel('sales/order', $order);
+
+        $notificationHandler = new NotificationHandler($transactionManager, new Logger());
+        $notificationHandler->handleResponse($successResponse, $backendService);
     }
 }
