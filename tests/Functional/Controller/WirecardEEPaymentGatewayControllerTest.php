@@ -318,6 +318,25 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $this->assertTrue($controller->cancelAction());
     }
 
+    public function testFailureAction()
+    {
+        $request  = new \Mage_Core_Controller_Request_Http();
+        $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
+
+        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        \Mage::app()->setRequest($request);
+
+        $order           = $this->createMock(\Mage_Sales_Model_Order::class);
+        $checkoutSession = $this->createMock(\Mage_Checkout_Model_Session::class);
+        $checkoutSession->method('getLastRealOrder')->willReturn($order);
+
+        $checkoutSession->expects($this->once())->method('setData');
+
+        $this->replaceMageSingleton('checkout/session', $checkoutSession);
+
+        $this->assertInstanceOf(\Mage_Core_Controller_Varien_Action::class, $controller->failureAction());
+    }
+
     public function testCancelFailsAction()
     {
         $request  = new \Mage_Core_Controller_Request_Http();
