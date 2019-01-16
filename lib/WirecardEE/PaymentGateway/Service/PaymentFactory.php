@@ -11,6 +11,7 @@ namespace WirecardEE\PaymentGateway\Service;
 
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\EpsTransaction;
+use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
@@ -100,7 +101,7 @@ class PaymentFactory
             SepaDirectDebitTransaction::NAME => SepaPayment::class,
             SofortTransaction::NAME          => SofortPayment::class,
             EpsTransaction::NAME             => EpsPayment::class,
-            IdealPayment::NAME               => IdealPayment::class,
+            IdealTransaction::NAME           => IdealPayment::class,
         ];
     }
 
