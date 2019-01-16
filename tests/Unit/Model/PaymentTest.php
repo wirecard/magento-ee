@@ -106,4 +106,14 @@ class PaymentTest extends TestCase
         $this->assertEquals('wirecardee_paymentgateway_sofortbanking', $payment->getCode());
         $this->assertNotEmpty($payment->toOptionArray());
     }
+
+    public function testEps()
+    {
+        $payment = new \WirecardEE_PaymentGateway_Model_Eps();
+        $this->assertStringEndsWith(
+            '/paymentgateway/gateway/index/method/eps/',
+            $payment->getOrderPlaceRedirectUrl()
+        );
+        $this->assertEquals('wirecardee_paymentgateway_eps', $payment->getCode());
+    }
 }

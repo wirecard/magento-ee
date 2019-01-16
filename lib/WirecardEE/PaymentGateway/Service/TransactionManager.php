@@ -72,6 +72,7 @@ class TransactionManager
         $transactionId        = $responseMapper->getTransactionId();
 
         if (! $transactionId) {
+            $this->logger->warning('Unable to create transaction due to missing transaction id');
             // We're not handling responses without transaction ids at all.
             return null;
         }
@@ -147,6 +148,8 @@ class TransactionManager
                         );
 
                         $mageTransactionModel->save();
+
+                        return $mageTransactionModel;
                     }
 
                     $this->logger->info("Unable to save transaction ($transactionId)");

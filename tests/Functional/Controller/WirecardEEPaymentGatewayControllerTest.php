@@ -11,6 +11,7 @@ namespace WirecardEE\Tests\Functional\Controller;
 
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\PaymentSdk\Transaction\EpsTransaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
@@ -244,6 +245,26 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         );
     }
 
+    public function testIndexActionWithEps()
+    {
+        list($controller, , $transaction, $coreSession) = $this->prepareForIndexAction(EpsTransaction::NAME);
+
+        $transaction->expects($this->once())->method('setTxnType')->with('payment');
+
+        $coreSession->method('getData')->willReturnMap([
+            [SessionManager::PAYMENT_DATA, false, ['epsBic' => 'BWFBATW1XXX']],
+            [\WirecardEE_PaymentGateway_Helper_Data::DEVICE_FINGERPRINT_ID, false, md5('test')],
+        ]);
+
+        /** @var RedirectAction $action */
+        $action = $controller->indexAction();
+        $this->assertInstanceOf(RedirectAction::class, $action);
+        $this->assertStringStartsWith(
+            'https://www.banking.co.at/appl/ebp/logout/so/loginPrepare/eps.html',
+            $action->getUrl()
+        );
+    }
+
     public function testReturnActionWithNoParams()
     {
         $request  = $this->getMockForAbstractClass(\Zend_Controller_Request_Abstract::class);
@@ -316,6 +337,17 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         \Mage::app()->setRequest($request);
 
         $this->assertTrue($controller->cancelAction());
+    }
+
+    public function testFailureAction()
+    {
+        $request  = new \Mage_Core_Controller_Request_Http();
+        $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
+
+        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        \Mage::app()->setRequest($request);
+
+        $this->assertInstanceOf(\Mage_Core_Controller_Varien_Action::class, $controller->failureAction());
     }
 
     public function testCancelFailsAction()

@@ -51,6 +51,12 @@ exports.config = {
         password: 'passwd',
         tan: '12345'
       }
+    },
+    eps: {
+      label: 'Wirecard eps-Überweisung',
+      fields: {
+        'wirecardee-eps--bic': 'BWFBATW1XXX'
+      }
     }
   }
 };

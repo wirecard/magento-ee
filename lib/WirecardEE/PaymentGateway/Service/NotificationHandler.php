@@ -15,6 +15,7 @@ use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\Transaction\Transaction;
+use WirecardEE\PaymentGateway\Mapper\ResponseMapper;
 
 /**
  * Handles notification responses. Notification responses are server-to-server, meaning you must NEVER access session
@@ -73,9 +74,13 @@ class NotificationHandler extends Handler
 
         /** @var Mage_Sales_Model_Order $order */
         $order = \Mage::getModel('sales/order')->load($response->getCustomFields()->get('order-id'));
-        if (! $order) {
-            $this->logger->error("Order not found for notification " . $response->getTransactionId());
-            throw new \Exception("Order not found");
+        if (! $order->getId()) {
+            if (! $orderNumber = (new ResponseMapper($response))->getOrderNumber()) {
+                $this->logger->error("Order not found for transaction " . $response->getTransactionId());
+                throw new \Exception("Order not found");
+            }
+
+            $order = $order->loadByIncrementId($orderNumber);
         }
 
         $refundableBasket = [];
