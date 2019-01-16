@@ -21,12 +21,10 @@ class WirecardEE_PaymentGateway_Model_Ideal extends WirecardEE_PaymentGateway_Mo
     /**
      * @return array
      *
-     * @throws ReflectionException
-     *
      * @since 1.1.0
      */
     public function getBanks()
     {
-        return (new \ReflectionClass(IdealBic::class))->getConstants();
+        return IdealBic::toArray();
     }
 }
