@@ -25,7 +25,7 @@ describe('eps test', () => {
   const paymentLabel = config.payments.eps.label;
   const formFields = config.payments.eps.fields;
 
-  it('should check the sepa direct debit payment process', async () => {
+  it('should check the eps payment process', async () => {
     await addProductToCartAndGotoCheckout(driver, '/accessories/jewelry/blue-horizons-bracelets.html');
     await fillOutGuestCheckout(driver);
     await chooseFlatRateShipping(driver);
