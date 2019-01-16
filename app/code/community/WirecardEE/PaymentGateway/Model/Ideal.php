@@ -7,11 +7,11 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-use Wirecard\PaymentSdk\Transaction\Operation;
+use Wirecard\PaymentSdk\Entity\IdealBic;
 use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 
 /**
- * @since 1.0.0
+ * @since 1.1.0
  */
 class WirecardEE_PaymentGateway_Model_Ideal extends WirecardEE_PaymentGateway_Model_Payment
 {
@@ -19,23 +19,14 @@ class WirecardEE_PaymentGateway_Model_Ideal extends WirecardEE_PaymentGateway_Mo
     protected $_paymentMethod = IdealTransaction::NAME;
 
     /**
-     * Return available transaction types for this payment.
-     *
      * @return array
      *
-     * @since 1.0.0
+     * @throws ReflectionException
+     *
+     * @since 1.1.0
      */
-    // public function toOptionArray()
-    // {
-    //     return [
-    //         [
-    //             'value' => Operation::RESERVE,
-    //             'label' => Mage::helper('catalog')->__('Authorization'),
-    //         ],
-    //         [
-    //             'value' => Operation::PAY,
-    //             'label' => Mage::helper('catalog')->__('Purchase'),
-    //         ],
-    //     ];
-    // }
+    public function getBanks()
+    {
+        return (new \ReflectionClass(IdealBic::class))->getConstants();
+    }
 }

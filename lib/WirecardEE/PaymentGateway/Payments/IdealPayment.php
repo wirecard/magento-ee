@@ -9,6 +9,7 @@
 
 namespace WirecardEE\PaymentGateway\Payments;
 
+use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Config\SepaConfig;
 use Wirecard\PaymentSdk\Entity\IdealBic;
@@ -17,7 +18,6 @@ use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\TransactionService;
-use WirecardEE\PaymentGateway\Exception\InsufficientDataException;
 use WirecardEE\PaymentGateway\Data\IdealPaymentConfig;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplate;
@@ -35,6 +35,8 @@ class IdealPayment extends Payment implements ProcessPaymentInterface, CustomFor
 
     /**
      * @return string
+     *
+     * @since 1.1.0
      */
     public function getName()
     {
@@ -69,18 +71,18 @@ class IdealPayment extends Payment implements ProcessPaymentInterface, CustomFor
             $this->getPaymentConfig()->getTransactionMAID(),
             $this->getPaymentConfig()->getTransactionSecret()
         ));
-         $sepaCreditTransferConfig = new SepaConfig(
-             SepaCreditTransferTransaction::NAME,
-             $this->getPaymentConfig()->getBackendTransactionMAID(),
-             $this->getPaymentConfig()->getBackendTransactionSecret()
-         );
-         $sepaCreditTransferConfig->setCreditorId($this->getPaymentConfig()->getBackendCreditorId());
-         $config->add($sepaCreditTransferConfig);
+        $sepaCreditTransferConfig = new SepaConfig(
+            SepaCreditTransferTransaction::NAME,
+            $this->getPaymentConfig()->getBackendTransactionMAID(),
+            $this->getPaymentConfig()->getBackendTransactionSecret()
+        );
+        $sepaCreditTransferConfig->setCreditorId($this->getPaymentConfig()->getBackendCreditorId());
+        $config->add($sepaCreditTransferConfig);
         return $config;
     }
 
     /**
-     * @return  PaymentConfig
+     * @return IdealPaymentConfig
      *
      * @since 1.1.0
      */
@@ -125,11 +127,11 @@ class IdealPayment extends Payment implements ProcessPaymentInterface, CustomFor
      * @param TransactionService $transactionService
      * @param Redirect           $redirect
      *
-     * @return null|Action
+     * @return null
      *
-     * @throws InsufficientDataException
+     * @throws \ReflectionException
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function processPayment(
         OrderSummary $orderSummary,
@@ -142,6 +144,8 @@ class IdealPayment extends Payment implements ProcessPaymentInterface, CustomFor
 
         $transaction = $this->getTransaction();
         $transaction->setBic($idealBic->getConstant($additionalPaymentData['idealBank']));
+
+        return null;
     }
 
     /**

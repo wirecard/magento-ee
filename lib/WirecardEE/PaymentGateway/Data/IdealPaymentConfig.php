@@ -36,7 +36,7 @@ class IdealPaymentConfig extends PaymentConfig
      *
      * @param string
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function setBackendTransactionMAID($backendTransactionMaid)
     {
@@ -48,7 +48,7 @@ class IdealPaymentConfig extends PaymentConfig
      *
      * @return string
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function getBackendTransactionMAID()
     {
@@ -60,7 +60,7 @@ class IdealPaymentConfig extends PaymentConfig
      *
      * @param string
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function setBackendTransactionSecret($backendTransactionSecret)
     {
@@ -72,7 +72,7 @@ class IdealPaymentConfig extends PaymentConfig
      *
      * @return string
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function getBackendTransactionSecret()
     {
@@ -84,7 +84,7 @@ class IdealPaymentConfig extends PaymentConfig
      *
      * @param string
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function setBackendCreditorId($backendCreditorId)
     {
@@ -96,13 +96,12 @@ class IdealPaymentConfig extends PaymentConfig
      *
      * @return string
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function getBackendCreditorId()
     {
         return $this->backendCreditorId;
     }
-
 
     /**
      * {@inheritdoc}
@@ -112,8 +111,8 @@ class IdealPaymentConfig extends PaymentConfig
         return array_merge(
             parent::toArray(),
             [
-                'backendTransactionMaid'   => $this->getBackendTransactionMAID(),
-                'backendCreditorId'        => $this->getBackendCreditorId()
+                'backendTransactionMaid' => $this->getBackendTransactionMAID(),
+                'backendCreditorId'      => $this->getBackendCreditorId(),
             ]
         );
     }
