@@ -149,6 +149,8 @@ class TransactionManager
 
                         $mageTransactionModel->save();
 
+                        $this->logger->info("Detected ID collision for $transactionId");
+
                         return $mageTransactionModel;
                     }
 
