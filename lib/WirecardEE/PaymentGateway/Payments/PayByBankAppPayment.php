@@ -96,6 +96,32 @@ class PayByBankAppPayment extends Payment implements ProcessPaymentInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getBackendTransaction(
+        \Mage_Sales_Model_Order $order,
+        $operation,
+        \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
+    ) {
+        $transaction = $this->getTransaction();
+
+        $customFields = $transaction->getCustomFields();
+
+        $customFields->add($this->makeCustomField('RefundReasonType', 'LATECONFIRMATION'));
+        $customFields->add($this->makeCustomField('RefundMethod', 'BACS'));
+
+        return $transaction;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRefundOperation()
+    {
+        return Operation::CANCEL;
+    }
+
+    /**
      * @param OrderSummary $orderSummary
      * @param TransactionService $transactionService
      * @param Redirect $redirect
