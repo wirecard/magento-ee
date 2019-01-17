@@ -20,7 +20,7 @@ class OrderTest extends MagentoTestCase
 
     public function testWirecardOrder()
     {
-        $method = new \WirecardEE_PaymentGateway_Model_CreditCard();
+        $method = new \WirecardEE_PaymentGateway_Model_Creditcard();
 
         $payment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
         $payment->method('getMethodInstance')->willReturn($method);
