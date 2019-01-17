@@ -107,9 +107,29 @@ class PayByBankAppPaymentTest extends TestCase
         $this->assertInstanceOf(CustomFieldCollection::class, $cFields);
         $this->assertCount(3, $cFields);
 
-        $this->assertInternalType('string', $cFields->get('MerchantRtnStrng'));
         $this->assertEquals('PAYMT', $cFields->get('TxType'));
         $this->assertEquals('DELTAD', $cFields->get('DeliveryType'));
+    }
+
+    public function testGetBackendTransaction()
+    {
+        $pmnt = new PayByBankAppPayment();
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject|\Mage_Sales_Model_Order $mageOrderMock */
+        $mageOrderMock = $this->createMock(\Mage_Sales_Model_Order::class);
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject|\Mage_Sales_Model_Order_Payment_Transaction $magePmntMock */
+        $magePmntMock = $this->createMock(\Mage_Sales_Model_Order_Payment_Transaction::class);
+
+        $transaction = $pmnt->getBackendTransaction($mageOrderMock, 'refund', $magePmntMock);
+
+        $cFields = $transaction->getCustomFields();
+
+        $this->assertInstanceOf(CustomFieldCollection::class, $cFields);
+        $this->assertCount(2, $cFields);
+
+        $this->assertEquals('LATECONFIRMATION', $cFields->get('RefundReasonType'));
+        $this->assertEquals('BACS', $cFields->get('RefundMethod'));
     }
 
     public function testProcessPaymentUnkownUserAgent()
