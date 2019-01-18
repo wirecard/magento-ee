@@ -11,24 +11,24 @@ namespace WirecardEE\PaymentGateway\Payments;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
-use Wirecard\PaymentSdk\Entity\BankAccount;
+use Wirecard\PaymentSdk\Config\SepaConfig;
+use Wirecard\PaymentSdk\Entity\IdealBic;
 use Wirecard\PaymentSdk\Entity\Redirect;
-use Wirecard\PaymentSdk\Transaction\EpsTransaction;
+use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\TransactionService;
-use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\SepaCreditTransferPaymentConfig;
 use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplate;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
-class EpsPayment extends Payment implements ProcessPaymentInterface, CustomFormTemplate
+class IdealPayment extends Payment implements ProcessPaymentInterface, CustomFormTemplate
 {
-    const NAME = EpsTransaction::NAME;
+    const NAME = IdealTransaction::NAME;
 
     /**
-     * @var EpsTransaction
+     * @var IdealTransaction
      */
     private $transactionInstance;
 
@@ -43,16 +43,30 @@ class EpsPayment extends Payment implements ProcessPaymentInterface, CustomFormT
     }
 
     /**
-     * @return EpsTransaction
+     * @return IdealTransaction
      *
      * @since 1.1.0
      */
     public function getTransaction()
     {
         if (! $this->transactionInstance) {
-            $this->transactionInstance = new EpsTransaction();
+            $this->transactionInstance = new IdealTransaction();
         }
         return $this->transactionInstance;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBackendTransaction(
+        \Mage_Sales_Model_Order $order,
+        $operation,
+        \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
+    ) {
+        if ($operation === Operation::CREDIT) {
+            return new SepaCreditTransferTransaction();
+        }
+        return new IdealTransaction();
     }
 
     /**
@@ -66,10 +80,17 @@ class EpsPayment extends Payment implements ProcessPaymentInterface, CustomFormT
     {
         $config = parent::getTransactionConfig($selectedCurrency);
         $config->add(new PaymentMethodConfig(
-            EpsTransaction::NAME,
+            IdealTransaction::NAME,
             $this->getPaymentConfig()->getTransactionMAID(),
             $this->getPaymentConfig()->getTransactionSecret()
         ));
+        $sepaCreditTransferConfig = new SepaConfig(
+            SepaCreditTransferTransaction::NAME,
+            $this->getPaymentConfig()->getBackendTransactionMAID(),
+            $this->getPaymentConfig()->getBackendTransactionSecret()
+        );
+        $sepaCreditTransferConfig->setCreditorId($this->getPaymentConfig()->getBackendCreditorId());
+        $config->add($sepaCreditTransferConfig);
         return $config;
     }
 
@@ -90,8 +111,6 @@ class EpsPayment extends Payment implements ProcessPaymentInterface, CustomFormT
         $paymentConfig->setTransactionSecret($this->getPluginConfig('api_secret'));
         $paymentConfig->setTransactionOperation(Operation::PAY);
         $paymentConfig->setOrderIdentification(true);
-        $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
-
         $paymentConfig->setBackendTransactionMAID(
             $this->getPluginConfig(
                 'api_maid',
@@ -111,6 +130,8 @@ class EpsPayment extends Payment implements ProcessPaymentInterface, CustomFormT
             )
         );
 
+        $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
+
         return $paymentConfig;
     }
 
@@ -119,7 +140,9 @@ class EpsPayment extends Payment implements ProcessPaymentInterface, CustomFormT
      * @param TransactionService $transactionService
      * @param Redirect           $redirect
      *
-     * @return null|Action
+     * @return null
+     *
+     * @throws \ReflectionException
      *
      * @since 1.1.0
      */
@@ -129,13 +152,11 @@ class EpsPayment extends Payment implements ProcessPaymentInterface, CustomFormT
         Redirect $redirect
     ) {
         $additionalPaymentData = $orderSummary->getAdditionalPaymentData();
-        $transaction           = $this->getTransaction();
 
-        if (array_key_exists('epsBic', $additionalPaymentData)) {
-            $bankAccount = new BankAccount();
-            $bankAccount->setBic($additionalPaymentData['epsBic']);
-            $transaction->setBankAccount($bankAccount);
-        }
+        $idealBic = new \ReflectionClass(IdealBic::class);
+
+        $transaction = $this->getTransaction();
+        $transaction->setBic($idealBic->getConstant($additionalPaymentData['idealBank']));
 
         return null;
     }
@@ -147,27 +168,7 @@ class EpsPayment extends Payment implements ProcessPaymentInterface, CustomFormT
      */
     public function getFormTemplateName()
     {
-        return 'WirecardEE/form/eps.phtml';
-    }
-
-    /**
-     * @param \Mage_Sales_Model_Order                     $order
-     * @param                                             $operation
-     * @param \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
-     *
-     * @return EpsTransaction|SepaCreditTransferTransaction
-     *
-     * @since 1.1.0
-     */
-    public function getBackendTransaction(
-        \Mage_Sales_Model_Order $order,
-        $operation,
-        \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
-    ) {
-        if ($operation === Operation::CREDIT) {
-            return new SepaCreditTransferTransaction();
-        }
-        return new EpsTransaction();
+        return 'WirecardEE/form/ideal.phtml';
     }
 
     /**

@@ -10,6 +10,7 @@
 namespace WirecardEE\Tests\Unit\Model;
 
 use PHPUnit\Framework\TestCase;
+use Wirecard\PaymentSdk\Entity\IdealBic;
 
 class PaymentTest extends TestCase
 {
@@ -105,6 +106,20 @@ class PaymentTest extends TestCase
         );
         $this->assertEquals('wirecardee_paymentgateway_sofortbanking', $payment->getCode());
         $this->assertNotEmpty($payment->toOptionArray());
+    }
+
+    public function testIdeal()
+    {
+        $payment = new \WirecardEE_PaymentGateway_Model_Ideal();
+        $this->assertStringEndsWith(
+            '/paymentgateway/gateway/index/method/ideal/',
+            $payment->getOrderPlaceRedirectUrl()
+        );
+        $this->assertEquals('wirecardee_paymentgateway_ideal', $payment->getCode());
+        $this->assertSame(
+            (new \ReflectionClass(IdealBic::class))->getConstants(),
+            $payment->getBanks()
+        );
     }
 
     public function testEps()

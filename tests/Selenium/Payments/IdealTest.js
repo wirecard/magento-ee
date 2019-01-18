@@ -9,47 +9,35 @@
 const { By, until } = require('selenium-webdriver');
 const {
   getDriver,
-  asyncForEach,
   placeOrder,
   checkConfirmationPage,
   choosePaymentMethod,
   fillOutGuestCheckout,
   addProductToCartAndGotoCheckout,
-  chooseFlatRateShipping
+  chooseFlatRateShipping,
+  asyncForEach
 } = require('../common');
 const { config } = require('../config');
 
-describe('eps test', () => {
+describe('iDEAL test', () => {
   const driver = getDriver();
 
-  const paymentLabel = config.payments.eps.label;
-  const formFields = config.payments.eps.fields;
+  const paymentLabel = config.payments.ideal.label;
+  const formFields = config.payments.ideal.fields;
 
-  it('should check the eps payment process', async () => {
+  it('should check the ideal payment process', async () => {
     await addProductToCartAndGotoCheckout(driver, '/accessories/jewelry/blue-horizons-bracelets.html');
     await fillOutGuestCheckout(driver);
     await chooseFlatRateShipping(driver);
-    await choosePaymentMethod(driver, 'p_method_wirecardee_paymentgateway_eps', paymentLabel, async () => {
+    await choosePaymentMethod(driver, 'p_method_wirecardee_paymentgateway_ideal', paymentLabel, async () => {
       await asyncForEach(Object.keys(formFields), async field => {
         await driver.findElement(By.id(field)).sendKeys(formFields[field]);
       });
     });
     await placeOrder(driver);
 
-    await driver.wait(until.elementLocated(By.id('sbtnLogin')), 5000);
-    await driver.findElement(By.id('sbtnLogin')).click();
-
-    await driver.wait(until.elementLocated(By.id('sbtnSign')), 5000);
-    await driver.findElement(By.id('sbtnSign')).click();
-
-    await driver.wait(until.elementLocated(By.id('sbtnSignCollect')), 5000);
-    await driver.findElement(By.id('sbtnSignCollect')).click();
-
-    await driver.wait(until.elementLocated(By.id('sbtnOk')), 5000);
-    await driver.findElement(By.id('sbtnOk')).click();
-
-    await driver.wait(until.elementLocated(By.name('back2Shop')), 5000);
-    await driver.findElement(By.name('back2Shop')).click();
+    await driver.wait(until.elementLocated(By.css('form .btnLink')), 20000);
+    await driver.findElement(By.css('form .btnLink')).click();
 
     await checkConfirmationPage(driver, 'Thank you for your purchase!');
   });

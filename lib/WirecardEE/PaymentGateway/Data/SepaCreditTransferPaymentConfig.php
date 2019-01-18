@@ -9,15 +9,17 @@
 
 namespace WirecardEE\PaymentGateway\Data;
 
+use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
+
 /**
- * Sofort. specific payment configuration.
+ * Some payments handle backend operations via SepaCT which requires additional configuration.
  *
- * @package WirecardElasticEngine\Components\Data
- *
- * @since   1.0.0
+ * @since 1.1.0
  */
-class SofortPaymentConfig extends PaymentConfig
+class SepaCreditTransferPaymentConfig extends PaymentConfig
 {
+    const BACKEND_NAME = SepaCreditTransferTransaction::NAME;
+
     /**
      * @var string
      */
@@ -38,7 +40,7 @@ class SofortPaymentConfig extends PaymentConfig
      *
      * @param string
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function setBackendTransactionMAID($backendTransactionMaid)
     {
@@ -50,7 +52,7 @@ class SofortPaymentConfig extends PaymentConfig
      *
      * @return string
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function getBackendTransactionMAID()
     {
@@ -62,7 +64,7 @@ class SofortPaymentConfig extends PaymentConfig
      *
      * @param string
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function setBackendTransactionSecret($backendTransactionSecret)
     {
@@ -74,7 +76,7 @@ class SofortPaymentConfig extends PaymentConfig
      *
      * @return string
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function getBackendTransactionSecret()
     {
@@ -86,7 +88,7 @@ class SofortPaymentConfig extends PaymentConfig
      *
      * @param string
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function setBackendCreditorId($backendCreditorId)
     {
@@ -98,7 +100,7 @@ class SofortPaymentConfig extends PaymentConfig
      *
      * @return string
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function getBackendCreditorId()
     {
@@ -113,8 +115,8 @@ class SofortPaymentConfig extends PaymentConfig
         return array_merge(
             parent::toArray(),
             [
-                'backendTransactionMaid'   => $this->getBackendTransactionMAID(),
-                'backendCreditorId'        => $this->getBackendCreditorId()
+                'backendTransactionMaid' => $this->getBackendTransactionMAID(),
+                'backendCreditorId'      => $this->getBackendCreditorId(),
             ]
         );
     }

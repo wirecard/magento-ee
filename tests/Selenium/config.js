@@ -52,6 +52,12 @@ exports.config = {
         tan: '12345'
       }
     },
+    ideal: {
+      label: 'Wirecard iDEAL',
+      fields: {
+        'wirecardee-ideal--bic': 'INGBNL2A'
+      }
+    },
     eps: {
       label: 'Wirecard eps-Überweisung',
       fields: {

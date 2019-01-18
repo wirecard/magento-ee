@@ -1,0 +1,27 @@
+<?php
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/LICENSE
+ */
+
+/** @var $this Mage_Payment_Block_Form */
+?>
+<ul class="form-list" id="payment_form_<?php echo $this->getMethodCode(); ?>" style="display: none;">
+    <li>
+        <label for="wirecardee-ideal--bic" class="required"><em>*</em><?php echo $this->__('bank_label'); ?></label>
+        <div class="input-box">
+            <select class="is--required" name="wirecardElasticEngine[idealBank]" id="wirecardee-ideal--bic">
+                <?php
+                /** @var WirecardEE_PaymentGateway_Model_Ideal $idealModel */
+                $idealModel = Mage::getModel('paymentgateway/ideal');
+                foreach ($idealModel->getBanks() as $bankKey => $bankLabel):
+                    ?>
+                    <option value="<?php echo $bankKey; ?>"><?php echo $bankLabel; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </li>
+</ul>

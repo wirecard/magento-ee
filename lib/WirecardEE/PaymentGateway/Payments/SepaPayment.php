@@ -18,6 +18,7 @@ use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\Action;
+use WirecardEE\PaymentGateway\Data\SepaCreditTransferPaymentConfig;
 use WirecardEE\PaymentGateway\Exception\InsufficientDataException;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\SepaPaymentConfig;
@@ -27,7 +28,6 @@ use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 class SepaPayment extends Payment implements ProcessPaymentInterface, CustomFormTemplate
 {
     const NAME = SepaDirectDebitTransaction::NAME;
-    const BACKEND_NAME = SepaCreditTransferTransaction::NAME;
 
     /**
      * @var SepaDirectDebitTransaction
@@ -110,19 +110,19 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, CustomForm
         $paymentConfig->setBackendTransactionMAID(
             $this->getPluginConfig(
                 'api_maid',
-                Payment::CONFIG_PREFIX . self::BACKEND_NAME
+                Payment::CONFIG_PREFIX . SepaCreditTransferPaymentConfig::BACKEND_NAME
             )
         );
         $paymentConfig->setBackendTransactionSecret(
             $this->getPluginConfig(
                 'api_secret',
-                Payment::CONFIG_PREFIX . self::BACKEND_NAME
+                Payment::CONFIG_PREFIX . SepaCreditTransferPaymentConfig::BACKEND_NAME
             )
         );
         $paymentConfig->setBackendCreditorId(
             $this->getPluginConfig(
                 'creditor_id',
-                Payment::CONFIG_PREFIX . self::BACKEND_NAME
+                Payment::CONFIG_PREFIX . SepaCreditTransferPaymentConfig::BACKEND_NAME
             )
         );
 
