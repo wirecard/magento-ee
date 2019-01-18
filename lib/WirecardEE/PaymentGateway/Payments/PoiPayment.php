@@ -18,9 +18,12 @@ use Wirecard\PaymentSdk\TransactionService;
 
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\PaymentConfig;
+use WirecardEE\PaymentGateway\Payments\Contracts\AdditionalPaymentInformationInterface;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
+use WirecardEE\PaymentGateway\Service\Logger;
+use WirecardEE\PaymentGateway\Service\TransactionManager;
 
-class PoiPayment extends Payment implements ProcessPaymentInterface
+class PoiPayment extends Payment implements ProcessPaymentInterface, AdditionalPaymentInformationInterface
 {
     const NAME = 'poi';
 
@@ -112,5 +115,38 @@ class PoiPayment extends Payment implements ProcessPaymentInterface
             $accountHolder->setFirstName($orderSummary->getUserMapper()->getFirstName());
             $this->getTransaction()->setAccountHolder($accountHolder);
         }
+    }
+
+    public function assignAdditionalPaymentInformation(\Mage_Sales_Model_Order $order)
+    {
+        $logger = new Logger();
+        $transactionManager = new TransactionManager($logger);
+
+        $response = $transactionManager->findInitialResponse($order);
+
+        if (! $response) {
+            return null;
+        }
+
+        $bankData = [ \Mage::helper('paymentgateway')->__('iban') . ' ' . $response['merchant-bank-account.0.iban']];
+
+        if ($response['merchant-bank-account.0.bic']) {
+            $bankData[] =  \Mage::helper('paymentgateway')->__('bic') . ' ' . $response['merchant-bank-account.0.bic'];
+        }
+
+        $bankData[] = \Mage::helper('paymentgateway')->__('ptrid') . ': ' . $response['provider-transaction-reference-id'];
+
+        if ($response['merchant-bank-account.0.bank-name']) {
+            $bankData[] = $response['merchant-bank-account.0.bank-name'];
+        }
+
+        if ($response['merchant-bank-account.0.branch-address']) {
+            $bankData[] = $response['merchant-bank-account.0.branch-address'];
+            $bankData[] = $response['merchant-bank-account.0.branch-city'] . ' ' . $response['merchant-bank-account.0.branch-state'];
+        }
+        $order->addStatusHistoryComment(implode('<br>', $bankData));
+        $order->save();
+
+        return null;
     }
 }
