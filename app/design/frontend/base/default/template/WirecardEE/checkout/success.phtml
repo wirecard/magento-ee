@@ -21,3 +21,51 @@ if (! $this->isWirecardPayment()) {
     }
     ?>
 </div>
+
+<?php
+$additionalPaymentInformation = $this->getAdditionalPaymentInformation();
+if ($additionalPaymentInformation) : ?>
+<?php if (!empty($additionalPaymentInformation['bankData'])) : ?>
+<?php
+$bankData = $additionalPaymentInformation['bankData'];
+$sOrderId = Mage::getSingleton('checkout/session')->getLastOrderId();
+$oOrder = Mage::getModel('sales/order')->load($sOrderId);
+?>
+<div class="wirecardee--bankdata">
+    <div class="panel--title primary is--underline">
+        {s name="BankInformationTitle"}{/s}
+    </div>
+    <div class="panel--body is--wide">
+        <div class="wirecardee--bankdata-amount">
+            <strong><?php echo Mage::helper('catalog')->__('requestedAmount') ?>:</strong>
+            <?php echo Mage::helper('core')->currency(number_format($oOrder->getGrandTotal(),2),true,false); ?>
+        </div>
+        <div class="wirecardee--bankdata-iban">
+            <strong><?php echo Mage::helper('catalog')->__('iban') ?>:</strong>
+            <?php echo $bankData['iban'] ?>
+        </div>
+        <?php if ($bankData['bic']) : ?>
+        <div class="wirecardee--bankdata-bic">
+            <strong><?php echo Mage::helper('catalog')->__('bic') ?>:</strong>
+            <?php echo $bankData['bic'] ?>
+        </div>
+        <?php endif; ?>
+        <div class="wirecardee--bankdata-reference">
+            <strong><?php echo Mage::helper('catalog')->__('ptrid') ?>:</strong>
+            <?php echo $bankData['reference'] ?>
+        </div>
+        <?php if ($bankData['bankName']) : ?>
+        <div class="wirecardee--bankdata-name">
+            <?php echo $bankData['bankName'] ?>
+        </div>
+        <?php endif; ?>
+        <?php if ($bankData['address']) : ?>
+        <div class="wirecardee--bankdata-address">
+            <?php echo $bankData['address'] ?><br>
+            <?php echo $bankData['city'] ?> <?php echo $bankData['state'] ?>
+        </div>
+        <?php endif; ?>
+    </div>
+</div>
+<?php endif; ?>
+<?php endif; ?>

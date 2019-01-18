@@ -7,6 +7,7 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+use WirecardEE\PaymentGateway\Payments\Contracts\AdditionalPaymentInformationInterface;
 use WirecardEE\PaymentGateway\Service\PaymentFactory;
 
 /**
@@ -57,5 +58,16 @@ class WirecardEE_PaymentGateway_Block_Checkout_Success extends Mage_Checkout_Blo
     protected function getCheckoutSession()
     {
         return Mage::getSingleton('checkout/session');
+    }
+
+    public function getAdditionalPaymentInformation()
+    {
+        $magePayment = $this->getCheckoutSession()->getLastRealOrder()->getPayment();
+        $payment = (new PaymentFactory())->createFromMagePayment($magePayment);
+        if ($payment instanceof AdditionalPaymentInformationInterface) {
+            return $payment->assignAdditionalPaymentInformation($magePayment->getOrder());
+        }
+
+        return false;
     }
 }
