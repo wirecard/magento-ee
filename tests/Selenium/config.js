@@ -51,6 +51,28 @@ exports.config = {
         password: 'passwd',
         tan: '12345'
       }
+    },
+    ideal: {
+      label: 'Wirecard iDEAL',
+      fields: {
+        'wirecardee-ideal--bic': 'INGBNL2A'
+      }
+    },
+    eps: {
+      label: 'Wirecard eps-Überweisung',
+      fields: {
+        'wirecardee-eps--bic': 'BWFBATW1XXX'
+      }
+    },
+    giropay: {
+      label: 'Wirecard Giropay',
+      fields: {
+        'wirecardee-giropay--bic': 'GENODETT488'
+      },
+      simulatorFields: {
+        sc: 10,
+        extensionSc: 4000
+      }
     }
   }
 };

@@ -11,6 +11,9 @@ namespace WirecardEE\Tests\Functional\Controller;
 
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\PaymentSdk\Transaction\IdealTransaction;
+use Wirecard\PaymentSdk\Transaction\EpsTransaction;
+use Wirecard\PaymentSdk\Transaction\GiropayTransaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
@@ -244,6 +247,91 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         );
     }
 
+    public function testIndexActionWithIdeal()
+    {
+        list($controller, , $transaction, $coreSession) = $this->prepareForIndexAction(IdealTransaction::NAME);
+
+        $transaction->expects($this->once())->method('setTxnType')->with('payment');
+
+        $coreSession->method('getData')->willReturnMap([
+            [SessionManager::PAYMENT_DATA, false, ['idealBank' => 'INGBNL2A']],
+            [\WirecardEE_PaymentGateway_Helper_Data::DEVICE_FINGERPRINT_ID, false, md5('test')],
+        ]);
+
+        /** @var RedirectAction $action */
+        $action = $controller->indexAction();
+        $this->assertInstanceOf(RedirectAction::class, $action);
+        $this->assertStringStartsWith(
+            'https://idealtest.secure-ing.com/ideal/',
+            $action->getUrl()
+        );
+    }
+
+    public function testIndexActionWithEps()
+    {
+        list($controller, , $transaction, $coreSession) = $this->prepareForIndexAction(EpsTransaction::NAME);
+
+        $transaction->expects($this->once())->method('setTxnType')->with('payment');
+
+        $coreSession->method('getData')->willReturnMap([
+            [SessionManager::PAYMENT_DATA, false, ['epsBic' => 'BWFBATW1XXX']],
+            [\WirecardEE_PaymentGateway_Helper_Data::DEVICE_FINGERPRINT_ID, false, md5('test')],
+        ]);
+
+        /** @var RedirectAction $action */
+        $action = $controller->indexAction();
+        $this->assertInstanceOf(RedirectAction::class, $action);
+        $this->assertStringStartsWith(
+            'https://www.banking.co.at/appl/ebp/logout/so/loginPrepare/eps.html',
+            $action->getUrl()
+        );
+    }
+
+    public function testIndexActionWithGiropay()
+    {
+        list($controller, , $transaction, $coreSession) = $this->prepareForIndexAction(GiropayTransaction::NAME);
+
+        $transaction->expects($this->once())->method('setTxnType')->with('payment');
+
+        $coreSession->method('getData')->willReturnMap([
+            [
+                SessionManager::PAYMENT_DATA,
+                false,
+                [
+                    'giropayBic' => 'GENODETT488',
+                ],
+            ],
+            [\WirecardEE_PaymentGateway_Helper_Data::DEVICE_FINGERPRINT_ID, false, md5('test')],
+        ]);
+        $coreSession->method('getMessages')->willReturn(new \Mage_Core_Model_Message_Collection());
+
+        /** @var RedirectAction $action */
+        $action = $controller->indexAction();
+        $this->assertInstanceOf(RedirectAction::class, $action);
+        $this->assertStringStartsWith(
+            'https://giropaytest1.fiducia.de/ShopSystem/bank',
+            $action->getUrl()
+        );
+    }
+
+    public function testInsufficientDataExceptionIndexActionWithGiropay()
+    {
+        list($controller, , , $coreSession) = $this->prepareForIndexAction(
+            GiropayTransaction::NAME,
+            false
+        );
+
+        $coreSession->method('getData')->willReturnMap([
+            [\WirecardEE_PaymentGateway_Helper_Data::DEVICE_FINGERPRINT_ID, false, md5('test')],
+        ]);
+        $coreSession->method('getMessages')->willReturn(new \Mage_Core_Model_Message_Collection());
+
+        /** @var ErrorAction $error */
+        $error = $controller->indexAction();
+        $this->assertInstanceOf(ErrorAction::class, $error);
+        $this->assertNotEmpty($error->getMessage());
+    }
+
     public function testReturnActionWithNoParams()
     {
         $request  = $this->getMockForAbstractClass(\Zend_Controller_Request_Abstract::class);
@@ -316,6 +404,25 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         \Mage::app()->setRequest($request);
 
         $this->assertTrue($controller->cancelAction());
+    }
+
+    public function testFailureAction()
+    {
+        $request  = new \Mage_Core_Controller_Request_Http();
+        $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
+
+        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        \Mage::app()->setRequest($request);
+
+        $order           = $this->createMock(\Mage_Sales_Model_Order::class);
+        $checkoutSession = $this->createMock(\Mage_Checkout_Model_Session::class);
+        $checkoutSession->method('getLastRealOrder')->willReturn($order);
+
+        $checkoutSession->expects($this->once())->method('setData');
+
+        $this->replaceMageSingleton('checkout/session', $checkoutSession);
+
+        $this->assertInstanceOf(\Mage_Core_Controller_Varien_Action::class, $controller->failureAction());
     }
 
     public function testCancelFailsAction()

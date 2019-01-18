@@ -14,7 +14,7 @@ namespace WirecardEE\PaymentGateway\Data;
  *
  * @since   1.0.0
  */
-class SepaPaymentConfig extends PaymentConfig
+class SepaPaymentConfig extends SepaCreditTransferPaymentConfig
 {
     /**
      * @var bool
@@ -48,21 +48,6 @@ class SepaPaymentConfig extends PaymentConfig
      * @var string
      */
     protected $creditorCountry;
-
-    /**
-     * @var string
-     */
-    protected $backendTransactionMaid;
-
-    /**
-     * @var string
-     */
-    protected $backendTransactionSecret;
-
-    /**
-     * @var string
-     */
-    protected $backendCreditorId;
 
     /**
      * @param bool $showBic
@@ -202,78 +187,6 @@ class SepaPaymentConfig extends PaymentConfig
     public function getCreditorCountry()
     {
         return $this->creditorCountry;
-    }
-
-    /**
-     * Set SEPA Credit Transfer transaction merchant account ID
-     *
-     * @param string
-     *
-     * @since 1.0.0
-     */
-    public function setBackendTransactionMAID($backendTransactionMaid)
-    {
-        $this->backendTransactionMaid = $backendTransactionMaid;
-    }
-
-    /**
-     * Get SEPA Credit Transfer transaction merchant account ID
-     *
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    public function getBackendTransactionMAID()
-    {
-        return $this->backendTransactionMaid;
-    }
-
-    /**
-     * Set SEPA Credit Transfer transaction secret
-     *
-     * @param string
-     *
-     * @since 1.0.0
-     */
-    public function setBackendTransactionSecret($backendTransactionSecret)
-    {
-        $this->backendTransactionSecret = $backendTransactionSecret;
-    }
-
-    /**
-     * Get SEPA Credit Transfer transaction secret
-     *
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    public function getBackendTransactionSecret()
-    {
-        return $this->backendTransactionSecret;
-    }
-
-    /**
-     * set SEPA Credit Transfer creditor id
-     *
-     * @param string
-     *
-     * @since 1.0.0
-     */
-    public function setBackendCreditorId($backendCreditorId)
-    {
-        $this->backendCreditorId = $backendCreditorId;
-    }
-
-    /**
-     * Get SEPA Credit Transfer creditor id
-     *
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    public function getBackendCreditorId()
-    {
-        return $this->backendCreditorId;
     }
 
     /**

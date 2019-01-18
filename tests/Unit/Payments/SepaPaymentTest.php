@@ -7,7 +7,7 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-namespace WirecardEE\Tests\Unit\Service;
+namespace WirecardEE\Tests\Unit\Payments;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Transaction\Operation;
