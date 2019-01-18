@@ -18,15 +18,14 @@ use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\TransactionService;
-use WirecardEE\PaymentGateway\Data\IdealPaymentConfig;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
+use WirecardEE\PaymentGateway\Data\SepaCreditTransferPaymentConfig;
 use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplate;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
 class IdealPayment extends Payment implements ProcessPaymentInterface, CustomFormTemplate
 {
     const NAME = IdealTransaction::NAME;
-    const BACKEND_NAME = SepaCreditTransferTransaction::NAME;
 
     /**
      * @var IdealTransaction
@@ -96,13 +95,13 @@ class IdealPayment extends Payment implements ProcessPaymentInterface, CustomFor
     }
 
     /**
-     * @return IdealPaymentConfig
+     * @return SepaCreditTransferPaymentConfig
      *
      * @since 1.1.0
      */
     public function getPaymentConfig()
     {
-        $paymentConfig = new IdealPaymentConfig(
+        $paymentConfig = new SepaCreditTransferPaymentConfig(
             $this->getPluginConfig('api_url'),
             $this->getPluginConfig('api_user'),
             $this->getPluginConfig('api_password')
@@ -115,19 +114,19 @@ class IdealPayment extends Payment implements ProcessPaymentInterface, CustomFor
         $paymentConfig->setBackendTransactionMAID(
             $this->getPluginConfig(
                 'api_maid',
-                Payment::CONFIG_PREFIX . self::BACKEND_NAME
+                Payment::CONFIG_PREFIX . SepaCreditTransferPaymentConfig::BACKEND_NAME
             )
         );
         $paymentConfig->setBackendTransactionSecret(
             $this->getPluginConfig(
                 'api_secret',
-                Payment::CONFIG_PREFIX . self::BACKEND_NAME
+                Payment::CONFIG_PREFIX . SepaCreditTransferPaymentConfig::BACKEND_NAME
             )
         );
         $paymentConfig->setBackendCreditorId(
             $this->getPluginConfig(
                 'creditor_id',
-                Payment::CONFIG_PREFIX . self::BACKEND_NAME
+                Payment::CONFIG_PREFIX . SepaCreditTransferPaymentConfig::BACKEND_NAME
             )
         );
 

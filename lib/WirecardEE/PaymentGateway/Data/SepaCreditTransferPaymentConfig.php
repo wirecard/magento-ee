@@ -9,13 +9,17 @@
 
 namespace WirecardEE\PaymentGateway\Data;
 
+use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
+
 /**
- * iDEAL specific payment configuration.
+ * Some payments handle backend operations via SepaCT which requires additional configuration.
  *
- * @since   1.1.0
+ * @since 1.1.0
  */
-class IdealPaymentConfig extends PaymentConfig
+class SepaCreditTransferPaymentConfig extends PaymentConfig
 {
+    const BACKEND_NAME = SepaCreditTransferTransaction::NAME;
+
     /**
      * @var string
      */

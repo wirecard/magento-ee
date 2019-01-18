@@ -17,13 +17,12 @@ use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
-use WirecardEE\PaymentGateway\Data\SofortPaymentConfig;
+use WirecardEE\PaymentGateway\Data\SepaCreditTransferPaymentConfig;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
 class SofortPayment extends Payment implements ProcessPaymentInterface
 {
     const NAME = SofortTransaction::NAME;
-    const BACKEND_NAME = SepaCreditTransferTransaction::NAME;
 
     /**
      * @var SofortTransaction
@@ -75,13 +74,13 @@ class SofortPayment extends Payment implements ProcessPaymentInterface
     }
 
     /**
-     * @return SofortPaymentConfig
+     * @return SepaCreditTransferPaymentConfig
      *
      * @since 1.0.0
      */
     public function getPaymentConfig()
     {
-        $paymentConfig = new SofortPaymentConfig(
+        $paymentConfig = new SepaCreditTransferPaymentConfig(
             $this->getPluginConfig('api_url'),
             $this->getPluginConfig('api_user'),
             $this->getPluginConfig('api_password')
@@ -94,19 +93,19 @@ class SofortPayment extends Payment implements ProcessPaymentInterface
         $paymentConfig->setBackendTransactionMAID(
             $this->getPluginConfig(
                 'api_maid',
-                Payment::CONFIG_PREFIX . self::BACKEND_NAME
+                Payment::CONFIG_PREFIX . SepaCreditTransferPaymentConfig::BACKEND_NAME
             )
         );
         $paymentConfig->setBackendTransactionSecret(
             $this->getPluginConfig(
                 'api_secret',
-                Payment::CONFIG_PREFIX . self::BACKEND_NAME
+                Payment::CONFIG_PREFIX . SepaCreditTransferPaymentConfig::BACKEND_NAME
             )
         );
         $paymentConfig->setBackendCreditorId(
             $this->getPluginConfig(
                 'creditor_id',
-                Payment::CONFIG_PREFIX . self::BACKEND_NAME
+                Payment::CONFIG_PREFIX . SepaCreditTransferPaymentConfig::BACKEND_NAME
             )
         );
 

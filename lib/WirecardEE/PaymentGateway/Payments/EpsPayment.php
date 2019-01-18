@@ -19,7 +19,7 @@ use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
-use WirecardEE\PaymentGateway\Data\PaymentConfig;
+use WirecardEE\PaymentGateway\Data\SepaCreditTransferPaymentConfig;
 use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplate;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
@@ -74,13 +74,13 @@ class EpsPayment extends Payment implements ProcessPaymentInterface, CustomFormT
     }
 
     /**
-     * @return PaymentConfig
+     * @return SepaCreditTransferPaymentConfig
      *
      * @since 1.1.0
      */
     public function getPaymentConfig()
     {
-        $paymentConfig = new PaymentConfig(
+        $paymentConfig = new SepaCreditTransferPaymentConfig(
             $this->getPluginConfig('api_url'),
             $this->getPluginConfig('api_user'),
             $this->getPluginConfig('api_password')
@@ -91,6 +91,25 @@ class EpsPayment extends Payment implements ProcessPaymentInterface, CustomFormT
         $paymentConfig->setTransactionOperation(Operation::PAY);
         $paymentConfig->setOrderIdentification(true);
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
+
+        $paymentConfig->setBackendTransactionMAID(
+            $this->getPluginConfig(
+                'api_maid',
+                Payment::CONFIG_PREFIX . SepaCreditTransferPaymentConfig::BACKEND_NAME
+            )
+        );
+        $paymentConfig->setBackendTransactionSecret(
+            $this->getPluginConfig(
+                'api_secret',
+                Payment::CONFIG_PREFIX . SepaCreditTransferPaymentConfig::BACKEND_NAME
+            )
+        );
+        $paymentConfig->setBackendCreditorId(
+            $this->getPluginConfig(
+                'creditor_id',
+                Payment::CONFIG_PREFIX . SepaCreditTransferPaymentConfig::BACKEND_NAME
+            )
+        );
 
         return $paymentConfig;
     }

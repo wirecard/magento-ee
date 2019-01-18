@@ -16,7 +16,7 @@ use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
-use WirecardEE\PaymentGateway\Data\SofortPaymentConfig;
+use WirecardEE\PaymentGateway\Data\SepaCreditTransferPaymentConfig;
 use WirecardEE\PaymentGateway\Payments\SofortPayment;
 use WirecardEE\Tests\Test\MagentoTestCase;
 
@@ -30,7 +30,7 @@ class SofortPaymentTest extends MagentoTestCase
         $this->assertSame($transaction, $payment->getTransaction());
 
         $this->assertInstanceOf(Config::class, $payment->getTransactionConfig('EUR'));
-        $this->assertInstanceOf(SofortPaymentConfig::class, $payment->getPaymentConfig());
+        $this->assertInstanceOf(SepaCreditTransferPaymentConfig::class, $payment->getPaymentConfig());
 
         $order       = $this->createMock(\Mage_Sales_Model_Order::class);
         $transaction = $this->createMock(\Mage_Sales_Model_Order_Payment_Transaction::class);

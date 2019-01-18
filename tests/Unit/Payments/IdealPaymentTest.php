@@ -15,8 +15,8 @@ use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\TransactionService;
-use WirecardEE\PaymentGateway\Data\IdealPaymentConfig;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
+use WirecardEE\PaymentGateway\Data\SepaCreditTransferPaymentConfig;
 use WirecardEE\PaymentGateway\Payments\IdealPayment;
 use WirecardEE\Tests\Test\MagentoTestCase;
 
@@ -30,7 +30,7 @@ class IdealPaymentTest extends MagentoTestCase
         $this->assertSame($transaction, $payment->getTransaction());
 
         $this->assertInstanceOf(Config::class, $payment->getTransactionConfig('EUR'));
-        $this->assertInstanceOf(IdealPaymentConfig::class, $payment->getPaymentConfig());
+        $this->assertInstanceOf(SepaCreditTransferPaymentConfig::class, $payment->getPaymentConfig());
 
         $order       = $this->createMock(\Mage_Sales_Model_Order::class);
         $transaction = $this->createMock(\Mage_Sales_Model_Order_Payment_Transaction::class);
