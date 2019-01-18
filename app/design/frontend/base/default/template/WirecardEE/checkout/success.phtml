@@ -33,25 +33,25 @@ $oOrder = Mage::getModel('sales/order')->load($sOrderId);
 ?>
 <div class="wirecardee--bankdata">
     <div class="panel--title primary is--underline">
-        {s name="BankInformationTitle"}{/s}
+        <?php echo Mage::helper('paymentgateway')->__('bank_label') ?>
     </div>
     <div class="panel--body is--wide">
         <div class="wirecardee--bankdata-amount">
-            <strong><?php echo Mage::helper('catalog')->__('requestedAmount') ?>:</strong>
+            <strong><?php echo Mage::helper('paymentgateway')->__('requestedAmount') ?>:</strong>
             <?php echo Mage::helper('core')->currency(number_format($oOrder->getGrandTotal(),2),true,false); ?>
         </div>
         <div class="wirecardee--bankdata-iban">
-            <strong><?php echo Mage::helper('catalog')->__('iban') ?>:</strong>
+            <strong><?php echo Mage::helper('paymentgateway')->__('iban') ?>:</strong>
             <?php echo $bankData['iban'] ?>
         </div>
         <?php if ($bankData['bic']) : ?>
         <div class="wirecardee--bankdata-bic">
-            <strong><?php echo Mage::helper('catalog')->__('bic') ?>:</strong>
+            <strong><?php echo Mage::helper('paymentgateway')->__('bic') ?>:</strong>
             <?php echo $bankData['bic'] ?>
         </div>
         <?php endif; ?>
         <div class="wirecardee--bankdata-reference">
-            <strong><?php echo Mage::helper('catalog')->__('ptrid') ?>:</strong>
+            <strong><?php echo Mage::helper('paymentgateway')->__('ptrid') ?>:</strong>
             <?php echo $bankData['reference'] ?>
         </div>
         <?php if ($bankData['bankName']) : ?>

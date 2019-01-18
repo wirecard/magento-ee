@@ -128,6 +128,25 @@ class PiaPayment extends Payment implements ProcessPaymentInterface, AdditionalP
             return null;
         }
 
+        $bankData = [ \Mage::helper('paymentgateway')->__('iban') . ' ' . $response['merchant-bank-account.0.iban']];
+
+        if ($response['merchant-bank-account.0.bic']) {
+            $bankData[] =  \Mage::helper('paymentgateway')->__('bic') . ' ' . $response['merchant-bank-account.0.bic'];
+        }
+
+        $bankData[] = \Mage::helper('paymentgateway')->__('ptrid') . ': ' . $response['provider-transaction-reference-id'];
+
+        if ($response['merchant-bank-account.0.bank-name']) {
+            $bankData[] = $response['merchant-bank-account.0.bank-name'];
+        }
+
+        if ($response['merchant-bank-account.0.branch-address']) {
+            $bankData[] = $response['merchant-bank-account.0.branch-address'];
+            $bankData[] = $response['merchant-bank-account.0.branch-city'] . ' ' . $response['merchant-bank-account.0.branch-state'];
+        }
+        $order->addStatusHistoryComment(implode('<br>', $bankData));
+        $order->save();
+
         return [
             'bankData' => [
                 'bankName'  => $response['merchant-bank-account.0.bank-name'],
