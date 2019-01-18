@@ -19,6 +19,7 @@ use WirecardEE\PaymentGateway\Payments\IdealPayment;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 use WirecardEE\PaymentGateway\Payments\PaypalPayment;
 use WirecardEE\PaymentGateway\Payments\PoiPayment;
+use WirecardEE\PaymentGateway\Payments\PiaPayment;
 use WirecardEE\PaymentGateway\Payments\SepaPayment;
 use WirecardEE\PaymentGateway\Payments\SofortPayment;
 
@@ -100,6 +101,7 @@ class PaymentFactory
             SofortTransaction::NAME          => SofortPayment::class,
             IdealPayment::NAME               => IdealPayment::class,
             'poi'                            => PoiPayment::class,
+            'pia'                            => PiaPayment::class,
         ];
     }
 
