@@ -100,7 +100,12 @@ class UserMapper
      */
     public function getShippingAccountHolder()
     {
-        $address       = $this->getOrder()->getShippingAddress();
+        $address = $this->getOrder()->getShippingAddress();
+
+        if (! $address) {
+            $address = $this->getOrder()->getBillingAddress();
+        }
+
         $accountHolder = new AccountHolder();
         $accountHolder->setFirstName($address->getFirstname());
         $accountHolder->setLastName($address->getLastname());
