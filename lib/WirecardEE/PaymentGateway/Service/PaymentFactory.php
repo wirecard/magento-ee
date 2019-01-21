@@ -13,6 +13,7 @@ use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\EpsTransaction;
 use Wirecard\PaymentSdk\Transaction\GiropayTransaction;
 use Wirecard\PaymentSdk\Transaction\IdealTransaction;
+use Wirecard\PaymentSdk\Transaction\MasterpassTransaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
@@ -21,6 +22,7 @@ use WirecardEE\PaymentGateway\Payments\CreditCardPayment;
 use WirecardEE\PaymentGateway\Payments\EpsPayment;
 use WirecardEE\PaymentGateway\Payments\GiropayPayment;
 use WirecardEE\PaymentGateway\Payments\IdealPayment;
+use WirecardEE\PaymentGateway\Payments\MasterpassPayment;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 use WirecardEE\PaymentGateway\Payments\PaypalPayment;
 use WirecardEE\PaymentGateway\Payments\SepaPayment;
@@ -106,6 +108,7 @@ class PaymentFactory
             GiropayTransaction::NAME         => GiropayPayment::class,
             EpsTransaction::NAME             => EpsPayment::class,
             IdealTransaction::NAME           => IdealPayment::class,
+            MasterpassTransaction::NAME      => MasterpassPayment::class,
         ];
     }
 
