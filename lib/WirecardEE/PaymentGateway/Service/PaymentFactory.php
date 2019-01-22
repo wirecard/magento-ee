@@ -108,8 +108,8 @@ class PaymentFactory
             GiropayTransaction::NAME         => GiropayPayment::class,
             EpsTransaction::NAME             => EpsPayment::class,
             IdealPayment::NAME               => IdealPayment::class,
-            'poi'                            => PoiPayment::class,
-            'pia'                            => PiaPayment::class,
+            PoiPayment::NAME                 => PoiPayment::class,
+            PiaPayment::NAME                 => PiaPayment::class,
         ];
     }
 
