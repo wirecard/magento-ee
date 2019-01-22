@@ -68,6 +68,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
                 new UserMapper(
                     $order,
                     $this->getHelper()->getClientIp(),
+                    $this->getHelper()->getUserAgent(),
                     Mage::app()->getLocale()->getLocaleCode()
                 ),
                 $this->getHelper()->getDeviceFingerprintId($payment->getPaymentConfig()->getTransactionMAID()),
