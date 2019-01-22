@@ -420,3 +420,7 @@
 
 
 "bic_required","BIC wird benötigt"
+"config_unmatched_payment_mail","E-Mail für nicht zuordenbare Zahlungsbenachrichtigung"
+"config_unmatched_payment_mail_desc","Sende E-Mail beim Erhalt einer nicht zuordenbaren Zahlungsbenachrichtigung"
+"unmatched_payment_mail_subject","Nicht zuordenbare Zahlung"
+"unmatched_payment_mail_content","Keine Transaktion für die Zahlung %s mit der PTRID '%s' gefunden"

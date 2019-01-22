@@ -419,3 +419,7 @@
 "invoice_created","Automatically created invoice by Wirecard Payment Gateway extension."
 
 "bic_required","BIC is a required field."
+"config_unmatched_payment_mail","E-mail for unmatched payment notification"
+"config_unmatched_payment_mail_desc","Send e-mail after recieving unmatched payment notfication"
+"unmatched_payment_mail_subject","Unmatched payment"
+"unmatched_payment_mail_content","No matching transaction for %s payment with PTRID '%s' found"

@@ -14,6 +14,7 @@ use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\Transaction\PoiPiaTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 use WirecardEE\PaymentGateway\Mapper\ResponseMapper;
 
@@ -81,6 +82,33 @@ class NotificationHandler extends Handler
             }
 
             $order = $order->loadByIncrementId($orderNumber);
+        }
+        if (! $order->getId()) {
+            $responseMapper = new ResponseMapper($response);
+            if ($responseMapper->getPaymentMethod() === PoiPiaTransaction::NAME) {
+                $this->logger->info(
+                    "No matching transaction for " . PoiPiaTransaction::NAME
+                    . " payment with PTRID '{$response->getProviderTransactionReference()}' found"
+                );
+                if (\Mage::getStoreConfig('wirecardee_paymentgateway/settings/unmatched_payment_mail')) {
+                    $mail = new \Zend_Mail('UTF-8');
+                    $mail->setFrom(
+                        \Mage::getStoreConfig('trans_email/ident_general/email'),
+                        \Mage::getStoreConfig('trans_email/ident_general/name')
+                    );
+                    $mail->addTo(\Mage::getStoreConfig('trans_email/ident_general/email'));
+                    $mail->setSubject(\Mage::helper('paymentgateway')->__('unmatched_payment_mail_subject'));
+                    $mail->setBodyText(
+                        sprintf(
+                            \Mage::helper('paymentgateway')->__('unmatched_payment_mail_content'),
+                            PoiPiaTransaction::NAME,
+                            $response->getProviderTransactionReference()
+                        )
+                    );
+                    $mail->send();
+                }
+            }
+            throw new \Exception("Order not found");
         }
 
         $refundableBasket = [];
