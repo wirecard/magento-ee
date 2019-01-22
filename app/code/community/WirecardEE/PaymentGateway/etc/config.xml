@@ -204,6 +204,24 @@
                 <fraud_prevention>1</fraud_prevention>
                 <sort_order>21</sort_order>
             </wirecardee_paymentgateway_ideal>
+            <wirecardee_paymentgateway_ratepayinvoice>
+                <active>0</active>
+                <model>paymentgateway/ratepayinvoice</model>
+                <title>Wirecard Guaranteed Invoice by Wirecard</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>70000-APITEST-AP</api_user>
+                <api_password>qD2wzQ_hrc!8</api_password>
+                <api_maid>fa02d1d4-f518-4e22-b42b-2abab5867a84</api_maid>
+                <api_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</api_secret>
+                <fraud_prevention>1</fraud_prevention>
+                <min_amount>20</min_amount>
+                <max_amount>3500</max_amount>
+                <allowed_currencies>EUR</allowed_currencies>
+                <allowed_billing_countries>AT,DE,CH</allowed_billing_countries>
+                <allowed_shipping_countries>AT,DE,CH</allowed_shipping_countries>
+                <identical_billig_shipping_address>0</identical_billig_shipping_address>
+                <sort_order>17</sort_order>
+            </wirecardee_paymentgateway_ratepayinvoice>
         </payment>
     </default>
 
@@ -212,7 +230,8 @@
             <adminhtml>
                 <args>
                     <modules>
-                        <WirecardEE_PaymentGateway after="Mage_Adminhtml">WirecardEE_PaymentGateway_Adminhtml</WirecardEE_PaymentGateway>
+                        <WirecardEE_PaymentGateway after="Mage_Adminhtml">WirecardEE_PaymentGateway_Adminhtml
+                        </WirecardEE_PaymentGateway>
                     </modules>
                 </args>
             </adminhtml>
