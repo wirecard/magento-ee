@@ -219,7 +219,7 @@
                 <allowed_currencies>EUR</allowed_currencies>
                 <allowed_billing_countries>AT,DE,CH</allowed_billing_countries>
                 <allowed_shipping_countries>AT,DE,CH</allowed_shipping_countries>
-                <identical_billig_shipping_address>0</identical_billig_shipping_address>
+                <identical_billing_shipping_address>1</identical_billing_shipping_address>
                 <sort_order>17</sort_order>
             </wirecardee_paymentgateway_ratepayinvoice>
         </payment>
