@@ -230,8 +230,7 @@
             <adminhtml>
                 <args>
                     <modules>
-                        <WirecardEE_PaymentGateway after="Mage_Adminhtml">WirecardEE_PaymentGateway_Adminhtml
-                        </WirecardEE_PaymentGateway>
+                        <WirecardEE_PaymentGateway after="Mage_Adminhtml">WirecardEE_PaymentGateway_Adminhtml</WirecardEE_PaymentGateway>
                     </modules>
                 </args>
             </adminhtml>
