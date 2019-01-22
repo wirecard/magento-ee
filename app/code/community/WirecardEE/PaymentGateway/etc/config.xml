@@ -294,6 +294,15 @@
                     </wirecard_ee_reviewfield>
                 </observers>
             </checkout_type_onepage_save_order>
+            <payment_method_is_active>
+                <observers>
+                    <wirecard_ee_check_payment_availability>
+                        <type>singleton</type>
+                        <class>paymentgateway/paymentFilter</class>
+                        <method>checkPaymentAvailability</method>
+                    </wirecard_ee_check_payment_availability>
+                </observers>
+            </payment_method_is_active>
         </events>
         <translate>
             <modules>

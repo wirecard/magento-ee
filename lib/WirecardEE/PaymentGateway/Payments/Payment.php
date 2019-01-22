@@ -60,7 +60,7 @@ abstract class Payment implements PaymentInterface
      * @param string $name
      * @param string $prefix
      *
-     * @return string|null
+     * @return string|array|null
      *
      * @since 1.0.0
      */

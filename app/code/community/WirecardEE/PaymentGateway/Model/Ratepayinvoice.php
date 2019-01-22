@@ -16,4 +16,16 @@ class WirecardEE_PaymentGateway_Model_Ratepayinvoice extends WirecardEE_PaymentG
 {
     protected $_code = 'wirecardee_paymentgateway_ratepayinvoice';
     protected $_paymentMethod = RatepayInvoiceTransaction::NAME;
+
+    /**
+     * @return bool
+     *
+     * @since 1.1.0
+     */
+    public function showDobForm()
+    {
+        /** @var Mage_Checkout_Model_Session $checkoutSession */
+        $checkoutSession = Mage::getSingleton('checkout/session');
+        return ! $checkoutSession->getQuote()->getCustomerDob();
+    }
 }

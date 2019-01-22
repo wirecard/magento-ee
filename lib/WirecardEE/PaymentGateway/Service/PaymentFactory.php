@@ -72,6 +72,19 @@ class PaymentFactory
     }
 
     /**
+     * @param \WirecardEE_PaymentGateway_Model_Payment $payment
+     *
+     * @return PaymentInterface
+     * @throws UnknownPaymentException
+     *
+     * @since 1.1.0
+     */
+    public function createFromPaymentModel(\WirecardEE_PaymentGateway_Model_Payment $payment)
+    {
+        return $this->create(str_replace(self::PAYMENT_PREFIX, '', $payment->getPaymentMethod()));
+    }
+
+    /**
      * Create and return all supported payments
      *
      * @return PaymentInterface[]

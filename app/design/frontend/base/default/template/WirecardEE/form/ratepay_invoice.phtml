@@ -1,0 +1,27 @@
+<?php
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/LICENSE
+ */
+
+/** @var $this Mage_Payment_Block_Form */
+
+/** @var WirecardEE_PaymentGateway_Model_Ratepayinvoice $ratepayInvoiceModel */
+$ratepayInvoiceModel = Mage::getModel('paymentgateway/ratepayinvoice');
+if (! $ratepayInvoiceModel->showDobForm()) {
+    return;
+}
+?>
+<ul class="form-list" id="payment_form_<?php echo $this->getMethodCode(); ?>" style="display: none;">
+    <li>
+        <?php
+        $block = $this->getLayout()
+                      ->createBlock('customer/widget_dob');
+        $block->setData('field_name_format', 'wirecardElasticEngine[%s]');
+        echo $block->toHtml();
+        ?>
+    </li>
+</ul>
