@@ -80,6 +80,20 @@ class RatepayInvoicePayment extends Payment implements
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getBackendTransaction(
+        \Mage_Sales_Model_Order $order,
+        $operation,
+        \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
+    ) {
+        $transaction = new RatepayInvoiceTransaction();
+        $transaction->setOrderNumber($order->getRealOrderId());
+
+        return $transaction;
+    }
+
+    /**
      * @return RatepayInvoicePaymentConfig
      *
      * @since 1.1.0

@@ -14,6 +14,7 @@ use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\SuccessAction;
 use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
+use WirecardEE\PaymentGateway\Mapper\BasketMapper;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 use WirecardEE\PaymentGateway\Service\BackendOperationsHandler;
 use WirecardEE\PaymentGateway\Service\Logger;
@@ -352,6 +353,13 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             $transaction
         );
         $backendTransaction->setParentTransactionId($transaction->getTxnId());
+
+        $backendTransaction->setBasket(
+            (new BasketMapper($transaction->getOrder(), $backendTransaction))->getBasket()
+        );
+        $backendTransaction->setAmount(
+            new Amount($transaction->getOrder()->getBaseGrandTotal(), $transaction->getOrder()->getBaseCurrencyCode())
+        );
         if ($amount) {
             $backendTransaction->setAmount($amount);
         }
