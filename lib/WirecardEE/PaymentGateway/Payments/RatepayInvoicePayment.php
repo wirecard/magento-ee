@@ -10,16 +10,19 @@
 namespace WirecardEE\PaymentGateway\Payments;
 
 use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 use Wirecard\PaymentSdk\TransactionService;
+use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\RatepayInvoicePaymentConfig;
 use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplate;
 use WirecardEE\PaymentGateway\Payments\Contracts\DisplayRestrictionInterface;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
-use WirecardEE\PaymentGateway\Service\Logger;
+use WirecardEE\PaymentGateway\Service\SessionManager;
 
 class RatepayInvoicePayment extends Payment implements
     ProcessPaymentInterface,
@@ -67,6 +70,12 @@ class RatepayInvoicePayment extends Payment implements
     public function getTransactionConfig($selectedCurrency)
     {
         $config = parent::getTransactionConfig($selectedCurrency);
+        $config->add(new PaymentMethodConfig(
+            RatepayInvoiceTransaction::NAME,
+            $this->getPaymentConfig()->getTransactionMAID(),
+            $this->getPaymentConfig()->getTransactionSecret()
+        ));
+
         return $config;
     }
 
@@ -85,7 +94,7 @@ class RatepayInvoicePayment extends Payment implements
 
         $paymentConfig->setTransactionMAID($this->getPluginConfig('api_maid'));
         $paymentConfig->setTransactionSecret($this->getPluginConfig('api_secret'));
-        $paymentConfig->setTransactionOperation(Operation::PAY);
+        $paymentConfig->setTransactionOperation(Operation::RESERVE);
         $paymentConfig->setOrderIdentification(true);
         $paymentConfig->setMinAmount($this->getPluginConfig('min_amount'));
         $paymentConfig->setMaxAmount($this->getPluginConfig('max_amount'));
@@ -112,6 +121,8 @@ class RatepayInvoicePayment extends Payment implements
      * @param TransactionService $transactionService
      * @param Redirect           $redirect
      *
+     * @throws \Exception
+     *
      * @return null
      *
      * @since 1.1.0
@@ -121,7 +132,24 @@ class RatepayInvoicePayment extends Payment implements
         TransactionService $transactionService,
         Redirect $redirect
     ) {
-        return null;
+        $transaction   = $this->getTransaction();
+        $paymentConfig = $this->getPaymentConfig();
+
+        if (! $paymentConfig->hasFraudPrevention()) {
+            $transaction->setDevice($orderSummary->getWirecardDevice());
+            $transaction->setOrderNumber($orderSummary->getOrder()->getRealOrderId());
+            $transaction->setAccountHolder($orderSummary->getUserMapper()->getBillingAccountHolder());
+            $transaction->setShipping($orderSummary->getUserMapper()->getShippingAccountHolder());
+        }
+
+        if (! $this->isAmountInRange($orderSummary->getOrder()->getBaseGrandTotal())) {
+            return new ErrorAction(
+                ErrorAction::PROCESSING_FAILED,
+                'Basket total amount not within set range'
+            );
+        }
+
+        return $this->validateConsumerDateOfBirth($orderSummary, $transaction->getAccountHolder());
     }
 
     /**
@@ -129,44 +157,56 @@ class RatepayInvoicePayment extends Payment implements
      */
     public function checkDisplayRestrictions(\Mage_Checkout_Model_Session $checkoutSession)
     {
-        $logger        = new Logger();
         $paymentConfig = $this->getPaymentConfig();
         $quote         = $checkoutSession->getQuote();
 
         // Check if merchant disallows different billing/shipping address and compare both
         if (! $paymentConfig->isAllowedDifferentBillingShipping()
             && ! $quote->getShippingAddress()->getSameAsBilling()) {
-            $logger->debug('different billing and shipping address');
             return false;
         }
 
         // Check if currency is allowed
         if (! in_array($quote->getQuoteCurrencyCode(), $paymentConfig->getAcceptedCurrencies())) {
-            $logger->debug('currency not allowed' . $quote->getQuoteCurrencyCode());
+            return false;
+        }
+
+        // Check if amount is in range
+        if (! $this->isAmountInRange($quote->getBaseGrandTotal())) {
             return false;
         }
 
         // Check customer age
-        $birthday = $quote->getCustomerDob();
+        /** @var \Mage_Core_Model_Session $session */
+        $session  = \Mage::getSingleton("core/session", ["name" => "frontend"]);
+        $birthday = $quote->getCustomerDob()
+            ? new \DateTime($quote->getCustomerDob())
+            : $this->getBirthdayFromPaymentData((new SessionManager($session))->getPaymentData());
 
-        if ($birthday && $this->isBelowAgeRestriction(new \DateTime($birthday))) {
+        if ($birthday && $this->isBelowAgeRestriction($birthday)) {
             return false;
         }
 
         // Check shipping and billing addresses are allowed
         if (! in_array($quote->getBillingAddress()->getCountry(), $paymentConfig->getBillingCountries())
             || ! in_array($quote->getShippingAddress()->getCountry(), $paymentConfig->getShippingCountries())) {
-            $logger->debug('billing or shipping country not allowed');
             return false;
         }
 
         // Check for virtual products
         if ($quote->hasVirtualItems()) {
-            $logger->debug('quote contains virtual items');
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormTemplateName()
+    {
+        return 'WirecardEE/form/ratepay_invoice.phtml';
     }
 
     /**
@@ -185,10 +225,75 @@ class RatepayInvoicePayment extends Payment implements
     }
 
     /**
-     * {@inheritdoc}
+     * @param $amount
+     *
+     * @return bool
+     *
+     * @since 1.1.0
      */
-    public function getFormTemplateName()
+    private function isAmountInRange($amount)
     {
-        return 'WirecardEE/form/ratepay_invoice.phtml';
+        $minAmount = floatval($this->getPaymentConfig()->getMinAmount());
+        $maxAmount = floatval($this->getPaymentConfig()->getMaxAmount());
+        return ($amount >= $minAmount && $amount <= $maxAmount);
+    }
+
+    /**
+     * @param array|null $paymentData
+     *
+     * @return \DateTime|null
+     *
+     * @throws \Exception
+     *
+     * @since 1.1.0
+     */
+    private function getBirthdayFromPaymentData($paymentData)
+    {
+        if (! isset($paymentData['birthday']['year'])
+            || ! isset($paymentData['birthday']['month'])
+            || ! isset($paymentData['birthday']['day'])
+        ) {
+            return null;
+        }
+        $birthDay = new \DateTime();
+        $birthDay->setDate(
+            intval($paymentData['birthday']['year']),
+            intval($paymentData['birthday']['month']),
+            intval($paymentData['birthday']['day'])
+        );
+        return $birthDay;
+    }
+
+    /**
+     * @param OrderSummary  $orderSummary
+     * @param AccountHolder $accountHolder
+     *
+     * @throws \Exception
+     *
+     * @return ErrorAction|null
+     *
+     * @since 1.1.0
+     */
+    private function validateConsumerDateOfBirth(OrderSummary $orderSummary, AccountHolder $accountHolder)
+    {
+        if ($orderSummary->getOrder()->getCustomerDob()) {
+            return null;
+        }
+
+        /** @var \Mage_Core_Model_Session $session */
+        $session  = \Mage::getSingleton("core/session", ["name" => "frontend"]);
+        $birthday = $orderSummary->getOrder()->getCustomerDob()
+            ? new \DateTime($orderSummary->getOrder()->getCustomerDob())
+            : $this->getBirthdayFromPaymentData((new SessionManager($session))->getPaymentData());
+
+        if ($birthday && $this->isBelowAgeRestriction($birthday)) {
+            return new ErrorAction(ErrorAction::PROCESSING_FAILED,
+                $birthday
+                    ? 'Consumer must be at least ' . self::MINIMUM_CONSUMER_AGE . ' years old'
+                    : 'Consumer birthday missing');
+        }
+
+        $accountHolder->setDateOfBirth($birthday);
+        return null;
     }
 }

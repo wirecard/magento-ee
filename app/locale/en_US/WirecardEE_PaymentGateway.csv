@@ -419,3 +419,4 @@
 "invoice_created","Automatically created invoice by Wirecard Payment Gateway extension."
 
 "bic_required","BIC is a required field."
+"dob_required","Date of Birth is a required field."

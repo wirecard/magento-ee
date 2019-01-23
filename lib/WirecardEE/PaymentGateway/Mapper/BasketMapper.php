@@ -82,6 +82,11 @@ class BasketMapper
             $basketItem->setTaxAmount(
                 new Amount(self::numberFormat($order->getShippingTaxAmount()), $currency)
             );
+            $basketItem->setTaxRate(
+                $order->getShippingTaxAmount() == 0
+                ? 0
+                : (($order->getShippingTaxAmount() / $shippingCosts) * 100)
+            );
 
             $basket->add($basketItem);
         }
@@ -92,6 +97,7 @@ class BasketMapper
 
             $basketItem = new Item(\Mage::helper('catalog')->__('Discount'), $discountValue, 1);
             $basketItem->setDescription($couponCode);
+            $basketItem->setTaxRate(0);
 
             $basket->add($basketItem);
         }

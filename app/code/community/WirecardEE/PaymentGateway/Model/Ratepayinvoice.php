@@ -28,4 +28,33 @@ class WirecardEE_PaymentGateway_Model_Ratepayinvoice extends WirecardEE_PaymentG
         $checkoutSession = Mage::getSingleton('checkout/session');
         return ! $checkoutSession->getQuote()->getCustomerDob();
     }
+
+    /**
+     * @throws Mage_Core_Exception
+     *
+     * @return $this
+     *
+     * @since 1.1.0
+     */
+    public function validate()
+    {
+        parent::validate();
+
+        /** @var Mage_Checkout_Model_Session $checkoutSession */
+        $checkoutSession = Mage::getSingleton('checkout/session');
+
+        if ($checkoutSession->getQuote()->getCustomerDob()) {
+            return $this;
+        }
+
+        $paymentData = Mage::app()->getRequest()->getParam('wirecardElasticEngine');
+        if (! isset($paymentData['birthday'])
+            || empty($paymentData['birthday']['month'])
+            || empty($paymentData['birthday']['day'])
+            || empty($paymentData['birthday']['year'])) {
+            Mage::throwException($this->_getHelper()->__('dob_required'));
+        }
+
+        return $this;
+    }
 }

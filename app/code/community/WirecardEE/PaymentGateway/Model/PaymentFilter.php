@@ -7,6 +7,7 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
 use WirecardEE\PaymentGateway\Payments\Contracts\DisplayRestrictionInterface;
 use WirecardEE\PaymentGateway\Payments\Payment;
 use WirecardEE\PaymentGateway\Service\PaymentFactory;
@@ -18,6 +19,8 @@ class WirecardEE_PaymentGateway_Model_PaymentFilter
 {
     /**
      * @param Varien_Event_Observer $observer
+     *
+     * @throws UnknownPaymentException
      *
      * @since 1.1.0
      */
@@ -31,7 +34,6 @@ class WirecardEE_PaymentGateway_Model_PaymentFilter
         }
 
         $factory = new PaymentFactory();
-        /** @var stdClass $result */
         $result  = $observer->getEvent()->getData('result');
         $payment = $factory->createFromPaymentModel($paymentModel);
 

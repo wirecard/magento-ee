@@ -18,9 +18,10 @@ if (! $ratepayInvoiceModel->showDobForm()) {
 <ul class="form-list" id="payment_form_<?php echo $this->getMethodCode(); ?>" style="display: none;">
     <li>
         <?php
+        /** @var Mage_Customer_Block_Widget_Dob $block */
         $block = $this->getLayout()
                       ->createBlock('customer/widget_dob');
-        $block->setData('field_name_format', 'wirecardElasticEngine[%s]');
+        $block->setData('field_name_format', 'wirecardElasticEngine[birthday][%s]');
         echo $block->toHtml();
         ?>
     </li>
