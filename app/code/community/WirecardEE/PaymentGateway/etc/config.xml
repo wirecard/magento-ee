@@ -215,7 +215,7 @@
                 <api_maid>105ab3e8-d16b-4fa0-9f1f-18dd9b390c94</api_maid>
                 <api_secret>2d96596b-9d10-4c98-ac47-4d56e22fd878</api_secret>
                 <fraud_prevention>1</fraud_prevention>
-                <sort_order>32</sort_order>
+                <sort_order>28</sort_order>
             </wirecardee_paymentgateway_poi>
             <wirecardee_paymentgateway_pia>
                 <active>0</active>
@@ -227,7 +227,7 @@
                 <api_maid>105ab3e8-d16b-4fa0-9f1f-18dd9b390c94</api_maid>
                 <api_secret>2d96596b-9d10-4c98-ac47-4d56e22fd878</api_secret>
                 <fraud_prevention>1</fraud_prevention>
-                <sort_order>32</sort_order>
+                <sort_order>27</sort_order>
             </wirecardee_paymentgateway_pia>
         </payment>
     </default>
