@@ -22,6 +22,7 @@ if (! $ratepayInvoiceModel->showDobForm()) {
         $block = $this->getLayout()
                       ->createBlock('customer/widget_dob');
         $block->setData('field_name_format', 'wirecardElasticEngine[birthday][%s]');
+        $block->setData('field_id_format', 'wirecardee--dob-%s');
         echo $block->toHtml();
         ?>
     </li>
