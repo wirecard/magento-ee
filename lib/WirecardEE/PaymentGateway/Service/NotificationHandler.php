@@ -100,7 +100,7 @@ class NotificationHandler extends Handler
 
             foreach ($order->getAllVisibleItems() as $item) {
                 /** @var \Mage_Sales_Model_Order_Item $item */
-                $refundableBasket[$item->getProductId()] = (int)$item->getQtyOrdered();
+                $refundableBasket[$item->getId()] = (int)$item->getQtyOrdered();
             }
             if ($order->getShippingAmount() > 0.0) {
                 $refundableBasket[TransactionManager::ADDITIONAL_AMOUNT_KEY] = $order->getShippingAmount();
