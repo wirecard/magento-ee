@@ -204,6 +204,19 @@
                 <fraud_prevention>1</fraud_prevention>
                 <sort_order>21</sort_order>
             </wirecardee_paymentgateway_ideal>
+            <wirecardee_paymentgateway_unionpayinternational>
+                <active>0</active>
+                <model>paymentgateway/unionpay</model>
+                <title>Wirecard UnionPay International</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>70000-APILUHN-CARD</api_user>
+                <api_password>8mhwavKVb91T</api_password>
+                <api_maid>c6e9331c-5c1f-4fc6-8a08-ef65ce09ddb0</api_maid>
+                <api_secret>16d85b73-79e2-4c33-932a-7da99fb04a9c</api_secret>
+                <transaction_type>pay</transaction_type>
+                <fraud_prevention>1</fraud_prevention>
+                <sort_order>38</sort_order>
+            </wirecardee_paymentgateway_unionpayinternational>
         </payment>
     </default>
 
