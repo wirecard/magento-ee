@@ -104,6 +104,19 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
      *
      * @since 1.0.0
      */
+    public function getUserAgent()
+    {
+        /** @var Mage_Core_Helper_Http $hlp */
+        $hlp = Mage::helper('core/http');
+
+        return $hlp->getHttpUserAgent();
+    }
+
+    /**
+     * @return string
+     *
+     * @since 1.0.0
+     */
     public function getPluginName()
     {
         return 'WirecardEE_PaymentGateway';
