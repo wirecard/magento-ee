@@ -9,6 +9,7 @@
 
 namespace WirecardEE\PaymentGateway\Service;
 
+use Wirecard\PaymentSdk\Transaction\AlipayCrossborderTransaction;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\EpsTransaction;
 use Wirecard\PaymentSdk\Transaction\GiropayTransaction;
@@ -17,6 +18,7 @@ use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
+use WirecardEE\PaymentGateway\Payments\AlipayPayment;
 use WirecardEE\PaymentGateway\Payments\CreditCardPayment;
 use WirecardEE\PaymentGateway\Payments\EpsPayment;
 use WirecardEE\PaymentGateway\Payments\GiropayPayment;
@@ -98,14 +100,15 @@ class PaymentFactory
     private function getMappedPayments()
     {
         return [
-            PayPalTransaction::NAME          => PaypalPayment::class,
-            CreditCardTransaction::NAME      => CreditCardPayment::class,
-            SepaDirectDebitTransaction::NAME => SepaPayment::class,
-            SofortTransaction::NAME          => SofortPayment::class,
-            EpsTransaction::NAME             => EpsPayment::class,
-            GiropayTransaction::NAME         => GiropayPayment::class,
-            EpsTransaction::NAME             => EpsPayment::class,
-            IdealTransaction::NAME           => IdealPayment::class,
+            PayPalTransaction::NAME            => PaypalPayment::class,
+            CreditCardTransaction::NAME        => CreditCardPayment::class,
+            SepaDirectDebitTransaction::NAME   => SepaPayment::class,
+            SofortTransaction::NAME            => SofortPayment::class,
+            EpsTransaction::NAME               => EpsPayment::class,
+            GiropayTransaction::NAME           => GiropayPayment::class,
+            EpsTransaction::NAME               => EpsPayment::class,
+            IdealTransaction::NAME             => IdealPayment::class,
+            AlipayCrossborderTransaction::NAME => AlipayPayment::class,
         ];
     }
 
