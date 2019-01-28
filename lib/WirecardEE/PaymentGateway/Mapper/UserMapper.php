@@ -30,20 +30,27 @@ class UserMapper
     /**
      * @var string
      */
+    protected $userAgent;
+
+    /**
+     * @var string
+     */
     protected $locale;
 
     /**
      * @param \Mage_Sales_Model_Order $order
-     * @param string                  $clientIp
-     * @param string                  $locale
+     * @param string $clientIp
+     * @param string $userAgent
+     * @param string $locale
      *
      * @since 1.0.0
      */
-    public function __construct(\Mage_Sales_Model_Order $order, $clientIp, $locale)
+    public function __construct(\Mage_Sales_Model_Order $order, $clientIp, $userAgent, $locale)
     {
-        $this->order    = $order;
-        $this->clientIp = $clientIp;
-        $this->locale   = $locale;
+        $this->order     = $order;
+        $this->clientIp  = $clientIp;
+        $this->userAgent = $userAgent;
+        $this->locale    = $locale;
     }
 
     /**
@@ -54,6 +61,16 @@ class UserMapper
     public function getClientIp()
     {
         return $this->clientIp;
+    }
+
+    /**
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getUserAgent()
+    {
+        return $this->userAgent;
     }
 
     /**
