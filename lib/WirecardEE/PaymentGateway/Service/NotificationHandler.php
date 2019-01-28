@@ -100,7 +100,7 @@ class NotificationHandler extends Handler
 
             foreach ($order->getAllVisibleItems() as $item) {
                 /** @var \Mage_Sales_Model_Order_Item $item */
-                $refundableBasket[$item->getProductId()] = (int)$item->getQtyOrdered();
+                $refundableBasket[$item->getId()] = (int)$item->getQtyOrdered();
             }
             if ($order->getShippingAmount() > 0.0) {
                 $refundableBasket[TransactionManager::ADDITIONAL_AMOUNT_KEY] = $order->getShippingAmount();
@@ -125,7 +125,7 @@ class NotificationHandler extends Handler
         $state = $this->getOrderState($backendService, $response);
         // Don't update if state equals order state or back to pending
         if ($state === $order->getState()
-            || ($order->getState() !== \Mage_Sales_Model_Order::STATE_PROCESSING
+            || ($order->getState() !== \Mage_Sales_Model_Order::STATE_NEW
                 && $state === \Mage_Sales_Model_Order::STATE_PENDING_PAYMENT)) {
             return $transaction;
         }
