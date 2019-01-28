@@ -17,11 +17,14 @@ class UserMapperTest extends TestCase
 {
     public function testMapper()
     {
+        $ua = 'User-Agent: Mozilla/5.0 (X11; U; Linux i686; xx; rv:1.9.1.9) ' .
+            'Gecko/20100330 Fedora/3.5.9-2.fc12 Firefox/3.5.9';
         $order  = $this->createMock(\Mage_Sales_Model_Order::class);
-        $mapper = new UserMapper($order, '127.0.0.1', 'de');
+        $mapper = new UserMapper($order, '127.0.0.1', $ua, 'de');
         $this->assertSame($order, $mapper->getOrder());
         $this->assertSame('127.0.0.1', $mapper->getClientIp());
         $this->assertSame('de', $mapper->getLocale());
+        $this->assertSame($ua, $mapper->getUserAgent());
     }
 
     public function testShippingAccountHolder()
@@ -46,7 +49,7 @@ class UserMapperTest extends TestCase
             ['getCustomerGender', [], '1'],
         ]);
 
-        $mapper  = new UserMapper($order, '127.0.0.1', 'de');
+        $mapper  = new UserMapper($order, '127.0.0.1', '', 'de');
         $account = $mapper->getShippingAccountHolder();
         $this->assertInstanceOf(AccountHolder::class, $account);
         $this->assertEquals([
@@ -85,7 +88,7 @@ class UserMapperTest extends TestCase
             ['getCustomerGender', [], '1'],
         ]);
 
-        $mapper  = new UserMapper($order, '127.0.0.1', 'de');
+        $mapper  = new UserMapper($order, '127.0.0.1', '', 'de');
         $account = $mapper->getBillingAccountHolder();
         $this->assertInstanceOf(AccountHolder::class, $account);
         $this->assertEquals([
@@ -121,7 +124,7 @@ class UserMapperTest extends TestCase
             ['getCustomerGender', [], '2'],
         ]);
 
-        $mapper  = new UserMapper($order, '127.0.0.1', 'de');
+        $mapper  = new UserMapper($order, '127.0.0.1', '', 'de');
         $account = $mapper->getBillingAccountHolder();
         $this->assertInstanceOf(AccountHolder::class, $account);
         $this->assertEquals([
