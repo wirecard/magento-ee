@@ -33,7 +33,8 @@ abstract class Payment implements PaymentInterface
         $config = new Config(
             $this->getPaymentConfig()->getBaseUrl(),
             $this->getPaymentConfig()->getHttpUser(),
-            $this->getPaymentConfig()->getHttpPassword()
+            $this->getPaymentConfig()->getHttpPassword(),
+            $selectedCurrency
         );
 
         $config->setShopInfo(

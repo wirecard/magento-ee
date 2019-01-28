@@ -22,6 +22,7 @@ use WirecardEE\PaymentGateway\Payments\CreditCardPayment;
 use WirecardEE\PaymentGateway\Payments\EpsPayment;
 use WirecardEE\PaymentGateway\Payments\GiropayPayment;
 use WirecardEE\PaymentGateway\Payments\IdealPayment;
+use WirecardEE\PaymentGateway\Payments\PayByBankAppPayment;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 use WirecardEE\PaymentGateway\Payments\PaypalPayment;
 use WirecardEE\PaymentGateway\Payments\RatepayInvoicePayment;
@@ -121,6 +122,7 @@ class PaymentFactory
             GiropayTransaction::NAME         => GiropayPayment::class,
             EpsTransaction::NAME             => EpsPayment::class,
             IdealTransaction::NAME           => IdealPayment::class,
+            PayByBankAppPayment::NAME        => PayByBankAppPayment::class,
             RatepayInvoiceTransaction::NAME  => RatepayInvoicePayment::class
         ];
     }
