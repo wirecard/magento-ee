@@ -108,6 +108,7 @@ class PaymentFactory
             GiropayTransaction::NAME         => GiropayPayment::class,
             EpsTransaction::NAME             => EpsPayment::class,
             IdealTransaction::NAME           => IdealPayment::class,
+            // PayByBankAppPayment::NAME        => PayByBankAppPayment::class,
             MaestroTransaction::NAME         => MaestroPayment::class,
         ];
     }
