@@ -406,7 +406,7 @@
 "config_creditor_country_desc","SEPA Direct Debit requires a Creditor Country for the SEPA Direct Debit Mandate page."
 "terms_of_use_title","General Information regarding Wirecard Shop Plugins"
 "error_render_template","Unable to render template"
-"text_plugin_version","Plugin version"
+"text_plugin_version","Extension version"
 "config_email_notification","E-mail for payment notifications"
 "config_email_notification_desc","Enter your e-mail address to receive a payment notification for each incoming payment confirmation via e-mail."
 "config_pendig_status_mails","Send pending status mails"
