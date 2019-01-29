@@ -49,15 +49,33 @@ if (! $wirecardUrl || ! $requestData || ! $url) {
             if (response.transaction_state === 'failed') {
                 $('.wirecardee-credit-card-error-message').html(response.status_description_1);
                 $('.wirecardee-credit-card-error-message').show();
+
+                // Re-render the form with new ui data
+                $.ajax({
+                    url: "<?php echo Mage::getUrl('paymentgateway/gateway/getNewUIData'); ?>",
+                    success: function (response) {
+                        if (! response.hasOwnProperty('error') && response.hasOwnProperty('request_id')) {
+                            return renderForm(response);
+                        }
+
+                        // If we're unable to new UI data we're simply reloading the current page
+                        return location.reload();
+                    }
+                });
             }
         };
 
-        WirecardPaymentPage.seamlessRenderForm({
-            requestData: <?php echo $requestData; ?>,
-            wrappingDivId: 'wirecardee-credit-card--iframe-div',
-            onSuccess: handleFailedFormResponse,
-            onError: handleFailedFormResponse
-        });
+        var renderForm = function (requestData) {
+            WirecardPaymentPage.seamlessRenderForm({
+                requestData: requestData,
+                wrappingDivId: 'wirecardee-credit-card--iframe-div',
+                onSuccess: handleFailedFormResponse,
+                onError: handleFailedFormResponse
+            });
+        };
+
+        // Initial form rendering
+        renderForm(<?php echo $requestData; ?>);
 
         var setParentTransactionId = function (response) {
             var form = document.getElementById('wirecardee-credit-card--form'),

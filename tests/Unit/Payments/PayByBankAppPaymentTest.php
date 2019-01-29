@@ -45,6 +45,8 @@ class PayByBankAppPaymentTest extends TestCase
 
     public function setup()
     {
+        $this->markTestSkipped('Payment method disabled at the moment.');
+
         $this->orderSummaryMock = $this->createMock(OrderSummary::class);
         $this->userMapperMock = $this->createMock(UserMapper::class);
         $this->transactionServiceMock = $this->createMock(TransactionService::class);

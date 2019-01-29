@@ -8,6 +8,7 @@
  */
 
 use Wirecard\PaymentSdk\BackendService;
+use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\TransactionService;
@@ -17,6 +18,7 @@ use WirecardEE\PaymentGateway\Actions\RedirectAction;
 use WirecardEE\PaymentGateway\Actions\ViewAction;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Exception\UnknownActionException;
+use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
 use WirecardEE\PaymentGateway\Mail\MerchantNotificationMail;
 use WirecardEE\PaymentGateway\Mapper\BasketMapper;
 use WirecardEE\PaymentGateway\Mapper\UserMapper;
@@ -40,7 +42,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      * @return Action
      * @throws UnknownActionException
      * @throws Mage_Core_Exception
-     * @throws \WirecardEE\PaymentGateway\Exception\UnknownPaymentException
+     * @throws UnknownPaymentException
      *
      * @since 1.0.0
      */
@@ -95,7 +97,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      *
      * @return Action
      * @throws UnknownActionException
-     * @throws \WirecardEE\PaymentGateway\Exception\UnknownPaymentException
+     * @throws UnknownPaymentException
      *
      * @since 1.0.0
      */
@@ -136,6 +138,51 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
     }
 
     /**
+     * Ajax API for getting new request data for seamless form UIs.
+     * See app/design/frontend/base/default/template/WirecardEE/seamless.phtml#54 for further details.
+     *
+     * @return Zend_Controller_Response_Abstract
+     * @throws UnknownPaymentException
+     *
+     * @since 1.0.0
+     */
+    public function getNewUIDataAction()
+    {
+        $this->getResponse()->clearHeaders();
+        $this->getResponse()->setHeader('Content-Type', 'application/json', true);
+
+        $order    = $this->getCheckoutSession()->getLastRealOrder();
+
+        if ($order->getState() !== \Mage_Sales_Model_Order::STATE_NEW) {
+            return $this->getResponse()->setBody(json_encode(['error' => 'Invalid order state']));
+        }
+
+        $paymentFactory = new PaymentFactory();
+
+        if (! $paymentFactory->isSupportedPayment($order->getPayment())) {
+            return $this->getResponse()->setBody(json_encode(['error' => 'Unsupported payment']));
+        }
+
+        $payment            = $paymentFactory->createFromMagePayment($order->getPayment());
+        $transactionService = new TransactionService(
+            $payment->getTransactionConfig($order->getBaseCurrency()->getCode()),
+            $this->getHelper()->getLogger()
+        );
+        $transaction        = $payment->getTransaction();
+        $transaction->setAmount(
+            new Amount(BasketMapper::numberFormat($order->getBaseGrandTotal()), $order->getBaseCurrencyCode())
+        );
+
+        $requestData = $transactionService->getCreditCardUiWithData(
+            $payment->getTransaction(),
+            $payment->getTransactionType(),
+            \Mage::app()->getLocale()->getLocaleCode()
+        );
+
+        return $this->getResponse()->setBody($requestData);
+    }
+
+    /**
      * @param Mage_Sales_Model_Order $order
      *
      * @return RedirectAction
@@ -159,7 +206,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      * by the `ReturnHandler`.
      *
      * @return \Wirecard\PaymentSdk\Response\Response
-     * @throws \WirecardEE\PaymentGateway\Exception\UnknownPaymentException
+     * @throws UnknownPaymentException
      *
      * @since 1.0.0
      */
