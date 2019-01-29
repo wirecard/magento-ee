@@ -15,42 +15,41 @@ use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Represents the Magento basket as object.
+ * Parent class for basket mapper classes.
  *
  * @since 1.0.0
  */
-class BasketMapper
+abstract class BasketMapper
 {
     /**
-     * @var \Mage_Sales_Model_Order
+     * @var \Mage_Sales_Model_Abstract
      */
-    protected $order;
+    protected $model;
 
     /**
      * @var Transaction
      */
     protected $transaction;
 
-    /**
-     * @param \Mage_Sales_Model_Order $order
-     * @param Transaction             $transaction
-     *
-     * @since 1.0.0
-     */
-    public function __construct(\Mage_Sales_Model_Order $order, Transaction $transaction)
+    public function __construct(\Mage_Sales_Model_Abstract $model, Transaction $transaction = null)
     {
-        $this->order       = $order;
+        $this->model       = $model;
+        $this->transaction = $transaction;
+    }
+
+    public function setTransaction(Transaction $transaction)
+    {
         $this->transaction = $transaction;
     }
 
     /**
-     * @return \Mage_Sales_Model_Order
+     * @return \Mage_Sales_Model_Abstract
      *
      * @since 1.0.0
      */
-    public function getOrder()
+    public function getModel()
     {
-        return $this->order;
+        return $this->model;
     }
 
     /**
@@ -60,40 +59,40 @@ class BasketMapper
      */
     public function getBasket()
     {
-        $order    = $this->getOrder();
-        $currency = $order->getBaseCurrencyCode();
+        $currency = $this->getCurrency();
 
         $basket = new Basket();
         $basket->setVersion($this->transaction);
 
-        /** @var \Mage_Sales_Model_Order_Item $item */
-        foreach ($order->getAllVisibleItems() as $item) {
-            $basketItem = new BasketItemMapper($item, $currency);
+        $itemMapper = $this->getItemMapper();
+        foreach ($this->getItems() as $item) {
+            /** @var BasketItemMapper $basketItem */
+            $basketItem = new $itemMapper($item, $currency);
             $basket->add($basketItem->getItem());
         }
 
-        $shippingCosts = $order->getShippingInclTax();
+        $shippingCosts = $this->getShippingCosts();
         if ($shippingCosts > 0.0) {
-            $shippingAmount = new Amount(self::numberFormat($shippingCosts), $currency);
+            $shippingAmount = new Amount(self::numberFormat($shippingCosts), $this->getCurrency());
 
             $basketItem = new Item(\Mage::helper('catalog')->__('Shipping'), $shippingAmount, 1);
-            $basketItem->setDescription($order->getShippingDescription());
+            $basketItem->setDescription($this->getShippingDescription());
             $basketItem->setArticleNumber('shipping');
             $basketItem->setTaxAmount(
-                new Amount(self::numberFormat($order->getShippingTaxAmount()), $currency)
+                new Amount(self::numberFormat($this->getShippingTaxAmount()), $this->getCurrency())
             );
             $basketItem->setTaxRate(
-                $order->getShippingTaxAmount() == 0
-                ? 0
-                : (($order->getShippingTaxAmount() / $shippingCosts) * 100)
+                $this->getShippingTaxAmount() == 0
+                    ? 0
+                    : (($this->getShippingTaxAmount() / $shippingCosts) * 100)
             );
 
             $basket->add($basketItem);
         }
 
-        $couponCode = (string)$order->getCouponCode();
-        if ($couponCode !== '') {
-            $discountValue = new Amount(self::numberFormat($order->getBaseDiscountAmount()), $currency);
+        $couponCode = $this->getCouponCode();
+        if ($couponCode && $couponCode !== '') {
+            $discountValue = new Amount(self::numberFormat($this->getDiscountAmount()), $currency);
 
             $basketItem = new Item(\Mage::helper('catalog')->__('Discount'), $discountValue, 1);
             $basketItem->setDescription($couponCode);
@@ -104,6 +103,46 @@ class BasketMapper
 
         return $basket;
     }
+
+    /**
+     * @return float
+     */
+    protected abstract function getDiscountAmount();
+
+    /**
+     * @return string
+     */
+    protected abstract function getCouponCode();
+
+    /**
+     * @return float
+     */
+    protected abstract function getShippingTaxAmount();
+
+    /**
+     * @return string
+     */
+    protected abstract function getShippingDescription();
+
+    /**
+     * @return float
+     */
+    protected abstract function getShippingCosts();
+
+    /**
+     * @return string
+     */
+    protected abstract function getCurrency();
+
+    /**
+     * @return \Mage_Sales_Model_Order_Item[]
+     */
+    protected abstract function getItems();
+
+    /**
+     * @return string
+     */
+    protected abstract function getItemMapper();
 
     /**
      * Helper function to format numbers throughout the plugin.

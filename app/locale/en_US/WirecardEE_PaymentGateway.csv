@@ -424,3 +424,9 @@
 
 "bic_required","BIC is a required field."
 "dob_required","Date of Birth is a required field."
+"birthdate_input_day","Day"
+"birthdate_input_day_format","DD"
+"birthdate_input_month","Month"
+"birthdate_input_month_format","MM"
+"birthdate_input_year","Year"
+"birthdate_input_year_format","YYYY"

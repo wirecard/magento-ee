@@ -10,11 +10,15 @@
 use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Amount;
+use Wirecard\PaymentSdk\Entity\Basket;
 use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\SuccessAction;
 use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
 use WirecardEE\PaymentGateway\Mapper\BasketMapper;
+use WirecardEE\PaymentGateway\Mapper\CreditmemoBasketMapper;
+use WirecardEE\PaymentGateway\Mapper\InvoiceBasketMapper;
+use WirecardEE\PaymentGateway\Mapper\OrderBasketMapper;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 use WirecardEE\PaymentGateway\Service\BackendOperationsHandler;
 use WirecardEE\PaymentGateway\Service\Logger;
@@ -128,6 +132,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                 $this->logger
             ),
             $payment->getCaptureOperation(),
+            new InvoiceBasketMapper($invoice),
             new Amount($invoice->getGrandTotal(), $invoice->getBaseCurrencyCode()),
             [TransactionManager::REFUNDABLE_BASKET_KEY => json_encode($refundableBasket)]
         );
@@ -228,6 +233,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                 $payment,
                 $backendService,
                 $payment->getRefundOperation(),
+                new CreditmemoBasketMapper($creditMemo),
                 new Amount($amount, $creditMemo->getBaseCurrencyCode())
             );
             $actions[] = $action;
@@ -299,7 +305,8 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                 $payment->getTransactionConfig(Mage::app()->getLocale()->getCurrency()),
                 $this->logger
             ),
-            $payment->getCancelOperation()
+            $payment->getCancelOperation(),
+            new OrderBasketMapper($magePayment->getOrder())
         );
 
         if ($action instanceof SuccessAction) {
@@ -337,6 +344,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
      * @param PaymentInterface                           $payment
      * @param BackendService                             $backendService
      * @param string                                     $operation
+     * @param BasketMapper                               $basketMapper
      * @param Amount|null                                $amount
      * @param array                                      $transactionContext
      *
@@ -349,6 +357,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         PaymentInterface $payment,
         BackendService $backendService,
         $operation,
+        BasketMapper $basketMapper,
         Amount $amount = null,
         $transactionContext = []
     ) {
@@ -363,12 +372,9 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         );
         $backendTransaction->setParentTransactionId($transaction->getTxnId());
 
-        $backendTransaction->setBasket(
-            (new BasketMapper($transaction->getOrder(), $backendTransaction))->getBasket()
-        );
-        $backendTransaction->setAmount(
-            new Amount($transaction->getOrder()->getBaseGrandTotal(), $transaction->getOrder()->getBaseCurrencyCode())
-        );
+        $basketMapper->setTransaction($backendTransaction);
+        $backendTransaction->setBasket($basketMapper->getBasket());
+
         if ($amount) {
             $backendTransaction->setAmount($amount);
         }

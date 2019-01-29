@@ -73,6 +73,14 @@ exports.config = {
         sc: 10,
         extensionSc: 4000
       }
+    },
+    ratepay: {
+      label: 'Wirecard Guaranteed Invoice by Wirecard',
+      fields: {
+        'wirecardee-ratepay--dob-day': '27',
+        'wirecardee-ratepay--dob-month': '10',
+        'wirecardee-ratepay--dob-year': '1990'
+      }
     }
   }
 };

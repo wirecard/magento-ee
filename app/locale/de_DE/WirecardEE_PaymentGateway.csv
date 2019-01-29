@@ -425,3 +425,9 @@
 
 "bic_required","BIC wird benötigt"
 "dob_required","Geburtstag wird benötigt"
+"birthdate_input_day","Tag"
+"birthdate_input_day_format","TT"
+"birthdate_input_month","Monat"
+"birthdate_input_month_format","MM"
+"birthdate_input_year","Jahr"
+"birthdate_input_year_format","JJJJ"

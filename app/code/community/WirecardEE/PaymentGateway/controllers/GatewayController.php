@@ -19,6 +19,7 @@ use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Exception\UnknownActionException;
 use WirecardEE\PaymentGateway\Mail\MerchantNotificationMail;
 use WirecardEE\PaymentGateway\Mapper\BasketMapper;
+use WirecardEE\PaymentGateway\Mapper\OrderBasketMapper;
 use WirecardEE\PaymentGateway\Mapper\UserMapper;
 use WirecardEE\PaymentGateway\Service\NotificationHandler;
 use WirecardEE\PaymentGateway\Service\PaymentFactory;
@@ -64,7 +65,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
             new OrderSummary(
                 $payment,
                 $order,
-                new BasketMapper($order, $payment->getTransaction()),
+                new OrderBasketMapper($order, $payment->getTransaction()),
                 new UserMapper(
                     $order,
                     $this->getHelper()->getClientIp(),

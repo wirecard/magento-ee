@@ -223,6 +223,11 @@ class RatepayInvoicePayment extends Payment implements
         return 'WirecardEE/form/ratepay_invoice.phtml';
     }
 
+    public function getRefundOperation()
+    {
+        return Operation::CANCEL;
+    }
+
     /**
      * @param \DateTime $birthDay
      *
