@@ -127,6 +127,8 @@ class SepaPayment extends Payment implements ProcessPaymentInterface, CustomForm
         );
 
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
+        $paymentConfig->setOrderIdentification($this->getPluginConfig('order_identification'));
+
         return $paymentConfig;
     }
 
