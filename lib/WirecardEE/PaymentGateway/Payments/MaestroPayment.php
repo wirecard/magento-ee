@@ -14,9 +14,11 @@ use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\MaestroTransaction;
 use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\Action;
+use WirecardEE\PaymentGateway\Actions\ViewAction;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\PaymentConfig;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
+use WirecardEE\PaymentGateway\Service\TransactionManager;
 
 class MaestroPayment extends Payment implements ProcessPaymentInterface
 {
@@ -107,6 +109,35 @@ class MaestroPayment extends Payment implements ProcessPaymentInterface
         TransactionService $transactionService,
         Redirect $redirect
     ) {
-        return null;
+        $transaction = $this->getTransaction();
+        $transaction->setTermUrl($redirect);
+
+        $requestData = $transactionService->getCreditCardUiWithData(
+            $transaction,
+            $orderSummary->getPayment()->getTransactionType(),
+            \Mage::app()->getLocale()->getLocaleCode()
+        );
+        $requestDataArray = json_decode($requestData, true);
+
+        /** @var \Mage_Sales_Model_Order_Payment_Transaction $transaction */
+        $transaction = \Mage::getModel('sales/order_payment_transaction');
+        $transaction->setTxnType(
+            TransactionManager::getMageTransactionType($requestDataArray['transaction_type'])
+        );
+        $transaction->setOrder($orderSummary->getOrder());
+        $transaction->setOrderPaymentObject($orderSummary->getOrder()->getPayment());
+        $transaction->setAdditionalInformation(
+            \Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS,
+            array_merge($requestDataArray, [
+                TransactionManager::TYPE_KEY => TransactionManager::TYPE_INITIAL_REQUEST
+            ])
+        );
+        $transaction->save();
+
+        return new ViewAction('paymentgateway/seamless', [
+            'wirecardUrl'         => $orderSummary->getPayment()->getPaymentConfig()->getBaseUrl(),
+            'wirecardRequestData' => $requestData,
+            'url'                 => \Mage::getUrl('paymentgateway/gateway/return', ['method' => self::NAME]),
+        ]);
     }
 }
