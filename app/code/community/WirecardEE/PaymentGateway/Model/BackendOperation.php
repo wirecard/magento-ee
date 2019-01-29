@@ -102,6 +102,11 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             return null;
         }
 
+        $invoicePost = Mage::app()->getRequest()->getPost('invoice', []);
+        if (empty($invoicePost['items'])) {
+            \Mage::throwException("Unable to capture empty invoice");
+        }
+
         $payment             = $this->paymentFactory->createFromMagePayment($invoice->getOrder()->getPayment());
         $initialNotification = $this->transactionManager->findInitialNotification($invoice->getOrder());
 
@@ -109,11 +114,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             $this->throwError("Capture failed (unable to find initial notification transaction)");
         }
 
-        $refundableBasket = [];
-        foreach ($invoice->getAllItems() as $item) {
-            /** @var Mage_Sales_Model_Order_Invoice_Item $item */
-            $refundableBasket[$item->getProductId()] = (int)$item->getQty();
-        }
+        $refundableBasket                                            = $invoicePost['items'];
         $refundableBasket[TransactionManager::ADDITIONAL_AMOUNT_KEY] = $invoice->getShippingAmount() > 0.0
             ? $invoice->getShippingAmount()
             : 0;
@@ -158,9 +159,10 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
      */
     public function refund(Varien_Event_Observer $observer)
     {
-        $creditMemo = $observer->getData('creditmemo');
+        $creditMemo     = $observer->getData('creditmemo');
+        $creditMemoPost = Mage::app()->getRequest()->getPost('creditmemo', []);
 
-        if (! ($creditMemo instanceof Mage_Sales_Model_Order_Creditmemo)) {
+        if (! ($creditMemo instanceof Mage_Sales_Model_Order_Creditmemo) || empty($creditMemoPost['items'])) {
             $this->throwError("Unable to process backend operation (refund)");
         }
 
@@ -184,6 +186,13 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                                      + $creditMemo->getAdjustmentPositive()
                                      - $creditMemo->getAdjustmentNegative();
 
+        foreach ($creditMemo->getAllItems() as $item) {
+            /** @var Mage_Sales_Model_Order_Creditmemo_Item$item */
+            if (array_key_exists($item->getOrderItemId(), $creditMemoPost['items'])) {
+                $creditMemoPost['items'][$item->getOrderItemId()]['price'] = $item->getBasePriceInclTax();
+            }
+        }
+
         $transactionEntries = [];
         $transactionEntries = $this->findTransactionsForAdditionalAmount(
             $transactionEntries,
@@ -193,7 +202,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         $transactionEntries = $this->findTransactionsForItems(
             $transactionEntries,
             $refundableTransactions,
-            $creditMemo->getAllItems()
+            $creditMemoPost['items']
         );
 
         if (count($transactionEntries) === 0) {
@@ -429,21 +438,28 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
     /**
      * @param array                                        $suitableTransactions
      * @param Mage_Sales_Model_Order_Payment_Transaction[] $refundableTransactions
-     * @param Mage_Sales_Model_Order_Creditmemo_Item[]     $items
+     * @param array                                        $items
      *
      * @return array
      * @throws Mage_Core_Exception
      *
      * @since 1.0.0
      */
-    private function findTransactionsForItems(array $suitableTransactions, array $refundableTransactions, array $items)
-    {
+    private function findTransactionsForItems(
+        array $suitableTransactions,
+        array $refundableTransactions,
+        array $items
+    ) {
         if (! $items) {
             return $suitableTransactions;
         }
 
-        foreach ($items as $item) {
-            $remainingQuantity = $item->getQty();
+        foreach ($items as $item => $meta) {
+            if (empty($meta['qty']) || empty($meta['price'])) {
+                continue;
+            }
+
+            $remainingQuantity = $meta['qty'];
 
             foreach ($refundableTransactions as $refundableTransaction) {
                 if (! $refundableBasket = TransactionManager::getRefundableBasketFromTransaction($refundableTransaction)) {
@@ -451,11 +467,11 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                 }
 
                 // Check if the product is in this transaction
-                if (! isset($refundableBasket[$item->getProductId()])) {
+                if (! isset($refundableBasket[$item])) {
                     continue;
                 }
 
-                $refundableQuantity = (int)$refundableBasket[$item->getProductId()];
+                $refundableQuantity = (int)$refundableBasket[$item];
 
                 $quantity = ($remainingQuantity > $refundableQuantity)
                     ? $refundableQuantity
@@ -469,9 +485,9 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                     ];
                 }
 
-                $suitableTransactions[$refundableTransaction->getId()]['amount']                        += $quantity
-                                                                                                           * $item->getBasePriceInclTax();
-                $suitableTransactions[$refundableTransaction->getId()]['basket'][$item->getProductId()] = $quantity;
+                $suitableTransactions[$refundableTransaction->getId()]['amount']        += $quantity
+                                                                                           * $meta['price'];
+                $suitableTransactions[$refundableTransaction->getId()]['basket'][$item] = $quantity;
 
                 $remainingQuantity -= $quantity;
 
@@ -481,7 +497,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             }
 
             if ($remainingQuantity > 0) {
-                $this->throwError("Unable to refund item {$item->getProductId()} (remaining quantity: $remainingQuantity)");
+                $this->throwError("Unable to refund item {$item} (remaining quantity: $remainingQuantity)");
             }
         }
 
