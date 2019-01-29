@@ -72,9 +72,6 @@ class WirecardEE_PaymentGateway_Model_Sepadirectdebit extends WirecardEE_Payment
         $paymentData = Mage::app()->getRequest()->getParam('wirecardElasticEngine');
         $errorMsg    = "";
 
-        if (empty($paymentData['sepaFirstName'])) {
-            $errorMsg = $this->_getHelper()->__('sepa_first_name_required') . PHP_EOL;
-        }
         if (empty($paymentData['sepaLastName'])) {
             $errorMsg .= $this->_getHelper()->__('sepa_last_name_required') . PHP_EOL;
         }
