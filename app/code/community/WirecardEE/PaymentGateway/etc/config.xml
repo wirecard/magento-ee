@@ -92,7 +92,7 @@
         <wirecardee_paymentgateway>
             <settings>
                 <notify_mail></notify_mail>
-                <pending_mail>0</pending_mail>
+                <!--<pending_mail>0</pending_mail>-->
                 <delete_cancelled_orders>0</delete_cancelled_orders>
             </settings>
         </wirecardee_paymentgateway>
@@ -125,6 +125,7 @@
                 <threeds_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</threeds_secret>
                 <transaction_type>pay</transaction_type>
                 <fraud_prevention>1</fraud_prevention>
+                <order_identification>1</order_identification>
                 <ssl_max_limit>300</ssl_max_limit>
                 <ssl_max_limit_currency>EUR</ssl_max_limit_currency>
                 <three_d_min_limit>100</three_d_min_limit>
@@ -142,6 +143,7 @@
                 <api_secret>ecdf5990-0372-47cd-a55d-037dccfe9d25</api_secret>
                 <transaction_type>pay</transaction_type>
                 <fraud_prevention>1</fraud_prevention>
+                <order_identification>1</order_identification>
                 <show_bic>0</show_bic>
                 <creditor_id>DE98ZZZ09999999999</creditor_id>
                 <creditor_name></creditor_name>
@@ -168,6 +170,19 @@
                 <fraud_prevention>1</fraud_prevention>
                 <sort_order>36</sort_order>
             </wirecardee_paymentgateway_sofortbanking>
+            <!--<wirecardee_paymentgateway_zapp>-->
+                <!--<active>0</active>-->
+                <!--<model>paymentgateway/paybybankapp</model>-->
+                <!--<title>Wirecard Pay by Bank app</title>-->
+                <!--<api_url>https://api-test.wirecard.com</api_url>-->
+                <!--<api_user>70000-APITEST-AP</api_user>-->
+                <!--<api_password>qD2wzQ_hrc!8</api_password>-->
+                <!--<api_maid>70055b24-38f1-4500-a3a8-afac4b1e3249</api_maid>-->
+                <!--<api_secret>4a4396df-f78c-44b9-b8a0-b72b108ac465</api_secret>-->
+                <!--<send_basket>1</send_basket>-->
+                <!--<fraud_prevention>1</fraud_prevention>-->
+                <!--<sort_order>40</sort_order>-->
+            <!--</wirecardee_paymentgateway_zapp>-->
             <wirecardee_paymentgateway_eps>
                 <active>0</active>
                 <model>paymentgateway/eps</model>
@@ -222,19 +237,6 @@
                 <identical_billing_shipping_address>1</identical_billing_shipping_address>
                 <sort_order>17</sort_order>
             </wirecardee_paymentgateway_ratepayinvoice>
-            <wirecardee_paymentgateway_zapp>
-                <active>0</active>
-                <model>paymentgateway/paybybankapp</model>
-                <title>Wirecard Pay by Bank app</title>
-                <api_url>https://api-test.wirecard.com</api_url>
-                <api_user>70000-APITEST-AP</api_user>
-                <api_password>qD2wzQ_hrc!8</api_password>
-                <api_maid>70055b24-38f1-4500-a3a8-afac4b1e3249</api_maid>
-                <api_secret>4a4396df-f78c-44b9-b8a0-b72b108ac465</api_secret>
-                <send_basket>1</send_basket>
-                <fraud_prevention>1</fraud_prevention>
-                <sort_order>40</sort_order>
-            </wirecardee_paymentgateway_zapp>
         </payment>
     </default>
 
