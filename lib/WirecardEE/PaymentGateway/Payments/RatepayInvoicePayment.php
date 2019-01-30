@@ -295,10 +295,6 @@ class RatepayInvoicePayment extends Payment implements
      */
     private function validateConsumerDateOfBirth(OrderSummary $orderSummary, AccountHolder $accountHolder)
     {
-        if ($orderSummary->getOrder()->getCustomerDob()) {
-            return null;
-        }
-
         /** @var \Mage_Core_Model_Session $session */
         $session  = \Mage::getSingleton("core/session", ["name" => "frontend"]);
         $birthday = $orderSummary->getOrder()->getCustomerDob()
