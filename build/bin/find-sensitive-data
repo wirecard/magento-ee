@@ -9,6 +9,8 @@ data=(
     "ecdf5990-0372-47cd-a55d-037dccfe9d25"
     "9b4b0e5f-1bc8-422e-be42-d0bad2eadabc"
     "0c8c6f3a-1534-4fa1-99d9-d1c644d43709"
+    "plugin-test"
+    "4-41N4\lI0]783"
 )
 
 cd "$(dirname "$0")"

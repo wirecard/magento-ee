@@ -12,6 +12,7 @@
     "test:eps": "node_modules/.bin/mocha tests/Selenium/Payments/EpsTest.js --timeout 60000",
     "test:giropay": "node_modules/.bin/mocha tests/Selenium/Payments/GiropayTest.js --timeout 60000",
     "test:ideal": "node_modules/.bin/mocha tests/Selenium/Payments/IdealTest.js --timeout 60000",
+    "test:maestro": "node_modules/.bin/mocha tests/Selenium/Payments/MaestroTest.js --timeout 60000",
     "test:runner": "node Tests/Selenium/runner.js"
   },
   "private": true,
