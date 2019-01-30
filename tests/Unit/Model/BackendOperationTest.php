@@ -44,6 +44,12 @@ class BackendOperationTest extends MagentoTestCase
 
     public function testCapture()
     {
+        $request = $this->createMock(\Mage_Core_Controller_Request_Http::class);
+        $request->method('getPost')->willReturn([
+            'items' => ['item']
+        ]);
+        \Mage::app()->setRequest($request);
+
         $payment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
         $payment->method('getData')->willReturn('wirecardee_paymentgateway_creditcard');
 
@@ -98,6 +104,12 @@ class BackendOperationTest extends MagentoTestCase
 
     public function testRefundEmpty()
     {
+        $request = $this->createMock(\Mage_Core_Controller_Request_Http::class);
+        $request->method('getPost')->willReturn([
+            'items' => ['item']
+        ]);
+        \Mage::app()->setRequest($request);
+
         $payment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
 
         $order = $this->createMock(\Mage_Sales_Model_Order::class);
@@ -115,6 +127,12 @@ class BackendOperationTest extends MagentoTestCase
 
     public function testRefund()
     {
+        $request = $this->createMock(\Mage_Core_Controller_Request_Http::class);
+        $request->method('getPost')->willReturn([
+            'items' => ['item']
+        ]);
+        \Mage::app()->setRequest($request);
+
         $payment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
         $payment->method('getData')->willReturn('wirecardee_paymentgateway_creditcard');
 
