@@ -75,7 +75,7 @@ class MaestroPayment extends Payment implements ProcessPaymentInterface
     /**
      * @return PaymentConfig
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function getPaymentConfig()
     {
@@ -102,7 +102,7 @@ class MaestroPayment extends Payment implements ProcessPaymentInterface
      * @return Action|null
      * @throws \Exception
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function processPayment(
         OrderSummary $orderSummary,
