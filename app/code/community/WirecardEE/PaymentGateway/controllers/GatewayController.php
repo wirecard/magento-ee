@@ -152,7 +152,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
         $this->getResponse()->clearHeaders();
         $this->getResponse()->setHeader('Content-Type', 'application/json', true);
 
-        $order    = $this->getCheckoutSession()->getLastRealOrder();
+        $order = $this->getCheckoutSession()->getLastRealOrder();
 
         if ($order->getState() !== \Mage_Sales_Model_Order::STATE_NEW) {
             return $this->getResponse()->setBody(json_encode(['error' => 'Invalid order state']));
