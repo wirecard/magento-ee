@@ -91,16 +91,21 @@ class NotificationHandler extends Handler
                     . " payment with PTRID '{$response->getProviderTransactionReference()}' found"
                 );
                 if (\Mage::getStoreConfig('wirecardee_paymentgateway/settings/unmatched_payment_mail')) {
-
                     $content = sprintf(
                         \Mage::helper('paymentgateway')->__('unmatched_payment_mail_content'),
                         PoiPiaTransaction::NAME,
                         $response->getProviderTransactionReference()
                     );
 
-                    $content .= $response->getPaymentDetails()->getAsHtml();
-                    $content .= $response->getTransactionDetails()->getAsHtml();
+                    $content .= PHP_EOL . PHP_EOL;
 
+                    foreach ($response->getData() as $key => $val) {
+                        if (substr($val, 0, 4) === 'http') {
+                            $content .= $key . ': ' . rawurlencode($val) . PHP_EOL;
+                            continue;
+                        }
+                        $content .= $key . ': ' . $val . PHP_EOL;
+                    }
                     $mail = new \Zend_Mail('UTF-8');
                     $mail->setFrom(
                         \Mage::getStoreConfig('trans_email/ident_general/email'),
@@ -108,7 +113,6 @@ class NotificationHandler extends Handler
                     );
                     $mail->addTo(\Mage::getStoreConfig('trans_email/ident_general/email'));
                     $mail->setSubject(\Mage::helper('paymentgateway')->__('unmatched_payment_mail_subject'));
-                    $mail->setBodyHtml($content);
                     $mail->setBodyText($content);
                     $mail->send();
                 }

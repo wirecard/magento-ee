@@ -134,7 +134,8 @@ class PiaPayment extends Payment implements ProcessPaymentInterface, AdditionalP
             $bankData[] =  \Mage::helper('paymentgateway')->__('bic') . ' ' . $response['merchant-bank-account.0.bic'];
         }
 
-        $bankData[] = \Mage::helper('paymentgateway')->__('ptrid') . ': ' . $response['provider-transaction-reference-id'];
+        $bankData[] = \Mage::helper('paymentgateway')->__('ptrid') . ': '
+                      . $response['provider-transaction-reference-id'];
 
         if ($response['merchant-bank-account.0.bank-name']) {
             $bankData[] = $response['merchant-bank-account.0.bank-name'];
@@ -142,7 +143,8 @@ class PiaPayment extends Payment implements ProcessPaymentInterface, AdditionalP
 
         if ($response['merchant-bank-account.0.branch-address']) {
             $bankData[] = $response['merchant-bank-account.0.branch-address'];
-            $bankData[] = $response['merchant-bank-account.0.branch-city'] . ' ' . $response['merchant-bank-account.0.branch-state'];
+            $bankData[] = $response['merchant-bank-account.0.branch-city'] . ' '
+                          . $response['merchant-bank-account.0.branch-state'];
         }
         $order->addStatusHistoryComment(implode('<br>', $bankData));
         $order->save();

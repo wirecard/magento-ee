@@ -1142,7 +1142,7 @@
                 </wirecardee_paymentgateway_zapp>
                 <wirecardee_paymentgateway_poi translate="label" module="paymentgateway">
                     <label>heading_title_poi</label>
-                    <sort_order>1005</sort_order>
+                    <sort_order>1007</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
@@ -1244,7 +1244,7 @@
                 </wirecardee_paymentgateway_poi>
                 <wirecardee_paymentgateway_pia translate="label" module="paymentgateway">
                     <label>heading_title_pia</label>
-                    <sort_order>1005</sort_order>
+                    <sort_order>1008</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
