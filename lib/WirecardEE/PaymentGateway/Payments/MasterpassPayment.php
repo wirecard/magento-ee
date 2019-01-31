@@ -9,10 +9,12 @@
 
 namespace WirecardEE\PaymentGateway\Payments;
 
+use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\MasterpassTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 use WirecardEE\PaymentGateway\Data\PaymentConfig;
+use WirecardEE\PaymentGateway\Service\TransactionManager;
 
 class MasterpassPayment extends Payment
 {
@@ -25,7 +27,7 @@ class MasterpassPayment extends Payment
 
     /**
      * @return string
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getName()
     {
@@ -35,7 +37,7 @@ class MasterpassPayment extends Payment
     /**
      * @return MasterpassTransaction
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getTransaction()
     {
@@ -55,23 +57,21 @@ class MasterpassPayment extends Payment
      *
      * @return Transaction|null
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getBackendTransaction(
         \Mage_Sales_Model_Order $order,
         $operation,
         \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
     ) {
-        $transactionDetails = $parentTransaction->getAdditionalInformation(
-            \Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS
-        );
+        $transactionDetails = TransactionManager::getAdditionalInformationFromTransaction($parentTransaction);
+        if (empty($transactionDetails[Transaction::PARAM_TRANSACTION_TYPE])) {
+            return null;
+        }
 
-        if (array_key_exists(Transaction::PARAM_TRANSACTION_TYPE, $transactionType)) {
-            $transactionType = $transactionDetails[Transaction::PARAM_TRANSACTION_TYPE];
-
-            if ($transactionType === Transaction::TYPE_DEBIT || $transactionType === Transaction::TYPE_AUTHORIZATION) {
-                return null;
-            }
+        $transactionType = $transactionDetails[Transaction::PARAM_TRANSACTION_TYPE];
+        if (in_array($transactionType, [Transaction::TYPE_DEBIT, Transaction::TYPE_AUTHORIZATION])) {
+            return null;
         }
 
         return new MasterpassTransaction();
@@ -82,7 +82,7 @@ class MasterpassPayment extends Payment
      *
      * @return Config
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getTransactionConfig($selectedCurrency)
     {
