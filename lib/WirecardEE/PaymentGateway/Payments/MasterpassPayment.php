@@ -63,7 +63,7 @@ class MasterpassPayment extends Payment
         \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
     ) {
         $transactionDetails = $parentTransaction->getAdditionalInformation(
-            Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAIL
+            \Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS
         );
 
         if (array_key_exists(Transaction::PARAM_TRANSACTION_TYPE, $transactionType)) {
