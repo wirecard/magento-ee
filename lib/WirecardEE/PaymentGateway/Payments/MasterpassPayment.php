@@ -12,6 +12,7 @@ namespace WirecardEE\PaymentGateway\Payments;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\MasterpassTransaction;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 use WirecardEE\PaymentGateway\Data\PaymentConfig;
 use WirecardEE\PaymentGateway\Service\TransactionManager;
@@ -51,8 +52,8 @@ class MasterpassPayment extends Payment
      * If paymentMethod is 'masterpass' and transaction type is 'debit' or 'authorization',
      * no backend operation is allowed.
      *
-     * @param \Mage_Sales_Model_Order                     $order
-     * @param string                                      $operation
+     * @param \Mage_Sales_Model_Order $order
+     * @param string $operation
      * @param \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
      *
      * @return Transaction|null
@@ -65,12 +66,14 @@ class MasterpassPayment extends Payment
         \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
     ) {
         $transactionDetails = TransactionManager::getAdditionalInformationFromTransaction($parentTransaction);
-        if (empty($transactionDetails[Transaction::PARAM_TRANSACTION_TYPE])) {
+        if (empty($transactionDetails[Transaction::PARAM_TRANSACTION_TYPE])
+            || empty($transactionDetails['payment-methods.0.name'])) {
             return null;
         }
 
-        $transactionType = $transactionDetails[Transaction::PARAM_TRANSACTION_TYPE];
-        if (in_array($transactionType, [Transaction::TYPE_DEBIT, Transaction::TYPE_AUTHORIZATION])) {
+        if ($transactionDetails['payment-methods.0.name'] === MasterpassTransaction::NAME
+            && in_array($transactionDetails[Transaction::PARAM_TRANSACTION_TYPE],
+                [Transaction::TYPE_DEBIT, Transaction::TYPE_AUTHORIZATION])) {
             return null;
         }
 
@@ -113,5 +116,13 @@ class MasterpassPayment extends Payment
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
 
         return $paymentConfig;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRefundOperation()
+    {
+        return Operation::CANCEL;
     }
 }
