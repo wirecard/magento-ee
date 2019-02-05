@@ -223,7 +223,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
 
         try {
             $backendService = new BackendService(
-                $payment->getTransactionConfig(Mage::app()->getLocale()->getCurrency())
+                $payment->getTransactionConfig(\Mage::app()->getStore()->getCurrentCurrencyCode())
             );
             $notification   = $backendService->handleNotification($request->getRawBody());
 

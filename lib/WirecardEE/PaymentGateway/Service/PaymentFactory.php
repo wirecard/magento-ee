@@ -24,6 +24,7 @@ use WirecardEE\PaymentGateway\Payments\GiropayPayment;
 use WirecardEE\PaymentGateway\Payments\IdealPayment;
 use WirecardEE\PaymentGateway\Payments\MaestroPayment;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
+use WirecardEE\PaymentGateway\Payments\PayolutionInvoicePayment;
 use WirecardEE\PaymentGateway\Payments\PaypalPayment;
 use WirecardEE\PaymentGateway\Payments\SepaPayment;
 use WirecardEE\PaymentGateway\Payments\SofortPayment;
@@ -52,6 +53,7 @@ class PaymentFactory
     {
         $mapping = $this->getMappedPayments();
         if (! isset($mapping[$paymentName])) {
+            (new Logger())->error("Unable to create payment $paymentName");
             throw new UnknownPaymentException($paymentName);
         }
 
@@ -70,6 +72,20 @@ class PaymentFactory
     {
         return $this->create($this->getMagePaymentName($magePayment));
     }
+
+    /**
+     * @param \WirecardEE_PaymentGateway_Model_Payment $payment
+     *
+     * @return PaymentInterface
+     * @throws UnknownPaymentException
+     *
+     * @since 1.1.0
+     */
+    public function createFromPaymentModel(\WirecardEE_PaymentGateway_Model_Payment $payment)
+    {
+        return $this->create(str_replace(self::PAYMENT_PREFIX, '', $payment->getPaymentMethod()));
+    }
+
 
     /**
      * Create and return all supported payments
@@ -110,6 +126,7 @@ class PaymentFactory
             IdealTransaction::NAME           => IdealPayment::class,
             // PayByBankAppPayment::NAME        => PayByBankAppPayment::class,
             MaestroTransaction::NAME         => MaestroPayment::class,
+            'payolutioninvoice'              => PayolutionInvoicePayment::class,
         ];
     }
 

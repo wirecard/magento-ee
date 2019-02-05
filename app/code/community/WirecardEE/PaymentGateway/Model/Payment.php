@@ -42,4 +42,14 @@ abstract class WirecardEE_PaymentGateway_Model_Payment extends Mage_Payment_Mode
             'method'  => $this->_paymentMethod,
         ]);
     }
+
+    /**
+     * @return string
+     *
+     * @since 1.1.0
+     */
+    public function getPaymentMethod()
+    {
+        return $this->_paymentMethod;
+    }
 }

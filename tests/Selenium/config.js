@@ -84,6 +84,14 @@ exports.config = {
       expirationYear: '2023',
       password: 'wirecard'
     },
+    payolution: {
+      label: 'Wirecard Guaranteed Invoice by payolution',
+      fields: {
+        'wirecardee-payolution--dob-day': '27',
+        'wirecardee-payolution--dob-month': '10',
+        'wirecardee-payolution--dob-year': '1990'
+      }
+    }
   }
 };
 
