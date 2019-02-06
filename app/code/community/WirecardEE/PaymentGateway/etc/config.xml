@@ -205,6 +205,7 @@
                 <api_maid>9b4b0e5f-1bc8-422e-be42-d0bad2eadabc</api_maid>
                 <api_secret>0c8c6f3a-1534-4fa1-99d9-d1c644d43709</api_secret>
                 <fraud_prevention>1</fraud_prevention>
+                <order_identification>1</order_identification>
                 <sort_order>11</sort_order>
             </wirecardee_paymentgateway_giropay>
             <wirecardee_paymentgateway_ideal>
