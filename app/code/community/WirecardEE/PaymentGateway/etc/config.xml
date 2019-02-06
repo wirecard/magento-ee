@@ -231,6 +231,7 @@
                 <api_password>4-41N4\lI0]783</api_password>
                 <api_maid>4945f0ef-51e0-43af-972f-885405320842</api_maid>
                 <api_secret>822e87ea-dcc3-4d01-861c-e39f14a0ab6c</api_secret>
+                <transaction_type>pay</transaction_type>
                 <fraud_prevention>1</fraud_prevention>
                 <order_identification>1</order_identification>
                 <sort_order>22</sort_order>
