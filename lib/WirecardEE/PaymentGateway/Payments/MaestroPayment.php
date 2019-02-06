@@ -88,6 +88,7 @@ class MaestroPayment extends Payment implements ProcessPaymentInterface
         $paymentConfig->setTransactionMAID($this->getPluginConfig('api_maid'));
         $paymentConfig->setTransactionSecret($this->getPluginConfig('api_secret'));
         $paymentConfig->setTransactionOperation($this->getPluginConfig('transaction_type'));
+        $paymentConfig->setOrderIdentification($this->getPluginConfig('order_identification'));
 
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
 
