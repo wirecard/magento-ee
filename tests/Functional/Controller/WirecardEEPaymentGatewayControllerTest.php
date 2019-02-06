@@ -329,7 +329,6 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
 
         /** @var ViewAction $action */
         $action = $controller->indexAction();
-        var_dump($action);
         $this->assertInstanceOf(ViewAction::class, $action);
         $this->assertEquals('paymentgateway/seamless', $action->getBlockName());
         $assignments = $action->getAssignments();
