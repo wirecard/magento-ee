@@ -193,6 +193,7 @@
                 <api_maid>1f629760-1a66-4f83-a6b4-6a35620b4a6d</api_maid>
                 <api_secret>20c6a95c-e39b-4e6a-971f-52cfb347d359</api_secret>
                 <fraud_prevention>1</fraud_prevention>
+                <order_identification>1</order_identification>
                 <sort_order>9</sort_order>
             </wirecardee_paymentgateway_eps>
             <wirecardee_paymentgateway_giropay>
