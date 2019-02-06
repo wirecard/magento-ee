@@ -311,7 +311,6 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
             return $this->render($action);
         }
         if ($action instanceof ErrorAction) {
-            $this->getHelper()->getLogger()->error('ErrorAction: ' . $action->getMessage());
             $this->cancelOrderAndRestoreBasket();
             $this->getCheckoutSession()->setData(
                 'error_message',
