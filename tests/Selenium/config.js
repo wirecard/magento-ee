@@ -84,6 +84,9 @@ exports.config = {
       expirationYear: '2023',
       password: 'wirecard'
     },
+    poi: {
+      label: 'Wirecard Payment on Invoice'
+    }
   }
 };
 
