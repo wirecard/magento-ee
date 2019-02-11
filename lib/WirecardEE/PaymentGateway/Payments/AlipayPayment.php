@@ -61,7 +61,7 @@ class AlipayPayment extends Payment implements ProcessPaymentInterface
      */
     public function getTransactionConfig($selectedCurrency)
     {
-        $config = parent::getTransactionConfig($$selectedCurrency);
+        $config = parent::getTransactionConfig($selectedCurrency);
         $config->add(new PaymentMethodConfig(
             AlipayCrossborderTransaction::NAME,
             $this->getPaymentConfig()->getTransactionMAID(),
