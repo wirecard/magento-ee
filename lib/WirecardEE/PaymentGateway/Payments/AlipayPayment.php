@@ -9,6 +9,7 @@
 
 namespace WirecardEE\PaymentGateway\Payments;
 
+use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Redirect;
@@ -96,8 +97,6 @@ class AlipayPayment extends Payment implements ProcessPaymentInterface
      *
      * @return null
      *
-     * @throws \ReflectionException
-     *
      * @since 1.2.0
      */
     public function processPayment(
@@ -106,10 +105,13 @@ class AlipayPayment extends Payment implements ProcessPaymentInterface
         Redirect $redirect
     ) {
         if (! $this->getPaymentConfig()->hasFraudPrevention()) {
-            $accountHolder = new AccountHolder();
-            $accountHolder->setLastName($orderSummary->getUserMapper()->getLastName());
-            $accountHolder->setFirstName($orderSummary->getUserMapper()->getFirstName());
+            $billingAddress = $orderSummary->getOrder()->getBillingAddress();
+            $accountHolder  = new AccountHolder();
+            $accountHolder->setLastName($billingAddress->getFirstname());
+            $accountHolder->setFirstName($billingAddress->getLastname());
             $this->getTransaction()->setAccountHolder($accountHolder);
         }
+
+        return null;
     }
 }
