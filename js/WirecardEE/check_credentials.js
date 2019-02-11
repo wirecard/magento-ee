@@ -7,13 +7,13 @@
  */
 
 function WirecardEECheckCredentials(payment) {
-  var server = jQuery("#payment_wirecardee_paymentgateway_" + payment + "_api_url").val();
-  var httpUser = jQuery("#payment_wirecardee_paymentgateway_" + payment + "_api_user").val();
-  var httpPassword = jQuery("#payment_wirecardee_paymentgateway_" + payment + "_api_password").val();
-  var $testButton = jQuery("#payment_wirecardee_paymentgateway_" + payment + "_check_credentials_button");
+  var server = document.getElementById("payment_wirecardee_paymentgateway_" + payment + "_api_url").value;
+  var httpUser = document.getElementById("payment_wirecardee_paymentgateway_" + payment + "_api_user").value;
+  var httpPassword = document.getElementById("payment_wirecardee_paymentgateway_" + payment + "_api_password").value;
+  var testButton = document.getElementById("payment_wirecardee_paymentgateway_" + payment + "_check_credentials_button");
 
   if (!new RegExp("^https?://([^/]+?\.[a-zA-Z]{2,4})/?$", "gm").test(server)) {
-    alert($testButton.data("invalid-url-string"));
+    alert(testButton.getAttribute("data-invalid-url-string"));
     return;
   }
 
@@ -28,14 +28,14 @@ function WirecardEECheckCredentials(payment) {
       var response = JSON.parse(data.responseText);
 
       if (response.status === "success") {
-        return alert($testButton.data("success-string"));
+        return alert(testButton.getAttribute("data-success-string"));
       }
 
-      return alert($testButton.data("error-string"));
+      return alert(testButton.getAttribute("data-error-string"));
     },
 
-    onFailure: function() {
-      return alert($testButton.data("error-string"));
+    onFailure: function () {
+      return alert(testButton.getAttribute("data-error-string"));
     }
   });
 }

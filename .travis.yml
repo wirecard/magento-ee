@@ -57,6 +57,9 @@ script:
 after_script:
   - travis_retry composer upload-coverage
 
+after_failure:
+  - cat ${MAGENTO_DIRECTORY}/var/log/wirecard_elastic_engine.log
+
 notifications:
   email: false
   slack:

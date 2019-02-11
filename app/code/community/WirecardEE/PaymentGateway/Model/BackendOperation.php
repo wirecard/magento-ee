@@ -182,12 +182,18 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             $backendService
         );
 
+        if (count($refundableTransactions) === 0) {
+            $this->throwError("No refundable transactions found (either transactions are lacking " .
+                              "a refundable basket or desired backend operation is not supported on any transaction " .
+                              "for this order)");
+        }
+
         $remainingAdditionalAmount = $creditMemo->getShippingAmount()
                                      + $creditMemo->getAdjustmentPositive()
                                      - $creditMemo->getAdjustmentNegative();
 
         foreach ($creditMemo->getAllItems() as $item) {
-            /** @var Mage_Sales_Model_Order_Creditmemo_Item$item */
+            /** @var Mage_Sales_Model_Order_Creditmemo_Item $item */
             if (array_key_exists($item->getOrderItemId(), $creditMemoPost['items'])) {
                 $creditMemoPost['items'][$item->getOrderItemId()]['price'] = $item->getBasePriceInclTax();
             }
@@ -206,7 +212,9 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         );
 
         if (count($transactionEntries) === 0) {
-            $this->throwError('Unable to refund (no transactions found)');
+            $this->throwError('Unable to refund (no proper refundable baskets)', [
+                'refundableTransactions' => $refundableTransactions
+            ]);
         }
 
         $this->logger->info('Executing operation "refund" on order #' . $creditMemo->getOrder()->getRealOrderId()
