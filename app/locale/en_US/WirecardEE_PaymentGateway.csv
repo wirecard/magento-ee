@@ -427,3 +427,6 @@
 "config_unmatched_payment_mail_desc","Send e-mail after recieving unmatched payment notfication"
 "unmatched_payment_mail_subject","Unmatched payment"
 "unmatched_payment_mail_content","No matching transaction for %s payment with PTRID '%s' found"
+"address","Address"
+"state","State"
+"bank_information","Please transfer the amount using the following data"

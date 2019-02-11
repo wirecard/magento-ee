@@ -9,7 +9,17 @@
 
 namespace WirecardEE\PaymentGateway\Payments\Contracts;
 
-interface AdditionalPaymentInformationInterface
+/**
+ * @since 1.2.0
+ */
+interface AdditionalCheckoutSuccessTemplateInterface
 {
-    public function assignAdditionalPaymentInformation(\Mage_Sales_Model_Order $order);
+    /**
+     * Some payments will show additional information on the success page.
+     *
+     * @return string
+     *
+     * @since 1.2.0
+     */
+    public function getCheckoutSuccessTemplate();
 }

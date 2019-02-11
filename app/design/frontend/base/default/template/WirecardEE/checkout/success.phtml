@@ -7,65 +7,34 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+// Keep in mind that this block is inserted ABOVE the default checkout block.
+
+use WirecardEE\PaymentGateway\Payments\Contracts\AdditionalCheckoutSuccessTemplateInterface;
+
 /** @var $this WirecardEE_PaymentGateway_Block_Checkout_Success */
 if (! $this->isWirecardPayment()) {
     return;
 }
 ?>
-<div class="wirecardee_checkout_payment_status">
-    <?php echo Mage::helper('catalog')->__('config_status'); ?>: <?php echo $this->getOrderStatusLabel(); ?>
+<div class="wirecardee_checkout_success" style="margin-bottom: 20px;">
+    <?php
+    $payment = $this->getPayment();
+    ?>
+    <div class="wirecardee_checkout_payment_status">
+        <?php echo Mage::helper('catalog')->__('config_status'); ?>: <?php echo $this->getOrderStatusLabel(); ?>
+
+        <?php
+        if ($this->getOrderStatusLabel() === Mage_Sales_Model_Order::STATE_PENDING_PAYMENT) {
+            echo '<p>' . Mage::helper('catalog')->__('payment_pending_message') . '</p>';
+        }
+        ?>
+    </div>
 
     <?php
-    if ($this->getOrderStatusLabel() === Mage_Sales_Model_Order::STATE_PENDING_PAYMENT) {
-        echo '<p>' . Mage::helper('catalog')->__('payment_pending_message') . '</p>';
+    if ($payment instanceof AdditionalCheckoutSuccessTemplateInterface) {
+        $block = $this->getLayout()->createBlock('adminhtml/template');
+        $block->setTemplate($payment->getCheckoutSuccessTemplate());
+        echo $block->toHtml();
     }
     ?>
 </div>
-
-<?php
-$additionalPaymentInformation = $this->getAdditionalPaymentInformation();
-if ($additionalPaymentInformation) : ?>
-<?php if (!empty($additionalPaymentInformation['bankData'])) : ?>
-<?php
-$bankData = $additionalPaymentInformation['bankData'];
-$sOrderId = Mage::getSingleton('checkout/session')->getLastOrderId();
-$oOrder = Mage::getModel('sales/order')->load($sOrderId);
-?>
-<div class="wirecardee--bankdata">
-    <div class="panel--title primary is--underline">
-        <?php echo Mage::helper('paymentgateway')->__('bank_label') ?>
-    </div>
-    <div class="panel--body is--wide">
-        <div class="wirecardee--bankdata-amount">
-            <strong><?php echo Mage::helper('paymentgateway')->__('requestedAmount') ?>:</strong>
-            <?php echo Mage::helper('core')->currency(number_format($oOrder->getGrandTotal(),2),true,false); ?>
-        </div>
-        <div class="wirecardee--bankdata-iban">
-            <strong><?php echo Mage::helper('paymentgateway')->__('iban') ?>:</strong>
-            <?php echo $bankData['iban'] ?>
-        </div>
-        <?php if ($bankData['bic']) : ?>
-        <div class="wirecardee--bankdata-bic">
-            <strong><?php echo Mage::helper('paymentgateway')->__('bic') ?>:</strong>
-            <?php echo $bankData['bic'] ?>
-        </div>
-        <?php endif; ?>
-        <div class="wirecardee--bankdata-reference">
-            <strong><?php echo Mage::helper('paymentgateway')->__('ptrid') ?>:</strong>
-            <?php echo $bankData['reference'] ?>
-        </div>
-        <?php if ($bankData['bankName']) : ?>
-        <div class="wirecardee--bankdata-name">
-            <?php echo $bankData['bankName'] ?>
-        </div>
-        <?php endif; ?>
-        <?php if ($bankData['address']) : ?>
-        <div class="wirecardee--bankdata-address">
-            <?php echo $bankData['address'] ?><br>
-            <?php echo $bankData['city'] ?> <?php echo $bankData['state'] ?>
-        </div>
-        <?php endif; ?>
-    </div>
-</div>
-<?php endif; ?>
-<?php endif; ?>

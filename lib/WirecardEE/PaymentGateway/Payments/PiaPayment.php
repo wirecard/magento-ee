@@ -9,21 +9,22 @@
 
 namespace WirecardEE\PaymentGateway\Payments;
 
+use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\PoiPiaTransaction;
 use Wirecard\PaymentSdk\TransactionService;
-
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\PaymentConfig;
-use WirecardEE\PaymentGateway\Payments\Contracts\AdditionalPaymentInformationInterface;
+use WirecardEE\PaymentGateway\Mapper\ResponseMapper;
+use WirecardEE\PaymentGateway\Payments\Contracts\AdditionalCheckoutSuccessTemplateInterface;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
-use WirecardEE\PaymentGateway\Service\Logger;
-use WirecardEE\PaymentGateway\Service\TransactionManager;
+use WirecardEE\PaymentGateway\Payments\Contracts\ProcessReturnInterface;
 
-class PiaPayment extends Payment implements ProcessPaymentInterface, AdditionalPaymentInformationInterface
+class PiaPayment extends Payment implements ProcessPaymentInterface, ProcessReturnInterface, AdditionalCheckoutSuccessTemplateInterface
 {
     const NAME = 'pia';
 
@@ -98,9 +99,7 @@ class PiaPayment extends Payment implements ProcessPaymentInterface, AdditionalP
      * @param TransactionService $transactionService
      * @param Redirect           $redirect
      *
-     * @return null|Action
-     *
-     * @throws InsufficientDataException
+     * @return null
      *
      * @since 1.0.0
      */
@@ -110,55 +109,48 @@ class PiaPayment extends Payment implements ProcessPaymentInterface, AdditionalP
         Redirect $redirect
     ) {
         if (! $this->getPaymentConfig()->hasFraudPrevention()) {
-            $accountHolder = new AccountHolder();
-            $accountHolder->setLastName($orderSummary->getUserMapper()->getLastName());
-            $accountHolder->setFirstName($orderSummary->getUserMapper()->getFirstName());
+            $billingAddress = $orderSummary->getOrder()->getBillingAddress();
+            $accountHolder  = new AccountHolder();
+            $accountHolder->setLastName($billingAddress->getFirstname());
+            $accountHolder->setFirstName($billingAddress->getLastname());
             $this->getTransaction()->setAccountHolder($accountHolder);
         }
+
+        return null;
     }
 
-    public function assignAdditionalPaymentInformation(\Mage_Sales_Model_Order $order)
+    /**
+     * {@inheritdoc}
+     */
+    public function processReturn(TransactionService $transactionService, \Mage_Core_Controller_Request_Http $request)
     {
-        $logger = new Logger();
-        $transactionManager = new TransactionManager($logger);
+        $response = $transactionService->handleResponse($request->getParams());
 
-        $response = $transactionManager->findInitialResponse($order);
+        if ($response instanceof SuccessResponse) {
+            /** @var \Mage_Checkout_Model_Session|\Mage_Core_Model_Abstract $checkoutSession */
+            $checkoutSession = \Mage::getSingleton('checkout/session');
+            $order           = $checkoutSession->getLastRealOrder();
+            $responseMapper  = new ResponseMapper($response);
+            $bankData        = $responseMapper->getBankData();
 
-        if (! $response) {
-            return null;
+            $order->getPayment()->setAdditionalInformation($bankData);
+            $order->addStatusHistoryComment(implode('<br>', array_filter(array_map(function ($key, $value) {
+                if (! $value) {
+                    return null;
+                }
+                return $this->getHelper()->__($key) . ': ' . $value;
+            }, array_keys($bankData), array_values($bankData)))));
+            $order->save();
         }
 
-        $bankData = [ \Mage::helper('paymentgateway')->__('iban') . ' ' . $response['merchant-bank-account.0.iban']];
+        return $response;
+    }
 
-        if ($response['merchant-bank-account.0.bic']) {
-            $bankData[] =  \Mage::helper('paymentgateway')->__('bic') . ' ' . $response['merchant-bank-account.0.bic'];
-        }
-
-        $bankData[] = \Mage::helper('paymentgateway')->__('ptrid') . ': '
-                      . $response['provider-transaction-reference-id'];
-
-        if ($response['merchant-bank-account.0.bank-name']) {
-            $bankData[] = $response['merchant-bank-account.0.bank-name'];
-        }
-
-        if ($response['merchant-bank-account.0.branch-address']) {
-            $bankData[] = $response['merchant-bank-account.0.branch-address'];
-            $bankData[] = $response['merchant-bank-account.0.branch-city'] . ' '
-                          . $response['merchant-bank-account.0.branch-state'];
-        }
-        $order->addStatusHistoryComment(implode('<br>', $bankData));
-        $order->save();
-
-        return [
-            'bankData' => [
-                'bankName'  => $response['merchant-bank-account.0.bank-name'],
-                'bic'       => $response['merchant-bank-account.0.bic'],
-                'iban'      => $response['merchant-bank-account.0.iban'],
-                'address'   => $response['merchant-bank-account.0.branch-address'],
-                'city'      => $response['merchant-bank-account.0.branch-city'],
-                'state'     => $response['merchant-bank-account.0.branch-state'],
-                'reference' => $response['provider-transaction-reference-id'],
-            ]
-        ];
+    /**
+     * {@inheritdoc}
+     */
+    public function getCheckoutSuccessTemplate()
+    {
+        return 'WirecardEE/checkout/bank_data.phtml';
     }
 }

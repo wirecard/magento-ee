@@ -7,7 +7,8 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-use WirecardEE\PaymentGateway\Payments\Contracts\AdditionalPaymentInformationInterface;
+use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
+use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 use WirecardEE\PaymentGateway\Service\PaymentFactory;
 
 /**
@@ -45,9 +46,23 @@ class WirecardEE_PaymentGateway_Block_Checkout_Success extends Mage_Checkout_Blo
      */
     public function isWirecardPayment()
     {
-        return (new PaymentFactory())->isSupportedPayment($this->getCheckoutSession()
+        return $this->getPaymentFactory()->isSupportedPayment($this->getCheckoutSession()
                                                                ->getLastRealOrder()
                                                                ->getPayment());
+    }
+
+    /**
+     * @return PaymentInterface
+     *
+     * @throws UnknownPaymentException
+     *
+     * @since 1.2.0
+     */
+    public function getPayment()
+    {
+        return $this->getPaymentFactory()->createFromMagePayment($this->getCheckoutSession()
+                                                                  ->getLastRealOrder()
+                                                                  ->getPayment());
     }
 
     /**
@@ -60,14 +75,13 @@ class WirecardEE_PaymentGateway_Block_Checkout_Success extends Mage_Checkout_Blo
         return Mage::getSingleton('checkout/session');
     }
 
-    public function getAdditionalPaymentInformation()
+    /**
+     * @return PaymentFactory
+     *
+     * @since 1.2.0
+     */
+    protected function getPaymentFactory()
     {
-        $magePayment = $this->getCheckoutSession()->getLastRealOrder()->getPayment();
-        $payment = (new PaymentFactory())->createFromMagePayment($magePayment);
-        if ($payment instanceof AdditionalPaymentInformationInterface) {
-            return $payment->assignAdditionalPaymentInformation($magePayment->getOrder());
-        }
-
-        return false;
+        return new PaymentFactory();
     }
 }

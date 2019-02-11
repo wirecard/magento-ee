@@ -202,6 +202,13 @@ class TransactionManager
         return null;
     }
 
+    /**
+     * @param \Mage_Sales_Model_Order $order
+     *
+     * @return array|null
+     *
+     * @since 1.2.0
+     */
     public function findInitialResponse(\Mage_Sales_Model_Order $order)
     {
         try {
