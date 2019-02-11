@@ -110,7 +110,7 @@ class IdealPayment extends Payment implements ProcessPaymentInterface, CustomFor
         $paymentConfig->setTransactionMAID($this->getPluginConfig('api_maid'));
         $paymentConfig->setTransactionSecret($this->getPluginConfig('api_secret'));
         $paymentConfig->setTransactionOperation(Operation::PAY);
-        $paymentConfig->setOrderIdentification(true);
+        $paymentConfig->setOrderIdentification($this->getPluginConfig('order_identification'));
         $paymentConfig->setBackendTransactionMAID(
             $this->getPluginConfig(
                 'api_maid',

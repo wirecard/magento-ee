@@ -128,20 +128,16 @@ class NotificationHandler extends Handler
         }
 
         $state = $this->getOrderState($backendService, $response);
-        // Don't update if state equals order state or back to pending
-        if ($state === $order->getState()
-            || ($order->getState() !== \Mage_Sales_Model_Order::STATE_NEW
-                && $state === \Mage_Sales_Model_Order::STATE_PENDING_PAYMENT)) {
+        // Don't update back to pending
+        if ($order->getState() !== \Mage_Sales_Model_Order::STATE_NEW
+                && $state === \Mage_Sales_Model_Order::STATE_PENDING_PAYMENT) {
             return $transaction;
         }
 
-        $sendEmail = $this->shouldSendOrderUpdateEmail($order);
-        $order->setState($state, $state, \Mage::helper('paymentgateway')->__('order_status_updated'), $sendEmail);
+        $order->setState($state, $state, \Mage::helper('paymentgateway')->__('order_status_updated'), true);
         $order->save();
 
-        if ($sendEmail) {
-            $order->sendOrderUpdateEmail();
-        }
+        $order->sendOrderUpdateEmail();
 
         return $transaction;
     }
@@ -168,21 +164,5 @@ class NotificationHandler extends Handler
             default:
                 return \Mage_Sales_Model_Order::STATE_PENDING_PAYMENT;
         }
-    }
-
-    /**
-     * @param Mage_Sales_Model_Order $order
-     *
-     * @return bool
-     *
-     * @since 1.0.0
-     */
-    private function shouldSendOrderUpdateEmail(\Mage_Sales_Model_Order $order)
-    {
-        if ($order->getState() === \Mage_Sales_Model_Order::STATE_PENDING_PAYMENT
-            && ! \Mage::getStoreConfig('wirecardee_paymentgateway/settings/pending_mail')) {
-            return false;
-        }
-        return true;
     }
 }

@@ -187,6 +187,7 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface
         $paymentConfig->setThreeDMinLimitCurrency($this->getPluginConfig('three_d_min_limit_currency'));
 
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
+        $paymentConfig->setOrderIdentification($this->getPluginConfig('order_identification'));
 
         return $paymentConfig;
     }
