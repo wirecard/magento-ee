@@ -24,7 +24,10 @@ use WirecardEE\PaymentGateway\Payments\Contracts\AdditionalCheckoutSuccessTempla
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessReturnInterface;
 
-class PiaPayment extends Payment implements ProcessPaymentInterface, ProcessReturnInterface, AdditionalCheckoutSuccessTemplateInterface
+class PiaPayment extends Payment implements
+    ProcessPaymentInterface,
+    ProcessReturnInterface,
+    AdditionalCheckoutSuccessTemplateInterface
 {
     const NAME = 'pia';
 
