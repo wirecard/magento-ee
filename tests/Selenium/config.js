@@ -86,6 +86,9 @@ exports.config = {
     },
     poi: {
       label: 'Wirecard Payment on Invoice'
+    },
+    pia: {
+      label: 'Wirecard Payment In Advance'
     }
   }
 };

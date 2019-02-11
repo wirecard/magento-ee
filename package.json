@@ -14,6 +14,7 @@
     "test:ideal": "node_modules/.bin/mocha tests/Selenium/Payments/IdealTest.js --timeout 60000",
     "test:maestro": "node_modules/.bin/mocha tests/Selenium/Payments/MaestroTest.js --timeout 60000",
     "test:poi": "node_modules/.bin/mocha tests/Selenium/Payments/PoiTest.js --timeout 60000",
+    "test:pia": "node_modules/.bin/mocha tests/Selenium/Payments/PiaTest.js --timeout 60000",
     "test:runner": "node Tests/Selenium/runner.js"
   },
   "private": true,
