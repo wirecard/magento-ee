@@ -47,7 +47,7 @@ class PiaPayment extends Payment implements
     /**
      * @return PoiPiaTransaction
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getTransaction()
     {
@@ -62,7 +62,7 @@ class PiaPayment extends Payment implements
      *
      * @return Config
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getTransactionConfig($selectedCurrency)
     {
@@ -79,7 +79,7 @@ class PiaPayment extends Payment implements
     /**
      * @return  PaymentConfig
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getPaymentConfig()
     {
@@ -104,7 +104,7 @@ class PiaPayment extends Payment implements
      *
      * @return null
      *
-     * @since 1.0.0
+     * @since 1.2.0
      */
     public function processPayment(
         OrderSummary $orderSummary,
