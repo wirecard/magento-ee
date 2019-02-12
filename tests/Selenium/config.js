@@ -16,7 +16,7 @@ exports.config = {
         account_number: '4012000300001003',
         card_security_code: '003'
       },
-      expirationYear: ((new Date()).getFullYear() + 1)
+      expirationYear: 2023
     },
     creditCard3ds: {
       label: 'Wirecard Credit Card',
@@ -25,7 +25,7 @@ exports.config = {
         account_number: '4012000300001003',
         card_security_code: '003'
       },
-      expirationYear: ((new Date()).getFullYear() + 1),
+      expirationYear: 2023,
       password: 'wirecard'
     },
     paypal: {
@@ -73,7 +73,17 @@ exports.config = {
         sc: 10,
         extensionSc: 4000
       }
-    }
+    },
+    maestro: {
+      label: 'Wirecard Maestro SecureCode',
+      fields: {
+        last_name: 'Lastname',
+        account_number: '6799860300001000003',
+        card_security_code: '003'
+      },
+      expirationYear: '2023',
+      password: 'wirecard'
+    },
   }
 };
 
