@@ -77,7 +77,7 @@ class PiaPayment extends Payment implements
     }
 
     /**
-     * @return  PaymentConfig
+     * @return PaymentConfig
      *
      * @since 1.2.0
      */
