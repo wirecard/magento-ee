@@ -84,6 +84,13 @@ exports.config = {
       expirationYear: '2023',
       password: 'wirecard'
     },
+    masterpass: {
+      label: 'Wirecard Masterpass',
+      fields: {
+        email: 'masterpass@mailadresse.net',
+        password: 'WirecardPass42'
+      }
+    },
   }
 };
 
