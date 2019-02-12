@@ -25,14 +25,14 @@ if (! is_array($bankData) || empty ($bankData)) {
         ?>
         <div class="wirecardee--bankdata-iban">
             <strong><?php echo Mage::helper('paymentgateway')->__('iban') ?>:</strong>
-            <?php echo $bankData['iban']; ?>
+            <?php echo Mage::helper('core')->escapeHtml($bankData['iban']); ?>
         </div>
         <?php
     }
     if (isset($bankData['bic'])) { ?>
         <div class="wirecardee--bankdata-bic">
             <strong><?php echo Mage::helper('paymentgateway')->__('bic') ?>:</strong>
-            <?php echo $bankData['bic']; ?>
+            <?php echo Mage::helper('core')->escapeHtml($bankData['bic']); ?>
         </div>
         <?php
     }
@@ -40,20 +40,20 @@ if (! is_array($bankData) || empty ($bankData)) {
         ?>
         <div class="wirecardee--bankdata-ptrid">
             <strong><?php echo Mage::helper('paymentgateway')->__('ptrid'); ?>:</strong>
-            <?php echo $bankData['ptrid']; ?>
+            <?php echo Mage::helper('core')->escapeHtml($bankData['ptrid']); ?>
         </div>
         <?php
     }
     if (isset($bankData['bankName'])) { ?>
         <div class="wirecardee--bankdata-name">
-            <?php echo $bankData['bankName']; ?>
+            <?php echo Mage::helper('core')->escapeHtml($bankData['bankName']); ?>
         </div>
         <?php
     }
     if (isset($bankData['address'])) { ?>
         <div class="wirecardee--bankdata-address">
-            <?php echo $bankData['address']; ?><br>
-            <?php echo $bankData['city']; ?> <?php echo $bankData['state']; ?>
+            <?php echo Mage::helper('core')->escapeHtml(['address']); ?><br>
+            <?php echo Mage::helper('core')->escapeHtml($bankData['city'] . " " . $bankData['state']); ?>
         </div>
         <?php
     }
