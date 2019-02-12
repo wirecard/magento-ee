@@ -130,6 +130,5 @@ class UnionpayPayment extends Payment implements ProcessPaymentInterface
             'wirecardRequestData' => $requestData,
             'url'                 => \Mage::getUrl('paymentgateway/gateway/return', ['method' => self::NAME]),
         ]);
-
     }
 }
