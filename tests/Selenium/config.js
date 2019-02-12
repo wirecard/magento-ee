@@ -84,6 +84,14 @@ exports.config = {
       expirationYear: '2023',
       password: 'wirecard'
     },
+    alipay: {
+      label: 'Wirecard Alipay Cross-border',
+      fields: {
+        email: 'alipaytest20091@gmail.com',
+        password: '111111',
+        paymentPasswordDigit: '1'
+      }
+    },
   }
 };
 
