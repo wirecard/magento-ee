@@ -13,6 +13,7 @@ use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\UpiTransaction;
 use Wirecard\PaymentSdk\TransactionService;
+use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Actions\ViewAction;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\PaymentConfig;
@@ -31,7 +32,7 @@ class UnionpayPayment extends Payment implements ProcessPaymentInterface
     /**
      * @return string
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getName()
     {
@@ -41,7 +42,7 @@ class UnionpayPayment extends Payment implements ProcessPaymentInterface
     /**
      * @return UpiTransaction
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getTransaction()
     {
@@ -89,10 +90,10 @@ class UnionpayPayment extends Payment implements ProcessPaymentInterface
      * @param TransactionService $transactionService
      * @param Redirect           $redirect
      *
-     * @return Action|null
+     * @return Action
      * @throws \Exception
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function processPayment(
         OrderSummary $orderSummary,
@@ -102,12 +103,14 @@ class UnionpayPayment extends Payment implements ProcessPaymentInterface
         $transaction = $this->getTransaction();
         $transaction->setTermUrl($redirect);
 
-        $requestData = $transactionService->getCreditCardUiWithData(
+        $requestData      = $transactionService->getCreditCardUiWithData(
             $transaction,
             $orderSummary->getPayment()->getTransactionType(),
             \Mage::app()->getLocale()->getLocaleCode()
         );
+        $requestDataArray = json_decode($requestData, true);
 
+        /** @var \Mage_Sales_Model_Order_Payment_Transaction $transaction */
         $transaction = \Mage::getModel('sales/order_payment_transaction');
         $transaction->setTxnType(
             TransactionManager::getMageTransactionType($requestDataArray['transaction_type'])
@@ -117,7 +120,7 @@ class UnionpayPayment extends Payment implements ProcessPaymentInterface
         $transaction->setAdditionalInformation(
             \Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS,
             array_merge($requestDataArray, [
-                TransactionManager::TYPE_KEY => TransactionManager::TYPE_INITIAL_REQUEST
+                TransactionManager::TYPE_KEY => TransactionManager::TYPE_INITIAL_REQUEST,
             ])
         );
         $transaction->save();

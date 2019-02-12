@@ -11,7 +11,7 @@ use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\UpiTransaction;
 
 /**
- * @since 1.0.0
+ * @since 1.2.0
  */
 class WirecardEE_PaymentGateway_Model_Unionpay extends WirecardEE_PaymentGateway_Model_Payment
 {
@@ -23,7 +23,7 @@ class WirecardEE_PaymentGateway_Model_Unionpay extends WirecardEE_PaymentGateway
      *
      * @return array
      *
-     * @since 1.0.0
+     * @since 1.2.0
      */
     public function toOptionArray()
     {
