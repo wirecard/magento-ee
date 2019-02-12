@@ -84,6 +84,14 @@ exports.config = {
       expirationYear: '2023',
       password: 'wirecard'
     },
+    upi: {
+      label: 'Wirecard UnionPay International',
+      fields: {
+        last_name: 'Lastname',
+        account_number: '6210943123456786'
+      },
+      expirationYear: 2023
+    }
   }
 };
 
