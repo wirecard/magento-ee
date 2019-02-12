@@ -8,9 +8,9 @@
 -->
 <layout version="0.1.0">
     <checkout_onepage_success>
-        <reference name="checkout.success">
+        <reference name="content">
             <block type="paymentgateway/checkout_success" name="wirecardee.checkout.success"
-                   template="WirecardEE/checkout/success.phtml"/>
+                   template="WirecardEE/checkout/success.phtml" before="checkout.success"/>
         </reference>
     </checkout_onepage_success>
 </layout>

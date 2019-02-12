@@ -91,9 +91,10 @@
     <default>
         <wirecardee_paymentgateway>
             <settings>
-                <notify_mail></notify_mail>
+                <notify_mail />
                 <!--<pending_mail>0</pending_mail>-->
                 <delete_cancelled_orders>0</delete_cancelled_orders>
+                <unmatched_payment_mail />
             </settings>
         </wirecardee_paymentgateway>
         <payment>
@@ -249,6 +250,30 @@
                 <order_identification>1</order_identification>
                 <sort_order>22</sort_order>
             </wirecardee_paymentgateway_maestro>
+            <wirecardee_paymentgateway_poi>
+                <active>0</active>
+                <model>paymentgateway/poi</model>
+                <title>Wirecard Payment On Invoice</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>70000-APITEST-AP</api_user>
+                <api_password>qD2wzQ_hrc!8</api_password>
+                <api_maid>105ab3e8-d16b-4fa0-9f1f-18dd9b390c94</api_maid>
+                <api_secret>2d96596b-9d10-4c98-ac47-4d56e22fd878</api_secret>
+                <fraud_prevention>1</fraud_prevention>
+                <sort_order>28</sort_order>
+            </wirecardee_paymentgateway_poi>
+            <wirecardee_paymentgateway_pia>
+                <active>0</active>
+                <model>paymentgateway/pia</model>
+                <title>Wirecard Payment In Advance</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>70000-APITEST-AP</api_user>
+                <api_password>qD2wzQ_hrc!8</api_password>
+                <api_maid>105ab3e8-d16b-4fa0-9f1f-18dd9b390c94</api_maid>
+                <api_secret>2d96596b-9d10-4c98-ac47-4d56e22fd878</api_secret>
+                <fraud_prevention>1</fraud_prevention>
+                <sort_order>27</sort_order>
+            </wirecardee_paymentgateway_pia>
             <wirecardee_paymentgateway_unionpayinternational>
                 <active>0</active>
                 <model>paymentgateway/unionpay</model>

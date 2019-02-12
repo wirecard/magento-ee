@@ -204,6 +204,41 @@ class TransactionManager
 
     /**
      * @param \Mage_Sales_Model_Order $order
+     *
+     * @return array|null
+     *
+     * @since 1.2.0
+     */
+    public function findInitialResponse(\Mage_Sales_Model_Order $order)
+    {
+        try {
+            /** @var \Mage_Sales_Model_Resource_Order_Payment_Transaction_Collection $transactions */
+            $transactions = \Mage::getResourceModel('sales/order_payment_transaction_collection');
+            $transactions->addOrderIdFilter($order->getId());
+            $transactions->setOrder('transaction_id', 'ASC');
+
+            if ($transactions->count() === 0) {
+                return null;
+            }
+
+            foreach ($transactions as $transaction) {
+                /** @var \Mage_Sales_Model_Order_Payment_Transaction $transaction */
+                $additionalInformation = self::getAdditionalInformationFromTransaction($transaction);
+                if (empty($additionalInformation[TransactionManager::TYPE_KEY])) {
+                    continue;
+                }
+                if ($additionalInformation[TransactionManager::TYPE_KEY] === TransactionManager::TYPE_INITIAL) {
+                    return $additionalInformation;
+                }
+            }
+        } catch (\Exception $e) {
+        }
+
+        return null;
+    }
+
+    /**
+     * @param \Mage_Sales_Model_Order $order
      * @param PaymentInterface        $payment
      * @param BackendService          $backendService
      *

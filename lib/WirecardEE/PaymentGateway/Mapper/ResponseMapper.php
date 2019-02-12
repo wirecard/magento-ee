@@ -112,17 +112,12 @@ class ResponseMapper
      *
      * @since 1.0.0
      */
-    public function getProviderTransactionReference()
+    public function getProviderTransactionReferenceId()
     {
         if ($this->response instanceof SuccessResponse) {
             return $this->response->getProviderTransactionReference();
         }
-        $data = $this->getData();
-        if (isset($data['provider-transaction-reference-id'])) {
-            return $data['provider-transaction-reference-id'];
-        }
-
-        return null;
+        return $this->getFromData('provider-transaction-reference-id');
     }
 
     /**
@@ -165,12 +160,7 @@ class ResponseMapper
         if ($this->response instanceof SuccessResponse) {
             return $this->response->getPaymentMethod();
         }
-        $data = $this->getData();
-        if (isset($data['payment-methods.0.name'])) {
-            return $data['payment-methods.0.name'];
-        }
-
-        return null;
+        return $this->getFromData('payment-methods.0.name');
     }
 
     /**
@@ -180,11 +170,103 @@ class ResponseMapper
      */
     public function getOrderNumber()
     {
-        $data = $this->getData();
-        if (! empty($data['order-number'])) {
-            return $data['order-number'];
-        }
+        return $this->getFromData('order-number');
+    }
 
-        return null;
+    /**
+     * @return string|null
+     *
+     * @since 1.2.0
+     */
+    public function getMerchantIban()
+    {
+        return $this->getFromData('merchant-bank-account.0.iban');
+    }
+
+    /**
+     * @return string|null
+     *
+     * @since 1.2.0
+     */
+    public function getMerchantBic()
+    {
+        return $this->getFromData('merchant-bank-account.0.bic');
+    }
+
+    /**
+     * @return string|null
+     *
+     * @since 1.2.0
+     */
+    public function getMerchantBankName()
+    {
+        return $this->getFromData('merchant-bank-account.0.bank-name');
+    }
+
+    /**
+     * @return string|null
+     *
+     * @since 1.2.0
+     */
+    public function getMerchantBankAddress()
+    {
+        return $this->getFromData('merchant-bank-account.0.branch-address');
+    }
+
+    /**
+     * @return string|null
+     *
+     * @since 1.2.0
+     */
+    public function getMerchantBankCity()
+    {
+        return $this->getFromData('merchant-bank-account.0.branch-city');
+    }
+
+    /**
+     * @return string|null
+     *
+     * @since 1.2.0
+     */
+    public function getMerchantBankState()
+    {
+        return $this->getFromData('merchant-bank-account.0.branch-state');
+    }
+
+    /**
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    public function getBankData()
+    {
+        return [
+            'bank_label' => $this->getMerchantBankName(),
+            'iban'       => $this->getMerchantIban(),
+            'bic'        => $this->getMerchantBic(),
+            'address'    => $this->getMerchantBankAddress(),
+            'city'       => $this->getMerchantBankCity(),
+            'state'      => $this->getMerchantBankState(),
+            'ptrid'      => $this->getProviderTransactionReferenceId(),
+        ];
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return string|null
+     *
+     * @since 1.2.0
+     */
+    private function getFromData($key)
+    {
+        $data = $this->getData();
+        if (! is_array($data)) {
+            return null;
+        }
+        if (! isset($data[$key])) {
+            return null;
+        }
+        return $data[$key];
     }
 }

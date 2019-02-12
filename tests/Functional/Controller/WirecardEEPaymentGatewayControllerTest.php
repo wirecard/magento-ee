@@ -100,6 +100,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $item->setTaxPercent("10.0");
 
         $order = $this->createMock(\Mage_Sales_Model_Order::class);
+        $payment->setOrder($order);
         $order->method('__call')->willReturnMap([
             ['getBaseGrandTotal', [], 25],
             ['getBaseCurrencyCode', [], 'EUR'],
@@ -308,6 +309,38 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
             '/engine/notification/masterpass/lightBoxPaymentPage',
             $action->getUrl()
         );
+    }
+
+    public function testIndexActionWithPoi()
+    {
+        list($controller, , , $coreSession) = $this->prepareForIndexAction('poi', false);
+
+        $coreSession->method('getData')->willReturnMap([
+            [\WirecardEE_PaymentGateway_Helper_Data::DEVICE_FINGERPRINT_ID, false, md5('test')],
+        ]);
+        $coreSession->method('getMessages')->willReturn(new \Mage_Core_Model_Message_Collection());
+
+        /** @var ViewAction $action */
+        $action = $controller->indexAction();
+        $this->assertInstanceOf(ViewAction::class, $action);
+        $this->assertNotEmpty($action->getAssignments());
+        $this->assertContains('redirect', $action->getBlockName());
+    }
+
+    public function testIndexActionWithPia()
+    {
+        list($controller, , , $coreSession) = $this->prepareForIndexAction('pia', false);
+
+        $coreSession->method('getData')->willReturnMap([
+            [\WirecardEE_PaymentGateway_Helper_Data::DEVICE_FINGERPRINT_ID, false, md5('test')],
+        ]);
+        $coreSession->method('getMessages')->willReturn(new \Mage_Core_Model_Message_Collection());
+
+        /** @var ViewAction $action */
+        $action = $controller->indexAction();
+        $this->assertInstanceOf(ViewAction::class, $action);
+        $this->assertNotEmpty($action->getAssignments());
+        $this->assertContains('redirect', $action->getBlockName());
     }
 
     public function testIndexActionWithGiropay()

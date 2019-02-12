@@ -390,7 +390,7 @@
 "text_required_fields","* benötigte Felder"
 "sepa_mandate_full_text","Ich erm&auml;chtige die Firma %1$s einmalig eine Zahlung von meinem Konto mittels SEPA Lastschrift einzuziehen. Zugleich weise ich mein Kreditinstitut an, die von der Firma %1$s<br /><br />Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrags verlangen. Es gelten dabei die mit meinem Kreditinstitut vereinbarten Bedingungen.<br /><br />F&uuml;r den Fall der Nichteinl&ouml;sung der Lastschrift oder des Widerspruchs gegen die Lastschrift weise ich meine Bank unwiderruflich an, der Firma %1$s oder Dritten auf Anforderung meinen Namen, Adresse und Geburtsdatum vollst&auml;ndig mitzuteilen."
 "config_merchant_secret_three_d_desc","Der Geheimschl&uuml;ssel wird ben&ouml;tigt um die Digitale Signatur f&uuml;r diese 3D Zahlung zu berechnen."
-"config_merchant_account_id_three_d_desc","Geben Sie Ihren 3D H&auml;ndler Bezeichner an. Leer lassen, um 3-D Secure zu deaktivieren.
+"config_merchant_account_id_three_d_desc","Geben Sie Ihren 3D H&auml;ndler Bezeichner an. Leer lassen, um 3-D Secure zu deaktivieren."
 "config_ssl_max_limit_desc","Ab diesem Betrag wird die Benutzung von 3-D Secure erzwungen. Leer lassen, um kein Non 3-D Secure Maximal Limit zu setzen."
 "config_ssl_max_limit_currency","Non 3-D Secure Maximal Limit W&auml;hrung"
 "config_ssl_max_limit_currency_desc","Die W&auml;hrung, f&uuml;r die 3-D Secure Max. Limit gilt"
@@ -424,3 +424,10 @@
 
 
 "bic_required","BIC wird benötigt"
+"config_unmatched_payment_mail","E-Mail für nicht zuordenbare Zahlungsbenachrichtigung"
+"config_unmatched_payment_mail_desc","Sende E-Mail beim Erhalt einer nicht zuordenbaren Zahlungsbenachrichtigung"
+"unmatched_payment_mail_subject","Nicht zuordenbare Zahlung"
+"unmatched_payment_mail_content","Keine Transaktion für die Zahlung %s mit der PTRID '%s' gefunden"
+"address","Adresse"
+"state","Bundesland"
+"bank_information","Bitte den Betrag mithilfe folgender Daten überweisen"

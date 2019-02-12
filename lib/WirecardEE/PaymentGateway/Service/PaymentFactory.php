@@ -30,6 +30,8 @@ use WirecardEE\PaymentGateway\Payments\MasterpassPayment;
 use WirecardEE\PaymentGateway\Payments\MaestroPayment;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 use WirecardEE\PaymentGateway\Payments\PaypalPayment;
+use WirecardEE\PaymentGateway\Payments\PoiPayment;
+use WirecardEE\PaymentGateway\Payments\PiaPayment;
 use WirecardEE\PaymentGateway\Payments\SepaPayment;
 use WirecardEE\PaymentGateway\Payments\SofortPayment;
 use WirecardEE\PaymentGateway\Payments\UnionpayPayment;
@@ -112,10 +114,11 @@ class PaymentFactory
             SofortTransaction::NAME          => SofortPayment::class,
             EpsTransaction::NAME             => EpsPayment::class,
             GiropayTransaction::NAME         => GiropayPayment::class,
-            EpsTransaction::NAME             => EpsPayment::class,
             IdealTransaction::NAME           => IdealPayment::class,
             // PayByBankAppPayment::NAME        => PayByBankAppPayment::class,
             MaestroTransaction::NAME         => MaestroPayment::class,
+            PoiPayment::NAME                 => PoiPayment::class,
+            PiaPayment::NAME                 => PiaPayment::class,
             MasterpassTransaction::NAME      => MasterpassPayment::class,
             AlipayCrossborderTransaction::NAME => AlipayPayment::class,
             UpiTransaction::NAME             => UnionpayPayment::class,

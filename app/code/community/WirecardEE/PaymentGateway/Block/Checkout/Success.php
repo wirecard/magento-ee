@@ -7,6 +7,8 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
+use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 use WirecardEE\PaymentGateway\Service\PaymentFactory;
 
 /**
@@ -23,8 +25,7 @@ class WirecardEE_PaymentGateway_Block_Checkout_Success extends Mage_Checkout_Blo
      */
     public function getOrderStatusLabel()
     {
-        $order = $this->getCheckoutSession()->getLastRealOrder();
-        return $order->getStatusLabel();
+        return $this->getCheckoutSession()->getLastRealOrder()->getStatusLabel();
     }
 
     /**
@@ -44,9 +45,23 @@ class WirecardEE_PaymentGateway_Block_Checkout_Success extends Mage_Checkout_Blo
      */
     public function isWirecardPayment()
     {
-        return (new PaymentFactory())->isSupportedPayment($this->getCheckoutSession()
+        return $this->getPaymentFactory()->isSupportedPayment($this->getCheckoutSession()
                                                                ->getLastRealOrder()
                                                                ->getPayment());
+    }
+
+    /**
+     * @return PaymentInterface
+     *
+     * @throws UnknownPaymentException
+     *
+     * @since 1.2.0
+     */
+    public function getPayment()
+    {
+        return $this->getPaymentFactory()->createFromMagePayment($this->getCheckoutSession()
+                                                                  ->getLastRealOrder()
+                                                                  ->getPayment());
     }
 
     /**
@@ -57,5 +72,15 @@ class WirecardEE_PaymentGateway_Block_Checkout_Success extends Mage_Checkout_Blo
     protected function getCheckoutSession()
     {
         return Mage::getSingleton('checkout/session');
+    }
+
+    /**
+     * @return PaymentFactory
+     *
+     * @since 1.2.0
+     */
+    protected function getPaymentFactory()
+    {
+        return new PaymentFactory();
     }
 }

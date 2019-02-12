@@ -1,0 +1,61 @@
+<?php
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/LICENSE
+ */
+
+$order    = Mage::getSingleton('checkout/session')->getLastRealOrder();
+$bankData = $order->getPayment()->getAdditionalInformation();
+if (! is_array($bankData) || empty ($bankData)) {
+    return;
+}
+?>
+<div class="wirecardee--bankdata"
+     style="border: 1px #cecece solid; width: 50%; margin: 25px auto; padding: 25px; text-align: left;">
+    <h3><?php echo Mage::helper('paymentgateway')->__('bank_information'); ?></h3>
+    <div class="wirecardee--bankdata-amount">
+        <strong><?php echo Mage::helper('paymentgateway')->__('requestedAmount'); ?>:</strong>
+        <?php echo Mage::helper('core')->currency(number_format($order->getGrandTotal(), 2), true, false); ?>
+    </div>
+    <?php
+    if (isset($bankData['iban'])) {
+        ?>
+        <div class="wirecardee--bankdata-iban">
+            <strong><?php echo Mage::helper('paymentgateway')->__('iban') ?>:</strong>
+            <?php echo Mage::helper('core')->escapeHtml($bankData['iban']); ?>
+        </div>
+        <?php
+    }
+    if (isset($bankData['bic'])) { ?>
+        <div class="wirecardee--bankdata-bic">
+            <strong><?php echo Mage::helper('paymentgateway')->__('bic') ?>:</strong>
+            <?php echo Mage::helper('core')->escapeHtml($bankData['bic']); ?>
+        </div>
+        <?php
+    }
+    if (isset($bankData['ptrid'])) {
+        ?>
+        <div class="wirecardee--bankdata-ptrid">
+            <strong><?php echo Mage::helper('paymentgateway')->__('ptrid'); ?>:</strong>
+            <?php echo Mage::helper('core')->escapeHtml($bankData['ptrid']); ?>
+        </div>
+        <?php
+    }
+    if (isset($bankData['bankName'])) { ?>
+        <div class="wirecardee--bankdata-name">
+            <?php echo Mage::helper('core')->escapeHtml($bankData['bankName']); ?>
+        </div>
+        <?php
+    }
+    if (isset($bankData['address'])) { ?>
+        <div class="wirecardee--bankdata-address">
+            <?php echo Mage::helper('core')->escapeHtml(['address']); ?><br>
+            <?php echo Mage::helper('core')->escapeHtml($bankData['city'] . " " . $bankData['state']); ?>
+        </div>
+        <?php
+    }
+    ?>
+</div>

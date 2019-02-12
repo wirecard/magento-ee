@@ -107,6 +107,12 @@ exports.config = {
         password: 'WirecardPass42'
       }
     },
+    poi: {
+      label: 'Wirecard Payment On Invoice'
+    },
+    pia: {
+      label: 'Wirecard Payment In Advance'
+    }
   }
 };
 

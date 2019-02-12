@@ -192,4 +192,37 @@ class TransactionManagerTest extends MagentoTestCase
 
         $this->assertSame($data, $refundableBasket);
     }
+
+    public function testFindInitialResponse()
+    {
+        $manager = new TransactionManager(new Logger());
+
+        $order = $this->createMock(\Mage_Sales_Model_Order::class);
+        $transactions = $this->createMock(\Mage_Sales_Model_Resource_Order_Payment_Transaction_Collection::class);
+        $transactions->method('count')->willReturn(0);
+        $transactions->method('getIterator')->willReturn(new \ArrayIterator([]));
+        $this->replaceMageResourceModel('sales/order_payment_transaction_collection', $transactions);
+
+        $this->assertNull($manager->findInitialResponse($order));
+
+        $payment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
+        $order->method('getPayment')->willReturn($payment);
+
+        $transaction = new \Mage_Sales_Model_Order_Payment_Transaction();
+        $transaction->setAdditionalInformation(\Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS, [
+            TransactionManager::TYPE_KEY => TransactionManager::TYPE_INITIAL,
+        ]);
+        $transaction->setTxnType(\Mage_Sales_Model_Order_Payment_Transaction::TYPE_PAYMENT);
+        $transactions = $this->createMock(\Mage_Sales_Model_Resource_Order_Payment_Transaction_Collection::class);
+        $transactions->method('count')->willReturn(1);
+        $transactions->method('getIterator')->willReturn(new \ArrayIterator([$transaction]));
+        $this->replaceMageResourceModel('sales/order_payment_transaction_collection', $transactions);
+
+        $response = $manager->findInitialResponse($order);
+
+        $this->assertNotNull($response);
+        $this->assertSame([
+            TransactionManager::TYPE_KEY => TransactionManager::TYPE_INITIAL,
+        ], $response);
+    }
 }
