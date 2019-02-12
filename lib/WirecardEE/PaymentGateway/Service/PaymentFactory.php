@@ -115,7 +115,6 @@ class PaymentFactory
             IdealPayment::NAME               => IdealPayment::class,
             PoiPayment::NAME                 => PoiPayment::class,
             PiaPayment::NAME                 => PiaPayment::class,
-            IdealTransaction::NAME           => IdealPayment::class,
         ];
     }
 
