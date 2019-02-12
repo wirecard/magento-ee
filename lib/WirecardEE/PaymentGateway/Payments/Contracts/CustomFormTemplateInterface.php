@@ -12,7 +12,7 @@ namespace WirecardEE\PaymentGateway\Payments\Contracts;
 /**
  * @since 1.0.0
  */
-interface CustomFormTemplate
+interface CustomFormTemplateInterface
 {
     /**
      * Some payments (e.g. SEPA) require custom form templates.
