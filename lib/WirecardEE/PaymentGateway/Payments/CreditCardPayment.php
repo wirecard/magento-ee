@@ -20,7 +20,6 @@ use WirecardEE\PaymentGateway\Data\CreditCardPaymentConfig;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 use WirecardEE\PaymentGateway\Service\Logger;
-use WirecardEE\PaymentGateway\Service\TransactionManager;
 
 class CreditCardPayment extends Payment implements ProcessPaymentInterface
 {
@@ -215,22 +214,9 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface
             $orderSummary->getPayment()->getTransactionType(),
             \Mage::app()->getLocale()->getLocaleCode()
         );
-        $requestDataArray = json_decode($requestData, true);
 
-        /** @var \Mage_Sales_Model_Order_Payment_Transaction $transaction */
-        $transaction = \Mage::getModel('sales/order_payment_transaction');
-        $transaction->setTxnType(
-            TransactionManager::getMageTransactionType($requestDataArray['transaction_type'])
-        );
-        $transaction->setOrder($orderSummary->getOrder());
-        $transaction->setOrderPaymentObject($orderSummary->getOrder()->getPayment());
-        $transaction->setAdditionalInformation(
-            \Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS,
-            array_merge($requestDataArray, [
-                TransactionManager::TYPE_KEY => TransactionManager::TYPE_INITIAL_REQUEST
-            ])
-        );
-        $transaction->save();
+        $requestDataArray = json_decode($requestData, true);
+        $this->getTransactionManager()->createInitialRequestTransaction($requestDataArray, $orderSummary->getOrder());
 
         return new ViewAction('paymentgateway/seamless', [
             'wirecardUrl'         => $orderSummary->getPayment()->getPaymentConfig()->getBaseUrl(),

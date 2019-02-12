@@ -13,6 +13,8 @@ use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 use WirecardEE\PaymentGateway\Exception\UnknownTransactionTypeException;
+use WirecardEE\PaymentGateway\Service\Logger;
+use WirecardEE\PaymentGateway\Service\TransactionManager;
 
 /**
  * @since 1.0.0
@@ -20,6 +22,11 @@ use WirecardEE\PaymentGateway\Exception\UnknownTransactionTypeException;
 abstract class Payment implements PaymentInterface
 {
     const CONFIG_PREFIX = 'payment/wirecardee_paymentgateway_';
+
+    /**
+     * @var TransactionManager
+     */
+    protected $transactionManager;
 
     /**
      * @param string $selectedCurrency
@@ -122,5 +129,18 @@ abstract class Payment implements PaymentInterface
     public function getCaptureOperation()
     {
         return Operation::PAY;
+    }
+
+    /**
+     * @return TransactionManager
+     *
+     * @since 1.2.0
+     */
+    protected function getTransactionManager()
+    {
+        if (! $this->transactionManager) {
+            $this->transactionManager = new TransactionManager(new Logger());
+        }
+        return $this->transactionManager;
     }
 }

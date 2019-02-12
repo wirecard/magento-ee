@@ -290,6 +290,39 @@ class TransactionManager
     }
 
     /**
+     * @param array                   $requestData
+     * @param \Mage_Sales_Model_Order $order
+     *
+     * @return Mage_Sales_Model_Order_Payment_Transaction|null
+     * @throws \Mage_Core_Exception
+     *
+     * @since 1.2.0
+     */
+    public function createInitialRequestTransaction(array $requestData, \Mage_Sales_Model_Order $order)
+    {
+        if (! isset($requestData['transaction_type'])) {
+            return null;
+        }
+
+        /** @var \Mage_Sales_Model_Order_Payment_Transaction $transaction */
+        $transaction = \Mage::getModel('sales/order_payment_transaction');
+        $transaction->setTxnType(
+            TransactionManager::getMageTransactionType($requestData['transaction_type'])
+        );
+        $transaction->setOrder($order);
+        $transaction->setOrderPaymentObject($order->getPayment());
+        $transaction->setAdditionalInformation(
+            \Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS,
+            array_merge($requestData, [
+                TransactionManager::TYPE_KEY => TransactionManager::TYPE_INITIAL_REQUEST
+            ])
+        );
+        $transaction->save();
+
+        return $transaction;
+    }
+
+    /**
      * @param $transactionType
      *
      * @return string
