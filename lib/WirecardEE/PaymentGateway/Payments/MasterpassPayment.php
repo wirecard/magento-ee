@@ -28,6 +28,7 @@ class MasterpassPayment extends Payment
 
     /**
      * @return string
+     *
      * @since 1.2.0
      */
     public function getName()
@@ -81,7 +82,7 @@ class MasterpassPayment extends Payment
     }
 
     /**
-     * @param $selectedCurrency
+     * @param string $selectedCurrency
      *
      * @return Config
      *
