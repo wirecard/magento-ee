@@ -147,11 +147,11 @@
                 <order_identification>1</order_identification>
                 <show_bic>0</show_bic>
                 <creditor_id>DE98ZZZ09999999999</creditor_id>
-                <creditor_name></creditor_name>
-                <creditor_street></creditor_street>
-                <creditor_zip></creditor_zip>
-                <creditor_city></creditor_city>
-                <creditor_country></creditor_country>
+                <creditor_name />
+                <creditor_street />
+                <creditor_zip />
+                <creditor_city />
+                <creditor_country />
                 <sort_order>33</sort_order>
             </wirecardee_paymentgateway_sepadirectdebit>
             <wirecardee_paymentgateway_sepacredit>
