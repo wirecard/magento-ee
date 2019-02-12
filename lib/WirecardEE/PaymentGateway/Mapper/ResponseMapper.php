@@ -264,7 +264,7 @@ class ResponseMapper
         if (! is_array($data)) {
             return null;
         }
-        if (empty($data[$key])) {
+        if (! isset($data[$key])) {
             return null;
         }
         return $data[$key];
