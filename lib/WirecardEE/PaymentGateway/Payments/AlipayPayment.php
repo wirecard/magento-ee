@@ -114,4 +114,12 @@ class AlipayPayment extends Payment implements ProcessPaymentInterface
 
         return null;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRefundOperation()
+    {
+        return Operation::CANCEL;
+    }
 }
