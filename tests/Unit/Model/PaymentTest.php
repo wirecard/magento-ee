@@ -108,6 +108,28 @@ class PaymentTest extends TestCase
         $this->assertNotEmpty($payment->toOptionArray());
     }
 
+    public function testMaestro()
+    {
+        $payment = new \WirecardEE_PaymentGateway_Model_Maestro();
+        $this->assertStringEndsWith(
+            '/paymentgateway/gateway/index/method/maestro/',
+            $payment->getOrderPlaceRedirectUrl()
+        );
+        $this->assertEquals('wirecardee_paymentgateway_maestro', $payment->getCode());
+        $this->assertNotEmpty($payment->toOptionArray());
+    }
+
+    public function testMasterpass()
+    {
+        $payment = new \WirecardEE_PaymentGateway_Model_Masterpass();
+        $this->assertStringEndsWith(
+            '/paymentgateway/gateway/index/method/masterpass/',
+            $payment->getOrderPlaceRedirectUrl()
+        );
+        $this->assertEquals('wirecardee_paymentgateway_masterpass', $payment->getCode());
+        $this->assertNotEmpty($payment->toOptionArray());
+    }
+
     public function testIdeal()
     {
         $payment = new \WirecardEE_PaymentGateway_Model_Ideal();
@@ -130,6 +152,26 @@ class PaymentTest extends TestCase
             $payment->getOrderPlaceRedirectUrl()
         );
         $this->assertEquals('wirecardee_paymentgateway_eps', $payment->getCode());
+    }
+
+    public function testPia()
+    {
+        $payment = new \WirecardEE_PaymentGateway_Model_Pia();
+        $this->assertStringEndsWith(
+            '/paymentgateway/gateway/index/method/pia/',
+            $payment->getOrderPlaceRedirectUrl()
+        );
+        $this->assertEquals('wirecardee_paymentgateway_pia', $payment->getCode());
+    }
+
+    public function testPoi()
+    {
+        $payment = new \WirecardEE_PaymentGateway_Model_Poi();
+        $this->assertStringEndsWith(
+            '/paymentgateway/gateway/index/method/poi/',
+            $payment->getOrderPlaceRedirectUrl()
+        );
+        $this->assertEquals('wirecardee_paymentgateway_poi', $payment->getCode());
     }
 
     public function testAlipay()
