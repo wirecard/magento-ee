@@ -31,11 +31,14 @@ class MasterpassPaymentTest extends MagentoTestCase
         $order       = $this->createMock(\Mage_Sales_Model_Order::class);
         $transaction = $this->createMock(\Mage_Sales_Model_Order_Payment_Transaction::class);
         $transaction->method('getAdditionalInformation')->willReturnOnConsecutiveCalls([
-            Transaction::PARAM_TRANSACTION_TYPE => Transaction::TYPE_DEBIT
+            'payment-methods.0.name'            => 'masterpass',
+            Transaction::PARAM_TRANSACTION_TYPE => Transaction::TYPE_DEBIT,
         ], [
-            Transaction::PARAM_TRANSACTION_TYPE => Transaction::TYPE_AUTHORIZATION
-        ],[
-            Transaction::PARAM_TRANSACTION_TYPE => Transaction::TYPE_CREDIT
+            'payment-methods.0.name'            => 'masterpass',
+            Transaction::PARAM_TRANSACTION_TYPE => Transaction::TYPE_AUTHORIZATION,
+        ], [
+            'payment-methods.0.name'            => 'masterpass',
+            Transaction::PARAM_TRANSACTION_TYPE => Transaction::TYPE_CREDIT,
         ]);
 
         $this->assertNull($payment->getBackendTransaction($order, null, $transaction));
