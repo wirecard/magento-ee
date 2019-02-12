@@ -33,6 +33,8 @@ class PoiPayment extends Payment implements ProcessPaymentInterface, ProcessRetu
 
     /**
      * @return string
+     *
+     * @since 1.2.0
      */
     public function getName()
     {
