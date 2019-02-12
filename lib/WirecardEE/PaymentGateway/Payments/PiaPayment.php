@@ -38,6 +38,8 @@ class PiaPayment extends Payment implements
 
     /**
      * @return string
+     *
+     * @since 1.2.0
      */
     public function getName()
     {
