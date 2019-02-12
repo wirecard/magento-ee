@@ -73,8 +73,10 @@ class MasterpassPayment extends Payment
         }
 
         if ($transactionDetails['payment-methods.0.name'] === MasterpassTransaction::NAME
-            && in_array($transactionDetails[Transaction::PARAM_TRANSACTION_TYPE],
-                [Transaction::TYPE_DEBIT, Transaction::TYPE_AUTHORIZATION])) {
+            && in_array(
+                $transactionDetails[Transaction::PARAM_TRANSACTION_TYPE],
+                [Transaction::TYPE_DEBIT, Transaction::TYPE_AUTHORIZATION]
+            )) {
             return null;
         }
 
