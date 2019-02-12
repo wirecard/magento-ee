@@ -58,7 +58,7 @@ class PiaPayment extends Payment implements
     }
 
     /**
-     * @param $selectedCurrency
+     * @param string $selectedCurrency
      *
      * @return Config
      *
