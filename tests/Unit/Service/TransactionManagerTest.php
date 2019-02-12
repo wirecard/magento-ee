@@ -231,7 +231,7 @@ class TransactionManagerTest extends MagentoTestCase
         $manager = new TransactionManager(new Logger());
 
         $requestData = [
-            'transaction_type' => 'eee',
+            'transaction_type' => 'payment',
         ];
 
         $payment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
