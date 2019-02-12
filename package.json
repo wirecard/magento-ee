@@ -14,6 +14,7 @@
     "test:ideal": "node_modules/.bin/mocha tests/Selenium/Payments/IdealTest.js --timeout 60000",
     "test:maestro": "node_modules/.bin/mocha tests/Selenium/Payments/MaestroTest.js --timeout 60000",
     "test:upi": "node_modules/.bin/mocha tests/Selenium/Payments/UpiTest.js --timeout 60000",
+    "test:alipay": "node_modules/.bin/mocha tests/Selenium/Payments/AlipayTest.js --timeout 60000",
     "test:runner": "node Tests/Selenium/runner.js"
   },
   "private": true,

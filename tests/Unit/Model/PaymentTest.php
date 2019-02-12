@@ -132,6 +132,16 @@ class PaymentTest extends TestCase
         $this->assertEquals('wirecardee_paymentgateway_eps', $payment->getCode());
     }
 
+    public function testAlipay()
+    {
+        $payment = new \WirecardEE_PaymentGateway_Model_Alipay();
+        $this->assertStringEndsWith(
+            '/paymentgateway/gateway/index/method/alipay-xborder/',
+            $payment->getOrderPlaceRedirectUrl()
+        );
+        $this->assertEquals('wirecardee_paymentgateway_alipay-xborder', $payment->getCode());
+    }
+
     public function testGiropay()
     {
         $address = $this->createMock(\Mage_Sales_Model_Order_Address::class);

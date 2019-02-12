@@ -9,6 +9,7 @@
 
 namespace WirecardEE\PaymentGateway\Service;
 
+use Wirecard\PaymentSdk\Transaction\AlipayCrossborderTransaction;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\EpsTransaction;
 use Wirecard\PaymentSdk\Transaction\GiropayTransaction;
@@ -19,6 +20,7 @@ use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 use Wirecard\PaymentSdk\Transaction\UpiTransaction;
 use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
+use WirecardEE\PaymentGateway\Payments\AlipayPayment;
 use WirecardEE\PaymentGateway\Payments\CreditCardPayment;
 use WirecardEE\PaymentGateway\Payments\EpsPayment;
 use WirecardEE\PaymentGateway\Payments\GiropayPayment;
@@ -112,6 +114,7 @@ class PaymentFactory
             IdealTransaction::NAME           => IdealPayment::class,
             // PayByBankAppPayment::NAME        => PayByBankAppPayment::class,
             MaestroTransaction::NAME         => MaestroPayment::class,
+            AlipayCrossborderTransaction::NAME => AlipayPayment::class,
             UpiTransaction::NAME             => UnionpayPayment::class,
         ];
     }

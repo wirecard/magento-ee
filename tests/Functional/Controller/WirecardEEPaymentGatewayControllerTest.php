@@ -10,6 +10,7 @@
 namespace WirecardEE\Tests\Functional\Controller;
 
 use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\Transaction\AlipayCrossborderTransaction;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 use Wirecard\PaymentSdk\Transaction\EpsTransaction;
@@ -314,6 +315,23 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
             'https://giropaytest1.fiducia.de/ShopSystem/bank',
             $action->getUrl()
         );
+    }
+
+    public function testIndexActionWithAlipay()
+    {
+        list($controller, , $transaction, $coreSession) = $this->prepareForIndexAction(AlipayCrossborderTransaction::NAME);
+
+        $transaction->expects($this->once())->method('setTxnType')->with('payment');
+
+        $coreSession->method('getData')->willReturnMap([
+            [\WirecardEE_PaymentGateway_Helper_Data::DEVICE_FINGERPRINT_ID, false, md5('test')],
+        ]);
+        $coreSession->method('getMessages')->willReturn(new \Mage_Core_Model_Message_Collection());
+
+        /** @var RedirectAction $action */
+        $action = $controller->indexAction();
+        $this->assertInstanceOf(RedirectAction::class, $action);
+        $this->assertContains('alipaydev.com/gateway', $action->getUrl());
     }
 
     public function testIndexActionWithMaestro()

@@ -91,7 +91,15 @@ exports.config = {
         account_number: '6210943123456786'
       },
       expirationYear: 2023
-    }
+    },
+    alipay: {
+      label: 'Wirecard Alipay Cross-border',
+      fields: {
+        email: 'alipaytest20091@gmail.com',
+        password: '111111',
+        paymentPasswordDigit: '1'
+      }
+    },
   }
 };
 

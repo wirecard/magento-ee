@@ -249,6 +249,18 @@
                 <fraud_prevention>1</fraud_prevention>
                 <sort_order>38</sort_order>
             </wirecardee_paymentgateway_unionpayinternational>
+            <wirecardee_paymentgateway_alipay-xborder>
+                <active>0</active>
+                <model>paymentgateway/alipay</model>
+                <title>Wirecard Alipay Cross-border</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>70000-APITEST-AP</api_user>
+                <api_password>qD2wzQ_hrc!8</api_password>
+                <api_maid>7ca48aa0-ab12-4560-ab4a-af1c477cce43</api_maid>
+                <api_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</api_secret>
+                <fraud_prevention>1</fraud_prevention>
+                <sort_order>3</sort_order>
+            </wirecardee_paymentgateway_alipay-xborder>
         </payment>
     </default>
 
