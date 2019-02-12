@@ -17,7 +17,7 @@ const {
 } = require('../common');
 const { config } = require('../config');
 
-describe('Payment on Invoice test', () => {
+describe('Payment On Invoice test', () => {
   const driver = getDriver();
 
   const paymentLabel = config.payments.poi.label;

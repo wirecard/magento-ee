@@ -17,7 +17,7 @@ const {
 } = require('../common');
 const { config } = require('../config');
 
-describe('Payment in Advance test', () => {
+describe('Payment In Advance test', () => {
   const driver = getDriver();
 
   const paymentLabel = config.payments.pia.label;

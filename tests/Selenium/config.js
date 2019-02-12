@@ -85,7 +85,7 @@ exports.config = {
       password: 'wirecard'
     },
     poi: {
-      label: 'Wirecard Payment on Invoice'
+      label: 'Wirecard Payment On Invoice'
     },
     pia: {
       label: 'Wirecard Payment In Advance'

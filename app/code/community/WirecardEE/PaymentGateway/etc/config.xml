@@ -240,7 +240,7 @@
             <wirecardee_paymentgateway_poi>
                 <active>0</active>
                 <model>paymentgateway/poi</model>
-                <title>Wirecard Payment on Invoice</title>
+                <title>Wirecard Payment On Invoice</title>
                 <api_url>https://api-test.wirecard.com</api_url>
                 <api_user>70000-APITEST-AP</api_user>
                 <api_password>qD2wzQ_hrc!8</api_password>
