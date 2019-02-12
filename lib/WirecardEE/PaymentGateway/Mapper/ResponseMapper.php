@@ -252,7 +252,7 @@ class ResponseMapper
     }
 
     /**
-     * @param $key
+     * @param string $key
      *
      * @return string|null
      *
