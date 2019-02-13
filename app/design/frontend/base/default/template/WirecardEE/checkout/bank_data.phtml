@@ -52,7 +52,7 @@ if (! is_array($bankData) || empty ($bankData)) {
     }
     if (isset($bankData['address'])) { ?>
         <div class="wirecardee--bankdata-address">
-            <?php echo Mage::helper('core')->escapeHtml(['address']); ?><br>
+            <?php echo Mage::helper('core')->escapeHtml($bankData['address']); ?><br>
             <?php echo Mage::helper('core')->escapeHtml($bankData['city'] . " " . $bankData['state']); ?>
         </div>
         <?php
