@@ -77,6 +77,16 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
     }
 
     /**
+     * @param PaymentFactory $paymentFactory
+     *
+     * @since 1.1.0
+     */
+    public function setPaymentFactory(PaymentFactory $paymentFactory)
+    {
+        $this->paymentFactory = $paymentFactory;
+    }
+
+    /**
      * @param Varien_Event_Observer $observer
      *
      * @return Action|null
@@ -107,7 +117,12 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             \Mage::throwException("Unable to capture empty invoice");
         }
 
-        $payment             = $this->paymentFactory->createFromMagePayment($invoice->getOrder()->getPayment());
+        $payment = $this->paymentFactory->createFromMagePayment($invoice->getOrder()->getPayment());
+
+        if (! $payment->getCaptureOperation()) {
+            return null;
+        }
+
         $initialNotification = $this->transactionManager->findInitialNotification($invoice->getOrder());
 
         if (! $initialNotification) {
@@ -170,7 +185,12 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             return [];
         }
 
-        $payment        = $this->paymentFactory->createFromMagePayment($creditMemo->getOrder()->getPayment());
+        $payment = $this->paymentFactory->createFromMagePayment($creditMemo->getOrder()->getPayment());
+
+        if (! $payment->getRefundOperation()) {
+            return null;
+        }
+
         $backendService = new BackendService(
             $payment->getTransactionConfig(Mage::app()->getLocale()->getCurrency()),
             $this->logger
@@ -213,7 +233,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
 
         if (count($transactionEntries) === 0) {
             $this->throwError('Unable to refund (no proper refundable baskets)', [
-                'refundableTransactions' => $refundableTransactions
+                'refundableTransactions' => $refundableTransactions,
             ]);
         }
 
@@ -292,7 +312,12 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             return null;
         }
 
-        $payment             = $this->paymentFactory->createFromMagePayment($magePayment);
+        $payment = $this->paymentFactory->createFromMagePayment($magePayment);
+
+        if (! $payment->getCancelOperation()) {
+            return null;
+        }
+
         $initialNotification = $this->transactionManager->findInitialNotification($magePayment->getOrder());
 
         if (! $initialNotification) {

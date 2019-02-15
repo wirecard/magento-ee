@@ -170,12 +170,26 @@ class GiropayPayment extends Payment implements ProcessPaymentInterface, CustomF
     }
 
     /**
-     * @return string
-     *
-     * @since 1.1.0
+     * {@inheritdoc}
      */
     public function getRefundOperation()
     {
-        return Operation::CREDIT;
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCancelOperation()
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCaptureOperation()
+    {
+        return null;
     }
 }

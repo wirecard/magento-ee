@@ -11,7 +11,9 @@ namespace WirecardEE\Tests\Unit\Model;
 
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\SuccessAction;
+use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 use WirecardEE\PaymentGateway\Service\BackendOperationsHandler;
+use WirecardEE\PaymentGateway\Service\PaymentFactory;
 use WirecardEE\PaymentGateway\Service\TransactionManager;
 use WirecardEE\Tests\Test\MagentoTestCase;
 
@@ -39,6 +41,38 @@ class BackendOperationTest extends MagentoTestCase
         $observer->method('getData')->willReturn($invoice);
 
         $backend = new \WirecardEE_PaymentGateway_Model_BackendOperation();
+        $this->assertNull($backend->capture($observer));
+    }
+
+    public function testDisabledCapture()
+    {
+        $request = $this->createMock(\Mage_Core_Controller_Request_Http::class);
+        $request->method('getPost')->willReturn([
+            'items' => ['item']
+        ]);
+        \Mage::app()->setRequest($request);
+
+        $payment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
+
+        $order = $this->createMock(\Mage_Sales_Model_Order::class);
+        $order->method('getPayment')->willReturn($payment);
+
+        $invoice = $this->createMock(\Mage_Sales_Model_Order_Invoice::class);
+        $invoice->method('getOrder')->willReturn($order);
+
+        $observer = $this->createMock(\Varien_Event_Observer::class);
+        $observer->method('getData')->willReturn($invoice);
+
+        $payment = $this->createMock(PaymentInterface::class);
+        $payment->method('getCaptureOperation')->willReturn(null);
+
+        $factory = $this->createMock(PaymentFactory::class);
+        $factory->method('createFromMagePayment')->willReturn($payment);
+        $factory->method('isSupportedPayment')->willReturn(true);
+
+        $backend = new \WirecardEE_PaymentGateway_Model_BackendOperation();
+        $backend->setPaymentFactory($factory);
+
         $this->assertNull($backend->capture($observer));
     }
 
@@ -208,6 +242,45 @@ class BackendOperationTest extends MagentoTestCase
         $backend->refund($observer);
     }
 
+    public function testDisabledRefund()
+    {
+        $request = $this->createMock(\Mage_Core_Controller_Request_Http::class);
+        $request->method('getPost')->willReturn([
+            'items' => ['item']
+        ]);
+        \Mage::app()->setRequest($request);
+
+        $magePayment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
+        $magePayment->method('getData')->willReturn('wirecardee_paymentgateway_creditcard');
+
+        $order = $this->createMock(\Mage_Sales_Model_Order::class);
+        $order->method('getPayment')->willReturn($magePayment);
+
+        $creditMemo = $this->createMock(\Mage_Sales_Model_Order_Creditmemo::class);
+        $creditMemo->method('getOrder')->willReturn($order);
+        $creditMemo->method('getAllItems')->willReturn([]);
+        $creditMemo->method('__call')->willReturnMap([
+            ['getShippingAmount', [], 0],
+            ['getAdjustmentPositive', [], 0],
+            ['getAdjustmentNegative', [], 0],
+        ]);
+
+        $observer = $this->createMock(\Varien_Event_Observer::class);
+        $observer->method('getData')->willReturn($creditMemo);
+
+        $payment = $this->createMock(PaymentInterface::class);
+        $payment->method('getRefundOperation')->willReturn(null);
+
+        $factory = $this->createMock(PaymentFactory::class);
+        $factory->method('createFromMagePayment')->willReturn($payment);
+        $factory->method('isSupportedPayment')->willReturn(true);
+
+        $backend = new \WirecardEE_PaymentGateway_Model_BackendOperation();
+        $backend->setPaymentFactory($factory);
+
+        $this->assertNull($backend->refund($observer));
+    }
+
     public function testCancelException()
     {
         $observer = $this->createMock(\Varien_Event_Observer::class);
@@ -265,5 +338,30 @@ class BackendOperationTest extends MagentoTestCase
         $backend->setBackendOperationHandler($handler);
         $this->expectException(\Mage_Core_Exception::class);
         $backend->cancel($observer);
+    }
+
+    public function testDisabledCancel()
+    {
+        $magePayment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
+        $magePayment->method('getData')->willReturnMap([['method', null, 'wirecardee_paymentgateway_eps']]);
+
+        $order = $this->createMock(\Mage_Sales_Model_Order::class);
+        $order->method('getPayment')->willReturn($magePayment);
+        $magePayment->method('getOrder')->willReturn($order);
+
+        $observer = $this->createMock(\Varien_Event_Observer::class);
+        $observer->method('getData')->willReturn($magePayment);
+
+        $payment = $this->createMock(PaymentInterface::class);
+        $payment->method('getCancelOperation')->willReturn(null);
+
+        $factory = $this->createMock(PaymentFactory::class);
+        $factory->method('createFromMagePayment')->willReturn($payment);
+        $factory->method('isSupportedPayment')->willReturn(true);
+
+        $backend = new \WirecardEE_PaymentGateway_Model_BackendOperation();
+        $backend->setPaymentFactory($factory);
+
+        $this->assertNull($backend->cancel($observer));
     }
 }
