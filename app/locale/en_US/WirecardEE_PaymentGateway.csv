@@ -102,8 +102,6 @@
 "config_title_desc","Payment method name as displayed for the consumer during checkout."
 "config_vault","One-Click Checkout"
 "config_vault_desc","Credit Cards can be saved for further use without re-entering credit card details."
-"config_merchant_returnstring", "Merchant Return String"
-"config_merchant_returnstring_desc", "Merchant Return String to redirect the Consumer from the mobile banking app to the merchant’s browser or App."
 "confirm_uninstall","Are you sure you want to uninstall?"
 "copy_xml_text","Copy XML"
 "country","Country"
