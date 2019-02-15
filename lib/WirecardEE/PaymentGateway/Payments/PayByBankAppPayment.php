@@ -142,7 +142,7 @@ class PayByBankAppPayment extends Payment implements ProcessPaymentInterface
         $customFields->add(
             $this->makeCustomField(
                 'MerchantRtnStrng',
-                Mage::getUrl('paymentgateway/gateway/return', ['method' => self::NAME])
+                \Mage::getUrl('paymentgateway/gateway/return', ['method' => self::NAME])
             )
         );
 
