@@ -102,6 +102,8 @@
 "config_title_desc","Name des Zahlungsmittels wie auf der Bezahlseite angezeigt."
 "config_vault","One-Click Checkout"
 "config_vault_desc","Kreditkarten können gespeichert und später wieder verwendet werden."
+"config_merchant_returnstring", "Merchant Return String"
+"config_merchant_returnstring_desc", "Merchant Return String, um den Kunden von der mobilen App auf die Händlerseite umzuleiten."
 "confirm_uninstall","Soll das Modul wirklich deinstalliert werden?"
 "copy_xml_text","XML Kopieren"
 "country","Land"
