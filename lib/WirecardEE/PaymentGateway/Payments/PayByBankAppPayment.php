@@ -140,7 +140,8 @@ class PayByBankAppPayment extends Payment implements ProcessPaymentInterface
         $customFields = $transaction->getCustomFields();
 
         $customFields->add(
-            $this->makeCustomField('MerchantRtnStrng', $this->getPluginConfig('merchant_return_string'))
+            $this->makeCustomField('MerchantRtnStrng',
+                Mage::getUrl('paymentgateway/gateway/return', ['method' => self::NAME]))
         );
 
         $customFields->add($this->makeCustomField('TxType', 'PAYMT'));
