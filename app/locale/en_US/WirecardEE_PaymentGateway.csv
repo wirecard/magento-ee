@@ -430,3 +430,7 @@
 "address","Address"
 "state","State"
 "bank_information","Please transfer the amount using the following data"
+"vault_allow_address_changes","Allow One-click-checkout with different address"
+"vault_allow_address_changes_desc","Credit card One-click-checkout is allowed, even if the billing or shipping address has been changed."
+"vault_use_three_d","Enable 3-D Secure for One-click-checkout"
+"vault_use_three_d_desc","Enable 3-D Secure for One-click-checkout payments with Credit Card."

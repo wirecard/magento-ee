@@ -74,7 +74,7 @@ class PoiPaymentTest extends MagentoTestCase
 
         $payment = new PoiPayment();
 
-        $return = $payment->processReturn($transactionService, $request);
+        $return = $payment->processReturn($transactionService, $request, $order);
         $this->assertInstanceOf(SuccessResponse::class, $return);
     }
 }

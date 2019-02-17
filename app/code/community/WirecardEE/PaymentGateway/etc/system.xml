@@ -388,6 +388,36 @@
                             <sort_order>150</sort_order>
                             <tooltip>config_three_d_min_limit_currency_desc</tooltip>
                         </three_d_min_limit_currency>
+                        <vault_enabled translate="label tooltip">
+                            <label>enable_vault</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <tooltip>config_vault_desc</tooltip>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>160</sort_order>
+                        </vault_enabled>
+                        <vault_allow_address_changes translate="label tooltip">
+                            <label>vault_allow_address_changes</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <tooltip>vault_allow_address_changes_desc</tooltip>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>170</sort_order>
+                        </vault_allow_address_changes>
+                        <vault_use_three_d translate="label tooltip">
+                            <label>vault_use_three_d</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <tooltip>vault_use_three_d_desc</tooltip>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>170</sort_order>
+                        </vault_use_three_d>
                         <sort_order translate="label tooltip">
                             <label>config_sort_order</label>
                             <frontend_type>text</frontend_type>
@@ -395,7 +425,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <frontend_class>validate-number</frontend_class>
-                            <sort_order>160</sort_order>
+                            <sort_order>180</sort_order>
                             <tooltip>config_sort_order_desc</tooltip>
                         </sort_order>
                     </fields>

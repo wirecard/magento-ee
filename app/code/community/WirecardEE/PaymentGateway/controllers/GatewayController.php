@@ -119,7 +119,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
                 new TransactionService(
                     $payment->getTransactionConfig($order->getBaseCurrency()->getCode()),
                     $this->getHelper()->getLogger()
-                )
+                ),
+                $order
             );
 
             $this->getHelper()

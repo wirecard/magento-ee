@@ -15,13 +15,19 @@ use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\Action;
+use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\ViewAction;
 use WirecardEE\PaymentGateway\Data\CreditCardPaymentConfig;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
+use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplateInterface;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
+use WirecardEE\PaymentGateway\Payments\Contracts\ProcessReturnInterface;
 use WirecardEE\PaymentGateway\Service\Logger;
 
-class CreditCardPayment extends Payment implements ProcessPaymentInterface
+class CreditCardPayment extends Payment implements
+    ProcessPaymentInterface,
+    ProcessReturnInterface,
+    CustomFormTemplateInterface
 {
     const NAME = CreditCardTransaction::NAME;
 
@@ -185,6 +191,10 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface
         $paymentConfig->setThreeDMinLimit($this->getPluginConfig('three_d_min_limit'));
         $paymentConfig->setThreeDMinLimitCurrency($this->getPluginConfig('three_d_min_limit_currency'));
 
+        $paymentConfig->setVaultEnabled($this->getPluginConfig('vault_enabled'));
+        $paymentConfig->setAllowAddressChanges($this->getPluginConfig('vault_allow_address_changes'));
+        $paymentConfig->setThreeDUsageOnTokens($this->getPluginConfig('vault_use_three_d'));
+
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
         $paymentConfig->setOrderIdentification($this->getPluginConfig('order_identification'));
 
@@ -209,6 +219,14 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface
         $transaction = $this->getTransaction();
         $transaction->setTermUrl($redirect);
 
+        if ($this->getPaymentConfig()->isVaultEnabled()) {
+            $paymentData = $orderSummary->getAdditionalPaymentData();
+            $tokenId     = isset($paymentData['token']) ? $paymentData['token'] : null;
+            if (is_numeric($tokenId)) {
+                return $this->useToken($transaction, $tokenId, $orderSummary);
+            }
+        }
+
         $requestData = $transactionService->getCreditCardUiWithData(
             $transaction,
             $orderSummary->getPayment()->getTransactionType(),
@@ -223,5 +241,114 @@ class CreditCardPayment extends Payment implements ProcessPaymentInterface
             'wirecardRequestData' => $requestData,
             'url'                 => \Mage::getUrl('paymentgateway/gateway/return', ['method' => self::NAME]),
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function processReturn(
+        TransactionService $transactionService,
+        \Mage_Core_Controller_Request_Http $request,
+        \Mage_Sales_Model_Order $order
+    ) {
+        if ($this->getPaymentConfig()->isVaultEnabled()) {
+            $this->saveToken($order, $request->getParams(), $transactionService);
+        }
+    }
+
+    public function getFormTemplateName()
+    {
+        return 'WirecardEE/form/credit_card.phtml';
+    }
+
+    private function saveToken(\Mage_Sales_Model_Order $order, array $params, TransactionService $transactionService)
+    {
+        if (! isset($params['token_id'])
+            || ! isset($params['transaction_id'])
+            || ! isset($params['masked_account_number'])
+        ) {
+            return;
+        }
+
+        $token       = $params['token_id'];
+        $customerId  = $order->getCustomerId();
+        $transaction = $transactionService->getTransactionByTransactionId(
+            $params['transaction_id'],
+            CreditCardTransaction::NAME
+        );
+        $cardInfo    = isset($transaction['payment']['card']) ? $transaction['payment']['card'] : [];
+
+        // Expired credit cards are considered invalid (and will not be shown to the customer) - hence not having
+        // information about the expiration date means we could simply skip saving this card.
+        if (empty($cardInfo['expiration-year']) || empty($cardInfo['expiration-month'])) {
+            return;
+        }
+
+        /** @var \WirecardEE_PaymentGateway_Model_CreditCardVaultToken $mageVaultTokenModel */
+        $mageVaultTokenModel = \Mage::getModel('paymentgateway/creditCardVaultToken');
+        /** @var \Mage_Core_Model_Resource_Db_Collection_Abstract $mageVaultTokenModelCollection */
+        $mageVaultTokenModelCollection = $mageVaultTokenModel->getCollection()->getTokensForCustomer($customerId);
+
+        if (! $mageVaultTokenModelCollection->getFirstItem()->isEmpty()) {
+            $mageVaultTokenModel->load($mageVaultTokenModelCollection->getFirstItem()->getId());
+        }
+
+        $mageVaultTokenModel->setExpirationDate($cardInfo['expiration-year'], $cardInfo['expiration-month']);
+        $mageVaultTokenModel->setBillingAddress($order->getBillingAddress());
+        $mageVaultTokenModel->setShippingAddress(
+            $order->getShippingAddress() ? $order->getShippingAddress() : $order->getBillingAddress()
+        );
+        $mageVaultTokenModel->setMaskedAccountNumber($params['masked_account_number']);
+        $mageVaultTokenModel->setToken($token);
+        $mageVaultTokenModel->setCustomerId($customerId);
+        $mageVaultTokenModel->setAdditionalData([
+            'firstName' => $order->getCustomerFirstname(),
+            'lastName'  => $order->getCustomerLastname(),
+            'cardType'  => isset($cardInfo['card-type']) ? $cardInfo['card-type'] : '',
+        ]);
+        $mageVaultTokenModel->setLastUsed(new \DateTime());
+        $mageVaultTokenModel->save();
+    }
+
+    private function useToken(CreditCardTransaction $transaction, $tokenId, OrderSummary $orderSummary)
+    {
+        /** @var \WirecardEE_PaymentGateway_Model_CreditCardVaultToken $mageVaultTokenModel */
+        $mageVaultTokenModel = \Mage::getModel('paymentgateway/creditCardVaultToken');
+        /** @var \WirecardEE_PaymentGateway_Model_Resource_CreditCardVaultToken_Collection $mageVaultTokenModelCollection */
+        $mageVaultTokenModelCollection = $mageVaultTokenModel->getCollection()->getTokenForCustomer(
+            $tokenId,
+            $orderSummary->getOrder()->getCustomerId(),
+            $this->getPaymentConfig()->allowAddressChanges()
+        );
+
+        if (! $this->getPaymentConfig()->allowAddressChanges()) {
+            $billingAddressHash = md5($orderSummary->getOrder()->getBillingAddress()->toString());
+            $mageVaultTokenModelCollection->addFilter(
+                'billing_address_hash',
+                $billingAddressHash
+            );
+            $mageVaultTokenModelCollection->addFilter(
+                'shipping_address_hash',
+                $orderSummary->getOrder()->getShippingAddress()
+                    ? md5($orderSummary->getOrder()->getShippingAddress()->toString())
+                    : $billingAddressHash
+            );
+        }
+
+        if ($mageVaultTokenModelCollection->count() === 0) {
+            return new ErrorAction(ErrorAction::PROCESSING_FAILED, 'no valid credit card for token found');
+        }
+
+        $mageVaultTokenModel->load($mageVaultTokenModelCollection->getFirstItem()->getId());
+        $mageVaultTokenModel->setLastUsed(new \DateTime());
+        $mageVaultTokenModel->save();
+
+        if (! $this->getPaymentConfig()->useThreeDOnTokens()) {
+            $transaction->setThreeD(false);
+        }
+
+        $transaction->setTokenId($mageVaultTokenModel->getToken());
+
+        return null;
     }
 }

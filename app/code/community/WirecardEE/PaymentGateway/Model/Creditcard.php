@@ -38,4 +38,55 @@ class WirecardEE_PaymentGateway_Model_CreditCard extends WirecardEE_PaymentGatew
             ],
         ];
     }
+
+    /**
+     * Keep in mind that this additionally depends on the credit card payment configuration.
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    public function showTokenSelection()
+    {
+        return Mage::getSingleton('customer/session')->isLoggedIn();
+    }
+
+    /**
+     * @return array|WirecardEE_PaymentGateway_Model_Resource_CreditCardVaultToken_Collection
+     *
+     * @since 1.2.0
+     */
+    public function getTokensForCustomer()
+    {
+        $mageVaultTokenModel = \Mage::getModel('paymentgateway/creditCardVaultToken');
+        /** @var \WirecardEE_PaymentGateway_Model_Resource_CreditCardVaultToken_Collection $mageVaultTokenModelCollection */
+        $mageVaultTokenModelCollection = $mageVaultTokenModel->getCollection();
+        $mageVaultTokenModelCollection->getTokensForCustomer(Mage::getSingleton('customer/session')->getCustomerId());
+
+        $allowAddressChange = Mage::getStoreConfig(
+            'payment/wirecardee_paymentgateway_creditcard/vault_allow_address_changes'
+        );
+        if (! $allowAddressChange) {
+            $quote = Mage::getSingleton('checkout/session')->getQuote();
+            $billingAddressHash = md5($quote->getBillingAddress()->toString());
+            $mageVaultTokenModelCollection->addFilter(
+                'billing_address_hash',
+                $billingAddressHash
+            );
+            $mageVaultTokenModelCollection->addFilter(
+                'shipping_address_hash',
+                $quote->getShippingAddress()
+                    ? md5($quote->getShippingAddress()->toString())
+                    : $billingAddressHash
+            );
+            var_dump($billingAddressHash);
+            var_dump($quote->getBillingAddress()->toString());
+        }
+
+        if ($mageVaultTokenModelCollection->count() === 0) {
+            return [];
+        }
+
+        return $mageVaultTokenModelCollection;
+    }
 }

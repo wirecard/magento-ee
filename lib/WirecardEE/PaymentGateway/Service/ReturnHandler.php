@@ -34,6 +34,7 @@ class ReturnHandler extends Handler
      * @param PaymentInterface                   $payment
      * @param \Mage_Core_Controller_Request_Http $request
      * @param TransactionService                 $transactionService
+     * @param \Mage_Sales_Model_Order            $order
      *
      * @return FailureResponse|InteractionResponse|Response|SuccessResponse
      *
@@ -42,10 +43,11 @@ class ReturnHandler extends Handler
     public function handleRequest(
         PaymentInterface $payment,
         \Mage_Core_Controller_Request_Http $request,
-        TransactionService $transactionService
+        TransactionService $transactionService,
+        \Mage_Sales_Model_Order $order
     ) {
         if ($payment instanceof ProcessReturnInterface) {
-            $response = $payment->processReturn($transactionService, $request);
+            $response = $payment->processReturn($transactionService, $request, $order);
             if ($response) {
                 return $response;
             }

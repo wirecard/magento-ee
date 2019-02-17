@@ -127,7 +127,7 @@ class PiaPayment extends Payment implements
     /**
      * {@inheritdoc}
      */
-    public function processReturn(TransactionService $transactionService, \Mage_Core_Controller_Request_Http $request)
+    public function processReturn(TransactionService $transactionService, \Mage_Core_Controller_Request_Http $request, \Mage_Sales_Model_Order $order)
     {
         $response = $transactionService->handleResponse($request->getParams());
 
