@@ -7,6 +7,11 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+/**
+ * Magento collection for credit card vault tokens.
+ *
+ * @since 1.2.0
+ */
 class WirecardEE_PaymentGateway_Model_Resource_CreditCardVaultToken_Collection extends
     Mage_Core_Model_Resource_Db_Collection_Abstract
 {

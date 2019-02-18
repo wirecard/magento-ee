@@ -7,6 +7,11 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+/**
+ * Required for connecting our model to the database.
+ *
+ * @since 1.2.0
+ */
 class WirecardEE_PaymentGateway_Model_Resource_CreditCardVaultToken extends Mage_Core_Model_Resource_Db_Abstract
 {
     /**
