@@ -527,6 +527,29 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $this->assertTrue($controller->cancelAction());
     }
 
+    public function testDeleteCreditCardTokenAction()
+    {
+        $customerSession = $this->createMock(\Mage_Customer_Model_Session::class);
+        $customerSession->method('getCustomerId')->willReturn(1);
+
+        $this->replaceMageSingleton('customer/session', $customerSession);
+
+        $vaultToken = $this->createMock(\WirecardEE_PaymentGateway_Model_CreditCardVaultToken::class);
+        $vaultToken->method('isEmpty')->willReturn(false);
+        $vaultToken->method('getCustomerId')->willReturn(1);
+        $vaultToken->expects($this->once())->method('delete');
+
+        $this->replaceMageModel('paymentgateway/creditCardVaultToken', $vaultToken);
+
+        $request  = new \Mage_Core_Controller_Request_Http();
+        $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
+
+        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        \Mage::app()->setRequest($request);
+
+        $this->assertInstanceOf(\Mage_Core_Controller_Varien_Action::class, $controller->deleteCreditCardTokenAction());
+    }
+
     public function testFailureAction()
     {
         $request  = new \Mage_Core_Controller_Request_Http();
