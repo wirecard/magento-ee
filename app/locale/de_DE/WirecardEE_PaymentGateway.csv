@@ -435,3 +435,5 @@
 "vault_allow_address_changes_desc","Kreditkarten können wieder verwendet werden, auch wenn die Rechnungs- oder Lieferadresse geändert wurde."
 "vault_use_three_d","3-D Secure für One-click-checkout aktivieren"
 "vault_use_three_d_desc","3-D Secure bei One-click-checkout Zahlungen mit Kreditkarte aktivieren."
+"vault_use_new_card","Neue Kreditkarte benutzen"
+"vault_use_new_card_save","Neue Kreditkarte benutzen <strong>und</strong> speichern"

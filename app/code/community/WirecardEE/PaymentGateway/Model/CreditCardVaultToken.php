@@ -22,6 +22,11 @@ class WirecardEE_PaymentGateway_Model_CreditCardVaultToken extends Mage_Core_Mod
         $this->_init('paymentgateway/creditCardVaultToken');
     }
 
+    /**
+     * @return string
+     *
+     * @since 1.2.0
+     */
     public function getCustomerId()
     {
         return $this->getData('customer_id');
@@ -37,6 +42,11 @@ class WirecardEE_PaymentGateway_Model_CreditCardVaultToken extends Mage_Core_Mod
         $this->setData('customer_id', $customerId);
     }
 
+    /**
+     * @return string
+     *
+     * @since 1.2.0
+     */
     public function getMaskedAccountNumber()
     {
         return $this->getData('masked_account_number');
@@ -52,21 +62,43 @@ class WirecardEE_PaymentGateway_Model_CreditCardVaultToken extends Mage_Core_Mod
         $this->setData('masked_account_number', $maskedAccountNumber);
     }
 
+    /**
+     * @return string
+     *
+     * @since 1.2.0
+     */
     public function getToken()
     {
         return $this->getData('token');
     }
 
+    /**
+     * @return string|null
+     *
+     * @since 1.2.0
+     */
     public function getFirstName()
     {
         return $this->getFromAdditionalData('firstName');
     }
 
+    /**
+     * @return string|null
+     *
+     * @since 1.2.0
+     */
     public function getLastName()
     {
         return $this->getFromAdditionalData('lastName');
     }
 
+    /**
+     * @param string $key
+     *
+     * @return mixed|null
+     *
+     * @since 1.2.0
+     */
     private function getFromAdditionalData($key)
     {
         $additionalData = $this->getAdditionalData();
@@ -86,6 +118,11 @@ class WirecardEE_PaymentGateway_Model_CreditCardVaultToken extends Mage_Core_Mod
         $this->setData('token', $token);
     }
 
+    /**
+     * @return array
+     *
+     * @since 1.2.0
+     */
     public function getAdditionalData()
     {
         $data = $this->getData('additional_data');
@@ -119,24 +156,116 @@ class WirecardEE_PaymentGateway_Model_CreditCardVaultToken extends Mage_Core_Mod
      * @param Mage_Sales_Model_Order_Address $billingAddress
      *
      * @since 1.2.0
+     *
+     * @throws Mage_Core_Exception
      */
     public function setBillingAddress(\Mage_Sales_Model_Order_Address $billingAddress)
     {
-        $billingAddressString = $billingAddress->toString();
-        $this->setData('billing_address', $billingAddressString);
-        $this->setData('billing_address_hash', md5($billingAddressString));
+        $address = $this->createAddress($billingAddress);
+        $this->setData('billing_address', serialize($address));
+        $this->setData('billing_address_hash', $this->createAddressHash($billingAddress));
+    }
+
+    /**
+     * Returns the serialized billing address.
+     *
+     * @return string
+     *
+     * @since 1.2.0
+     */
+    public function getSerializedBillingAddress()
+    {
+        return $this->getData('billing_address');
+    }
+
+    /**
+     * @return string
+     *
+     * @since 1.2.0
+     */
+    public function getBillingAddressHash()
+    {
+        return $this->getData('billing_address_hash');
     }
 
     /**
      * @param Mage_Sales_Model_Order_Address $shippingAddress
      *
      * @since 1.2.0
+     *
+     * @throws Mage_Core_Exception
      */
     public function setShippingAddress(\Mage_Sales_Model_Order_Address $shippingAddress)
     {
-        $shippingAddressString = $shippingAddress->toString();
-        $this->setData('shipping_address', $shippingAddressString);
-        $this->setData('shipping_address_hash', md5($shippingAddressString));
+        $address = $this->createAddress($shippingAddress);
+        $this->setData('shipping_address', serialize($address));
+        $this->setData('shipping_address_hash', $this->createAddressHash($shippingAddress));
+    }
+
+    /**
+     * Returns the serialized shipping address.
+     *
+     * @return string
+     *
+     * @since 1.2.0
+     */
+    public function getSerializedShippingAddress()
+    {
+        return $this->getData('shipping_address');
+    }
+
+    /**
+     * @return string
+     *
+     * @since 1.2.0
+     */
+    public function getShippingAddressHash()
+    {
+        return $this->getData('shipping_address_hash');
+    }
+
+    /**
+     * @param \Mage_Sales_Model_Order_Address|\Mage_Sales_Model_Quote_Address $address
+     *
+     * @return array
+     *
+     * @throws Mage_Core_Exception
+     *
+     * @since 1.2.0
+     */
+    public function createAddress($address)
+    {
+        if (! ($address instanceof \Mage_Sales_Model_Order_Address)
+            && ! ($address instanceof \Mage_Sales_Model_Quote_Address)) {
+            \Mage::throwException('Invalid address');
+        }
+
+        return [
+            'country' => $address->getCountryId(),
+            'city'    => $address->getCity(),
+            'street'  => $address->getStreet(),
+            'zip'     => $address->getPostcode(),
+            'region'  => $address->getRegionCode(),
+        ];
+    }
+
+    /**
+     * @param \Mage_Sales_Model_Order_Address|Mage_Sales_Model_Quote_Address $address
+     *
+     * @return string
+     *
+     * @throws Mage_Core_Exception
+     *
+     * @since 1.2.0
+     */
+    public function createAddressHash($address)
+    {
+        if (! ($address instanceof \Mage_Sales_Model_Order_Address)
+            && ! ($address instanceof \Mage_Sales_Model_Quote_Address)) {
+            \Mage::throwException('Invalid address');
+        }
+
+        return md5(serialize($this->createAddress($address)));
     }
 
     /**
@@ -147,9 +276,20 @@ class WirecardEE_PaymentGateway_Model_CreditCardVaultToken extends Mage_Core_Mod
      */
     public function setExpirationDate($year, $month)
     {
-        $this->setData(
-            'expiration_date',
-            \DateTime::createFromFormat('Ym-d', $year . $month . '-1')->format(\DateTime::W3C)
-        );
+        $date = \DateTime::createFromFormat('Ym-d', $year . $month . '-1');
+
+        if ($date instanceof \DateTime) {
+            $this->setData('expiration_date', $date->format(\DateTime::W3C));
+        }
+    }
+
+    /**
+     * @return \DateTime
+     *
+     * @since 1.2.0
+     */
+    public function getExpirationDate()
+    {
+        return $this->getData('expiration_date');
     }
 }

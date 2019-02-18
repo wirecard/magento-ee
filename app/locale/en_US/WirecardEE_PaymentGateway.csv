@@ -434,3 +434,5 @@
 "vault_allow_address_changes_desc","Credit card One-click-checkout is allowed, even if the billing or shipping address has been changed."
 "vault_use_three_d","Enable 3-D Secure for One-click-checkout"
 "vault_use_three_d_desc","Enable 3-D Secure for One-click-checkout payments with Credit Card."
+"vault_use_new_card","Use new card"
+"vault_use_new_card_save","Use new card <strong>and</strong> save it"

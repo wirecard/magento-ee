@@ -296,6 +296,35 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
     }
 
     /**
+     * Action for deleting credit card tokens.
+     *
+     * @return Mage_Core_Controller_Varien_Action
+     *
+     * @since 1.2.0
+     *
+     * @throws Mage_Core_Exception
+     */
+    public function deleteCreditCardTokenAction()
+    {
+        $tokenId = $this->getRequest()->getParam('tokenId');
+
+        /** @var \WirecardEE_PaymentGateway_Model_CreditCardVaultToken $mageVaultTokenModel */
+        $mageVaultTokenModel = \Mage::getModel('paymentgateway/creditCardVaultToken');
+        $mageVaultTokenModel->load($tokenId);
+
+        /** @var Mage_Customer_Model_Session $customerSession */
+        $customerSession = \Mage::getSingleton('customer/session');
+
+        if ($mageVaultTokenModel->isEmpty() || $mageVaultTokenModel->getCustomerId() !== $customerSession->getCustomerId()) {
+            Mage::throwException("Token not found");
+        }
+
+        $mageVaultTokenModel->delete();
+
+        return $this->_redirect('checkout/onepage');
+    }
+
+    /**
      * @param Action $action
      *
      * @return Mage_Core_Controller_Varien_Action

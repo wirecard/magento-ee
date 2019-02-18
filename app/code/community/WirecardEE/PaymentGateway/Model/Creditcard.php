@@ -55,9 +55,12 @@ class WirecardEE_PaymentGateway_Model_CreditCard extends WirecardEE_PaymentGatew
      * @return array|WirecardEE_PaymentGateway_Model_Resource_CreditCardVaultToken_Collection
      *
      * @since 1.2.0
+     *
+     * @throws Mage_Core_Exception
      */
     public function getTokensForCustomer()
     {
+        /** @var \WirecardEE_PaymentGateway_Model_CreditCardVaultToken $mageVaultTokenModel */
         $mageVaultTokenModel = \Mage::getModel('paymentgateway/creditCardVaultToken');
         /** @var \WirecardEE_PaymentGateway_Model_Resource_CreditCardVaultToken_Collection $mageVaultTokenModelCollection */
         $mageVaultTokenModelCollection = $mageVaultTokenModel->getCollection();
@@ -67,20 +70,13 @@ class WirecardEE_PaymentGateway_Model_CreditCard extends WirecardEE_PaymentGatew
             'payment/wirecardee_paymentgateway_creditcard/vault_allow_address_changes'
         );
         if (! $allowAddressChange) {
-            $quote = Mage::getSingleton('checkout/session')->getQuote();
-            $billingAddressHash = md5($quote->getBillingAddress()->toString());
-            $mageVaultTokenModelCollection->addFilter(
-                'billing_address_hash',
-                $billingAddressHash
-            );
-            $mageVaultTokenModelCollection->addFilter(
-                'shipping_address_hash',
-                $quote->getShippingAddress()
-                    ? md5($quote->getShippingAddress()->toString())
-                    : $billingAddressHash
-            );
-            var_dump($billingAddressHash);
-            var_dump($quote->getBillingAddress()->toString());
+            $quote               = Mage::getSingleton('checkout/session')->getQuote();
+            $billingAddressHash  = $mageVaultTokenModel->createAddressHash($quote->getBillingAddress());
+            $shippingAddressHash = $quote->getShippingAddress()
+                ? $mageVaultTokenModel->createAddressHash($quote->getShippingAddress())
+                : $billingAddressHash;
+            $mageVaultTokenModelCollection->addFilter('billing_address_hash', $billingAddressHash);
+            $mageVaultTokenModelCollection->addFilter('shipping_address_hash', $shippingAddressHash);
         }
 
         if ($mageVaultTokenModelCollection->count() === 0) {

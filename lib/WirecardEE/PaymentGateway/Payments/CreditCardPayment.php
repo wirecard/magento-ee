@@ -23,6 +23,7 @@ use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplateInterface;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessReturnInterface;
 use WirecardEE\PaymentGateway\Service\Logger;
+use WirecardEE\PaymentGateway\Service\SessionManager;
 
 class CreditCardPayment extends Payment implements
     ProcessPaymentInterface,
@@ -222,7 +223,13 @@ class CreditCardPayment extends Payment implements
         if ($this->getPaymentConfig()->isVaultEnabled()) {
             $paymentData = $orderSummary->getAdditionalPaymentData();
             $tokenId     = isset($paymentData['token']) ? $paymentData['token'] : null;
-            if (is_numeric($tokenId)) {
+
+            /** @var \Mage_Core_Model_Session $session */
+            $session        = \Mage::getSingleton("core/session", ["name" => "frontend"]);
+            $sessionManager = new SessionManager($session);
+            $sessionManager->storePaymentData(['saveToken' => ($tokenId === 'wirecardee--new-card-save')]);
+
+            if ($tokenId && ! in_array($tokenId, ['wirecardee--new-card', 'wirecardee--new-card-save'])) {
                 return $this->useToken($transaction, $tokenId, $orderSummary);
             }
         }
@@ -256,6 +263,9 @@ class CreditCardPayment extends Payment implements
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getFormTemplateName()
     {
         return 'WirecardEE/form/credit_card.phtml';
@@ -263,7 +273,14 @@ class CreditCardPayment extends Payment implements
 
     private function saveToken(\Mage_Sales_Model_Order $order, array $params, TransactionService $transactionService)
     {
-        if (! isset($params['token_id'])
+        /** @var \Mage_Core_Model_Session $session */
+        $session        = \Mage::getSingleton("core/session", ["name" => "frontend"]);
+        $sessionManager = new SessionManager($session);
+        $paymentData    = $sessionManager->getPaymentData();
+
+        if (! isset($paymentData['saveToken'])
+            || ! $paymentData['saveToken']
+            || ! isset($params['token_id'])
             || ! isset($params['transaction_id'])
             || ! isset($params['masked_account_number'])
         ) {
@@ -317,22 +334,18 @@ class CreditCardPayment extends Payment implements
         /** @var \WirecardEE_PaymentGateway_Model_Resource_CreditCardVaultToken_Collection $mageVaultTokenModelCollection */
         $mageVaultTokenModelCollection = $mageVaultTokenModel->getCollection()->getTokenForCustomer(
             $tokenId,
-            $orderSummary->getOrder()->getCustomerId(),
-            $this->getPaymentConfig()->allowAddressChanges()
+            $orderSummary->getOrder()->getCustomerId()
         );
 
         if (! $this->getPaymentConfig()->allowAddressChanges()) {
-            $billingAddressHash = md5($orderSummary->getOrder()->getBillingAddress()->toString());
-            $mageVaultTokenModelCollection->addFilter(
-                'billing_address_hash',
-                $billingAddressHash
+            $billingAddressHash  = $mageVaultTokenModel->createAddressHash(
+                $orderSummary->getOrder()->getBillingAddress()
             );
-            $mageVaultTokenModelCollection->addFilter(
-                'shipping_address_hash',
-                $orderSummary->getOrder()->getShippingAddress()
-                    ? md5($orderSummary->getOrder()->getShippingAddress()->toString())
-                    : $billingAddressHash
-            );
+            $shippingAddressHash = $orderSummary->getOrder()->getShippingAddress()
+                ? $mageVaultTokenModel->createAddressHash($orderSummary->getOrder()->getShippingAddress())
+                : $billingAddressHash;
+            $mageVaultTokenModelCollection->addFilter('billing_address_hash', $billingAddressHash);
+            $mageVaultTokenModelCollection->addFilter('shipping_address_hash', $shippingAddressHash);
         }
 
         if ($mageVaultTokenModelCollection->count() === 0) {

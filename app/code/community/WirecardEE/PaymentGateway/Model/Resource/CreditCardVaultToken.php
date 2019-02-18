@@ -9,6 +9,9 @@
 
 class WirecardEE_PaymentGateway_Model_Resource_CreditCardVaultToken extends Mage_Core_Model_Resource_Db_Abstract
 {
+    /**
+     * @since 1.2.0
+     */
     protected function _construct()
     {
         $this->_init('paymentgateway/credit_card_vault_token', 'id');

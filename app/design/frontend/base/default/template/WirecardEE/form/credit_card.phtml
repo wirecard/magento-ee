@@ -17,7 +17,7 @@ if (! $creditCardModel->showTokenSelection()) {
 <ul class="form-list" id="payment_form_<?php echo $this->getMethodCode(); ?>" style="display: none;">
     <li>
         <div style="padding: 15px; border: 1px #cecece solid;">
-            <h4>Saved cards</h4>
+            <h4><?php echo $this->__('text_vault'); ?></h4>
             <ul>
                 <?php
                 foreach ($creditCardModel->getTokensForCustomer() as $card) {
@@ -34,21 +34,26 @@ if (! $creditCardModel->showTokenSelection()) {
                             <?php echo $card->getLastName(); ?>
                         </label>
 
-                        <small><a href="#"><?php echo $this->__('vault_delete_card_text'); ?></a></small>
+                        <small>
+                            <a href="<?php echo $this->getUrl('paymentgateway/gateway/deleteCreditCardToken',
+                                ['tokenId' => $card->getId()]); ?>">
+                                <?php echo $this->__('vault_delete_card_text'); ?>
+                            </a>
+                        </small>
                     </li>
                     <?php
                 }
                 ?>
                 <li style="border-top: 1px #cecece solid; padding-top: 8px;">
                     <input type="radio" name="wirecardElasticEngine[token]"
-                           value="wirecardee--new-card" style="margin-right: 15px;" id="new-card-save">
-                    <label for="new-card-save">Use new card <strong>and</strong> save it</label>
+                           value="wirecardee--new-card-save" style="margin-right: 15px;" id="new-card-save">
+                    <label for="new-card-save"><?php echo $this->__('vault_use_new_card_save'); ?></label>
                 </li>
                 <li style="margin-bottom: 0;">
                     <input type="radio" name="wirecardElasticEngine[token]"
                            value="wirecardee--new-card" id="new-card"
                            style="margin-right: 15px;" checked="checked">
-                    <label for="new-card">Use new card <em>without</em> saving it</label>
+                    <label for="new-card"><?php echo $this->__('vault_use_new_card'); ?></label>
                 </li>
             </ul>
         </div>
