@@ -271,6 +271,17 @@ class CreditCardPayment extends Payment implements
         return 'WirecardEE/form/credit_card.phtml';
     }
 
+    /**
+     * Responsible for saving tokens for future checkouts
+     *
+     * @param \Mage_Sales_Model_Order $order
+     * @param array                   $params
+     * @param TransactionService      $transactionService
+     *
+     * @throws \Mage_Core_Exception
+     *
+     * @since 1.2.0
+     */
     private function saveToken(\Mage_Sales_Model_Order $order, array $params, TransactionService $transactionService)
     {
         /** @var \Mage_Core_Model_Session $session */
@@ -327,6 +338,19 @@ class CreditCardPayment extends Payment implements
         $mageVaultTokenModel->save();
     }
 
+    /**
+     * Responsible for using a token for one-click checkout
+     *
+     * @param CreditCardTransaction $transaction
+     * @param                       $tokenId
+     * @param OrderSummary          $orderSummary
+     *
+     * @return ErrorAction|null
+     *
+     * @throws \Mage_Core_Exception
+     *
+     * @since 1.2.0
+     */
     private function useToken(CreditCardTransaction $transaction, $tokenId, OrderSummary $orderSummary)
     {
         /** @var \WirecardEE_PaymentGateway_Model_CreditCardVaultToken $mageVaultTokenModel */
