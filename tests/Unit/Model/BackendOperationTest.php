@@ -336,8 +336,7 @@ class BackendOperationTest extends MagentoTestCase
         $backend = new \WirecardEE_PaymentGateway_Model_BackendOperation();
         $backend->setTransactionManager($transactionManager);
         $backend->setBackendOperationHandler($handler);
-        $this->expectException(\Mage_Core_Exception::class);
-        $backend->cancel($observer);
+        $this->assertNull($backend->cancel($observer));
     }
 
     public function testDisabledCancel()

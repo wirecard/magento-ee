@@ -77,6 +77,16 @@
                     </wirecard_ee_refund>
                 </observers>
             </sales_order_payment_refund>
+
+            <controller_action_predispatch>
+                <observers>
+                    <wirecard_ee_check_session_messages>
+                        <type>singleton</type>
+                        <class>paymentgateway/backendOperation</class>
+                        <method>checkSessionMessages</method>
+                    </wirecard_ee_check_session_messages>
+                </observers>
+            </controller_action_predispatch>
         </events>
 
         <resources>
