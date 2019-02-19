@@ -28,6 +28,7 @@ class PaymentFactoryTest extends MagentoTestCase
 
         $operation  = new \ReflectionClass(Operation::class);
         $operations = $operation->getConstants();
+        array_push($operations, null);
 
         foreach ($factory->getSupportedPayments() as $payment) {
             $this->assertInstanceOf(PaymentInterface::class, $payment);

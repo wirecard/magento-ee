@@ -419,3 +419,5 @@
 "order_status_updated","Status updated by notification"
 "basket_verification_failed","Basket verification failed"
 "invoice_created","Automatically created invoice by Wirecard Payment Gateway extension."
+
+"bic_required","BIC is a required field."

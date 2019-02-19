@@ -9,30 +9,33 @@
 
 namespace WirecardEE\PaymentGateway\Payments;
 
+use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
-use Wirecard\PaymentSdk\Config\SepaConfig;
+use Wirecard\PaymentSdk\Entity\BankAccount;
 use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Transaction\GiropayTransaction;
 use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
-use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 use Wirecard\PaymentSdk\TransactionService;
+use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\SepaCreditTransferPaymentConfig;
+use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplate;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
-class SofortPayment extends Payment implements ProcessPaymentInterface
+class GiropayPayment extends Payment implements ProcessPaymentInterface, CustomFormTemplate
 {
-    const NAME = SofortTransaction::NAME;
+    const NAME = GiropayTransaction::NAME;
 
     /**
-     * @var SofortTransaction
+     * @var GiropayTransaction
      */
     private $transactionInstance;
 
     /**
      * @return string
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function getName()
     {
@@ -40,43 +43,40 @@ class SofortPayment extends Payment implements ProcessPaymentInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return GiropayTransaction
+     *
+     * @since 1.1.0
      */
     public function getTransaction()
     {
         if (! $this->transactionInstance) {
-            $this->transactionInstance = new SofortTransaction();
+            $this->transactionInstance = new GiropayTransaction();
         }
         return $this->transactionInstance;
     }
 
     /**
-     * {@inheritdoc}
+     * @param $selectedCurrency
+     *
+     * @return Config
+     *
+     * @since 1.1.0
      */
     public function getTransactionConfig($selectedCurrency)
     {
         $config = parent::getTransactionConfig($selectedCurrency);
         $config->add(new PaymentMethodConfig(
-            SofortTransaction::NAME,
+            GiropayTransaction::NAME,
             $this->getPaymentConfig()->getTransactionMAID(),
             $this->getPaymentConfig()->getTransactionSecret()
         ));
-
-        $sepaCreditTransferConfig = new SepaConfig(
-            SepaCreditTransferTransaction::NAME,
-            $this->getPaymentConfig()->getBackendTransactionMAID(),
-            $this->getPaymentConfig()->getBackendTransactionSecret()
-        );
-        $sepaCreditTransferConfig->setCreditorId($this->getPaymentConfig()->getBackendCreditorId());
-        $config->add($sepaCreditTransferConfig);
-
         return $config;
     }
 
     /**
      * @return SepaCreditTransferPaymentConfig
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function getPaymentConfig()
     {
@@ -89,7 +89,8 @@ class SofortPayment extends Payment implements ProcessPaymentInterface
         $paymentConfig->setTransactionMAID($this->getPluginConfig('api_maid'));
         $paymentConfig->setTransactionSecret($this->getPluginConfig('api_secret'));
         $paymentConfig->setTransactionOperation(Operation::PAY);
-        $paymentConfig->setOrderIdentification(true);
+        $paymentConfig->setOrderIdentification($this->getPluginConfig('order_identification'));
+        $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
         $paymentConfig->setBackendTransactionMAID(
             $this->getPluginConfig(
                 'api_maid',
@@ -109,35 +110,31 @@ class SofortPayment extends Payment implements ProcessPaymentInterface
             )
         );
 
-        $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
-
         return $paymentConfig;
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getBackendTransaction(
-        \Mage_Sales_Model_Order $order,
-        $operation,
-        \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
-    ) {
-        if (in_array($operation, [Operation::CREDIT, Operation::CANCEL])) {
-            return new SepaCreditTransferTransaction();
-        }
-        return new SofortTransaction();
-    }
-
-    /**
-     * {@inheritdoc}
+     * @param OrderSummary       $orderSummary
+     * @param TransactionService $transactionService
+     * @param Redirect           $redirect
+     *
+     * @return null|Action
+     *
+     * @since 1.1.0
      */
     public function processPayment(
         OrderSummary $orderSummary,
         TransactionService $transactionService,
         Redirect $redirect
     ) {
-        $transaction = $this->getTransaction();
-        $transaction->setOrderNumber($orderSummary->getOrder()->getRealOrderId());
+        $additionalPaymentData = $orderSummary->getAdditionalPaymentData();
+        $transaction           = $this->getTransaction();
+
+        if (array_key_exists('giropayBic', $additionalPaymentData)) {
+            $bankAccount = new BankAccount();
+            $bankAccount->setBic($additionalPaymentData['giropayBic']);
+            $transaction->setBankAccount($bankAccount);
+        }
 
         return null;
     }
@@ -145,10 +142,54 @@ class SofortPayment extends Payment implements ProcessPaymentInterface
     /**
      * @return string
      *
-     * @since 1.0.0
+     * @since 1.1.0
+     */
+    public function getFormTemplateName()
+    {
+        return 'WirecardEE/form/giropay.phtml';
+    }
+
+    /**
+     * @param \Mage_Sales_Model_Order                     $order
+     * @param                                             $operation
+     * @param \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
+     *
+     * @return GiropayTransaction|SepaCreditTransferTransaction
+     *
+     * @since 1.1.0
+     */
+    public function getBackendTransaction(
+        \Mage_Sales_Model_Order $order,
+        $operation,
+        \Mage_Sales_Model_Order_Payment_Transaction $parentTransaction
+    ) {
+        if ($operation === Operation::CREDIT) {
+            return new SepaCreditTransferTransaction();
+        }
+        return new GiropayTransaction();
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getRefundOperation()
     {
-        return Operation::CREDIT;
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCancelOperation()
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCaptureOperation()
+    {
+        return null;
     }
 }

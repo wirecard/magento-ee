@@ -10,38 +10,33 @@
 namespace WirecardEE\Tests\Unit\Payments;
 
 use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\Transaction\MaestroTransaction;
 use Wirecard\PaymentSdk\Transaction\Operation;
-use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
-use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
-use WirecardEE\PaymentGateway\Data\SepaPaymentConfig;
-use WirecardEE\PaymentGateway\Payments\SepaPayment;
+use WirecardEE\PaymentGateway\Data\PaymentConfig;
+use WirecardEE\PaymentGateway\Payments\MaestroPayment;
 use WirecardEE\Tests\Test\MagentoTestCase;
 
-class SepaPaymentTest extends MagentoTestCase
+class MaestroPaymentTest extends MagentoTestCase
 {
     public function testPayment()
     {
-        $payment     = new SepaPayment();
+        $payment     = new MaestroPayment();
         $transaction = $payment->getTransaction();
-        $this->assertInstanceOf(SepaDirectDebitTransaction::class, $transaction);
+        $this->assertInstanceOf(MaestroTransaction::class, $transaction);
         $this->assertSame($transaction, $payment->getTransaction());
 
         $this->assertInstanceOf(Config::class, $payment->getTransactionConfig('EUR'));
-        $this->assertInstanceOf(SepaPaymentConfig::class, $payment->getPaymentConfig());
+        $this->assertInstanceOf(PaymentConfig::class, $payment->getPaymentConfig());
 
         $order       = $this->createMock(\Mage_Sales_Model_Order::class);
         $transaction = $this->createMock(\Mage_Sales_Model_Order_Payment_Transaction::class);
         $this->assertInstanceOf(
-            SepaCreditTransferTransaction::class,
+            MaestroTransaction::class,
             $payment->getBackendTransaction($order, Operation::CREDIT, $transaction)
         );
         $this->assertInstanceOf(
-            SepaDirectDebitTransaction::class,
+            MaestroTransaction::class,
             $payment->getBackendTransaction($order, Operation::CANCEL, $transaction)
-        );
-        $this->assertInstanceOf(
-            SepaDirectDebitTransaction::class,
-            $payment->getBackendTransaction($order, Operation::REFUND, $transaction)
         );
     }
 }

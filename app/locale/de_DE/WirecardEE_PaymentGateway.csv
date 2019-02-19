@@ -419,3 +419,6 @@
 "order_status_updated","Statusänderung durch Notification"
 "basket_verification_failed","Warenkorb-Validierung fehlgeschlagen"
 "invoice_created","Rechnung automatisch durch Wirecard Payment Gateway erzeugt."
+
+
+"bic_required","BIC wird benötigt"

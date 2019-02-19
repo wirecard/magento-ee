@@ -172,4 +172,19 @@ class ResponseMapper
 
         return null;
     }
+
+    /**
+     * @return null|string
+     *
+     * @since 1.1.0
+     */
+    public function getOrderNumber()
+    {
+        $data = $this->getData();
+        if (! empty($data['order-number'])) {
+            return $data['order-number'];
+        }
+
+        return null;
+    }
 }

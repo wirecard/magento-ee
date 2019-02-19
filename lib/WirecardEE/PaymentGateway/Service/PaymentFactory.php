@@ -10,11 +10,19 @@
 namespace WirecardEE\PaymentGateway\Service;
 
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\PaymentSdk\Transaction\EpsTransaction;
+use Wirecard\PaymentSdk\Transaction\GiropayTransaction;
+use Wirecard\PaymentSdk\Transaction\IdealTransaction;
+use Wirecard\PaymentSdk\Transaction\MaestroTransaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
 use WirecardEE\PaymentGateway\Payments\CreditCardPayment;
+use WirecardEE\PaymentGateway\Payments\EpsPayment;
+use WirecardEE\PaymentGateway\Payments\GiropayPayment;
+use WirecardEE\PaymentGateway\Payments\IdealPayment;
+use WirecardEE\PaymentGateway\Payments\MaestroPayment;
 use WirecardEE\PaymentGateway\Payments\PayByBankAppPayment;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 use WirecardEE\PaymentGateway\Payments\PaypalPayment;
@@ -97,7 +105,12 @@ class PaymentFactory
             CreditCardTransaction::NAME      => CreditCardPayment::class,
             SepaDirectDebitTransaction::NAME => SepaPayment::class,
             SofortTransaction::NAME          => SofortPayment::class,
+            EpsTransaction::NAME             => EpsPayment::class,
+            GiropayTransaction::NAME         => GiropayPayment::class,
+            EpsTransaction::NAME             => EpsPayment::class,
+            IdealTransaction::NAME           => IdealPayment::class,
             PayByBankAppPayment::NAME        => PayByBankAppPayment::class,
+            MaestroTransaction::NAME         => MaestroPayment::class,
         ];
     }
 

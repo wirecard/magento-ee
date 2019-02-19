@@ -12,8 +12,6 @@ namespace WirecardEE\PaymentGateway\Data;
 /**
  * Credit Card specific payment configuration.
  *
- * @package WirecardElasticEngine\Components\Data
- *
  * @since   1.0.0
  */
 class CreditCardPaymentConfig extends PaymentConfig

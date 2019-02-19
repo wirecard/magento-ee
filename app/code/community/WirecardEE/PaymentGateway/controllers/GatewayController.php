@@ -82,7 +82,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
             ),
             new Redirect(
                 $this->getUrl('paymentgateway/gateway/return', ['method' => $paymentName]),
-                $this->getUrl('paymentgateway/gateway/cancel', ['method' => $paymentName])
+                $this->getUrl('paymentgateway/gateway/cancel', ['method' => $paymentName]),
+                $this->getUrl('paymentgateway/gateway/failure', ['method' => $paymentName])
             ),
             $this->getUrl('paymentgateway/gateway/notify', ['method' => $paymentName])
         );
@@ -151,7 +152,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
         $this->getResponse()->clearHeaders();
         $this->getResponse()->setHeader('Content-Type', 'application/json', true);
 
-        $order    = $this->getCheckoutSession()->getLastRealOrder();
+        $order = $this->getCheckoutSession()->getLastRealOrder();
 
         if ($order->getState() !== \Mage_Sales_Model_Order::STATE_NEW) {
             return $this->getResponse()->setBody(json_encode(['error' => 'Invalid order state']));
@@ -277,6 +278,23 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
     }
 
     /**
+     * If the payment fails this action is called.
+     *
+     * @return Mage_Core_Controller_Varien_Action
+     *
+     * @since 1.1.0
+     */
+    public function failureAction()
+    {
+        $this->restoreBasket($this->getCheckoutSession()->getLastRealOrder());
+        $this->getCheckoutSession()->setData(
+            'error_message',
+            Mage::helper('catalog')->__('order_error')
+        );
+        return $this->_redirect('checkout/onepage/failure');
+    }
+
+    /**
      * @param Action $action
      *
      * @return Mage_Core_Controller_Varien_Action
@@ -329,6 +347,8 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
     /**
      * @return bool
      * @throws Exception
+     *
+     * @since 1.0.0
      */
     private function cancelOrderAndRestoreBasket()
     {
@@ -340,15 +360,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
 
         $order->setState($cancelState, $cancelState, $this->getHelper()->__('order_cancelled'));
 
-        /** @var Mage_Sales_Model_Quote $quote */
-        $quote = Mage::getModel('sales/quote')->load($order->getQuoteId());
-
-        if ($quote->getId()) {
-            $quote->setIsActive(1)
-                  ->setReservedOrderId(null)
-                  ->save();
-            $this->getCheckoutSession()->replaceQuote($quote);
-        }
+        $this->restoreBasket($order);
 
         if (Mage::getStoreConfig('wirecardee_paymentgateway/settings/delete_cancelled_orders')) {
             Mage::register('isSecureArea', true);
@@ -357,6 +369,30 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
         }
 
         return true;
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     *
+     * @return bool
+     *
+     * @since 1.1.0
+     */
+    private function restoreBasket(Mage_Sales_Model_Order $order)
+    {
+        /** @var Mage_Sales_Model_Quote $quote */
+        $quote = Mage::getModel('sales/quote')->load($order->getQuoteId());
+
+        if ($quote->getId()) {
+            $quote->setIsActive(1)
+                  ->setReservedOrderId(null)
+                  ->save();
+            $this->getCheckoutSession()->replaceQuote($quote);
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

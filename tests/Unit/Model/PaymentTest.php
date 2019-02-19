@@ -10,6 +10,7 @@
 namespace WirecardEE\Tests\Unit\Model;
 
 use PHPUnit\Framework\TestCase;
+use Wirecard\PaymentSdk\Entity\IdealBic;
 
 class PaymentTest extends TestCase
 {
@@ -105,5 +106,81 @@ class PaymentTest extends TestCase
         );
         $this->assertEquals('wirecardee_paymentgateway_sofortbanking', $payment->getCode());
         $this->assertNotEmpty($payment->toOptionArray());
+    }
+
+    public function testIdeal()
+    {
+        $payment = new \WirecardEE_PaymentGateway_Model_Ideal();
+        $this->assertStringEndsWith(
+            '/paymentgateway/gateway/index/method/ideal/',
+            $payment->getOrderPlaceRedirectUrl()
+        );
+        $this->assertEquals('wirecardee_paymentgateway_ideal', $payment->getCode());
+        $this->assertSame(
+            (new \ReflectionClass(IdealBic::class))->getConstants(),
+            $payment->getBanks()
+        );
+    }
+
+    public function testEps()
+    {
+        $payment = new \WirecardEE_PaymentGateway_Model_Eps();
+        $this->assertStringEndsWith(
+            '/paymentgateway/gateway/index/method/eps/',
+            $payment->getOrderPlaceRedirectUrl()
+        );
+        $this->assertEquals('wirecardee_paymentgateway_eps', $payment->getCode());
+    }
+
+    public function testGiropay()
+    {
+        $address = $this->createMock(\Mage_Sales_Model_Order_Address::class);
+        $address->method('__call')->willReturnMap([['getCountryId', [], 'AT']]);
+
+        $order = $this->createMock(\Mage_Sales_Model_Order::class);
+        $order->method('getBillingAddress')->willReturn($address);
+        $paymentInfo = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
+        $paymentInfo->method('getOrder')->willReturn($order);
+
+        $request = new \Mage_Core_Controller_Request_Http();
+        $request->setParams([
+            'wirecardElasticEngine' => [
+                'giropayBic'      => 'BIC',
+            ],
+        ]);
+        \Mage::app()->setRequest($request);
+
+        $payment = new \WirecardEE_PaymentGateway_Model_Giropay();
+        $payment->setData('info_instance', $paymentInfo);
+        $this->assertStringEndsWith(
+            '/paymentgateway/gateway/index/method/giropay/',
+            $payment->getOrderPlaceRedirectUrl()
+        );
+        $this->assertEquals('wirecardee_paymentgateway_giropay', $payment->getCode());
+        $this->assertEquals($payment, $payment->validate());
+    }
+
+    public function testGiropayInvalid()
+    {
+        $address = $this->createMock(\Mage_Sales_Model_Order_Address::class);
+        $address->method('__call')->willReturnMap([['getCountryId', [], 'AT']]);
+
+        $order = $this->createMock(\Mage_Sales_Model_Order::class);
+        $order->method('getBillingAddress')->willReturn($address);
+        $paymentInfo = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
+        $paymentInfo->method('getOrder')->willReturn($order);
+
+        $request = new \Mage_Core_Controller_Request_Http();
+        $request->setParams([
+            'wirecardElasticEngine' => [
+                'giropayBic'      => '',
+            ],
+        ]);
+        \Mage::app()->setRequest($request);
+
+        $payment = new \WirecardEE_PaymentGateway_Model_Giropay();
+        $payment->setData('info_instance', $paymentInfo);
+        $this->expectException(\Mage_Core_Exception::class);
+        $this->assertEquals($payment, $payment->validate());
     }
 }
