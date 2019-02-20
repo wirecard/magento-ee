@@ -321,12 +321,12 @@ class CreditCardPayment extends Payment implements
             'billing_address_hash',
             $mageVaultTokenModel->createAddressHash($order->getBillingAddress())
         );
-        if ($order->getShippingAddress()) {
-            $mageVaultTokenModelCollection->addFilter(
-                'shipping_address_hash',
-                $mageVaultTokenModel->createAddressHash($order->getShippingAddress())
-            );
-        }
+        $mageVaultTokenModelCollection->addFilter(
+            'shipping_address_hash',
+            $mageVaultTokenModel->createAddressHash(
+                $order->getShippingAddress() ? $order->getShippingAddress() : $order->getBillingAddress()
+            )
+        );
 
         if (! $mageVaultTokenModelCollection->getFirstItem()->isEmpty()) {
             $mageVaultTokenModel->load($mageVaultTokenModelCollection->getFirstItem()->getId());
