@@ -109,8 +109,11 @@ class PoiPayment extends Payment implements ProcessPaymentInterface, ProcessRetu
     /**
      * {@inheritdoc}
      */
-    public function processReturn(TransactionService $transactionService, \Mage_Core_Controller_Request_Http $request, \Mage_Sales_Model_Order $order)
-    {
+    public function processReturn(
+        TransactionService $transactionService,
+        \Mage_Core_Controller_Request_Http $request,
+        \Mage_Sales_Model_Order $order
+    ) {
         $response = $transactionService->handleResponse($request->getParams());
 
         if ($response instanceof SuccessResponse) {

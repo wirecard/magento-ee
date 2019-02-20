@@ -100,9 +100,9 @@ class PiaPayment extends Payment implements
     }
 
     /**
-     * @param OrderSummary       $orderSummary
+     * @param OrderSummary $orderSummary
      * @param TransactionService $transactionService
-     * @param Redirect           $redirect
+     * @param Redirect $redirect
      *
      * @return null
      *
@@ -127,8 +127,11 @@ class PiaPayment extends Payment implements
     /**
      * {@inheritdoc}
      */
-    public function processReturn(TransactionService $transactionService, \Mage_Core_Controller_Request_Http $request, \Mage_Sales_Model_Order $order)
-    {
+    public function processReturn(
+        TransactionService $transactionService,
+        \Mage_Core_Controller_Request_Http $request,
+        \Mage_Sales_Model_Order $order
+    ) {
         $response = $transactionService->handleResponse($request->getParams());
 
         if ($response instanceof SuccessResponse) {
