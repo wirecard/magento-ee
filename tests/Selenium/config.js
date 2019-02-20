@@ -7,7 +7,7 @@
  */
 
 exports.config = {
-  url: process.env.TEST_URL || 'http://localhost:9000',
+  url: process.env.TEST_URL || 'http://localhost:26600',
   payments: {
     creditCard: {
       label: 'Wirecard Credit Card',
@@ -338,5 +338,41 @@ exports.tests = [
   {
     file: 'Payments/SofortTest',
     timeout: 120000
+  },
+  {
+    file: 'Payments/EpsTest.js',
+    timeout: 60000,
+  },
+  {
+    file: 'Payments/GiropayTest.js',
+    timeout: 120000,
+  },
+  {
+    file: 'Payments/IdealTest.js',
+    timeout: 120000,
+  },
+  {
+    file: 'Payments/MaestroTest.js',
+    timeout: 120000,
+  },
+  {
+    file: 'Payments/PoiTest.js',
+    timeout: 120000,
+  },
+  {
+    file: 'Payments/PiaTest.js',
+    timeout: 120000,
+  },
+  {
+    file: 'Payments/MasterpassTest.js',
+    timeout: 120000,
+  },
+  {
+    file: 'Payments/UpiTest.js',
+    timeout: 120000,
+  },
+  {
+    file: 'Payments/AlipayTest.js',
+    timeout: 120000,
   }
 ];

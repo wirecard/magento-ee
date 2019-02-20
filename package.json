@@ -18,7 +18,7 @@
     "test:masterpass": "node_modules/.bin/mocha tests/Selenium/Payments/MasterpassTest.js --timeout 60000",
     "test:upi": "node_modules/.bin/mocha tests/Selenium/Payments/UpiTest.js --timeout 60000",
     "test:alipay": "node_modules/.bin/mocha tests/Selenium/Payments/AlipayTest.js --timeout 60000",
-    "test:runner": "node Tests/Selenium/runner.js"
+    "test:runner": "node tests/Selenium/runner.js"
   },
   "private": true,
   "license": "GPL-3.0",
