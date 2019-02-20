@@ -67,4 +67,27 @@ class WirecardEE_PaymentGateway_Model_Resource_CreditCardVaultToken_Collection e
         ]);
         return $this;
     }
+
+    /**
+     * Finds a token by its value for a customer.
+     *
+     * @param string $token
+     * @param string $customerId
+     *
+     * @return $this
+     *
+     * @throws Exception
+     *
+     * @since 1.2.0
+     */
+    public function findTokenForCustomer($token, $customerId)
+    {
+        $this->addFilter('customer_id', $customerId);
+        $this->addFilter('token', $token);
+        $this->addFieldToFilter('expiration_date', [
+            'from' => (new DateTime('first day of this month'))->modify('-1 month')->format(DateTime::W3C),
+            'date' => true,
+        ]);
+        return $this;
+    }
 }

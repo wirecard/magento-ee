@@ -315,7 +315,18 @@ class CreditCardPayment extends Payment implements
         /** @var \WirecardEE_PaymentGateway_Model_CreditCardVaultToken $mageVaultTokenModel */
         $mageVaultTokenModel = \Mage::getModel('paymentgateway/creditCardVaultToken');
         /** @var \Mage_Core_Model_Resource_Db_Collection_Abstract $mageVaultTokenModelCollection */
-        $mageVaultTokenModelCollection = $mageVaultTokenModel->getCollection()->getTokensForCustomer($customerId);
+        $mageVaultTokenModelCollection = $mageVaultTokenModel->getCollection()
+                                                             ->findTokenForCustomer($token, $customerId);
+        $mageVaultTokenModelCollection->addFilter(
+            'billing_address_hash',
+            $mageVaultTokenModel->createAddressHash($order->getBillingAddress())
+        );
+        if ($order->getShippingAddress()) {
+            $mageVaultTokenModelCollection->addFilter(
+                'shipping_address_hash',
+                $mageVaultTokenModel->createAddressHash($order->getShippingAddress())
+            );
+        }
 
         if (! $mageVaultTokenModelCollection->getFirstItem()->isEmpty()) {
             $mageVaultTokenModel->load($mageVaultTokenModelCollection->getFirstItem()->getId());
