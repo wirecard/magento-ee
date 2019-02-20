@@ -279,7 +279,7 @@ class WirecardEE_PaymentGateway_Model_CreditCardVaultToken extends Mage_Core_Mod
     }
 
     /**
-     * @return \DateTime
+     * @return string
      *
      * @since 1.2.0
      */
