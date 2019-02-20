@@ -29,9 +29,9 @@ if (! $creditCardModel->showTokenSelection()) {
                                value="<?php echo $card->getId(); ?>" style="margin-right: 15px;">
                         <label
                             for="wirecardee--card__<?php echo $card->getId(); ?>">
-                            <?php echo $card->getMaskedAccountNumber(); ?> -
-                            <?php echo $card->getFirstName(); ?>
-                            <?php echo $card->getLastName(); ?>
+                            <?php echo Mage::helper('core')->escapeHtml($card->getMaskedAccountNumber()); ?> -
+                            <?php echo Mage::helper('core')->escapeHtml($card->getFirstName()); ?>
+                            <?php echo Mage::helper('core')->escapeHtml($card->getLastName()); ?>
                         </label>
 
                         <small>
