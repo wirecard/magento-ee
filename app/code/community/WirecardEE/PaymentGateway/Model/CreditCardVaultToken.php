@@ -260,11 +260,6 @@ class WirecardEE_PaymentGateway_Model_CreditCardVaultToken extends Mage_Core_Mod
      */
     public function createAddressHash($address)
     {
-        if (! ($address instanceof \Mage_Sales_Model_Order_Address)
-            && ! ($address instanceof \Mage_Sales_Model_Quote_Address)) {
-            \Mage::throwException('Invalid address');
-        }
-
         return md5(serialize($this->createAddress($address)));
     }
 
