@@ -366,7 +366,6 @@ class CreditCardPayment extends Payment implements
     {
         /** @var \WirecardEE_PaymentGateway_Model_CreditCardVaultToken $mageVaultTokenModel */
         $mageVaultTokenModel = \Mage::getModel('paymentgateway/creditCardVaultToken');
-        /** @var \WirecardEE_PaymentGateway_Model_Resource_CreditCardVaultToken_Collection $mageVaultTokenModelCollection */
         $mageVaultTokenModelCollection = $mageVaultTokenModel->getCollection()->getTokenForCustomer(
             $tokenId,
             $orderSummary->getOrder()->getCustomerId()
