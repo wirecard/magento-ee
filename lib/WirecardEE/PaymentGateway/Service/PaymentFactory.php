@@ -28,6 +28,7 @@ use WirecardEE\PaymentGateway\Payments\GiropayPayment;
 use WirecardEE\PaymentGateway\Payments\IdealPayment;
 use WirecardEE\PaymentGateway\Payments\MasterpassPayment;
 use WirecardEE\PaymentGateway\Payments\MaestroPayment;
+use WirecardEE\PaymentGateway\Payments\PayByBankAppPayment;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 use WirecardEE\PaymentGateway\Payments\PaypalPayment;
 use WirecardEE\PaymentGateway\Payments\PoiPayment;
@@ -115,7 +116,7 @@ class PaymentFactory
             EpsTransaction::NAME             => EpsPayment::class,
             GiropayTransaction::NAME         => GiropayPayment::class,
             IdealTransaction::NAME           => IdealPayment::class,
-            // PayByBankAppPayment::NAME        => PayByBankAppPayment::class,
+            PayByBankAppPayment::NAME        => PayByBankAppPayment::class,
             MaestroTransaction::NAME         => MaestroPayment::class,
             PoiPayment::NAME                 => PoiPayment::class,
             PiaPayment::NAME                 => PiaPayment::class,

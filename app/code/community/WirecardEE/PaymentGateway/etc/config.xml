@@ -86,6 +86,16 @@
                     </wirecard_ee_refund>
                 </observers>
             </sales_order_payment_refund>
+
+            <controller_action_predispatch>
+                <observers>
+                    <wirecard_ee_check_session_messages>
+                        <type>singleton</type>
+                        <class>paymentgateway/backendOperation</class>
+                        <method>checkSessionMessages</method>
+                    </wirecard_ee_check_session_messages>
+                </observers>
+            </controller_action_predispatch>
         </events>
 
         <resources>
@@ -187,19 +197,19 @@
                 <fraud_prevention>1</fraud_prevention>
                 <sort_order>36</sort_order>
             </wirecardee_paymentgateway_sofortbanking>
-            <!--<wirecardee_paymentgateway_zapp>-->
-                <!--<active>0</active>-->
-                <!--<model>paymentgateway/paybybankapp</model>-->
-                <!--<title>Wirecard Pay by Bank app</title>-->
-                <!--<api_url>https://api-test.wirecard.com</api_url>-->
-                <!--<api_user>70000-APITEST-AP</api_user>-->
-                <!--<api_password>qD2wzQ_hrc!8</api_password>-->
-                <!--<api_maid>70055b24-38f1-4500-a3a8-afac4b1e3249</api_maid>-->
-                <!--<api_secret>4a4396df-f78c-44b9-b8a0-b72b108ac465</api_secret>-->
-                <!--<send_basket>1</send_basket>-->
-                <!--<fraud_prevention>1</fraud_prevention>-->
-                <!--<sort_order>40</sort_order>-->
-            <!--</wirecardee_paymentgateway_zapp>-->
+            <wirecardee_paymentgateway_zapp>
+                <active>0</active>
+                <model>paymentgateway/paybybankapp</model>
+                <title>Wirecard Pay by Bank app</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>70000-APITEST-AP</api_user>
+                <api_password>qD2wzQ_hrc!8</api_password>
+                <api_maid>70055b24-38f1-4500-a3a8-afac4b1e3249</api_maid>
+                <api_secret>4a4396df-f78c-44b9-b8a0-b72b108ac465</api_secret>
+                <send_basket>1</send_basket>
+                <fraud_prevention>1</fraud_prevention>
+                <sort_order>40</sort_order>
+            </wirecardee_paymentgateway_zapp>
             <wirecardee_paymentgateway_eps>
                 <active>0</active>
                 <model>paymentgateway/eps</model>
