@@ -19,17 +19,24 @@ class WirecardEE_PaymentGateway_Block_Head extends Mage_Adminhtml_Block_Page_Hea
      * Classify HTML head item and queue it into "lines" array
      *
      * @param array        &$lines
-     * @param string       $itemIf
-     * @param string       $itemType
-     * @param string|array $itemParams
-     * @param string       $itemName
-     * @param array        $itemThe
+     * @param string        $itemIf
+     * @param string        $itemType
+     * @param string|array  $itemParams
+     * @param string        $itemName
+     * @param array         $itemThe
      *
      * @since 1.0.0
      */
     protected function _separateOtherHtmlHeadElements(&$lines, $itemIf, $itemType, $itemParams, $itemName, $itemThe)
     {
-        parent::_separateOtherHtmlHeadElements($lines, $itemIf, $itemType, $itemParams, $itemName, $itemThe);
+        parent::_separateOtherHtmlHeadElements(
+            $lines,
+            $itemIf,
+            $itemType,
+            is_string($itemParams) ? $itemParams : '',
+            $itemName,
+            $itemThe
+        );
 
         $params = $itemParams ? $itemParams : '';
         if (is_array($itemParams)) {

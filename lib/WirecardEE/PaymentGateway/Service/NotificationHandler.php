@@ -14,7 +14,9 @@ use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\Transaction\PoiPiaTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
+use WirecardEE\PaymentGateway\Mail\UnmatchedTransactionMail;
 use WirecardEE\PaymentGateway\Mapper\ResponseMapper;
 
 /**
@@ -75,7 +77,19 @@ class NotificationHandler extends Handler
         /** @var Mage_Sales_Model_Order $order */
         $order = \Mage::getModel('sales/order')->load($response->getCustomFields()->get('order-id'));
         if (! $order->getId()) {
-            if (! $orderNumber = (new ResponseMapper($response))->getOrderNumber()) {
+            $responseMapper = new ResponseMapper($response);
+
+            if ($responseMapper->getPaymentMethod() === PoiPiaTransaction::NAME) {
+                $this->logger->warning(
+                    "No matching transaction for " . PoiPiaTransaction::NAME
+                    . " payment with PTRID '{$response->getProviderTransactionReference()}' found"
+                );
+                if (\Mage::getStoreConfig('wirecardee_paymentgateway/settings/unmatched_payment_mail')) {
+                    $this->sendUnmatchedTransactionMail($response);
+                }
+            }
+
+            if (! $orderNumber = $responseMapper->getOrderNumber()) {
                 $this->logger->error("Order not found for transaction " . $response->getTransactionId());
                 throw new \Exception("Order not found");
             }
@@ -130,7 +144,7 @@ class NotificationHandler extends Handler
         $state = $this->getOrderState($backendService, $response);
         // Don't update back to pending
         if ($order->getState() !== \Mage_Sales_Model_Order::STATE_NEW
-                && $state === \Mage_Sales_Model_Order::STATE_PENDING_PAYMENT) {
+            && $state === \Mage_Sales_Model_Order::STATE_PENDING_PAYMENT) {
             return $transaction;
         }
 
@@ -140,6 +154,27 @@ class NotificationHandler extends Handler
         $order->sendOrderUpdateEmail();
 
         return $transaction;
+    }
+
+    /**
+     * @param SuccessResponse $notification
+     *
+     * @throws \Zend_Mail_Exception
+     *
+     * @since 1.2.0
+     */
+    private function sendUnmatchedTransactionMail(SuccessResponse $notification)
+    {
+        /** @var \Mage_Core_Helper_Abstract|\WirecardEE_PaymentGateway_Helper_Data $helper */
+        $helper = \Mage::helper('paymentgateway');
+        $unmatchedTransactionMail = new UnmatchedTransactionMail($helper);
+        $mail = $unmatchedTransactionMail->create(
+            \Mage::getStoreConfig('wirecardee_paymentgateway/settings/unmatched_payment_mail'),
+            $notification
+        );
+        if ($mail) {
+            $mail->send();
+        }
     }
 
     /**

@@ -10,7 +10,7 @@
 namespace WirecardEE\PaymentGateway\Exception;
 
 /**
- * @since   1.0.0
+ * @since 1.0.0
  */
 class UnknownTransactionTypeException extends \Exception
 {

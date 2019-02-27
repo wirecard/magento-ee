@@ -12,9 +12,7 @@ namespace WirecardEE\PaymentGateway\Exception;
 /**
  * Thrown when given data is insufficient.
  *
- * @package WirecardElasticEngine\Exception
- *
- * @since   1.0.0
+ * @since 1.0.0
  */
 class InsufficientDataException extends \Exception
 {

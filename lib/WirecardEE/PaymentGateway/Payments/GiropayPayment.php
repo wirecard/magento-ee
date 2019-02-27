@@ -20,10 +20,10 @@ use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\SepaCreditTransferPaymentConfig;
-use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplate;
+use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplateInterface;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
-class GiropayPayment extends Payment implements ProcessPaymentInterface, CustomFormTemplate
+class GiropayPayment extends Payment implements ProcessPaymentInterface, CustomFormTemplateInterface
 {
     const NAME = GiropayTransaction::NAME;
 
@@ -89,7 +89,7 @@ class GiropayPayment extends Payment implements ProcessPaymentInterface, CustomF
         $paymentConfig->setTransactionMAID($this->getPluginConfig('api_maid'));
         $paymentConfig->setTransactionSecret($this->getPluginConfig('api_secret'));
         $paymentConfig->setTransactionOperation(Operation::PAY);
-        $paymentConfig->setOrderIdentification(true);
+        $paymentConfig->setOrderIdentification($this->getPluginConfig('order_identification'));
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
         $paymentConfig->setBackendTransactionMAID(
             $this->getPluginConfig(
@@ -170,12 +170,26 @@ class GiropayPayment extends Payment implements ProcessPaymentInterface, CustomF
     }
 
     /**
-     * @return string
-     *
-     * @since 1.1.0
+     * {@inheritdoc}
      */
     public function getRefundOperation()
     {
-        return Operation::CREDIT;
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCancelOperation()
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCaptureOperation()
+    {
+        return null;
     }
 }

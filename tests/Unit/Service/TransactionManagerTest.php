@@ -185,11 +185,70 @@ class TransactionManagerTest extends MagentoTestCase
 
         $data = ['item' => 1];
         $transaction->setAdditionalInformation(\Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS, [
-            TransactionManager::REFUNDABLE_BASKET_KEY => json_encode($data)
+            TransactionManager::REFUNDABLE_BASKET_KEY => json_encode($data),
         ]);
 
         $refundableBasket = TransactionManager::getRefundableBasketFromTransaction($transaction);
 
         $this->assertSame($data, $refundableBasket);
+    }
+
+    public function testFindInitialResponse()
+    {
+        $manager = new TransactionManager(new Logger());
+
+        $order        = $this->createMock(\Mage_Sales_Model_Order::class);
+        $transactions = $this->createMock(\Mage_Sales_Model_Resource_Order_Payment_Transaction_Collection::class);
+        $transactions->method('count')->willReturn(0);
+        $transactions->method('getIterator')->willReturn(new \ArrayIterator([]));
+        $this->replaceMageResourceModel('sales/order_payment_transaction_collection', $transactions);
+
+        $this->assertNull($manager->findInitialResponse($order));
+
+        $payment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
+        $order->method('getPayment')->willReturn($payment);
+
+        $transaction = new \Mage_Sales_Model_Order_Payment_Transaction();
+        $transaction->setAdditionalInformation(\Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS, [
+            TransactionManager::TYPE_KEY => TransactionManager::TYPE_INITIAL,
+        ]);
+        $transaction->setTxnType(\Mage_Sales_Model_Order_Payment_Transaction::TYPE_PAYMENT);
+        $transactions = $this->createMock(\Mage_Sales_Model_Resource_Order_Payment_Transaction_Collection::class);
+        $transactions->method('count')->willReturn(1);
+        $transactions->method('getIterator')->willReturn(new \ArrayIterator([$transaction]));
+        $this->replaceMageResourceModel('sales/order_payment_transaction_collection', $transactions);
+
+        $response = $manager->findInitialResponse($order);
+
+        $this->assertNotNull($response);
+        $this->assertSame([
+            TransactionManager::TYPE_KEY => TransactionManager::TYPE_INITIAL,
+        ], $response);
+    }
+
+    public function testCreateInitialRequestTransaction()
+    {
+        $manager = new TransactionManager(new Logger());
+
+        $requestData = [
+            'transaction_type' => 'payment',
+        ];
+
+        $payment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
+
+        $order = $this->createMock(\Mage_Sales_Model_Order::class);
+        $order->method('getPayment')->willReturn($payment);
+
+        $transaction = $this->createMock(\Mage_Sales_Model_Order_Payment_Transaction::class);
+        $transaction->expects($this->once())->method('setTxnType')->with('payment');
+        $transaction->expects($this->once())->method('setOrder')->with($order);
+        $transaction->expects($this->once())->method('setOrderPaymentObject')->with($payment);
+        $transaction->expects($this->once())->method('setAdditionalInformation')->with();
+        $transaction->expects($this->once())->method('save');
+
+        $this->replaceMageModel('sales/order_payment_transaction', $transaction);
+
+        $this->assertNull($manager->createInitialRequestTransaction([], $order));
+        $this->assertSame($transaction, $manager->createInitialRequestTransaction($requestData, $order));
     }
 }

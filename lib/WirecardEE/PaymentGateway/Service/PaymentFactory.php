@@ -9,25 +9,34 @@
 
 namespace WirecardEE\PaymentGateway\Service;
 
+use Wirecard\PaymentSdk\Transaction\AlipayCrossborderTransaction;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\EpsTransaction;
 use Wirecard\PaymentSdk\Transaction\GiropayTransaction;
 use Wirecard\PaymentSdk\Transaction\IdealTransaction;
+use Wirecard\PaymentSdk\Transaction\MasterpassTransaction;
 use Wirecard\PaymentSdk\Transaction\MaestroTransaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
+use Wirecard\PaymentSdk\Transaction\UpiTransaction;
 use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
+use WirecardEE\PaymentGateway\Payments\AlipayPayment;
 use WirecardEE\PaymentGateway\Payments\CreditCardPayment;
 use WirecardEE\PaymentGateway\Payments\EpsPayment;
 use WirecardEE\PaymentGateway\Payments\GiropayPayment;
 use WirecardEE\PaymentGateway\Payments\IdealPayment;
+use WirecardEE\PaymentGateway\Payments\MasterpassPayment;
 use WirecardEE\PaymentGateway\Payments\MaestroPayment;
+use WirecardEE\PaymentGateway\Payments\PayByBankAppPayment;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 use WirecardEE\PaymentGateway\Payments\PayolutionInvoicePayment;
 use WirecardEE\PaymentGateway\Payments\PaypalPayment;
+use WirecardEE\PaymentGateway\Payments\PoiPayment;
+use WirecardEE\PaymentGateway\Payments\PiaPayment;
 use WirecardEE\PaymentGateway\Payments\SepaPayment;
 use WirecardEE\PaymentGateway\Payments\SofortPayment;
+use WirecardEE\PaymentGateway\Payments\UnionpayPayment;
 
 /**
  * Responsible for creating payment objects based on their name.
@@ -122,10 +131,14 @@ class PaymentFactory
             SofortTransaction::NAME          => SofortPayment::class,
             EpsTransaction::NAME             => EpsPayment::class,
             GiropayTransaction::NAME         => GiropayPayment::class,
-            EpsTransaction::NAME             => EpsPayment::class,
             IdealTransaction::NAME           => IdealPayment::class,
-            // PayByBankAppPayment::NAME        => PayByBankAppPayment::class,
+            PayByBankAppPayment::NAME        => PayByBankAppPayment::class,
             MaestroTransaction::NAME         => MaestroPayment::class,
+            PoiPayment::NAME                 => PoiPayment::class,
+            PiaPayment::NAME                 => PiaPayment::class,
+            MasterpassTransaction::NAME      => MasterpassPayment::class,
+            AlipayCrossborderTransaction::NAME => AlipayPayment::class,
+            UpiTransaction::NAME             => UnionpayPayment::class,
             'payolutioninvoice'              => PayolutionInvoicePayment::class,
         ];
     }

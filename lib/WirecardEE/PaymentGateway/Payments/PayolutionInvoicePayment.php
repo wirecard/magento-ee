@@ -20,7 +20,7 @@ use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\PaymentConfig;
 use WirecardEE\PaymentGateway\Data\PayolutionInvoicePaymentConfig;
-use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplate;
+use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplateInterface;
 use WirecardEE\PaymentGateway\Payments\Contracts\DisplayRestrictionInterface;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 use WirecardEE\PaymentGateway\Service\SessionManager;
@@ -28,7 +28,7 @@ use WirecardEE\PaymentGateway\Service\SessionManager;
 class PayolutionInvoicePayment extends Payment implements
     ProcessPaymentInterface,
     DisplayRestrictionInterface,
-    CustomFormTemplate
+    CustomFormTemplateInterface
 {
     const NAME = 'payolutioninvoice';
     const MINIMUM_CONSUMER_AGE = 18;

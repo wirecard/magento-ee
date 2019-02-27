@@ -1,6 +1,6 @@
 {
   "name": "@wirecard/magento-ee",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "scripts": {
     "test": "node_modules/.bin/mocha tests/Selenium/**/*Test.js --timeout 220000",
     "test:default": "node_modules/.bin/mocha tests/Selenium/Payments/DefaultTest.js --timeout 60000",
@@ -13,6 +13,11 @@
     "test:giropay": "node_modules/.bin/mocha tests/Selenium/Payments/GiropayTest.js --timeout 60000",
     "test:ideal": "node_modules/.bin/mocha tests/Selenium/Payments/IdealTest.js --timeout 60000",
     "test:maestro": "node_modules/.bin/mocha tests/Selenium/Payments/MaestroTest.js --timeout 60000",
+    "test:poi": "node_modules/.bin/mocha tests/Selenium/Payments/PoiTest.js --timeout 60000",
+    "test:pia": "node_modules/.bin/mocha tests/Selenium/Payments/PiaTest.js --timeout 60000",
+    "test:masterpass": "node_modules/.bin/mocha tests/Selenium/Payments/MasterpassTest.js --timeout 60000",
+    "test:upi": "node_modules/.bin/mocha tests/Selenium/Payments/UpiTest.js --timeout 60000",
+    "test:alipay": "node_modules/.bin/mocha tests/Selenium/Payments/AlipayTest.js --timeout 60000",
     "test:payolution": "node_modules/.bin/mocha tests/Selenium/Payments/PayolutionTest.js --timeout 60000",
     "test:runner": "node Tests/Selenium/runner.js"
   },

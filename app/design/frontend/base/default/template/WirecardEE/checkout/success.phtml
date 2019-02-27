@@ -7,17 +7,34 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+// Keep in mind that this block is inserted ABOVE the default checkout block.
+
+use WirecardEE\PaymentGateway\Payments\Contracts\AdditionalCheckoutSuccessTemplateInterface;
+
 /** @var $this WirecardEE_PaymentGateway_Block_Checkout_Success */
 if (! $this->isWirecardPayment()) {
     return;
 }
 ?>
-<div class="wirecardee_checkout_payment_status">
-    <?php echo Mage::helper('catalog')->__('config_status'); ?>: <?php echo $this->getOrderStatusLabel(); ?>
+<div class="wirecardee_checkout_success" style="margin-bottom: 20px;">
+    <?php
+    $payment = $this->getPayment();
+    ?>
+    <div class="wirecardee_checkout_payment_status">
+        <?php echo Mage::helper('catalog')->__('config_status'); ?>: <?php echo $this->getOrderStatusLabel(); ?>
+
+        <?php
+        if ($this->getOrderStatusLabel() === Mage_Sales_Model_Order::STATE_PENDING_PAYMENT) {
+            echo '<p>' . Mage::helper('catalog')->__('payment_pending_message') . '</p>';
+        }
+        ?>
+    </div>
 
     <?php
-    if ($this->getOrderStatusLabel() === Mage_Sales_Model_Order::STATE_PENDING_PAYMENT) {
-        echo '<p>' . Mage::helper('catalog')->__('payment_pending_message') . '</p>';
+    if ($payment instanceof AdditionalCheckoutSuccessTemplateInterface) {
+        $block = $this->getLayout()->createBlock('adminhtml/template');
+        $block->setTemplate($payment->getCheckoutSuccessTemplate());
+        echo $block->toHtml();
     }
     ?>
 </div>

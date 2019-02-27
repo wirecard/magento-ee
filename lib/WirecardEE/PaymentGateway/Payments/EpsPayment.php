@@ -20,10 +20,10 @@ use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\SepaCreditTransferPaymentConfig;
-use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplate;
+use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplateInterface;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
-class EpsPayment extends Payment implements ProcessPaymentInterface, CustomFormTemplate
+class EpsPayment extends Payment implements ProcessPaymentInterface, CustomFormTemplateInterface
 {
     const NAME = EpsTransaction::NAME;
 
@@ -89,7 +89,7 @@ class EpsPayment extends Payment implements ProcessPaymentInterface, CustomFormT
         $paymentConfig->setTransactionMAID($this->getPluginConfig('api_maid'));
         $paymentConfig->setTransactionSecret($this->getPluginConfig('api_secret'));
         $paymentConfig->setTransactionOperation(Operation::PAY);
-        $paymentConfig->setOrderIdentification(true);
+        $paymentConfig->setOrderIdentification($this->getPluginConfig('order_identification'));
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
 
         $paymentConfig->setBackendTransactionMAID(
@@ -171,12 +171,26 @@ class EpsPayment extends Payment implements ProcessPaymentInterface, CustomFormT
     }
 
     /**
-     * @return string
-     *
-     * @since 1.1.0
+     * {@inheritdoc}
      */
     public function getRefundOperation()
     {
-        return Operation::CREDIT;
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCancelOperation()
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCaptureOperation()
+    {
+        return null;
     }
 }

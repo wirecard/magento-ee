@@ -77,6 +77,16 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
     }
 
     /**
+     * @param PaymentFactory $paymentFactory
+     *
+     * @since 1.1.0
+     */
+    public function setPaymentFactory(PaymentFactory $paymentFactory)
+    {
+        $this->paymentFactory = $paymentFactory;
+    }
+
+    /**
      * @param Varien_Event_Observer $observer
      *
      * @return Action|null
@@ -107,7 +117,12 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             \Mage::throwException("Unable to capture empty invoice");
         }
 
-        $payment             = $this->paymentFactory->createFromMagePayment($invoice->getOrder()->getPayment());
+        $payment = $this->paymentFactory->createFromMagePayment($invoice->getOrder()->getPayment());
+
+        if (! $payment->getCaptureOperation()) {
+            return null;
+        }
+
         $initialNotification = $this->transactionManager->findInitialNotification($invoice->getOrder());
 
         if (! $initialNotification) {
@@ -170,7 +185,12 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             return [];
         }
 
-        $payment        = $this->paymentFactory->createFromMagePayment($creditMemo->getOrder()->getPayment());
+        $payment = $this->paymentFactory->createFromMagePayment($creditMemo->getOrder()->getPayment());
+
+        if (! $payment->getRefundOperation()) {
+            return null;
+        }
+
         $backendService = new BackendService(
             $payment->getTransactionConfig(Mage::app()->getLocale()->getCurrency()),
             $this->logger
@@ -182,12 +202,18 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             $backendService
         );
 
+        if (count($refundableTransactions) === 0) {
+            $this->throwError("No refundable transactions found (either transactions are lacking " .
+                              "a refundable basket or desired backend operation is not supported on any transaction " .
+                              "for this order)");
+        }
+
         $remainingAdditionalAmount = $creditMemo->getShippingAmount()
                                      + $creditMemo->getAdjustmentPositive()
                                      - $creditMemo->getAdjustmentNegative();
 
         foreach ($creditMemo->getAllItems() as $item) {
-            /** @var Mage_Sales_Model_Order_Creditmemo_Item$item */
+            /** @var Mage_Sales_Model_Order_Creditmemo_Item $item */
             if (array_key_exists($item->getOrderItemId(), $creditMemoPost['items'])) {
                 $creditMemoPost['items'][$item->getOrderItemId()]['price'] = $item->getBasePriceInclTax();
             }
@@ -206,7 +232,9 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         );
 
         if (count($transactionEntries) === 0) {
-            $this->throwError('Unable to refund (no transactions found)');
+            $this->throwError('Unable to refund (no proper refundable baskets)', [
+                'refundableTransactions' => $refundableTransactions,
+            ]);
         }
 
         $this->logger->info('Executing operation "refund" on order #' . $creditMemo->getOrder()->getRealOrderId()
@@ -277,18 +305,27 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         $magePayment = $observer->getData('payment');
 
         if (! ($magePayment instanceof Mage_Sales_Model_Order_Payment)) {
-            \Mage::throwException("Unable to process backend operation (cancel)");
+            $this->throwError("Unable to process backend operation (cancel)");
         }
 
         if (! $this->paymentFactory->isSupportedPayment($magePayment)) {
             return null;
         }
 
-        $payment             = $this->paymentFactory->createFromMagePayment($magePayment);
+        $payment = $this->paymentFactory->createFromMagePayment($magePayment);
+
+        if (! $payment->getCancelOperation()) {
+            return null;
+        }
+
         $initialNotification = $this->transactionManager->findInitialNotification($magePayment->getOrder());
 
         if (! $initialNotification) {
-            $this->throwError("Cancellation failed (unable to find initial notification transaction)");
+            return $this->preventOperation(
+                $magePayment->getOrder(),
+                \Mage_Sales_Model_Order::ACTION_FLAG_CANCEL,
+                "Cancellation failed (unable to find initial notification transaction)"
+            );
         }
 
         $action = $this->processBackendOperation(
@@ -307,7 +344,12 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             return $action;
         }
         if ($action instanceof ErrorAction) {
-            $this->throwError($action->getMessage(), ['code' => $action->getCode()]);
+            return $this->preventOperation(
+                $magePayment->getOrder(),
+                \Mage_Sales_Model_Order::ACTION_FLAG_CANCEL,
+                $action->getMessage(),
+                ['code' => $action->getCode()]
+            );
         }
 
         $this->throwError('Cancellation failed');
@@ -502,5 +544,66 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         }
 
         return $suitableTransactions;
+    }
+
+    /**
+     * Checks if the session messages should be flushed and, if applicable, remove all messages but error messages.
+     *
+     * @since 1.1.0
+     */
+    public function checkSessionMessages()
+    {
+        if (! $this->getAdminSession()->getData('flush_messages')) {
+            return;
+        }
+
+        $messages = $this->getAdminSession()->getMessages();
+        $errors   = [];
+        foreach ($messages->getItems() as $message) {
+            if ($message instanceof \Mage_Core_Model_Message_Error) {
+                $errors[] = $message;
+            }
+        }
+
+        if (count($errors) > 0) {
+            $this->getAdminSession()->getMessages(true);
+            foreach ($errors as $error) {
+                /** @var $error Mage_Core_Model_Message_Abstract */
+                $this->getAdminSession()->addMessage($error);
+            }
+        }
+    }
+
+    /**
+     * Prevents a backend operation by setting a proper flag.
+     *
+     * @param Mage_Sales_Model_Order $order
+     * @param string                 $actionFlag
+     * @param string                 $reason
+     * @param array                  $context
+     *
+     * @return null
+     */
+    private function preventOperation(\Mage_Sales_Model_Order $order, $actionFlag, $reason, $context = [])
+    {
+        $order->setActionFlag($actionFlag, false);
+        $this->getAdminSession()->setData('flush_messages', true);
+        $this->getAdminSession()->addError(\Mage::helper('catalog')
+                                                ->__('An error has occurred during executing your request (Order #'
+                                                     . $order->getRealOrderId() .
+                                                     '). Check log files for further information.'));
+        $this->logger->error($reason, $context);
+
+        return null;
+    }
+
+    /**
+     * @return Mage_Adminhtml_Model_Session|Mage_Core_Model_Abstract
+     *
+     * @since 1.1.0
+     */
+    private function getAdminSession()
+    {
+        return Mage::getSingleton('adminhtml/session');
     }
 }

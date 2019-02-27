@@ -12,9 +12,7 @@ namespace WirecardEE\PaymentGateway\Exception;
 /**
  * Thrown if actions returned by handlers are unknown / not implemented.
  *
- * @package WirecardElasticEngine\Exception
- *
- * @since   1.0.0
+ * @since 1.0.0
  */
 class UnknownActionException extends \Exception
 {
