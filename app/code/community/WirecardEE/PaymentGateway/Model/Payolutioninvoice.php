@@ -38,6 +38,12 @@ class WirecardEE_PaymentGateway_Model_Payolutioninvoice extends WirecardEE_Payme
         return isset($config['require_consent']) && $config['require_consent'];
     }
 
+    public function getTermsUrl()
+    {
+        $config = \Mage::getStoreConfig('payment/wirecardee_paymentgateway_payolutioninvoice');
+        return isset($config['terms_url']) ? $config['terms_url'] : '#';
+    }
+
     /**
      * @throws Mage_Core_Exception
      *

@@ -59,10 +59,13 @@ $payolutionInvoiceModel = Mage::getModel('paymentgateway/payolutioninvoice');
                    required="required" value="confirmed"/>
             <label
                 for="wirecardee-payolution--consent"
-                class="required"><?php echo $this->__('payolution_consent_text'); ?></label>
+                class="required" style="display: inline;">
+                <?php
+                echo sprintf($this->__('payolution_consent_text'), $payolutionInvoiceModel->getTermsUrl());
+                ?>
+            </label>
         </li>
         <?php
     }
     ?>
-
 </ul>

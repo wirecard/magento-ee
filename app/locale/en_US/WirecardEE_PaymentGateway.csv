@@ -450,5 +450,5 @@
 "birthdate_input_month_format","MM"
 "birthdate_input_year","Year"
 "birthdate_input_year_format","YYYY"
-"payolution_consent_text","I agree that the data which are necessary for the liquidation of purchase on account and which are used to complete the identity and credit check are transmitted to payolution. My consent can be revoked at any time with effect for the future."
+"payolution_consent_text","I agree that the data which are necessary for the liquidation of purchase on account and which are used to complete the identity and credit check are transmitted to payolution. My <a href='%s' style='float: none; margin-left: 0;'>consent</a> can be revoked at any time with effect for the future."
 "payolution_consent_required_text","You need to accept the terms"
