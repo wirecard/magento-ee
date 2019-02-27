@@ -56,7 +56,7 @@ class EpsPayment extends Payment implements ProcessPaymentInterface, CustomFormT
     }
 
     /**
-     * @param $selectedCurrency
+     * @param string $selectedCurrency
      *
      * @return Config
      *

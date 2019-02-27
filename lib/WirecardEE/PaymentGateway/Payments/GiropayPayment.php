@@ -56,7 +56,7 @@ class GiropayPayment extends Payment implements ProcessPaymentInterface, CustomF
     }
 
     /**
-     * @param $selectedCurrency
+     * @param string $selectedCurrency
      *
      * @return Config
      *

@@ -70,7 +70,7 @@ class IdealPayment extends Payment implements ProcessPaymentInterface, CustomFor
     }
 
     /**
-     * @param $selectedCurrency
+     * @param string $selectedCurrency
      *
      * @return Config
      *
