@@ -138,7 +138,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             $initialNotification,
             $payment,
             new BackendService(
-                $payment->getTransactionConfig(Mage::app()->getLocale()->getCurrency()),
+                $payment->getTransactionConfig($invoice->getOrderCurrencyCode()),
                 $this->logger
             ),
             $payment->getCaptureOperation(),
@@ -192,7 +192,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         }
 
         $backendService = new BackendService(
-            $payment->getTransactionConfig(Mage::app()->getLocale()->getCurrency()),
+            $payment->getTransactionConfig($creditMemo->getOrderCurrencyCode()),
             $this->logger
         );
 
@@ -332,7 +332,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             $initialNotification,
             $payment,
             new BackendService(
-                $payment->getTransactionConfig(Mage::app()->getLocale()->getCurrency()),
+                $payment->getTransactionConfig($magePayment->getOrder()->getOrderCurrencyCode()),
                 $this->logger
             ),
             $payment->getCancelOperation()
