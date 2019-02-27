@@ -92,7 +92,7 @@ class WirecardEE_PaymentGateway_Helper_Data extends Mage_Payment_Helper_Data
         }
 
         if (! empty($server['HTTP_X_FORWARDED_FOR'])) {
-            $ips = $server['HTTP_X_FORWARDED_FOR'];
+            $ips = explode(',', $server['HTTP_X_FORWARDED_FOR']);
             return trim($ips[count($ips) - 1]);
         }
 
