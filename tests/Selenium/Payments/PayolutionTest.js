@@ -34,6 +34,7 @@ describe('payolution invoice test', () => {
         await driver.findElement(By.id(field)).sendKeys(formFields[field]);
       });
     });
+    await driver.findElement(By.id('wirecardee-payolution--consent')).click();
     await placeOrder(driver);
 
     await checkConfirmationPage(driver, 'Thank you for your purchase!');
