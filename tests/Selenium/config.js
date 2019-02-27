@@ -382,5 +382,9 @@ exports.tests = [
   {
     file: 'Payments/AlipayTest.js',
     timeout: 120000,
+  },
+  {
+    file: 'Payments/PayolutionTest.js',
+    timeout: 120000
   }
 ];
