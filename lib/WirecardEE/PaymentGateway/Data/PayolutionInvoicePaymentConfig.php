@@ -128,7 +128,7 @@ class PayolutionInvoicePaymentConfig extends PaymentConfig
     }
 
     /**
-     * @param $merchantId
+     * @param string $merchantId
      *
      * @since 1.2.0
      */
@@ -148,7 +148,7 @@ class PayolutionInvoicePaymentConfig extends PaymentConfig
     }
 
     /**
-     * @param $termsUrl
+     * @param string $termsUrl
      *
      * @since 1.2.0
      */
