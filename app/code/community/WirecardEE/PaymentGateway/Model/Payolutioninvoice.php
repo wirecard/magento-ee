@@ -8,7 +8,7 @@
  */
 
 /**
- * @since 1.1.0
+ * @since 1.2.0
  */
 class WirecardEE_PaymentGateway_Model_Payolutioninvoice extends WirecardEE_PaymentGateway_Model_Payment
 {
@@ -24,7 +24,7 @@ class WirecardEE_PaymentGateway_Model_Payolutioninvoice extends WirecardEE_Payme
     {
         /** @var Mage_Checkout_Model_Session $checkoutSession */
         $checkoutSession = Mage::getSingleton('checkout/session');
-        return ! $checkoutSession->getQuote()->getCustomerDob();
+        return !! $checkoutSession->getQuote()->getCustomerDob();
     }
 
     /**
@@ -61,10 +61,10 @@ class WirecardEE_PaymentGateway_Model_Payolutioninvoice extends WirecardEE_Payme
         }
 
         if (! $checkoutSession->getQuote()->getCustomerDob() &&
-            ! isset($paymentData['birthday'])
-            || empty($paymentData['birthday']['month'])
-            || empty($paymentData['birthday']['day'])
-            || empty($paymentData['birthday']['year'])) {
+            (! isset($paymentData['birthday'])
+                || empty($paymentData['birthday']['month'])
+                || empty($paymentData['birthday']['day'])
+                || empty($paymentData['birthday']['year']))) {
             $errorMsg .= $this->_getHelper()->__('dob_required') . PHP_EOL;
         }
 
