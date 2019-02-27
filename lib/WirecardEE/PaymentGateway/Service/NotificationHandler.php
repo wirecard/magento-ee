@@ -97,8 +97,6 @@ class NotificationHandler extends Handler
             $order = $order->loadByIncrementId($orderNumber);
         }
 
-        $refundableBasket = [];
-
         // Automatically invoice purchases.
         if (in_array($response->getTransactionType(), self::AUTO_INVOICE_TRANSACTION_TYPES) && $order->canInvoice()) {
             /** @var \Mage_Sales_Model_Order_Invoice $invoice */
@@ -116,14 +114,16 @@ class NotificationHandler extends Handler
                 ->addObject($invoice)
                 ->addObject($invoice->getOrder())
                 ->save();
+        }
 
-            foreach ($order->getAllVisibleItems() as $item) {
-                /** @var \Mage_Sales_Model_Order_Item $item */
-                $refundableBasket[$item->getId()] = (int)$item->getQtyOrdered();
-            }
-            if ($order->getShippingAmount() > 0.0) {
-                $refundableBasket[TransactionManager::ADDITIONAL_AMOUNT_KEY] = $order->getShippingAmount();
-            }
+        $refundableBasket = [];
+
+        foreach ($order->getAllVisibleItems() as $item) {
+            /** @var \Mage_Sales_Model_Order_Item $item */
+            $refundableBasket[$item->getId()] = (int)$item->getQtyOrdered();
+        }
+        if ($order->getShippingAmount() > 0.0) {
+            $refundableBasket[TransactionManager::ADDITIONAL_AMOUNT_KEY] = $order->getShippingAmount();
         }
 
         $transaction = $this->transactionManager->createTransaction(
