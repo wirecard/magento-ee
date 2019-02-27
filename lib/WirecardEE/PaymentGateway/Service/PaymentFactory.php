@@ -88,7 +88,7 @@ class PaymentFactory
      * @return PaymentInterface
      * @throws UnknownPaymentException
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function createFromPaymentModel(\WirecardEE_PaymentGateway_Model_Payment $payment)
     {

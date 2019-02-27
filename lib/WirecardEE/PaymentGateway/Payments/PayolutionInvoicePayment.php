@@ -42,7 +42,7 @@ class PayolutionInvoicePayment extends Payment implements
     /**
      * @return string
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getName()
     {
@@ -52,7 +52,7 @@ class PayolutionInvoicePayment extends Payment implements
     /**
      * @return PayolutionInvoiceTransaction
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getTransaction()
     {
@@ -63,11 +63,11 @@ class PayolutionInvoicePayment extends Payment implements
     }
 
     /**
-     * @param $selectedCurrency
+     * @param string $selectedCurrency
      *
      * @return Config
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getTransactionConfig($selectedCurrency)
     {
@@ -165,7 +165,7 @@ class PayolutionInvoicePayment extends Payment implements
      *
      * @return null
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function processPayment(
         OrderSummary $orderSummary,
@@ -261,7 +261,7 @@ class PayolutionInvoicePayment extends Payment implements
      *
      * @throws \Exception
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     private function isBelowAgeRestriction(\DateTime $birthDay)
     {
@@ -270,11 +270,11 @@ class PayolutionInvoicePayment extends Payment implements
     }
 
     /**
-     * @param $amount
+     * @param float $amount
      *
      * @return bool
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     private function isAmountInRange($amount)
     {
@@ -290,7 +290,7 @@ class PayolutionInvoicePayment extends Payment implements
      *
      * @throws \Exception
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     private function getBirthdayFromPaymentData($paymentData)
     {
@@ -317,7 +317,7 @@ class PayolutionInvoicePayment extends Payment implements
      *
      * @return ErrorAction|null
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     private function validateConsumerDateOfBirth(OrderSummary $orderSummary, AccountHolder $accountHolder)
     {

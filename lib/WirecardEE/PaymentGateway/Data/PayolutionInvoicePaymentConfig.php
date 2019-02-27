@@ -81,7 +81,7 @@ class PayolutionInvoicePaymentConfig extends PaymentConfig
     }
 
     /**
-     * @param $currency
+     * @param string $currency
      *
      * @return PaymentConfig
      *
@@ -96,7 +96,7 @@ class PayolutionInvoicePaymentConfig extends PaymentConfig
     }
 
     /**
-     * @param $currency
+     * @param string $currency
      *
      * @return bool
      *
@@ -168,7 +168,7 @@ class PayolutionInvoicePaymentConfig extends PaymentConfig
     }
 
     /**
-     * @param $requiresConsent
+     * @param bool $requiresConsent
      *
      * @since 1.2.0
      */

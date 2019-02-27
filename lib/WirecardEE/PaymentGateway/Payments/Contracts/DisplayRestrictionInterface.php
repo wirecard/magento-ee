@@ -10,7 +10,7 @@
 namespace WirecardEE\PaymentGateway\Payments\Contracts;
 
 /**
- * @since 1.1.0
+ * @since 1.2.0
  */
 interface DisplayRestrictionInterface
 {
@@ -19,7 +19,7 @@ interface DisplayRestrictionInterface
      *
      * @return bool
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function checkDisplayRestrictions(\Mage_Checkout_Model_Session $checkoutSession);
 }

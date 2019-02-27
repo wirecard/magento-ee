@@ -18,7 +18,7 @@ class WirecardEE_PaymentGateway_Model_Payolutioninvoice extends WirecardEE_Payme
     /**
      * @return bool
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function showDobForm()
     {
@@ -30,7 +30,7 @@ class WirecardEE_PaymentGateway_Model_Payolutioninvoice extends WirecardEE_Payme
     /**
      * @return bool
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function requiresConsent()
     {
@@ -43,7 +43,7 @@ class WirecardEE_PaymentGateway_Model_Payolutioninvoice extends WirecardEE_Payme
      *
      * @return $this
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function validate()
     {
