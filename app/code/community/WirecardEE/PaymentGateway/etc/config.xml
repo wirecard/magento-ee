@@ -9,7 +9,7 @@
 <config>
     <modules>
         <WirecardEE_PaymentGateway>
-            <version>1.0.0</version>
+            <version>1.2.0</version>
         </WirecardEE_PaymentGateway>
     </modules>
 
@@ -34,7 +34,16 @@
         <models>
             <paymentgateway>
                 <class>WirecardEE_PaymentGateway_Model</class>
+                <resourceModel>paymentgateway_resource</resourceModel>
             </paymentgateway>
+            <paymentgateway_resource>
+                <class>WirecardEE_PaymentGateway_Model_Resource</class>
+                <entities>
+                    <credit_card_vault_token>
+                        <table>wirecard_elastic_engine_credit_card_vault</table>
+                    </credit_card_vault_token>
+                </entities>
+            </paymentgateway_resource>
         </models>
 
         <events>
@@ -77,23 +86,48 @@
                     </wirecard_ee_refund>
                 </observers>
             </sales_order_payment_refund>
+
+            <controller_action_predispatch>
+                <observers>
+                    <wirecard_ee_check_session_messages>
+                        <type>singleton</type>
+                        <class>paymentgateway/backendOperation</class>
+                        <method>checkSessionMessages</method>
+                    </wirecard_ee_check_session_messages>
+                </observers>
+            </controller_action_predispatch>
+
+            <payment_method_is_active>
+                <observers>
+                    <wirecard_ee_payment_filter>
+                        <type>singleton</type>
+                        <class>paymentgateway/paymentFilter</class>
+                        <method>checkPaymentAvailability</method>
+                    </wirecard_ee_payment_filter>
+                </observers>
+            </payment_method_is_active>
         </events>
 
         <resources>
-            <paymentgateway_setup>
+            <wirecardee_paymentgateway_setup>
                 <setup>
                     <module>WirecardEE_PaymentGateway</module>
+                    <class>Mage_Eav_Model_Entity_Setup</class>
                 </setup>
-            </paymentgateway_setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </wirecardee_paymentgateway_setup>
         </resources>
     </global>
 
     <default>
         <wirecardee_paymentgateway>
             <settings>
-                <notify_mail></notify_mail>
+                <notify_mail />
                 <!--<pending_mail>0</pending_mail>-->
                 <delete_cancelled_orders>0</delete_cancelled_orders>
+                <unmatched_payment_mail />
             </settings>
         </wirecardee_paymentgateway>
         <payment>
@@ -131,6 +165,9 @@
                 <three_d_min_limit>100</three_d_min_limit>
                 <three_d_min_limit_currency>EUR</three_d_min_limit_currency>
                 <sort_order>1</sort_order>
+                <vault_enabled>0</vault_enabled>
+                <vault_allow_address_changes>0</vault_allow_address_changes>
+                <vault_use_three_d>1</vault_use_three_d>
             </wirecardee_paymentgateway_creditcard>
             <wirecardee_paymentgateway_sepadirectdebit>
                 <active>0</active>
@@ -146,11 +183,11 @@
                 <order_identification>1</order_identification>
                 <show_bic>0</show_bic>
                 <creditor_id>DE98ZZZ09999999999</creditor_id>
-                <creditor_name></creditor_name>
-                <creditor_street></creditor_street>
-                <creditor_zip></creditor_zip>
-                <creditor_city></creditor_city>
-                <creditor_country></creditor_country>
+                <creditor_name />
+                <creditor_street />
+                <creditor_zip />
+                <creditor_city />
+                <creditor_country />
                 <sort_order>33</sort_order>
             </wirecardee_paymentgateway_sepadirectdebit>
             <wirecardee_paymentgateway_sepacredit>
@@ -170,19 +207,19 @@
                 <fraud_prevention>1</fraud_prevention>
                 <sort_order>36</sort_order>
             </wirecardee_paymentgateway_sofortbanking>
-            <!--<wirecardee_paymentgateway_zapp>-->
-                <!--<active>0</active>-->
-                <!--<model>paymentgateway/paybybankapp</model>-->
-                <!--<title>Wirecard Pay by Bank app</title>-->
-                <!--<api_url>https://api-test.wirecard.com</api_url>-->
-                <!--<api_user>70000-APITEST-AP</api_user>-->
-                <!--<api_password>qD2wzQ_hrc!8</api_password>-->
-                <!--<api_maid>70055b24-38f1-4500-a3a8-afac4b1e3249</api_maid>-->
-                <!--<api_secret>4a4396df-f78c-44b9-b8a0-b72b108ac465</api_secret>-->
-                <!--<send_basket>1</send_basket>-->
-                <!--<fraud_prevention>1</fraud_prevention>-->
-                <!--<sort_order>40</sort_order>-->
-            <!--</wirecardee_paymentgateway_zapp>-->
+            <wirecardee_paymentgateway_zapp>
+                <active>0</active>
+                <model>paymentgateway/paybybankapp</model>
+                <title>Wirecard Pay by Bank app</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>70000-APITEST-AP</api_user>
+                <api_password>qD2wzQ_hrc!8</api_password>
+                <api_maid>70055b24-38f1-4500-a3a8-afac4b1e3249</api_maid>
+                <api_secret>4a4396df-f78c-44b9-b8a0-b72b108ac465</api_secret>
+                <send_basket>1</send_basket>
+                <fraud_prevention>1</fraud_prevention>
+                <sort_order>40</sort_order>
+            </wirecardee_paymentgateway_zapp>
             <wirecardee_paymentgateway_eps>
                 <active>0</active>
                 <model>paymentgateway/eps</model>
@@ -193,6 +230,7 @@
                 <api_maid>1f629760-1a66-4f83-a6b4-6a35620b4a6d</api_maid>
                 <api_secret>20c6a95c-e39b-4e6a-971f-52cfb347d359</api_secret>
                 <fraud_prevention>1</fraud_prevention>
+                <order_identification>1</order_identification>
                 <sort_order>9</sort_order>
             </wirecardee_paymentgateway_eps>
             <wirecardee_paymentgateway_giropay>
@@ -205,6 +243,7 @@
                 <api_maid>9b4b0e5f-1bc8-422e-be42-d0bad2eadabc</api_maid>
                 <api_secret>0c8c6f3a-1534-4fa1-99d9-d1c644d43709</api_secret>
                 <fraud_prevention>1</fraud_prevention>
+                <order_identification>1</order_identification>
                 <sort_order>11</sort_order>
             </wirecardee_paymentgateway_giropay>
             <wirecardee_paymentgateway_ideal>
@@ -217,8 +256,22 @@
                 <api_maid>4aeccf39-0d47-47f6-a399-c05c1f2fc819</api_maid>
                 <api_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</api_secret>
                 <fraud_prevention>1</fraud_prevention>
+                <order_identification>1</order_identification>
                 <sort_order>21</sort_order>
             </wirecardee_paymentgateway_ideal>
+            <wirecardee_paymentgateway_masterpass>
+                <active>0</active>
+                <model>paymentgateway/masterpass</model>
+                <title>Wirecard Masterpass</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>70000-APITEST-AP</api_user>
+                <api_password>qD2wzQ_hrc!8</api_password>
+                <api_maid>8bc8ed6d-81a8-43be-bd7b-75b008f89fa6</api_maid>
+                <api_secret>2d96596b-9d10-4c98-ac47-4d56e22fd878</api_secret>
+                <transaction_type>pay</transaction_type>
+                <fraud_prevention>1</fraud_prevention>
+                <sort_order>23</sort_order>
+            </wirecardee_paymentgateway_masterpass>
             <wirecardee_paymentgateway_ratepayinvoice>
                 <active>0</active>
                 <model>paymentgateway/ratepayinvoice</model>
@@ -246,9 +299,87 @@
                 <api_password>4-41N4\lI0]783</api_password>
                 <api_maid>4945f0ef-51e0-43af-972f-885405320842</api_maid>
                 <api_secret>822e87ea-dcc3-4d01-861c-e39f14a0ab6c</api_secret>
+                <transaction_type>pay</transaction_type>
                 <fraud_prevention>1</fraud_prevention>
+                <order_identification>1</order_identification>
                 <sort_order>22</sort_order>
             </wirecardee_paymentgateway_maestro>
+            <wirecardee_paymentgateway_poi>
+                <active>0</active>
+                <model>paymentgateway/poi</model>
+                <title>Wirecard Payment On Invoice</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>70000-APITEST-AP</api_user>
+                <api_password>qD2wzQ_hrc!8</api_password>
+                <api_maid>105ab3e8-d16b-4fa0-9f1f-18dd9b390c94</api_maid>
+                <api_secret>2d96596b-9d10-4c98-ac47-4d56e22fd878</api_secret>
+                <fraud_prevention>1</fraud_prevention>
+                <sort_order>28</sort_order>
+            </wirecardee_paymentgateway_poi>
+            <wirecardee_paymentgateway_pia>
+                <active>0</active>
+                <model>paymentgateway/pia</model>
+                <title>Wirecard Payment In Advance</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>70000-APITEST-AP</api_user>
+                <api_password>qD2wzQ_hrc!8</api_password>
+                <api_maid>105ab3e8-d16b-4fa0-9f1f-18dd9b390c94</api_maid>
+                <api_secret>2d96596b-9d10-4c98-ac47-4d56e22fd878</api_secret>
+                <fraud_prevention>1</fraud_prevention>
+                <sort_order>27</sort_order>
+            </wirecardee_paymentgateway_pia>
+            <wirecardee_paymentgateway_unionpayinternational>
+                <active>0</active>
+                <model>paymentgateway/unionpay</model>
+                <title>Wirecard UnionPay International</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>70000-APILUHN-CARD</api_user>
+                <api_password>8mhwavKVb91T</api_password>
+                <api_maid>c6e9331c-5c1f-4fc6-8a08-ef65ce09ddb0</api_maid>
+                <api_secret>16d85b73-79e2-4c33-932a-7da99fb04a9c</api_secret>
+                <transaction_type>pay</transaction_type>
+                <fraud_prevention>1</fraud_prevention>
+                <sort_order>38</sort_order>
+            </wirecardee_paymentgateway_unionpayinternational>
+            <wirecardee_paymentgateway_alipay-xborder>
+                <active>0</active>
+                <model>paymentgateway/alipay</model>
+                <title>Wirecard Alipay Cross-border</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>70000-APITEST-AP</api_user>
+                <api_password>qD2wzQ_hrc!8</api_password>
+                <api_maid>7ca48aa0-ab12-4560-ab4a-af1c477cce43</api_maid>
+                <api_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</api_secret>
+                <fraud_prevention>1</fraud_prevention>
+                <sort_order>3</sort_order>
+            </wirecardee_paymentgateway_alipay-xborder>
+            <wirecardee_paymentgateway_payolutioninvoice>
+                <active>0</active>
+                <model>paymentgateway/payolutioninvoice</model>
+                <title>Wirecard Guaranteed Invoice by payolution</title>
+                <eur_enabled>0</eur_enabled>
+                <eur_api_url>https://api-test.wirecard.com</eur_api_url>
+                <eur_api_user>16390-testing</eur_api_user>
+                <eur_api_password>3!3013=D3fD8X7</eur_api_password>
+                <eur_api_maid>2048677d-57f4-44b0-8d67-9014c6631d5f</eur_api_maid>
+                <eur_api_secret>74bd2f0c-6d1b-4e9a-b278-abc34b83ab9f</eur_api_secret>
+                <chf_enabled>0</chf_enabled>
+                <chf_api_url>https://api-test.wirecard.com</chf_api_url>
+                <chf_api_user>16390-testing</chf_api_user>
+                <chf_api_password>3!3013=D3fD8X7</chf_api_password>
+                <chf_api_maid>2048677d-57f4-44b0-8d67-9014c6631d5f</chf_api_maid>
+                <chf_api_secret>74bd2f0c-6d1b-4e9a-b278-abc34b83ab9f</chf_api_secret>
+                <fraud_prevention>1</fraud_prevention>
+                <min_amount>25</min_amount>
+                <max_amount>3500</max_amount>
+                <allowed_billing_countries>AT,DE,CH,NL</allowed_billing_countries>
+                <allowed_shipping_countries>AT,DE,CH,NL</allowed_shipping_countries>
+                <identical_billing_shipping_address>1</identical_billing_shipping_address>
+                <require_consent>1</require_consent>
+                <mid />
+                <terms_url />
+                <sort_order>18</sort_order>
+            </wirecardee_paymentgateway_payolutioninvoice>
         </payment>
     </default>
 

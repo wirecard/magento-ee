@@ -10,14 +10,17 @@
 namespace WirecardEE\Tests\Functional\Controller;
 
 use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\Transaction\AlipayCrossborderTransaction;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 use Wirecard\PaymentSdk\Transaction\EpsTransaction;
 use Wirecard\PaymentSdk\Transaction\GiropayTransaction;
 use Wirecard\PaymentSdk\Transaction\MaestroTransaction;
+use Wirecard\PaymentSdk\Transaction\MasterpassTransaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
+use Wirecard\PaymentSdk\Transaction\UpiTransaction;
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\RedirectAction;
 use WirecardEE\PaymentGateway\Actions\ViewAction;
@@ -97,6 +100,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $item->setTaxPercent("10.0");
 
         $order = $this->createMock(\Mage_Sales_Model_Order::class);
+        $payment->setOrder($order);
         $order->method('__call')->willReturnMap([
             ['getBaseGrandTotal', [], 25],
             ['getBaseCurrencyCode', [], 'EUR'],
@@ -288,6 +292,57 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         );
     }
 
+    public function testIndexActionWithMasterpass()
+    {
+        list($controller, , $transaction, $coreSession) = $this->prepareForIndexAction(MasterpassTransaction::NAME);
+
+        $transaction->expects($this->once())->method('setTxnType')->with('payment');
+
+        $coreSession->method('getData')->willReturnMap([
+            [\WirecardEE_PaymentGateway_Helper_Data::DEVICE_FINGERPRINT_ID, false, md5('test')],
+        ]);
+
+        /** @var RedirectAction $action */
+        $action = $controller->indexAction();
+        $this->assertInstanceOf(RedirectAction::class, $action);
+        $this->assertContains(
+            '/engine/notification/masterpass/lightBoxPaymentPage',
+            $action->getUrl()
+        );
+    }
+
+    public function testIndexActionWithPoi()
+    {
+        list($controller, , , $coreSession) = $this->prepareForIndexAction('poi', false);
+
+        $coreSession->method('getData')->willReturnMap([
+            [\WirecardEE_PaymentGateway_Helper_Data::DEVICE_FINGERPRINT_ID, false, md5('test')],
+        ]);
+        $coreSession->method('getMessages')->willReturn(new \Mage_Core_Model_Message_Collection());
+
+        /** @var ViewAction $action */
+        $action = $controller->indexAction();
+        $this->assertInstanceOf(ViewAction::class, $action);
+        $this->assertNotEmpty($action->getAssignments());
+        $this->assertContains('redirect', $action->getBlockName());
+    }
+
+    public function testIndexActionWithPia()
+    {
+        list($controller, , , $coreSession) = $this->prepareForIndexAction('pia', false);
+
+        $coreSession->method('getData')->willReturnMap([
+            [\WirecardEE_PaymentGateway_Helper_Data::DEVICE_FINGERPRINT_ID, false, md5('test')],
+        ]);
+        $coreSession->method('getMessages')->willReturn(new \Mage_Core_Model_Message_Collection());
+
+        /** @var ViewAction $action */
+        $action = $controller->indexAction();
+        $this->assertInstanceOf(ViewAction::class, $action);
+        $this->assertNotEmpty($action->getAssignments());
+        $this->assertContains('redirect', $action->getBlockName());
+    }
+
     public function testIndexActionWithGiropay()
     {
         list($controller, , $transaction, $coreSession) = $this->prepareForIndexAction(GiropayTransaction::NAME);
@@ -315,6 +370,23 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         );
     }
 
+    public function testIndexActionWithAlipay()
+    {
+        list($controller, , $transaction, $coreSession) = $this->prepareForIndexAction(AlipayCrossborderTransaction::NAME);
+
+        $transaction->expects($this->once())->method('setTxnType')->with('payment');
+
+        $coreSession->method('getData')->willReturnMap([
+            [\WirecardEE_PaymentGateway_Helper_Data::DEVICE_FINGERPRINT_ID, false, md5('test')],
+        ]);
+        $coreSession->method('getMessages')->willReturn(new \Mage_Core_Model_Message_Collection());
+
+        /** @var RedirectAction $action */
+        $action = $controller->indexAction();
+        $this->assertInstanceOf(RedirectAction::class, $action);
+        $this->assertContains('alipaydev.com/gateway', $action->getUrl());
+    }
+
     public function testIndexActionWithMaestro()
     {
         list($controller, $order, $transaction, $coreSession) = $this->prepareForIndexAction(MaestroTransaction::NAME);
@@ -337,6 +409,30 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $this->assertArrayHasKey('url', $assignments);
         $this->assertEquals('https://api-wdcee-test.wirecard.com', $assignments['wirecardUrl']);
         $this->assertStringEndsWith('paymentgateway/gateway/return/method/maestro/', $assignments['url']);
+    }
+
+    public function testIndexActionWithUnionpay()
+    {
+        list($controller, $order, $transaction, $coreSession) = $this->prepareForIndexAction(UpiTransaction::NAME);
+
+        $transaction->expects($this->once())->method('setTxnType')->with('capture');
+        $transaction->expects($this->once())->method('setOrder')->with($order);
+
+        $coreSession->method('getData')->willReturnMap([
+            [\WirecardEE_PaymentGateway_Helper_Data::DEVICE_FINGERPRINT_ID, false, md5('test')],
+        ]);
+        $coreSession->method('getMessages')->willReturn(new \Mage_Core_Model_Message_Collection());
+
+        /** @var ViewAction $action */
+        $action = $controller->indexAction();
+        $this->assertInstanceOf(ViewAction::class, $action);
+        $this->assertEquals('paymentgateway/seamless', $action->getBlockName());
+        $assignments = $action->getAssignments();
+        $this->assertArrayHasKey('wirecardUrl', $assignments);
+        $this->assertArrayHasKey('wirecardRequestData', $assignments);
+        $this->assertArrayHasKey('url', $assignments);
+        $this->assertEquals('https://api-test.wirecard.com', $assignments['wirecardUrl']);
+        $this->assertStringEndsWith('paymentgateway/gateway/return/method/unionpayinternational/', $assignments['url']);
     }
 
     public function testInsufficientDataExceptionIndexActionWithGiropay()
@@ -429,6 +525,29 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         \Mage::app()->setRequest($request);
 
         $this->assertTrue($controller->cancelAction());
+    }
+
+    public function testDeleteCreditCardTokenAction()
+    {
+        $customerSession = $this->createMock(\Mage_Customer_Model_Session::class);
+        $customerSession->method('getCustomerId')->willReturn(1);
+
+        $this->replaceMageSingleton('customer/session', $customerSession);
+
+        $vaultToken = $this->createMock(\WirecardEE_PaymentGateway_Model_CreditCardVaultToken::class);
+        $vaultToken->method('isEmpty')->willReturn(false);
+        $vaultToken->method('getCustomerId')->willReturn(1);
+        $vaultToken->expects($this->once())->method('delete');
+
+        $this->replaceMageModel('paymentgateway/creditCardVaultToken', $vaultToken);
+
+        $request  = new \Mage_Core_Controller_Request_Http();
+        $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
+
+        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        \Mage::app()->setRequest($request);
+
+        $this->assertInstanceOf(\Mage_Core_Controller_Varien_Action::class, $controller->deleteCreditCardTokenAction());
     }
 
     public function testFailureAction()

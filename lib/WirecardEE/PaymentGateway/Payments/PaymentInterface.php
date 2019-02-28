@@ -37,7 +37,7 @@ interface PaymentInterface
     /**
      * Returns transaction config.
      *
-     * @param $selectedCurrency
+     * @param string $selectedCurrency
      *
      * @return Config
      *
@@ -82,21 +82,30 @@ interface PaymentInterface
     );
 
     /**
-     * @return string
+     * Returns the backend operation for canceling orders. Returning `null` would disable this backend operation (by
+     * not hooking into the Magento cancel operation).
+     *
+     * @return string|null
      *
      * @since 1.0.0
      */
     public function getCancelOperation();
 
     /**
-     * @return string
+     * Returns the backend operation for refunding payments. Returning `null` would disable this backend operation (by
+     * not hooking into the Magento cancel operation).
+     *
+     * @return string|null
      *
      * @since 1.0.0
      */
     public function getRefundOperation();
 
     /**
-     * @return string
+     * Returns the backend operation for capturing payments. Returning `null` would disable this backend operation (by
+     * not hooking into the Magento cancel operation).
+     *
+     * @return string|null
      *
      * @since 1.0.0
      */

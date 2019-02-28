@@ -13,7 +13,7 @@ use WirecardEE\PaymentGateway\Payments\Payment;
 use WirecardEE\PaymentGateway\Service\PaymentFactory;
 
 /**
- * @since 1.1.0
+ * @since 1.2.0
  */
 class WirecardEE_PaymentGateway_Model_PaymentFilter
 {
@@ -22,7 +22,7 @@ class WirecardEE_PaymentGateway_Model_PaymentFilter
      *
      * @throws UnknownPaymentException
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function checkPaymentAvailability(Varien_Event_Observer $observer)
     {
@@ -50,7 +50,7 @@ class WirecardEE_PaymentGateway_Model_PaymentFilter
     /**
      * @return Mage_Checkout_Model_Session|Mage_Core_Model_Abstract
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     protected function getCheckoutSession()
     {

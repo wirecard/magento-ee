@@ -9,26 +9,36 @@
 
 namespace WirecardEE\PaymentGateway\Service;
 
+use Wirecard\PaymentSdk\Transaction\AlipayCrossborderTransaction;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\EpsTransaction;
 use Wirecard\PaymentSdk\Transaction\GiropayTransaction;
 use Wirecard\PaymentSdk\Transaction\IdealTransaction;
+use Wirecard\PaymentSdk\Transaction\MasterpassTransaction;
 use Wirecard\PaymentSdk\Transaction\MaestroTransaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
+use Wirecard\PaymentSdk\Transaction\UpiTransaction;
 use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
+use WirecardEE\PaymentGateway\Payments\AlipayPayment;
 use WirecardEE\PaymentGateway\Payments\CreditCardPayment;
 use WirecardEE\PaymentGateway\Payments\EpsPayment;
 use WirecardEE\PaymentGateway\Payments\GiropayPayment;
 use WirecardEE\PaymentGateway\Payments\IdealPayment;
+use WirecardEE\PaymentGateway\Payments\MasterpassPayment;
 use WirecardEE\PaymentGateway\Payments\MaestroPayment;
+use WirecardEE\PaymentGateway\Payments\PayByBankAppPayment;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
+use WirecardEE\PaymentGateway\Payments\PayolutionInvoicePayment;
 use WirecardEE\PaymentGateway\Payments\PaypalPayment;
+use WirecardEE\PaymentGateway\Payments\PoiPayment;
+use WirecardEE\PaymentGateway\Payments\PiaPayment;
 use WirecardEE\PaymentGateway\Payments\RatepayInvoicePayment;
 use WirecardEE\PaymentGateway\Payments\SepaPayment;
 use WirecardEE\PaymentGateway\Payments\SofortPayment;
+use WirecardEE\PaymentGateway\Payments\UnionpayPayment;
 
 /**
  * Responsible for creating payment objects based on their name.
@@ -54,6 +64,7 @@ class PaymentFactory
     {
         $mapping = $this->getMappedPayments();
         if (! isset($mapping[$paymentName])) {
+            (new Logger())->error("Unable to create payment $paymentName");
             throw new UnknownPaymentException($paymentName);
         }
 
@@ -79,12 +90,13 @@ class PaymentFactory
      * @return PaymentInterface
      * @throws UnknownPaymentException
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function createFromPaymentModel(\WirecardEE_PaymentGateway_Model_Payment $payment)
     {
         return $this->create(str_replace(self::PAYMENT_PREFIX, '', $payment->getPaymentMethod()));
     }
+
 
     /**
      * Create and return all supported payments
@@ -115,17 +127,22 @@ class PaymentFactory
     private function getMappedPayments()
     {
         return [
-            PayPalTransaction::NAME          => PaypalPayment::class,
-            CreditCardTransaction::NAME      => CreditCardPayment::class,
-            SepaDirectDebitTransaction::NAME => SepaPayment::class,
-            SofortTransaction::NAME          => SofortPayment::class,
-            EpsTransaction::NAME             => EpsPayment::class,
-            GiropayTransaction::NAME         => GiropayPayment::class,
-            EpsTransaction::NAME             => EpsPayment::class,
-            IdealTransaction::NAME           => IdealPayment::class,
-            RatepayInvoiceTransaction::NAME  => RatepayInvoicePayment::class,
-            // PayByBankAppPayment::NAME        => PayByBankAppPayment::class,
-            MaestroTransaction::NAME         => MaestroPayment::class,
+            PayPalTransaction::NAME            => PaypalPayment::class,
+            CreditCardTransaction::NAME        => CreditCardPayment::class,
+            SepaDirectDebitTransaction::NAME   => SepaPayment::class,
+            SofortTransaction::NAME            => SofortPayment::class,
+            EpsTransaction::NAME               => EpsPayment::class,
+            GiropayTransaction::NAME           => GiropayPayment::class,
+            IdealTransaction::NAME             => IdealPayment::class,
+            PayByBankAppPayment::NAME          => PayByBankAppPayment::class,
+            RatepayInvoiceTransaction::NAME    => RatepayInvoicePayment::class,
+            MaestroTransaction::NAME           => MaestroPayment::class,
+            PoiPayment::NAME                   => PoiPayment::class,
+            PiaPayment::NAME                   => PiaPayment::class,
+            MasterpassTransaction::NAME        => MasterpassPayment::class,
+            AlipayCrossborderTransaction::NAME => AlipayPayment::class,
+            UpiTransaction::NAME               => UnionpayPayment::class,
+            'payolutioninvoice'                => PayolutionInvoicePayment::class,
         ];
     }
 

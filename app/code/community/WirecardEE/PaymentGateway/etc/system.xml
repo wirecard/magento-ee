@@ -51,14 +51,14 @@
                             <tooltip>config_email_notification_desc</tooltip>
                         </notify_mail>
                         <!--<pending_mail translate="label">-->
-                            <!--<label>config_pendig_status_mails</label>-->
-                            <!--<frontend_type>select</frontend_type>-->
-                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
-                            <!--<sort_order>20</sort_order>-->
-                            <!--<show_in_default>1</show_in_default>-->
-                            <!--<show_in_website>1</show_in_website>-->
-                            <!--<show_in_store>1</show_in_store>-->
-                            <!--<tooltip>config_pendig_status_mails_desc</tooltip>-->
+                        <!--<label>config_pendig_status_mails</label>-->
+                        <!--<frontend_type>select</frontend_type>-->
+                        <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                        <!--<sort_order>20</sort_order>-->
+                        <!--<show_in_default>1</show_in_default>-->
+                        <!--<show_in_website>1</show_in_website>-->
+                        <!--<show_in_store>1</show_in_store>-->
+                        <!--<tooltip>config_pendig_status_mails_desc</tooltip>-->
                         <!--</pending_mail>-->
                         <delete_cancelled_orders translate="label comment">
                             <label>config_delete_cancel_order</label>
@@ -71,6 +71,15 @@
                             <comment>config_delete_cancel_order_warning</comment>
                             <tooltip>config_delete_cancel_order_desc</tooltip>
                         </delete_cancelled_orders>
+                        <unmatched_payment_mail>
+                            <label>config_unmatched_payment_mail</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <tooltip>config_unmatched_payment_mail_desc</tooltip>
+                        </unmatched_payment_mail>
                     </fields>
                 </settings>
             </groups>
@@ -379,6 +388,36 @@
                             <sort_order>150</sort_order>
                             <tooltip>config_three_d_min_limit_currency_desc</tooltip>
                         </three_d_min_limit_currency>
+                        <vault_enabled translate="label tooltip">
+                            <label>enable_vault</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <tooltip>config_vault_desc</tooltip>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>160</sort_order>
+                        </vault_enabled>
+                        <vault_allow_address_changes translate="label tooltip">
+                            <label>vault_allow_address_changes</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <tooltip>vault_allow_address_changes_desc</tooltip>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>170</sort_order>
+                        </vault_allow_address_changes>
+                        <vault_use_three_d translate="label tooltip">
+                            <label>vault_use_three_d</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <tooltip>vault_use_three_d_desc</tooltip>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>170</sort_order>
+                        </vault_use_three_d>
                         <sort_order translate="label tooltip">
                             <label>config_sort_order</label>
                             <frontend_type>text</frontend_type>
@@ -386,7 +425,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <frontend_class>validate-number</frontend_class>
-                            <sort_order>160</sort_order>
+                            <sort_order>180</sort_order>
                             <tooltip>config_sort_order_desc</tooltip>
                         </sort_order>
                     </fields>
@@ -723,127 +762,118 @@
                         </sort_order>
                     </fields>
                 </wirecardee_paymentgateway_sofortbanking>
-                <!--<wirecardee_paymentgateway_zapp translate="label" module="paymentgateway">-->
-                    <!--<label>heading_title_zapp</label>-->
-                    <!--<sort_order>998</sort_order>-->
-                    <!--<show_in_default>1</show_in_default>-->
-                    <!--<show_in_website>1</show_in_website>-->
-                    <!--<show_in_store>1</show_in_store>-->
-                    <!--<fields>-->
-                        <!--<title translate="label tooltip">-->
-                            <!--<label>config_title</label>-->
-                            <!--<frontend_type>text</frontend_type>-->
-                            <!--<show_in_default>1</show_in_default>-->
-                            <!--<show_in_website>1</show_in_website>-->
-                            <!--<show_in_store>1</show_in_store>-->
-                            <!--<sort_order>10</sort_order>-->
-                            <!--<tooltip>config_title_desc</tooltip>-->
-                        <!--</title>-->
-                        <!--<active translate="label tooltip">-->
-                            <!--<label>text_enabled</label>-->
-                            <!--<frontend_type>select</frontend_type>-->
-                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
-                            <!--<show_in_default>1</show_in_default>-->
-                            <!--<show_in_website>1</show_in_website>-->
-                            <!--<show_in_store>1</show_in_store>-->
-                            <!--<sort_order>20</sort_order>-->
-                            <!--<tooltip>config_status_desc_zapp</tooltip>-->
-                        <!--</active>-->
-                        <!--<api_url translate="label tooltip">-->
-                            <!--<label>config_base_url</label>-->
-                            <!--<frontend_type>text</frontend_type>-->
-                            <!--<show_in_default>1</show_in_default>-->
-                            <!--<show_in_website>1</show_in_website>-->
-                            <!--<show_in_store>1</show_in_store>-->
-                            <!--<sort_order>30</sort_order>-->
-                            <!--<tooltip>config_base_url_desc</tooltip>-->
-                        <!--</api_url>-->
-                        <!--<api_user translate="label tooltip">-->
-                            <!--<label>config_http_user</label>-->
-                            <!--<frontend_type>text</frontend_type>-->
-                            <!--<show_in_default>1</show_in_default>-->
-                            <!--<show_in_website>1</show_in_website>-->
-                            <!--<show_in_store>1</show_in_store>-->
-                            <!--<sort_order>40</sort_order>-->
-                            <!--<tooltip>config_http_user_desc</tooltip>-->
-                        <!--</api_user>-->
-                        <!--<api_password translate="label tooltip">-->
-                            <!--<label>config_http_password</label>-->
-                            <!--<frontend_type>text</frontend_type>-->
-                            <!--<show_in_default>1</show_in_default>-->
-                            <!--<show_in_website>1</show_in_website>-->
-                            <!--<show_in_store>1</show_in_store>-->
-                            <!--<sort_order>50</sort_order>-->
-                            <!--<tooltip>config_http_password_desc</tooltip>-->
-                        <!--</api_password>-->
-                        <!--<api_test_button>-->
-                            <!--<frontend_type>button</frontend_type>-->
-                            <!--<frontend_model>paymentgateway/adminhtml_system_config_credentialsButton</frontend_model>-->
-                            <!--<method>zapp</method>-->
-                            <!--<show_in_default>1</show_in_default>-->
-                            <!--<show_in_website>1</show_in_website>-->
-                            <!--<show_in_store>1</show_in_store>-->
-                            <!--<sort_order>60</sort_order>-->
-                        <!--</api_test_button>-->
-                        <!--<api_maid translate="label tooltip">-->
-                            <!--<label>config_merchant_account_id</label>-->
-                            <!--<frontend_type>text</frontend_type>-->
-                            <!--<show_in_default>1</show_in_default>-->
-                            <!--<show_in_website>1</show_in_website>-->
-                            <!--<show_in_store>1</show_in_store>-->
-                            <!--<sort_order>70</sort_order>-->
-                            <!--<tooltip>config_merchant_account_id_desc</tooltip>-->
-                        <!--</api_maid>-->
-                        <!--<api_secret translate="label tooltip">-->
-                            <!--<label>config_merchant_secret</label>-->
-                            <!--<frontend_type>text</frontend_type>-->
-                            <!--<show_in_default>1</show_in_default>-->
-                            <!--<show_in_website>1</show_in_website>-->
-                            <!--<show_in_store>1</show_in_store>-->
-                            <!--<sort_order>80</sort_order>-->
-                            <!--<tooltip>config_merchant_secret_desc</tooltip>-->
-                        <!--</api_secret>-->
-                        <!--<send_basket translate="label tooltip">-->
-                            <!--<label>config_shopping_basket</label>-->
-                            <!--<frontend_type>select</frontend_type>-->
-                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
-                            <!--<show_in_default>1</show_in_default>-->
-                            <!--<show_in_website>1</show_in_website>-->
-                            <!--<show_in_store>1</show_in_store>-->
-                            <!--<sort_order>90</sort_order>-->
-                            <!--<tooltip>config_shopping_basket_desc</tooltip>-->
-                        <!--</send_basket>-->
-                        <!--<fraud_prevention translate="label tooltip">-->
-                            <!--<label>config_additional_info</label>-->
-                            <!--<frontend_type>select</frontend_type>-->
-                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
-                            <!--<show_in_default>1</show_in_default>-->
-                            <!--<show_in_website>1</show_in_website>-->
-                            <!--<show_in_store>1</show_in_store>-->
-                            <!--<sort_order>100</sort_order>-->
-                            <!--<tooltip>config_additional_info_desc</tooltip>-->
-                        <!--</fraud_prevention>-->
-                        <!--<merchant_return_string translate="label tooltip">-->
-                            <!--<label>config_merchant_returnstring</label>-->
-                            <!--<frontend_type>text</frontend_type>-->
-                            <!--<show_in_default>1</show_in_default>-->
-                            <!--<show_in_website>1</show_in_website>-->
-                            <!--<show_in_store>1</show_in_store>-->
-                            <!--<sort_order>110</sort_order>-->
-                            <!--<tooltip>config_merchant_returnstring_desc</tooltip>-->
-                        <!--</merchant_return_string>-->
-                        <!--<sort_order translate="label tooltip">-->
-                            <!--<label>config_sort_order</label>-->
-                            <!--<frontend_type>text</frontend_type>-->
-                            <!--<show_in_default>1</show_in_default>-->
-                            <!--<show_in_website>1</show_in_website>-->
-                            <!--<show_in_store>0</show_in_store>-->
-                            <!--<frontend_class>validate-number</frontend_class>-->
-                            <!--<sort_order>120</sort_order>-->
-                            <!--<tooltip>config_sort_order_desc</tooltip>-->
-                        <!--</sort_order>-->
-                    <!--</fields>-->
-                <!--</wirecardee_paymentgateway_zapp>-->
+                <wirecardee_paymentgateway_zapp translate="label" module="paymentgateway">
+                    <label>heading_title_zapp</label>
+                    <sort_order>998</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <title translate="label tooltip">
+                            <label>config_title</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>10</sort_order>
+                            <tooltip>config_title_desc</tooltip>
+                        </title>
+                        <active translate="label tooltip">
+                            <label>text_enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>20</sort_order>
+                            <tooltip>config_status_desc_zapp</tooltip>
+                        </active>
+                        <api_url translate="label tooltip">
+                            <label>config_base_url</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>30</sort_order>
+                            <tooltip>config_base_url_desc</tooltip>
+                        </api_url>
+                        <api_user translate="label tooltip">
+                            <label>config_http_user</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>40</sort_order>
+                            <tooltip>config_http_user_desc</tooltip>
+                        </api_user>
+                        <api_password translate="label tooltip">
+                            <label>config_http_password</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>50</sort_order>
+                            <tooltip>config_http_password_desc</tooltip>
+                        </api_password>
+                        <api_test_button>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>paymentgateway/adminhtml_system_config_credentialsButton</frontend_model>
+                            <method>zapp</method>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>60</sort_order>
+                        </api_test_button>
+                        <api_maid translate="label tooltip">
+                            <label>config_merchant_account_id</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>70</sort_order>
+                            <tooltip>config_merchant_account_id_desc</tooltip>
+                        </api_maid>
+                        <api_secret translate="label tooltip">
+                            <label>config_merchant_secret</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>80</sort_order>
+                            <tooltip>config_merchant_secret_desc</tooltip>
+                        </api_secret>
+                        <send_basket translate="label tooltip">
+                            <label>config_shopping_basket</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>90</sort_order>
+                            <tooltip>config_shopping_basket_desc</tooltip>
+                        </send_basket>
+                        <fraud_prevention translate="label tooltip">
+                            <label>config_additional_info</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>100</sort_order>
+                            <tooltip>config_additional_info_desc</tooltip>
+                        </fraud_prevention>
+                        <sort_order translate="label tooltip">
+                            <label>config_sort_order</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <frontend_class>validate-number</frontend_class>
+                            <sort_order>120</sort_order>
+                            <tooltip>config_sort_order_desc</tooltip>
+                        </sort_order>
+                    </fields>
+                </wirecardee_paymentgateway_zapp>
                 <wirecardee_paymentgateway_eps translate="label" module="paymentgateway">
                     <label>heading_title_eps</label>
                     <sort_order>1005</sort_order>
@@ -934,6 +964,16 @@
                             <sort_order>90</sort_order>
                             <tooltip>config_additional_info_desc</tooltip>
                         </fraud_prevention>
+                        <order_identification translate="label tooltip">
+                            <label>config_descriptor</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>95</sort_order>
+                            <tooltip>config_descriptor_desc</tooltip>
+                        </order_identification>
                         <sort_order translate="label tooltip">
                             <label>config_sort_order</label>
                             <frontend_type>text</frontend_type>
@@ -1036,6 +1076,16 @@
                             <sort_order>90</sort_order>
                             <tooltip>config_additional_info_desc</tooltip>
                         </fraud_prevention>
+                        <order_identification translate="label tooltip">
+                            <label>config_descriptor</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>95</sort_order>
+                            <tooltip>config_descriptor_desc</tooltip>
+                        </order_identification>
                         <sort_order translate="label tooltip">
                             <label>config_sort_order</label>
                             <frontend_type>text</frontend_type>
@@ -1138,6 +1188,16 @@
                             <sort_order>80</sort_order>
                             <tooltip>config_additional_info_desc</tooltip>
                         </fraud_prevention>
+                        <order_identification translate="label tooltip">
+                            <label>config_descriptor</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>85</sort_order>
+                            <tooltip>config_descriptor_desc</tooltip>
+                        </order_identification>
                         <sort_order translate="label">
                             <label>config_sort_order</label>
                             <frontend_type>text</frontend_type>
@@ -1416,6 +1476,16 @@
                             <sort_order>80</sort_order>
                             <tooltip>config_additional_info_desc</tooltip>
                         </fraud_prevention>
+                        <order_identification translate="label tooltip">
+                            <label>config_descriptor</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>85</sort_order>
+                            <tooltip>config_descriptor_desc</tooltip>
+                        </order_identification>
                         <sort_order translate="label">
                             <label>config_sort_order</label>
                             <frontend_type>text</frontend_type>
@@ -1428,6 +1498,835 @@
                         </sort_order>
                     </fields>
                 </wirecardee_paymentgateway_maestro>
+                <wirecardee_paymentgateway_unionpayinternational>
+                    <label>heading_title_upi</label>
+                    <sort_order>1006</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <title translate="label tooltip">
+                            <label>config_title</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>10</sort_order>
+                            <tooltip>config_title_desc</tooltip>
+                        </title>
+                        <active translate="label tooltip">
+                            <label>text_enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>20</sort_order>
+                            <tooltip>config_status_desc_upi</tooltip>
+                        </active>
+                        <api_url translate="label tooltip">
+                            <label>config_base_url</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>30</sort_order>
+                            <tooltip>config_base_url_desc</tooltip>
+                        </api_url>
+                        <api_user translate="label tooltip">
+                            <label>config_http_user</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>40</sort_order>
+                            <tooltip>config_http_user_desc</tooltip>
+                        </api_user>
+                        <api_password translate="label tooltip">
+                            <label>config_http_password</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>50</sort_order>
+                            <tooltip>config_http_password_desc</tooltip>
+                        </api_password>
+                        <api_test_button>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>paymentgateway/adminhtml_system_config_credentialsButton</frontend_model>
+                            <method>unionpayinternational</method>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>60</sort_order>
+                        </api_test_button>
+                        <api_maid translate="label tooltip">
+                            <label>config_merchant_account_id</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>70</sort_order>
+                            <tooltip>config_merchant_account_id_desc</tooltip>
+                        </api_maid>
+                        <api_secret translate="label tooltip">
+                            <label>config_merchant_secret</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>80</sort_order>
+                            <tooltip>config_merchant_secret_desc</tooltip>
+                        </api_secret>
+                        <transaction_type translate="label tooltip">
+                            <label>config_payment_action</label>
+                            <source_model>paymentgateway/unionpay</source_model>
+                            <frontend_type>select</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>90</sort_order>
+                            <tooltip>config_payment_action_desc</tooltip>
+                        </transaction_type>
+                        <fraud_prevention translate="label tooltip">
+                            <label>config_additional_info</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>100</sort_order>
+                            <tooltip>config_additional_info_desc</tooltip>
+                        </fraud_prevention>
+                        <sort_order translate="label tooltip">
+                            <label>config_sort_order</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <frontend_class>validate-number</frontend_class>
+                            <sort_order>110</sort_order>
+                            <tooltip>config_sort_order_desc</tooltip>
+                        </sort_order>
+                    </fields>
+                </wirecardee_paymentgateway_unionpayinternational>
+                <wirecardee_paymentgateway_alipay-xborder translate="label" module="paymentgateway">
+                    <label>heading_title_alipay_crossborder</label>
+                    <sort_order>1006</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <title translate="label tooltip">
+                            <label>config_title</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>0</sort_order>
+                            <tooltip>config_title_desc</tooltip>
+                        </title>
+                        <active translate="label tooltip">
+                            <label>text_enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>10</sort_order>
+                            <tooltip>config_status_desc_alipay_crossborder</tooltip>
+                        </active>
+                        <api_url translate="label tooltip">
+                            <label>config_base_url</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>20</sort_order>
+                            <tooltip>config_base_url_desc</tooltip>
+                        </api_url>
+                        <api_user translate="label tooltip">
+                            <label>config_http_user</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>30</sort_order>
+                            <tooltip>config_http_user_desc</tooltip>
+                        </api_user>
+                        <api_password translate="label tooltip">
+                            <label>config_http_password</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>40</sort_order>
+                            <tooltip>config_http_password_desc</tooltip>
+                        </api_password>
+                        <api_test_button>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>paymentgateway/adminhtml_system_config_credentialsButton</frontend_model>
+                            <method>alipay-xborder</method>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>50</sort_order>
+                        </api_test_button>
+                        <api_maid translate="label tooltip">
+                            <label>config_merchant_account_id</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>60</sort_order>
+                            <tooltip>config_merchant_account_id_desc</tooltip>
+                        </api_maid>
+                        <api_secret translate="label tooltip">
+                            <label>config_merchant_secret</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>70</sort_order>
+                            <tooltip>config_merchant_secret_desc</tooltip>
+                        </api_secret>
+                        <fraud_prevention translate="label">
+                            <label>config_additional_info</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>80</sort_order>
+                            <tooltip>config_additional_info_desc</tooltip>
+                        </fraud_prevention>
+                        <sort_order translate="label">
+                            <label>config_sort_order</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <frontend_class>validate-number</frontend_class>
+                            <sort_order>90</sort_order>
+                            <tooltip>config_sort_order_desc</tooltip>
+                        </sort_order>
+                    </fields>
+                </wirecardee_paymentgateway_alipay-xborder>
+                <wirecardee_paymentgateway_masterpass>
+                    <label>heading_title_masterpass</label>
+                    <sort_order>1007</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <title translate="label tooltip">
+                            <label>config_title</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>10</sort_order>
+                            <tooltip>config_title_desc</tooltip>
+                        </title>
+                        <active translate="label tooltip">
+                            <label>text_enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>20</sort_order>
+                            <tooltip>config_status_desc_masterpass</tooltip>
+                        </active>
+                        <api_url translate="label tooltip">
+                            <label>config_base_url</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>30</sort_order>
+                            <tooltip>config_base_url_desc</tooltip>
+                        </api_url>
+                        <api_user translate="label tooltip">
+                            <label>config_http_user</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>40</sort_order>
+                            <tooltip>config_http_user_desc</tooltip>
+                        </api_user>
+                        <api_password translate="label tooltip">
+                            <label>config_http_password</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>50</sort_order>
+                            <tooltip>config_http_password_desc</tooltip>
+                        </api_password>
+                        <api_test_button>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>paymentgateway/adminhtml_system_config_credentialsButton</frontend_model>
+                            <method>masterpass</method>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>60</sort_order>
+                        </api_test_button>
+                        <api_maid translate="label tooltip">
+                            <label>config_merchant_account_id</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>70</sort_order>
+                            <tooltip>config_merchant_account_id_desc</tooltip>
+                        </api_maid>
+                        <api_secret translate="label tooltip">
+                            <label>config_merchant_secret</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>80</sort_order>
+                            <tooltip>config_merchant_secret_desc</tooltip>
+                        </api_secret>
+                        <transaction_type translate="label tooltip">
+                            <label>config_payment_action</label>
+                            <source_model>paymentgateway/masterpass</source_model>
+                            <frontend_type>select</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>90</sort_order>
+                            <tooltip>config_payment_action_desc</tooltip>
+                        </transaction_type>
+                        <fraud_prevention translate="label tooltip">
+                            <label>config_additional_info</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>100</sort_order>
+                            <tooltip>config_additional_info_desc</tooltip>
+                        </fraud_prevention>
+                        <sort_order translate="label tooltip">
+                            <label>config_sort_order</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <frontend_class>validate-number</frontend_class>
+                            <sort_order>110</sort_order>
+                            <tooltip>config_sort_order_desc</tooltip>
+                        </sort_order>
+                    </fields>
+                </wirecardee_paymentgateway_masterpass>
+                <wirecardee_paymentgateway_poi translate="label" module="paymentgateway">
+                    <label>heading_title_poi</label>
+                    <sort_order>1007</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <title translate="label tooltip">
+                            <label>config_title</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>0</sort_order>
+                            <tooltip>config_title_desc</tooltip>
+                        </title>
+                        <active translate="label tooltip">
+                            <label>text_enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>10</sort_order>
+                            <tooltip>config_status_desc_poi</tooltip>
+                        </active>
+                        <api_url translate="label tooltip">
+                            <label>config_base_url</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>20</sort_order>
+                            <tooltip>config_base_url_desc</tooltip>
+                        </api_url>
+                        <api_user translate="label tooltip">
+                            <label>config_http_user</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>30</sort_order>
+                            <tooltip>config_http_user_desc</tooltip>
+                        </api_user>
+                        <api_password translate="label tooltip">
+                            <label>config_http_password</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>40</sort_order>
+                            <tooltip>config_http_password_desc</tooltip>
+                        </api_password>
+                        <api_test_button>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>paymentgateway/adminhtml_system_config_credentialsButton</frontend_model>
+                            <method>poi</method>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>50</sort_order>
+                        </api_test_button>
+                        <api_maid translate="label tooltip">
+                            <label>config_merchant_account_id</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>60</sort_order>
+                            <tooltip>config_merchant_account_id_desc</tooltip>
+                        </api_maid>
+                        <api_secret translate="label tooltip">
+                            <label>config_merchant_secret</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>70</sort_order>
+                            <tooltip>config_merchant_secret_desc</tooltip>
+                        </api_secret>
+                        <fraud_prevention translate="label">
+                            <label>config_additional_info</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>80</sort_order>
+                            <tooltip>config_additional_info_desc</tooltip>
+                        </fraud_prevention>
+                        <sort_order translate="label">
+                            <label>config_sort_order</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <frontend_class>validate-number</frontend_class>
+                            <sort_order>90</sort_order>
+                            <tooltip>config_sort_order_desc</tooltip>
+                        </sort_order>
+                    </fields>
+                </wirecardee_paymentgateway_poi>
+                <wirecardee_paymentgateway_pia translate="label" module="paymentgateway">
+                    <label>heading_title_pia</label>
+                    <sort_order>1008</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <title translate="label tooltip">
+                            <label>config_title</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>0</sort_order>
+                            <tooltip>config_title_desc</tooltip>
+                        </title>
+                        <active translate="label tooltip">
+                            <label>text_enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>10</sort_order>
+                            <tooltip>config_status_desc_pia</tooltip>
+                        </active>
+                        <api_url translate="label tooltip">
+                            <label>config_base_url</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>20</sort_order>
+                            <tooltip>config_base_url_desc</tooltip>
+                        </api_url>
+                        <api_user translate="label tooltip">
+                            <label>config_http_user</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>30</sort_order>
+                            <tooltip>config_http_user_desc</tooltip>
+                        </api_user>
+                        <api_password translate="label tooltip">
+                            <label>config_http_password</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>40</sort_order>
+                            <tooltip>config_http_password_desc</tooltip>
+                        </api_password>
+                        <api_test_button>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>paymentgateway/adminhtml_system_config_credentialsButton</frontend_model>
+                            <method>pia</method>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>50</sort_order>
+                        </api_test_button>
+                        <api_maid translate="label tooltip">
+                            <label>config_merchant_account_id</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>60</sort_order>
+                            <tooltip>config_merchant_account_id_desc</tooltip>
+                        </api_maid>
+                        <api_secret translate="label tooltip">
+                            <label>config_merchant_secret</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>70</sort_order>
+                            <tooltip>config_merchant_secret_desc</tooltip>
+                        </api_secret>
+                        <fraud_prevention translate="label">
+                            <label>config_additional_info</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>80</sort_order>
+                            <tooltip>config_additional_info_desc</tooltip>
+                        </fraud_prevention>
+                        <sort_order translate="label">
+                            <label>config_sort_order</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <frontend_class>validate-number</frontend_class>
+                            <sort_order>90</sort_order>
+                            <tooltip>config_sort_order_desc</tooltip>
+                        </sort_order>
+                    </fields>
+                </wirecardee_paymentgateway_pia>
+                <wirecardee_paymentgateway_payolutioninvoice translate="label" module="paymentgateway">
+                    <label>heading_title_payolutioninvoice</label>
+                    <sort_order>1010</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <title translate="label tooltip">
+                            <label>config_title</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>10</sort_order>
+                            <tooltip>config_title_desc</tooltip>
+                        </title>
+                        <active translate="label tooltip">
+                            <label>text_enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>20</sort_order>
+                            <tooltip>config_status_desc_payolutioninvoice</tooltip>
+                        </active>
+                        <credentials_eur_title>
+                            <label>
+                                <![CDATA[
+                                    <h3>Credentials (EUR)</h3>
+                                ]]>
+                            </label>
+                            <frontend_type>label</frontend_type>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </credentials_eur_title>
+                        <eur_enabled translate="label tooltip">
+                            <label>text_enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>26</sort_order>
+                            <tooltip>config_status_desc_payolutioninvoice_eur</tooltip>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </eur_enabled>
+                        <eur_api_url translate="label tooltip">
+                            <label>config_base_url</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>30</sort_order>
+                            <tooltip>config_base_url_desc</tooltip>
+                        </eur_api_url>
+                        <eur_api_user translate="label tooltip">
+                            <label>config_http_user</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>40</sort_order>
+                            <tooltip>config_http_user_desc</tooltip>
+                        </eur_api_user>
+                        <eur_api_password translate="label tooltip">
+                            <label>config_http_password</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>50</sort_order>
+                            <tooltip>config_http_password_desc</tooltip>
+                        </eur_api_password>
+                        <eur_api_test_button>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>paymentgateway/adminhtml_system_config_credentialsButton</frontend_model>
+                            <method>payolutioninvoice_eur</method>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>60</sort_order>
+                        </eur_api_test_button>
+                        <eur_api_maid translate="label tooltip">
+                            <label>config_merchant_account_id</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>70</sort_order>
+                            <tooltip>config_merchant_account_id_desc</tooltip>
+                        </eur_api_maid>
+                        <eur_api_secret translate="label tooltip">
+                            <label>config_merchant_secret</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>80</sort_order>
+                            <tooltip>config_merchant_secret_desc</tooltip>
+                        </eur_api_secret>
+                        <credentials_chf_title>
+                            <label>
+                                <![CDATA[
+                                    <h3>Credentials (CHF)</h3>
+                                ]]>
+                            </label>
+                            <frontend_type>label</frontend_type>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </credentials_chf_title>
+                        <chf_enabled translate="label tooltip">
+                            <label>text_enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>95</sort_order>
+                            <tooltip>config_status_desc_payolutioninvoice_chf</tooltip>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </chf_enabled>
+                        <chf_api_url translate="label tooltip">
+                            <label>config_base_url</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>100</sort_order>
+                            <tooltip>config_base_url_desc</tooltip>
+                        </chf_api_url>
+                        <chf_api_user translate="label tooltip">
+                            <label>config_http_user</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>110</sort_order>
+                            <tooltip>config_http_user_desc</tooltip>
+                        </chf_api_user>
+                        <chf_api_password translate="label tooltip">
+                            <label>config_http_password</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>120</sort_order>
+                            <tooltip>config_http_password_desc</tooltip>
+                        </chf_api_password>
+                        <chf_api_test_button>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>paymentgateway/adminhtml_system_config_credentialsButton</frontend_model>
+                            <method>payolutioninvoice_chf</method>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>130</sort_order>
+                        </chf_api_test_button>
+                        <chf_api_maid translate="label tooltip">
+                            <label>config_merchant_account_id</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>140</sort_order>
+                            <tooltip>config_merchant_account_id_desc</tooltip>
+                        </chf_api_maid>
+                        <chf_api_secret translate="label tooltip">
+                            <label>config_merchant_secret</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>150</sort_order>
+                            <tooltip>config_merchant_secret_desc</tooltip>
+                        </chf_api_secret>
+                        <settings_title>
+                            <label>
+                                <![CDATA[
+                                    <h3>Settings</h3>
+                                ]]>
+                            </label>
+                            <frontend_type>label</frontend_type>
+                            <sort_order>160</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </settings_title>
+                        <min_amount translate="label tooltip">
+                            <label>config_basket_min</label>
+                            <frontend_type>text</frontend_type>
+                            <frontend_class>validate-number</frontend_class>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>170</sort_order>
+                            <tooltip>config_basket_min_desc</tooltip>
+                        </min_amount>
+                        <max_amount translate="label tooltip">
+                            <label>config_basket_max</label>
+                            <frontend_type>text</frontend_type>
+                            <frontend_class>validate-number</frontend_class>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>180</sort_order>
+                            <tooltip>config_basket_max_desc</tooltip>
+                        </max_amount>
+                        <allowed_billing_countries translate="label tooltip">
+                            <label>config_billing_countries</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <sort_order>190</sort_order>
+                            <source_model>adminhtml/system_config_source_country</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>190</sort_order>
+                            <tooltip>config_billing_countries_desc</tooltip>
+                        </allowed_billing_countries>
+                        <allowed_shipping_countries translate="label tooltip">
+                            <label>config_shipping_countries</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <sort_order>200</sort_order>
+                            <source_model>adminhtml/system_config_source_country</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>210</sort_order>
+                            <tooltip>config_shipping_countries_desc</tooltip>
+                        </allowed_shipping_countries>
+                        <identical_billing_shipping_address translate="label tooltip">
+                            <label>config_billing_shipping</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>220</sort_order>
+                            <tooltip>config_billing_shipping_desc</tooltip>
+                        </identical_billing_shipping_address>
+                        <fraud_prevention translate="label tooltip">
+                            <label>config_additional_info</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>230</sort_order>
+                            <tooltip>config_additional_info_desc</tooltip>
+                        </fraud_prevention>
+                        <require_consent translate="label tooltip">
+                            <label>config_require_consent</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>240</sort_order>
+                            <tooltip>config_require_consent_desc</tooltip>
+                        </require_consent>
+                        <mid translate="label tooltip">
+                            <label>config_mid</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>250</sort_order>
+                            <tooltip>config_mid_desc</tooltip>
+                        </mid>
+                        <terms_url translate="label tooltip">
+                            <label>config_terms_url</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>250</sort_order>
+                            <tooltip>config_terms_url_desc</tooltip>
+                        </terms_url>
+                        <sort_order translate="label tooltip">
+                            <label>config_sort_order</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <frontend_class>validate-number</frontend_class>
+                            <sort_order>260</sort_order>
+                            <tooltip>config_sort_order_desc</tooltip>
+                        </sort_order>
+                    </fields>
+                </wirecardee_paymentgateway_payolutioninvoice>
             </groups>
         </payment>
     </sections>
