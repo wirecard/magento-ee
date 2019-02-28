@@ -339,7 +339,7 @@
                 <active>0</active>
                 <model>paymentgateway/payolutioninvoice</model>
                 <title>Wirecard Guaranteed Invoice by payolution</title>
-                <eur_enabled>0</eur_enabled>
+                <eur_enabled>1</eur_enabled>
                 <eur_api_url>https://api-test.wirecard.com</eur_api_url>
                 <eur_api_user>16390-testing</eur_api_user>
                 <eur_api_password>3!3013=D3fD8X7</eur_api_password>
