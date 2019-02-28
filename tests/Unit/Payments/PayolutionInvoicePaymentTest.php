@@ -23,6 +23,12 @@ use WirecardEE\Tests\Test\MagentoTestCase;
 
 class PayolutionInvoicePaymentTest extends MagentoTestCase
 {
+    public function setUp()
+    {
+        $this->setMageConfig('payment/wirecardee_paymentgateway_payolutioninvoice/active', 1);
+        $this->setMageConfig('payment/wirecardee_paymentgateway_payolutioninvoice/eur_enabled', 1);
+    }
+
     public function testPayment()
     {
         $payment     = new PayolutionInvoicePayment();
