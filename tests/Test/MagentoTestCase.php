@@ -16,8 +16,6 @@ abstract class MagentoTestCase extends TestCase
 {
     private $registry = [];
 
-    private $config = [];
-
     /**
      * Restore Mage state after each test
      */
@@ -109,10 +107,6 @@ abstract class MagentoTestCase extends TestCase
         }
         $this->registry = [];
 
-        foreach ($this->config as $path => $value) {
-            \Mage::getConfig()->saveConfig($path, $value);
-        }
-
         /** @var Config $config */
         $config = \Mage::getConfig();
         $config->restore();
@@ -124,8 +118,6 @@ abstract class MagentoTestCase extends TestCase
      */
     protected function setMageConfig($path, $value)
     {
-        $this->config[$path] = \Mage::getStoreConfig($path);
         \Mage::getConfig()->saveConfig($path, $value);
-        \Mage::getConfig()->cleanCache();
     }
 }
