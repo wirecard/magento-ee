@@ -119,5 +119,6 @@ abstract class MagentoTestCase extends TestCase
     protected function setMageConfig($path, $value)
     {
         \Mage::getConfig()->saveConfig($path, $value);
+        \Mage::getConfig()->cleanCache();
     }
 }
