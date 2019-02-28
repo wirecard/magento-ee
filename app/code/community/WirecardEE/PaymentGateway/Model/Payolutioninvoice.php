@@ -24,7 +24,7 @@ class WirecardEE_PaymentGateway_Model_Payolutioninvoice extends WirecardEE_Payme
     {
         /** @var Mage_Checkout_Model_Session $checkoutSession */
         $checkoutSession = Mage::getSingleton('checkout/session');
-        return !! $checkoutSession->getQuote()->getCustomerDob();
+        return ! $checkoutSession->getQuote()->getCustomerDob();
     }
 
     /**
