@@ -106,7 +106,7 @@ class BackendOperationTest extends MagentoTestCase
         $invoice->method('getAllItems')->willReturn([]);
         $invoice->method('__call')->willReturnMap([
             ['getGrandTotal', [], 25],
-            ['getBaseCurrencyCode', [], 'EUR'],
+            ['getBaseCurrencyCode', [], 'EUR']
         ]);
 
         $observer = $this->createMock(\Varien_Event_Observer::class);
@@ -190,6 +190,7 @@ class BackendOperationTest extends MagentoTestCase
             ['getShippingAmount', [], 5],
             ['getAdjustmentPositive', [], 2],
             ['getAdjustmentNegative', [], 1],
+            ['getBaseCurrencyCode', [], 'EUR']
         ]);
 
         $observer = $this->createMock(\Varien_Event_Observer::class);
@@ -310,6 +311,9 @@ class BackendOperationTest extends MagentoTestCase
 
         $order = $this->createMock(\Mage_Sales_Model_Order::class);
         $order->method('getPayment')->willReturn($payment);
+        $order->method('__call')->willReturnMap([
+            ['getOrderCurrencyCode', [], 'EUR']
+        ]);
         $payment->method('getOrder')->willReturn($order);
 
         $observer = $this->createMock(\Varien_Event_Observer::class);

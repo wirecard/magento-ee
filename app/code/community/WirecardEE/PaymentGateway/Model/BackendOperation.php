@@ -138,7 +138,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             $initialNotification,
             $payment,
             new BackendService(
-                $payment->getTransactionConfig($invoice->getOrderCurrencyCode()),
+                $payment->getTransactionConfig($invoice->getBaseCurrencyCode()),
                 $this->logger
             ),
             $payment->getCaptureOperation(),
@@ -192,7 +192,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         }
 
         $backendService = new BackendService(
-            $payment->getTransactionConfig($creditMemo->getOrderCurrencyCode()),
+            $payment->getTransactionConfig($creditMemo->getBaseCurrencyCode()),
             $this->logger
         );
 
