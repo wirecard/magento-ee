@@ -73,7 +73,8 @@ class PaymentHandler extends Handler
                 $payment->getPaymentConfig()->getTransactionOperation()
             );
         } catch (\Exception $e) {
-            (new Logger())->error('Transaction service process failed: ' . $e->getMessage() . ' (' . get_class($e) .')');
+            (new Logger())
+                ->error('Transaction service process failed: ' . $e->getMessage() . ' (' . get_class($e) . ')');
             return new ErrorAction(ErrorAction::PROCESSING_FAILED, 'order_error');
         }
 
