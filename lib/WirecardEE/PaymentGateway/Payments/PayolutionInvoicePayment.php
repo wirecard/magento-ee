@@ -327,7 +327,7 @@ class PayolutionInvoicePayment extends Payment implements
             ? new \DateTime($orderSummary->getOrder()->getCustomerDob())
             : $this->getBirthdayFromPaymentData((new SessionManager($session))->getPaymentData());
 
-        if ($birthday && $this->isBelowAgeRestriction($birthday)) {
+        if (! $birthday || $this->isBelowAgeRestriction($birthday)) {
             return new ErrorAction(ErrorAction::PROCESSING_FAILED,
                 $birthday
                     ? 'Consumer must be at least ' . self::MINIMUM_CONSUMER_AGE . ' years old'
