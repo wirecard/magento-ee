@@ -37,7 +37,7 @@ interface PaymentInterface
     /**
      * Returns transaction config.
      *
-     * @param $selectedCurrency
+     * @param string $selectedCurrency
      *
      * @return Config
      *

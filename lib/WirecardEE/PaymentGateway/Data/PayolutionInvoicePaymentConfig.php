@@ -2,9 +2,9 @@
 /**
  * Shop System Plugins:
  * - Terms of Use can be found under:
- * https://github.com/wirecard/shopware-ee/blob/master/_TERMS_OF_USE
+ * https://github.com/wirecard/magento-ee/blob/master/_TERMS_OF_USE
  * - License can be found under:
- * https://github.com/wirecard/shopware-ee/blob/master/LICENSE
+ * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
 namespace WirecardEE\PaymentGateway\Data;
@@ -128,7 +128,7 @@ class PayolutionInvoicePaymentConfig extends PaymentConfig
     }
 
     /**
-     * @param $merchantId
+     * @param string $merchantId
      *
      * @since 1.2.0
      */
@@ -148,7 +148,7 @@ class PayolutionInvoicePaymentConfig extends PaymentConfig
     }
 
     /**
-     * @param $termsUrl
+     * @param string $termsUrl
      *
      * @since 1.2.0
      */
