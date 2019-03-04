@@ -28,6 +28,13 @@ class CreditmemoBasketMapper extends BasketMapper
      */
     protected $refundedOrderItems;
 
+    /**
+     * @param \Mage_Sales_Model_Order_Creditmemo $creditmemo
+     * @param array                              $refundedOrderItems
+     * @param Transaction|null                   $transaction
+     *
+     * @since 1.2.0
+     */
     public function __construct(
         \Mage_Sales_Model_Order_Creditmemo $creditmemo,
         array $refundedOrderItems,
@@ -38,13 +45,16 @@ class CreditmemoBasketMapper extends BasketMapper
         parent::__construct($creditmemo, $transaction);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getCurrency()
     {
         return $this->model->getBaseCurrencyCode();
     }
 
     /**
-     * @return float
+     * {@inheritdoc}
      */
     protected function getDiscountAmount()
     {
@@ -52,7 +62,7 @@ class CreditmemoBasketMapper extends BasketMapper
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     protected function getCouponCode()
     {
@@ -60,7 +70,7 @@ class CreditmemoBasketMapper extends BasketMapper
     }
 
     /**
-     * @return float
+     * {@inheritdoc}
      */
     protected function getShippingTaxAmount()
     {
@@ -68,7 +78,7 @@ class CreditmemoBasketMapper extends BasketMapper
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     protected function getShippingDescription()
     {
@@ -76,7 +86,7 @@ class CreditmemoBasketMapper extends BasketMapper
     }
 
     /**
-     * @return float
+     * {@inheritdoc}
      */
     protected function getShippingCosts()
     {
@@ -84,7 +94,7 @@ class CreditmemoBasketMapper extends BasketMapper
     }
 
     /**
-     * @return \Mage_Sales_Model_Order_Item[]
+     * {@inheritdoc}
      */
     protected function getItems()
     {
@@ -103,6 +113,9 @@ class CreditmemoBasketMapper extends BasketMapper
         return $invoicedItems;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getItemMapper()
     {
         return CreditmemoItemMapper::class;

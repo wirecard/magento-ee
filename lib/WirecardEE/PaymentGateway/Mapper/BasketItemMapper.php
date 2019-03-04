@@ -13,7 +13,7 @@ use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Item;
 
 /**
- * Represents a single item from the Magento basket as object.
+ * Parent class for basket items.
  *
  * @since 1.0.0
  */
@@ -67,17 +67,52 @@ abstract class BasketItemMapper
         return $item;
     }
 
+    /**
+     * @return float
+     *
+     * @since 1.2.0
+     */
     abstract protected function getPrice();
 
+    /**
+     * @return float
+     *
+     * @since 1.2.0
+     */
     abstract protected function getQuantity();
 
+    /**
+     * @return string
+     *
+     * @since 1.2.0
+     */
     abstract protected function getName();
 
+    /**
+     * @return string
+     *
+     * @since 1.2.0
+     */
     abstract protected function getSku();
 
+    /**
+     * @return string
+     *
+     * @since 1.2.0
+     */
     abstract protected function getDescription();
 
+    /**
+     * @return float
+     *
+     * @since 1.2.0
+     */
     abstract protected function getTaxAmount();
 
+    /**
+     * @return float
+     *
+     * @since 1.2.0
+     */
     abstract protected function getTaxPercent();
 }

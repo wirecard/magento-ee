@@ -31,12 +31,21 @@ abstract class BasketMapper
      */
     protected $transaction;
 
+    /**
+     * @param \Mage_Sales_Model_Abstract $model
+     * @param Transaction|null           $transaction
+     */
     public function __construct(\Mage_Sales_Model_Abstract $model, Transaction $transaction = null)
     {
         $this->model       = $model;
         $this->transaction = $transaction;
     }
 
+    /**
+     * @param Transaction $transaction
+     *
+     * @since 1.2.0
+     */
     public function setTransaction(Transaction $transaction)
     {
         $this->transaction = $transaction;
@@ -106,41 +115,59 @@ abstract class BasketMapper
 
     /**
      * @return float
+     *
+     * @since 1.2.0
      */
     abstract protected function getDiscountAmount();
 
     /**
      * @return string
+     *
+     * @since 1.2.0
      */
     abstract protected function getCouponCode();
 
     /**
      * @return float
+     *
+     * @since 1.2.0
      */
     abstract protected function getShippingTaxAmount();
 
     /**
      * @return string
+     *
+     * @since 1.2.0
      */
     abstract protected function getShippingDescription();
 
     /**
      * @return float
+     *
+     * @since 1.2.0
      */
     abstract protected function getShippingCosts();
 
     /**
      * @return string
+     *
+     * @since 1.2.0
      */
     abstract protected function getCurrency();
 
     /**
      * @return \Mage_Sales_Model_Order_Item[]
+     *
+     * @since 1.2.0
      */
     abstract protected function getItems();
 
     /**
+     * Returns the class name of the item mapper which should be used for items within the inherited mapper.
+     *
      * @return string
+     *
+     * @since 1.2.0
      */
     abstract protected function getItemMapper();
 

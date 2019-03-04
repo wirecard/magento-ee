@@ -28,6 +28,13 @@ class InvoiceBasketMapper extends BasketMapper
      */
     protected $invoicedOrderItems;
 
+    /**
+     * @param \Mage_Sales_Model_Order_Invoice $invoice
+     * @param array                           $invoicedOrderItems
+     * @param Transaction|null                $transaction
+     *
+     * @since 1.2.0
+     */
     public function __construct(
         \Mage_Sales_Model_Order_Invoice $invoice,
         array $invoicedOrderItems,
@@ -38,13 +45,16 @@ class InvoiceBasketMapper extends BasketMapper
         parent::__construct($invoice, $transaction);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getCurrency()
     {
         return $this->model->getBaseCurrencyCode();
     }
 
     /**
-     * @return float
+     * {@inheritdoc}
      */
     protected function getDiscountAmount()
     {
@@ -52,7 +62,7 @@ class InvoiceBasketMapper extends BasketMapper
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     protected function getCouponCode()
     {
@@ -60,7 +70,7 @@ class InvoiceBasketMapper extends BasketMapper
     }
 
     /**
-     * @return float
+     * {@inheritdoc}
      */
     protected function getShippingTaxAmount()
     {
@@ -68,7 +78,7 @@ class InvoiceBasketMapper extends BasketMapper
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     protected function getShippingDescription()
     {
@@ -76,7 +86,7 @@ class InvoiceBasketMapper extends BasketMapper
     }
 
     /**
-     * @return float
+     * {@inheritdoc}
      */
     protected function getShippingCosts()
     {
@@ -84,7 +94,7 @@ class InvoiceBasketMapper extends BasketMapper
     }
 
     /**
-     * @return \Mage_Sales_Model_Order_Invoice_Item[]
+     * {@inheritdoc}
      */
     protected function getItems()
     {
@@ -103,6 +113,9 @@ class InvoiceBasketMapper extends BasketMapper
         return $invoicedItems;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getItemMapper()
     {
         return InvoiceItemMapper::class;

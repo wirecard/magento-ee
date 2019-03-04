@@ -23,18 +23,25 @@ class OrderBasketMapper extends BasketMapper
      */
     protected $model;
 
+    /**
+     * @param \Mage_Sales_Model_Order $order
+     * @param Transaction|null        $transaction
+     */
     public function __construct(\Mage_Sales_Model_Order $order, Transaction $transaction = null)
     {
         parent::__construct($order, $transaction);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getCurrency()
     {
         return $this->model->getBaseCurrencyCode();
     }
 
     /**
-     * @return float
+     * {@inheritdoc}
      */
     protected function getDiscountAmount()
     {
@@ -42,7 +49,7 @@ class OrderBasketMapper extends BasketMapper
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     protected function getCouponCode()
     {
@@ -50,7 +57,7 @@ class OrderBasketMapper extends BasketMapper
     }
 
     /**
-     * @return float
+     * {@inheritdoc}
      */
     protected function getShippingTaxAmount()
     {
@@ -58,7 +65,7 @@ class OrderBasketMapper extends BasketMapper
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     protected function getShippingDescription()
     {
@@ -66,7 +73,7 @@ class OrderBasketMapper extends BasketMapper
     }
 
     /**
-     * @return float
+     * {@inheritdoc}
      */
     protected function getShippingCosts()
     {
@@ -74,7 +81,7 @@ class OrderBasketMapper extends BasketMapper
     }
 
     /**
-     * @return \Mage_Sales_Model_Order_Item[]
+     * {@inheritdoc}
      */
     protected function getItems()
     {
@@ -82,7 +89,7 @@ class OrderBasketMapper extends BasketMapper
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     protected function getItemMapper()
     {
