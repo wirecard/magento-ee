@@ -61,7 +61,7 @@ class RatepayInvoicePayment extends Payment implements
     }
 
     /**
-     * @param $selectedCurrency
+     * @param string $selectedCurrency
      *
      * @return Config
      *
