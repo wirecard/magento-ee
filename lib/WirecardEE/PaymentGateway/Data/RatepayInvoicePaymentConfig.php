@@ -12,7 +12,7 @@ namespace WirecardEE\PaymentGateway\Data;
 /**
  * Guaranteed Invoice by Wirecard / Ratepay specific payment configuration.
  *
- * @since   1.1.0
+ * @since   1.2.0
  */
 class RatepayInvoicePaymentConfig extends PaymentConfig
 {
@@ -49,7 +49,7 @@ class RatepayInvoicePaymentConfig extends PaymentConfig
     /**
      * @return string|float
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getMinAmount()
     {
@@ -59,7 +59,7 @@ class RatepayInvoicePaymentConfig extends PaymentConfig
     /**
      * @param string|float $minAmount
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function setMinAmount($minAmount)
     {
@@ -69,7 +69,7 @@ class RatepayInvoicePaymentConfig extends PaymentConfig
     /**
      * @return string|float
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getMaxAmount()
     {
@@ -79,7 +79,7 @@ class RatepayInvoicePaymentConfig extends PaymentConfig
     /**
      * @param string|float $maxAmount
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function setMaxAmount($maxAmount)
     {
@@ -89,7 +89,7 @@ class RatepayInvoicePaymentConfig extends PaymentConfig
     /**
      * @return array
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getAcceptedCurrencies()
     {
@@ -99,7 +99,7 @@ class RatepayInvoicePaymentConfig extends PaymentConfig
     /**
      * @param array $acceptedCurrencies
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function setAcceptedCurrencies($acceptedCurrencies)
     {
@@ -112,7 +112,7 @@ class RatepayInvoicePaymentConfig extends PaymentConfig
     /**
      * @return array
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getShippingCountries()
     {
@@ -122,7 +122,7 @@ class RatepayInvoicePaymentConfig extends PaymentConfig
     /**
      * @param array $shippingCountries
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function setShippingCountries($shippingCountries)
     {
@@ -135,7 +135,7 @@ class RatepayInvoicePaymentConfig extends PaymentConfig
     /**
      * @return array
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getBillingCountries()
     {
@@ -145,7 +145,7 @@ class RatepayInvoicePaymentConfig extends PaymentConfig
     /**
      * @param array $billingCountries
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function setBillingCountries($billingCountries)
     {
@@ -158,7 +158,7 @@ class RatepayInvoicePaymentConfig extends PaymentConfig
     /**
      * @return bool
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function isAllowedDifferentBillingShipping()
     {
@@ -168,7 +168,7 @@ class RatepayInvoicePaymentConfig extends PaymentConfig
     /**
      * @param bool $allowDifferentBillingShipping
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function setAllowDifferentBillingShipping($allowDifferentBillingShipping)
     {
