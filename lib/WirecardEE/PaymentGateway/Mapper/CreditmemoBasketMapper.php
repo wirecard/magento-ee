@@ -90,7 +90,7 @@ class CreditmemoBasketMapper extends BasketMapper
      */
     protected function getShippingCosts()
     {
-        return $this->model->getBaseShippingInclTax();
+        return $this->model->getShippingAmount();
     }
 
     /**
