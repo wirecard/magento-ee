@@ -111,6 +111,7 @@ class OrderBasketMapperTest extends TestCase
                     'amount'         => ['currency' => 'EUR', 'value' => 10.0],
                     'description'    => 'Shipping Description',
                     'article-number' => 'shipping',
+                    'tax-rate'       => 20
                 ],
             ],
         ], $mapper->getBasket()->mappedProperties());

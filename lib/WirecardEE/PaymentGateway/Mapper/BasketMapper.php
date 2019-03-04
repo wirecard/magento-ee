@@ -80,6 +80,11 @@ abstract class BasketMapper
             $basketItem->setTaxAmount(
                 new Amount(self::numberFormat($this->getShippingTaxAmount()), $this->getCurrency())
             );
+            $basketItem->setTaxRate(
+                $this->getShippingTaxAmount() == 0
+                    ? 0
+                    : (($this->getShippingTaxAmount() / $shippingCosts) * 100)
+            );
 
             $basket->add($basketItem);
         }
