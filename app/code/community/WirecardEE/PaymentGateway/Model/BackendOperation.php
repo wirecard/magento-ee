@@ -338,7 +338,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             $initialNotification,
             $payment,
             new BackendService(
-                $payment->getTransactionConfig($magePayment->getOrder()->getOrderCurrencyCode()),
+                $payment->getTransactionConfig($magePayment->getOrder()->getBaseCurrencyCode()),
                 $this->logger
             ),
             $payment->getCancelOperation(),
