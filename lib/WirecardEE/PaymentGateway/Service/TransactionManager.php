@@ -277,9 +277,9 @@ class TransactionManager
                 // It's important to check for transaction type AFTER checking for a valid operations, since the
                 // transaction type gets sets within `retrieveBackendOperations`.
                 if (! array_key_exists(
-                        $payment->getRefundOperation(),
-                        $backendService->retrieveBackendOperations($backendTransaction, true)
-                    ) || $backendTransaction->getParentTransactionType() === Transaction::TYPE_AUTHORIZATION) {
+                    $payment->getRefundOperation(),
+                    $backendService->retrieveBackendOperations($backendTransaction, true)
+                ) || $backendTransaction->getParentTransactionType() === Transaction::TYPE_AUTHORIZATION) {
                     continue;
                 }
 

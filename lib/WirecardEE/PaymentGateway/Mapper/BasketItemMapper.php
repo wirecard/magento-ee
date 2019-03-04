@@ -67,17 +67,17 @@ abstract class BasketItemMapper
         return $item;
     }
 
-    protected abstract function getPrice();
+    abstract protected function getPrice();
 
-    protected abstract function getQuantity();
+    abstract protected function getQuantity();
 
-    protected abstract function getName();
+    abstract protected function getName();
 
-    protected abstract function getSku();
+    abstract protected function getSku();
 
-    protected abstract function getDescription();
+    abstract protected function getDescription();
 
-    protected abstract function getTaxAmount();
+    abstract protected function getTaxAmount();
 
-    protected abstract function getTaxPercent();
+    abstract protected function getTaxPercent();
 }

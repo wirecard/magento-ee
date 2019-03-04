@@ -302,10 +302,12 @@ class RatepayInvoicePayment extends Payment implements
             : $this->getBirthdayFromPaymentData((new SessionManager($session))->getPaymentData());
 
         if (! $birthday || $this->isBelowAgeRestriction($birthday)) {
-            return new ErrorAction(ErrorAction::PROCESSING_FAILED,
+            return new ErrorAction(
+                ErrorAction::PROCESSING_FAILED,
                 $birthday
                     ? 'Consumer must be at least ' . self::MINIMUM_CONSUMER_AGE . ' years old'
-                    : 'Consumer birthday missing');
+                    : 'Consumer birthday missing'
+            );
         }
 
         $accountHolder->setDateOfBirth($birthday);

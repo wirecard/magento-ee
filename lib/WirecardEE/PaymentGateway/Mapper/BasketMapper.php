@@ -107,42 +107,42 @@ abstract class BasketMapper
     /**
      * @return float
      */
-    protected abstract function getDiscountAmount();
+    abstract protected function getDiscountAmount();
 
     /**
      * @return string
      */
-    protected abstract function getCouponCode();
+    abstract protected function getCouponCode();
 
     /**
      * @return float
      */
-    protected abstract function getShippingTaxAmount();
+    abstract protected function getShippingTaxAmount();
 
     /**
      * @return string
      */
-    protected abstract function getShippingDescription();
+    abstract protected function getShippingDescription();
 
     /**
      * @return float
      */
-    protected abstract function getShippingCosts();
+    abstract protected function getShippingCosts();
 
     /**
      * @return string
      */
-    protected abstract function getCurrency();
+    abstract protected function getCurrency();
 
     /**
      * @return \Mage_Sales_Model_Order_Item[]
      */
-    protected abstract function getItems();
+    abstract protected function getItems();
 
     /**
      * @return string
      */
-    protected abstract function getItemMapper();
+    abstract protected function getItemMapper();
 
     /**
      * Helper function to format numbers throughout the plugin.
