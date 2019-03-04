@@ -127,8 +127,6 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             return null;
         }
 
-        var_dump($invoicePost);
-
         $initialNotification = $this->transactionManager->findInitialNotification($invoice->getOrder());
 
         if (! $initialNotification) {
