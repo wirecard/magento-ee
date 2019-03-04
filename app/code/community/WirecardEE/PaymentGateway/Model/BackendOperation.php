@@ -186,6 +186,8 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             $this->throwError("Unable to process backend operation (refund)");
         }
 
+        $items = $creditMemoPost['items'];
+
         if (! $this->paymentFactory->isSupportedPayment($creditMemo->getOrder()->getPayment())) {
             return [];
         }
@@ -219,8 +221,8 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
 
         foreach ($creditMemo->getAllItems() as $item) {
             /** @var Mage_Sales_Model_Order_Creditmemo_Item $item */
-            if (array_key_exists($item->getOrderItemId(), $creditMemoPost['items'])) {
-                $creditMemoPost['items'][$item->getOrderItemId()]['price'] = $item->getBasePriceInclTax();
+            if (array_key_exists($item->getOrderItemId(), $items)) {
+                $items[$item->getOrderItemId()]['price'] = $item->getBasePriceInclTax();
             }
         }
 
@@ -233,26 +235,53 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         $transactionEntries = $this->findTransactionsForItems(
             $transactionEntries,
             $refundableTransactions,
-            $creditMemoPost['items']
+            $items
         );
 
         if (count($transactionEntries) === 0) {
-            $this->throwError('Unable to refund (no proper refundable baskets)', [
-                'refundableTransactions' => $refundableTransactions,
-            ]);
+            $this->throwError('Unable to refund (no proper refundable baskets)');
         }
 
         $this->logger->info('Executing operation "refund" on order #' . $creditMemo->getOrder()->getRealOrderId()
                             . ' (split across ' . count($transactionEntries) . ' transactions)');
 
+        var_dump($items);
         $actions = [];
         foreach ($transactionEntries as $transactionEntry) {
             /** @var Mage_Sales_Model_Order_Payment_Transaction $transaction */
-            $transaction = $transactionEntry['transaction'];
-            $amount      = $transactionEntry['amount'];
+            $transaction       = $transactionEntry['transaction'];
+            $amount            = $transactionEntry['amount'];
+            $transactionBasket = $transactionEntry['basket'];
 
             if ($amount <= 0) {
                 continue;
+            }
+
+            // List of items which will be refunded from the current transaction, required for building the proper
+            // basket.
+            $transactionItems = [];
+            foreach ($items as $itemOrderId => $meta) {
+                $refundingQuantity = $meta['qty'];
+                if ($refundingQuantity < 1) {
+                    continue;
+                }
+
+                if (isset($transactionBasket[$itemOrderId]) && $transactionBasket[$itemOrderId] > 0) {
+                    $availableQuantity          = $transactionBasket[$itemOrderId];
+                    $items[$itemOrderId]['qty'] = ($refundingQuantity - $availableQuantity > 0)
+                        ? $refundingQuantity - $availableQuantity
+                        : 0;
+                    if (! isset($transactionItems[$itemOrderId])) {
+                        $transactionItems[$itemOrderId] = [
+                            'qty'   => 0,
+                            'price' => 0,
+                        ];
+                    }
+                    $transactionItems[$itemOrderId]['qty'] = $availableQuantity - $refundingQuantity <= 0
+                        ? $availableQuantity
+                        : $refundingQuantity;
+                    $transactionItems[$itemOrderId]['price'] = $meta['price'] * $transactionItems[$itemOrderId]['qty'];
+                }
             }
 
             $action    = $this->processBackendOperation(
@@ -260,7 +289,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                 $payment,
                 $backendService,
                 $payment->getRefundOperation(),
-                new CreditmemoBasketMapper($creditMemo, $creditMemoPost['items']),
+                new CreditmemoBasketMapper($creditMemo, $transactionItems),
                 new Amount($amount, $creditMemo->getBaseCurrencyCode())
             );
             $actions[] = $action;
@@ -541,9 +570,10 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                     ];
                 }
 
-                $suitableTransactions[$refundableTransaction->getId()]['amount']        += $quantity
-                                                                                           * $meta['price'];
-                $suitableTransactions[$refundableTransaction->getId()]['basket'][$item] = $quantity;
+                $suitableTransactions[$refundableTransaction->getId()]['amount']        += floatval(
+                    $quantity * $meta['price']
+                );
+                $suitableTransactions[$refundableTransaction->getId()]['basket'][$item] = floatval($quantity);
 
                 $remainingQuantity -= $quantity;
 
