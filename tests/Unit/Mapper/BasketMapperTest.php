@@ -13,6 +13,8 @@ use PHPUnit\Framework\TestCase;
 use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 use WirecardEE\PaymentGateway\Mapper\BasketMapper;
+use WirecardEE\PaymentGateway\Mapper\OrderBasketMapper;
+use WirecardEE\PaymentGateway\Mapper\OrderItemMapper;
 
 class BasketMapperTest extends TestCase
 {
@@ -44,7 +46,7 @@ class BasketMapperTest extends TestCase
         /** @var Transaction|\PHPUnit_Framework_MockObject_MockObject $transaction */
         $transaction = $this->createMock(Transaction::class);
 
-        $mapper = new BasketMapper($order, $transaction);
+        $mapper = new OrderBasketMapper($order, $transaction);
         $this->assertSame($order, $mapper->getOrder());
         $basket = $mapper->getBasket();
         $this->assertInstanceOf(Basket::class, $basket);
@@ -92,7 +94,7 @@ class BasketMapperTest extends TestCase
         /** @var Transaction|\PHPUnit_Framework_MockObject_MockObject $transaction */
         $transaction = $this->createMock(Transaction::class);
 
-        $mapper = new BasketMapper($order, $transaction);
+        $mapper = new OrderBasketMapper($order, $transaction);
         $this->assertSame($order, $mapper->getOrder());
         $this->assertEquals([
             'order-item' => [
@@ -137,7 +139,7 @@ class BasketMapperTest extends TestCase
         /** @var Transaction|\PHPUnit_Framework_MockObject_MockObject $transaction */
         $transaction = $this->createMock(Transaction::class);
 
-        $mapper = new BasketMapper($order, $transaction);
+        $mapper = new OrderBasketMapper($order, $transaction);
         $this->assertSame($order, $mapper->getOrder());
         $this->assertEquals([
             'order-item' => [
@@ -154,6 +156,7 @@ class BasketMapperTest extends TestCase
                     'quantity'    => 1,
                     'amount'      => ['currency' => 'USD', 'value' => -100.5],
                     'description' => 'ABC',
+                    'tax-rate'    => 0
                 ],
             ],
         ], $mapper->getBasket()->mappedProperties());

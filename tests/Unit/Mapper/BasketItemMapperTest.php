@@ -13,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Item;
 use WirecardEE\PaymentGateway\Mapper\BasketItemMapper;
+use WirecardEE\PaymentGateway\Mapper\OrderItemMapper;
 
 class BasketItemMapperTest extends TestCase
 {
@@ -26,7 +27,7 @@ class BasketItemMapperTest extends TestCase
         $mageItem->setDescription('foobar');
         $mageItem->setTaxAmount(200);
         $mageItem->setTaxPercent(20);
-        $mapper = new BasketItemMapper($mageItem, 'EUR');
+        $mapper = new OrderItemMapper($mageItem, 'EUR');
 
         $item = $mapper->getItem();
         $this->assertInstanceOf(Item::class, $item);
@@ -54,7 +55,7 @@ class BasketItemMapperTest extends TestCase
         $mageItem->setTaxAmount(200);
         $mageItem->setTaxPercent(20);
 
-        $mapper = new BasketItemMapper($mageItem, 'EUR');
+        $mapper = new OrderItemMapper($mageItem, 'EUR');
         $this->assertEquals([
             'name'           => 'foo',
             'quantity'       => 1,
@@ -65,7 +66,7 @@ class BasketItemMapperTest extends TestCase
 
         $mageItem->setDescription('foobar');
 
-        $mapper = new BasketItemMapper($mageItem, 'EUR');
+        $mapper = new OrderItemMapper($mageItem, 'EUR');
         $this->assertEquals([
             'name'           => 'foo',
             'quantity'       => 1,
@@ -75,7 +76,7 @@ class BasketItemMapperTest extends TestCase
             'tax-rate'       => 20,
         ], $mapper->getItem()->mappedProperties());
 
-        $mapper = new BasketItemMapper($mageItem, 'USD');
+        $mapper = new OrderItemMapper($mageItem, 'USD');
         $this->assertEquals([
             'name'           => 'foo',
             'quantity'       => 1,

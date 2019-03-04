@@ -312,8 +312,10 @@ class BackendOperationTest extends MagentoTestCase
         $order = $this->createMock(\Mage_Sales_Model_Order::class);
         $order->method('getPayment')->willReturn($payment);
         $order->method('__call')->willReturnMap([
-            ['getOrderCurrencyCode', [], 'EUR']
+            ['getOrderCurrencyCode', [], 'EUR'],
+            ['getGrandTotal', [], 0]
         ]);
+        $order->method('getAllVisibleItems')->willReturn([]);
         $payment->method('getOrder')->willReturn($order);
 
         $observer = $this->createMock(\Varien_Event_Observer::class);

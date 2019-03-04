@@ -33,6 +33,16 @@ class OrderBasketMapper extends BasketMapper
     }
 
     /**
+     * @return \Mage_Sales_Model_Order
+     *
+     * @since 1.2.0
+     */
+    public function getOrder()
+    {
+        return $this->model;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getCurrency()
@@ -77,7 +87,7 @@ class OrderBasketMapper extends BasketMapper
      */
     protected function getShippingCosts()
     {
-        return $this->model->getBaseShippingInclTax();
+        return $this->model->getShippingInclTax();
     }
 
     /**
