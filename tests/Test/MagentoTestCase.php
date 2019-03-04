@@ -111,4 +111,14 @@ abstract class MagentoTestCase extends TestCase
         $config = \Mage::getConfig();
         $config->restore();
     }
+
+    /**
+     * @param string $path
+     * @param string $value
+     */
+    protected function setMageConfig($path, $value)
+    {
+        \Mage::getConfig()->saveConfig($path, $value);
+        \Mage::getConfig()->cleanCache();
+    }
 }
