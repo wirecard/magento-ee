@@ -10,7 +10,7 @@
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 
 /**
- * @since 1.1.0
+ * @since 1.2.0
  */
 class WirecardEE_PaymentGateway_Model_Ratepayinvoice extends WirecardEE_PaymentGateway_Model_Payment
 {
@@ -20,7 +20,7 @@ class WirecardEE_PaymentGateway_Model_Ratepayinvoice extends WirecardEE_PaymentG
     /**
      * @return bool
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function showDobForm()
     {
@@ -34,7 +34,7 @@ class WirecardEE_PaymentGateway_Model_Ratepayinvoice extends WirecardEE_PaymentG
      *
      * @return $this
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function validate()
     {

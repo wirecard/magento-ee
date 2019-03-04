@@ -40,7 +40,7 @@ class RatepayInvoicePayment extends Payment implements
     /**
      * @return string
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getName()
     {
@@ -50,7 +50,7 @@ class RatepayInvoicePayment extends Payment implements
     /**
      * @return RatepayInvoiceTransaction
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getTransaction()
     {
@@ -65,7 +65,7 @@ class RatepayInvoicePayment extends Payment implements
      *
      * @return Config
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getTransactionConfig($selectedCurrency)
     {
@@ -96,7 +96,7 @@ class RatepayInvoicePayment extends Payment implements
     /**
      * @return RatepayInvoicePaymentConfig
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getPaymentConfig()
     {
@@ -139,7 +139,7 @@ class RatepayInvoicePayment extends Payment implements
      *
      * @return null
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function processPayment(
         OrderSummary $orderSummary,
@@ -235,7 +235,7 @@ class RatepayInvoicePayment extends Payment implements
      *
      * @throws \Exception
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     private function isBelowAgeRestriction(\DateTime $birthDay)
     {
@@ -248,7 +248,7 @@ class RatepayInvoicePayment extends Payment implements
      *
      * @return bool
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     private function isAmountInRange($amount)
     {
@@ -264,7 +264,7 @@ class RatepayInvoicePayment extends Payment implements
      *
      * @throws \Exception
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     private function getBirthdayFromPaymentData($paymentData)
     {
@@ -291,7 +291,7 @@ class RatepayInvoicePayment extends Payment implements
      *
      * @return ErrorAction|null
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     private function validateConsumerDateOfBirth(OrderSummary $orderSummary, AccountHolder $accountHolder)
     {
