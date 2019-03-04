@@ -272,10 +272,14 @@ class TransactionManager
                 );
                 $backendTransaction->setParentTransactionId($transaction->getTxnId());
 
+                // Transactions are considered invalid for refunds if either the operation is not allowed (regarding
+                // `retrieveBackendOperations`) or you're trying to refund an authorization.
+                // It's important to check for transaction type AFTER checking for a valid operations, since the
+                // transaction type gets sets within `retrieveBackendOperations`.
                 if (! array_key_exists(
-                    $payment->getRefundOperation(),
-                    $backendService->retrieveBackendOperations($backendTransaction, true)
-                )) {
+                        $payment->getRefundOperation(),
+                        $backendService->retrieveBackendOperations($backendTransaction, true)
+                    ) || $backendTransaction->getParentTransactionType() === Transaction::TYPE_AUTHORIZATION) {
                     continue;
                 }
 
@@ -314,7 +318,7 @@ class TransactionManager
         $transaction->setAdditionalInformation(
             \Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS,
             array_merge($requestData, [
-                TransactionManager::TYPE_KEY => TransactionManager::TYPE_INITIAL_REQUEST
+                TransactionManager::TYPE_KEY => TransactionManager::TYPE_INITIAL_REQUEST,
             ])
         );
         $transaction->save();

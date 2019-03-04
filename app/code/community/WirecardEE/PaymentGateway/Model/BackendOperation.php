@@ -127,6 +127,8 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             return null;
         }
 
+        var_dump($invoicePost);
+
         $initialNotification = $this->transactionManager->findInitialNotification($invoice->getOrder());
 
         if (! $initialNotification) {
@@ -146,7 +148,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                 $this->logger
             ),
             $payment->getCaptureOperation(),
-            new InvoiceBasketMapper($invoice),
+            new InvoiceBasketMapper($invoice, $invoicePost['items']),
             new Amount($invoice->getGrandTotal(), $invoice->getBaseCurrencyCode()),
             [TransactionManager::REFUNDABLE_BASKET_KEY => json_encode($refundableBasket)]
         );
@@ -260,7 +262,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                 $payment,
                 $backendService,
                 $payment->getRefundOperation(),
-                new CreditmemoBasketMapper($creditMemo),
+                new CreditmemoBasketMapper($creditMemo, $creditMemoPost['items']),
                 new Amount($amount, $creditMemo->getBaseCurrencyCode())
             );
             $actions[] = $action;
@@ -342,7 +344,8 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                 $this->logger
             ),
             $payment->getCancelOperation(),
-            new OrderBasketMapper($magePayment->getOrder())
+            new OrderBasketMapper($magePayment->getOrder()),
+            new Amount($magePayment->getOrder()->getGrandTotal(), $magePayment->getOrder()->getBaseCurrencyCode())
         );
 
         if ($action instanceof SuccessAction) {

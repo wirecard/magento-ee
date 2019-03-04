@@ -9,15 +9,12 @@
 
 namespace WirecardEE\PaymentGateway\Mapper;
 
-use Wirecard\PaymentSdk\Entity\Amount;
-use Wirecard\PaymentSdk\Entity\Basket;
-use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Represents the basket from a `Mage_Sales_Model_Order_Invoice` as object.
  *
- * @since 1.1.0
+ * @since 1.2.0
  */
 class InvoiceBasketMapper extends BasketMapper
 {
@@ -26,8 +23,18 @@ class InvoiceBasketMapper extends BasketMapper
      */
     protected $model;
 
-    public function __construct(\Mage_Sales_Model_Order_Invoice $invoice, Transaction  $transaction = null)
-    {
+    /**
+     * @var array
+     */
+    protected $invoicedOrderItems;
+
+    public function __construct(
+        \Mage_Sales_Model_Order_Invoice $invoice,
+        array $invoicedOrderItems,
+        Transaction $transaction = null
+    ) {
+        $this->invoicedOrderItems = $invoicedOrderItems;
+
         parent::__construct($invoice, $transaction);
     }
 
@@ -81,7 +88,19 @@ class InvoiceBasketMapper extends BasketMapper
      */
     protected function getItems()
     {
-        return $this->model->getAllItems();
+        /** @var \Mage_Sales_Model_Order_Invoice_Item[] $items */
+        $items = $this->model->getAllItems();
+
+        $invoicedItems = [];
+        foreach ($items as $item) {
+            if (! array_key_exists($item->getData('order_item_id'), $this->invoicedOrderItems)) {
+                continue;
+            }
+
+            $invoicedItems[] = $item;
+        }
+
+        return $invoicedItems;
     }
 
     protected function getItemMapper()

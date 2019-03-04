@@ -19,7 +19,7 @@ use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\RatepayInvoicePaymentConfig;
-use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplate;
+use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplateInterface;
 use WirecardEE\PaymentGateway\Payments\Contracts\DisplayRestrictionInterface;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 use WirecardEE\PaymentGateway\Service\SessionManager;
@@ -27,7 +27,7 @@ use WirecardEE\PaymentGateway\Service\SessionManager;
 class RatepayInvoicePayment extends Payment implements
     ProcessPaymentInterface,
     DisplayRestrictionInterface,
-    CustomFormTemplate
+    CustomFormTemplateInterface
 {
     const NAME = RatepayInvoiceTransaction::NAME;
     const MINIMUM_CONSUMER_AGE = 18;
@@ -301,7 +301,7 @@ class RatepayInvoicePayment extends Payment implements
             ? new \DateTime($orderSummary->getOrder()->getCustomerDob())
             : $this->getBirthdayFromPaymentData((new SessionManager($session))->getPaymentData());
 
-        if ($birthday && $this->isBelowAgeRestriction($birthday)) {
+        if (! $birthday || $this->isBelowAgeRestriction($birthday)) {
             return new ErrorAction(ErrorAction::PROCESSING_FAILED,
                 $birthday
                     ? 'Consumer must be at least ' . self::MINIMUM_CONSUMER_AGE . ' years old'

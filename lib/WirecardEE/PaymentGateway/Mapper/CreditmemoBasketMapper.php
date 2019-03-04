@@ -14,7 +14,7 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 /**
  * Represents the basket from a `Mage_Sales_Model_Order_Creditmemo` as object.
  *
- * @since 1.1.0
+ * @since 1.2.0
  */
 class CreditmemoBasketMapper extends BasketMapper
 {
@@ -23,8 +23,18 @@ class CreditmemoBasketMapper extends BasketMapper
      */
     protected $model;
 
-    public function __construct(\Mage_Sales_Model_Order_Creditmemo $creditmemo, Transaction $transaction = null)
-    {
+    /**
+     * @var array
+     */
+    protected $refundedOrderItems;
+
+    public function __construct(
+        \Mage_Sales_Model_Order_Creditmemo $creditmemo,
+        array $refundedOrderItems,
+        Transaction $transaction = null
+    ) {
+        $this->refundedOrderItems = $refundedOrderItems;
+
         parent::__construct($creditmemo, $transaction);
     }
 
@@ -78,7 +88,19 @@ class CreditmemoBasketMapper extends BasketMapper
      */
     protected function getItems()
     {
-        return $this->model->getAllItems();
+        /** @var \Mage_Sales_Model_Order_Creditmemo_Item $items */
+        $items = $this->model->getAllItems();
+
+        $invoicedItems = [];
+        foreach ($items as $item) {
+            if (! array_key_exists($item->getData('order_item_id'), $this->refundedOrderItems)) {
+                continue;
+            }
+
+            $invoicedItems[] = $item;
+        }
+
+        return $invoicedItems;
     }
 
     protected function getItemMapper()
