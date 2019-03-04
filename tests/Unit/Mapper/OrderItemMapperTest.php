@@ -12,10 +12,9 @@ namespace WirecardEE\Tests\Unit\Mapper;
 use PHPUnit\Framework\TestCase;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Item;
-use WirecardEE\PaymentGateway\Mapper\BasketItemMapper;
 use WirecardEE\PaymentGateway\Mapper\OrderItemMapper;
 
-class BasketItemMapperTest extends TestCase
+class OrderItemMapperTest extends TestCase
 {
     public function testBasket()
     {

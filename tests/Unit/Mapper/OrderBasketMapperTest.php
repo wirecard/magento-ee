@@ -14,9 +14,8 @@ use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 use WirecardEE\PaymentGateway\Mapper\BasketMapper;
 use WirecardEE\PaymentGateway\Mapper\OrderBasketMapper;
-use WirecardEE\PaymentGateway\Mapper\OrderItemMapper;
 
-class BasketMapperTest extends TestCase
+class OrderBasketMapperTest extends TestCase
 {
     public function testBasket()
     {

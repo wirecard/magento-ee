@@ -24,6 +24,8 @@ class CreditmemoItemMapper extends BasketItemMapper
     /**
      * @param \Mage_Sales_Model_Order_Creditmemo_Item $item
      * @param string                                  $currency
+     *
+     * @since 1.2.0
      */
     public function __construct(\Mage_Sales_Model_Order_Creditmemo_Item $item, $currency)
     {
@@ -35,7 +37,7 @@ class CreditmemoItemMapper extends BasketItemMapper
      */
     protected function getPrice()
     {
-        return $this->item->getBasePriceInclTax();
+        return $this->item->getPriceInclTax();
     }
 
     /**

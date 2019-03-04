@@ -37,7 +37,7 @@ class InvoiceItemMapper extends BasketItemMapper
      */
     protected function getPrice()
     {
-        return $this->item->getBasePriceInclTax();
+        return $this->item->getPriceInclTax();
     }
 
     /**

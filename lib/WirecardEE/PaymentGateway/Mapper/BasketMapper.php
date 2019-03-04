@@ -52,16 +52,6 @@ abstract class BasketMapper
     }
 
     /**
-     * @return \Mage_Sales_Model_Abstract
-     *
-     * @since 1.0.0
-     */
-    public function getModel()
-    {
-        return $this->model;
-    }
-
-    /**
      * @return Basket
      *
      * @since 1.0.0
