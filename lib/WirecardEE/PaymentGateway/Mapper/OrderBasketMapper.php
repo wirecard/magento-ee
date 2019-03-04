@@ -26,6 +26,8 @@ class OrderBasketMapper extends BasketMapper
     /**
      * @param \Mage_Sales_Model_Order $order
      * @param Transaction|null        $transaction
+     *
+     * @since 1.2.0
      */
     public function __construct(\Mage_Sales_Model_Order $order, Transaction $transaction = null)
     {

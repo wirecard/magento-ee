@@ -24,6 +24,8 @@ class OrderItemMapper extends BasketItemMapper
     /**
      * @param \Mage_Sales_Model_Order_Item $item
      * @param string                       $currency
+     *
+     * @since 1.2.0
      */
     public function __construct(\Mage_Sales_Model_Order_Item $item, $currency)
     {
