@@ -126,6 +126,7 @@ class RatepayInvoicePayment extends Payment implements
         );
 
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
+        $paymentConfig->setOrderIdentification($this->getPluginConfig('order_identification'));
 
         return $paymentConfig;
     }

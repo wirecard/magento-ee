@@ -282,6 +282,7 @@
                 <api_maid>fa02d1d4-f518-4e22-b42b-2abab5867a84</api_maid>
                 <api_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</api_secret>
                 <fraud_prevention>1</fraud_prevention>
+                <order_identification>1</order_identification>
                 <min_amount>20</min_amount>
                 <max_amount>3500</max_amount>
                 <allowed_currencies>EUR</allowed_currencies>
