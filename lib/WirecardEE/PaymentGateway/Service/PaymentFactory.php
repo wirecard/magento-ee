@@ -142,7 +142,7 @@ class PaymentFactory
             MasterpassTransaction::NAME        => MasterpassPayment::class,
             AlipayCrossborderTransaction::NAME => AlipayPayment::class,
             UpiTransaction::NAME               => UnionpayPayment::class,
-            'payolutioninvoice'                => PayolutionInvoicePayment::class,
+            PayolutionInvoicePayment::NAME     => PayolutionInvoicePayment::class,
         ];
     }
 
