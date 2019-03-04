@@ -394,5 +394,9 @@ exports.tests = [
   {
     file: 'Payments/PayolutionTest.js',
     timeout: 120000
+  },
+  {
+    file: 'Payments/RatepayTest.js',
+    timeout: 120000
   }
 ];
