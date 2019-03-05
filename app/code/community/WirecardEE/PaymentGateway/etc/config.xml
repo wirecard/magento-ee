@@ -270,6 +270,7 @@
                 <api_secret>2d96596b-9d10-4c98-ac47-4d56e22fd878</api_secret>
                 <transaction_type>pay</transaction_type>
                 <fraud_prevention>1</fraud_prevention>
+                <order_identification>1</order_identification>
                 <sort_order>23</sort_order>
             </wirecardee_paymentgateway_masterpass>
             <wirecardee_paymentgateway_ratepayinvoice>
