@@ -2347,6 +2347,16 @@
                             <sort_order>230</sort_order>
                             <tooltip>config_additional_info_desc</tooltip>
                         </fraud_prevention>
+                        <order_identification translate="label tooltip">
+                            <label>config_descriptor</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>235</sort_order>
+                            <tooltip>config_descriptor_desc</tooltip>
+                        </order_identification>
                         <require_consent translate="label tooltip">
                             <label>config_require_consent</label>
                             <frontend_type>select</frontend_type>

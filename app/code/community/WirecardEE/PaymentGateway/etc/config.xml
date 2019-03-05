@@ -376,6 +376,7 @@
                 <chf_api_maid>2048677d-57f4-44b0-8d67-9014c6631d5f</chf_api_maid>
                 <chf_api_secret>74bd2f0c-6d1b-4e9a-b278-abc34b83ab9f</chf_api_secret>
                 <fraud_prevention>1</fraud_prevention>
+                <order_identification>1</order_identification>
                 <min_amount>25</min_amount>
                 <max_amount>3500</max_amount>
                 <allowed_billing_countries>AT,DE,CH,NL</allowed_billing_countries>

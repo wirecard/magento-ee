@@ -136,7 +136,7 @@ class PayolutionInvoicePayment extends Payment implements
         }
 
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
-        $paymentConfig->setOrderIdentification(true);
+        $paymentConfig->setOrderIdentification($this->getPluginConfig('order_identification'));
         $paymentConfig->setMinAmount($this->getPluginConfig('min_amount'));
         $paymentConfig->setMaxAmount($this->getPluginConfig('max_amount'));
         $paymentConfig->setBillingCountries(
