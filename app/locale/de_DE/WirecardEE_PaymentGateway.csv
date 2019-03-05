@@ -442,5 +442,8 @@
 "birthdate_input_month_format","MM"
 "birthdate_input_year","Jahr"
 "birthdate_input_year_format","JJJJ"
-"payolution_consent_text","Mit der Übermittlung der für die Abwicklung des Rechnungskaufes und einer Identitäts- und Bonitätsprüfung erforderlichen Daten an payolution bin ich einverstanden. Meine <a href='%s' style='float: none; margin-left: 0;'>Einwilligung</a> kann ich jederzeit mit Wirkung für die Zukunft widerrufen."
+"payolution_consent_text","Mit der Übermittlung der für die Abwicklung des Rechnungskaufes und einer Identitäts- und Bonitätsprüfung erforderlichen Daten an payolution bin ich einverstanden. Meine <a href='%s' target='_blank' style='float: none; margin-left: 0;'>Einwilligung</a> kann ich jederzeit mit Wirkung für die Zukunft widerrufen."
 "payolution_consent_required_text","Ihre Einwilligung wird benötigt"
+
+"pia_history_comment","Übermitteln Sie ihrem Kunden folgende Informationen"
+"poi_history_comment","Hängen Sie diese Information an die Rechnung an den Kunden an"

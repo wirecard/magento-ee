@@ -101,9 +101,9 @@ class PiaPayment extends Payment implements
     }
 
     /**
-     * @param OrderSummary $orderSummary
+     * @param OrderSummary       $orderSummary
      * @param TransactionService $transactionService
-     * @param Redirect $redirect
+     * @param Redirect           $redirect
      *
      * @return null
      *
@@ -143,12 +143,15 @@ class PiaPayment extends Payment implements
             $bankData        = $responseMapper->getBankData();
 
             $order->getPayment()->setAdditionalInformation($bankData);
-            $order->addStatusHistoryComment(implode('<br>', array_filter(array_map(function ($key, $value) {
-                if (! $value) {
-                    return null;
-                }
-                return $this->getHelper()->__($key) . ': ' . $value;
-            }, array_keys($bankData), array_values($bankData)))));
+            $order->addStatusHistoryComment(
+                \Mage::helper('catalog')->__('pia_history_comment') . "<br><br>"
+                . implode('<br>', array_filter(array_map(function ($key, $value) {
+                    if (! $value) {
+                        return null;
+                    }
+                    return $this->getHelper()->__($key) . ': ' . $value;
+                }, array_keys($bankData), array_values($bankData))))
+            );
             $order->save();
         }
 

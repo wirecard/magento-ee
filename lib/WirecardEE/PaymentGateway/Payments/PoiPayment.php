@@ -125,12 +125,15 @@ class PoiPayment extends Payment implements ProcessPaymentInterface, ProcessRetu
             $bankData        = $responseMapper->getBankData();
 
             $order->getPayment()->setAdditionalInformation($bankData);
-            $order->addStatusHistoryComment(implode('<br>', array_filter(array_map(function ($key, $value) {
-                if (! $value) {
-                    return null;
-                }
-                return $this->getHelper()->__($key) . ': ' . $value;
-            }, array_keys($bankData), array_values($bankData)))));
+            $order->addStatusHistoryComment(
+                \Mage::helper('catalog')->__('poi_history_comment') . "<br><br>"
+                . implode('<br>', array_filter(array_map(function ($key, $value) {
+                    if (! $value) {
+                        return null;
+                    }
+                    return $this->getHelper()->__($key) . ': ' . $value;
+                }, array_keys($bankData), array_values($bankData))))
+            );
             $order->save();
         }
 
