@@ -352,6 +352,7 @@
                 <api_maid>7ca48aa0-ab12-4560-ab4a-af1c477cce43</api_maid>
                 <api_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</api_secret>
                 <fraud_prevention>1</fraud_prevention>
+                <order_identification>1</order_identification>
                 <sort_order>3</sort_order>
             </wirecardee_paymentgateway_alipay-xborder>
             <wirecardee_paymentgateway_payolutioninvoice>

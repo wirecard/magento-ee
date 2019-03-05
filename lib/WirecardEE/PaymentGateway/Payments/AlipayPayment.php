@@ -86,6 +86,7 @@ class AlipayPayment extends Payment implements ProcessPaymentInterface
         $paymentConfig->setTransactionSecret($this->getPluginConfig('api_secret'));
         $paymentConfig->setTransactionOperation(Operation::PAY);
         $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
+        $paymentConfig->setOrderIdentification($this->getPluginConfig('order_identification'));
 
         return $paymentConfig;
     }
