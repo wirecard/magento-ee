@@ -28,9 +28,12 @@ class CreditmemoBasketMapper extends BasketMapper
      */
     protected $refundedOrderItems;
 
+    protected $shipping;
+
     /**
      * @param \Mage_Sales_Model_Order_Creditmemo $creditmemo
      * @param array                              $refundedOrderItems
+     * @param float                              $shipping
      * @param Transaction|null                   $transaction
      *
      * @since 1.2.0
@@ -38,9 +41,11 @@ class CreditmemoBasketMapper extends BasketMapper
     public function __construct(
         \Mage_Sales_Model_Order_Creditmemo $creditmemo,
         array $refundedOrderItems,
+        $shipping,
         Transaction $transaction = null
     ) {
         $this->refundedOrderItems = $refundedOrderItems;
+        $this->shipping           = $shipping;
 
         parent::__construct($creditmemo, $transaction);
     }
@@ -90,7 +95,7 @@ class CreditmemoBasketMapper extends BasketMapper
      */
     protected function getShippingCosts()
     {
-        return $this->model->getShippingAmount();
+        return $this->shipping;
     }
 
     /**
@@ -107,6 +112,9 @@ class CreditmemoBasketMapper extends BasketMapper
                 continue;
             }
 
+            // Total quantity is irrelevant at this point, hence we're going to save the transaction specific quantity
+            // which will be used in the item mapper class for getting the quantity.
+            $item->setData('invoicing_quantity', $this->refundedOrderItems[$item->getData('order_item_id')]);
             $invoicedItems[] = $item;
         }
 

@@ -19,6 +19,7 @@ use WirecardEE\PaymentGateway\Mapper\CreditmemoBasketMapper;
 use WirecardEE\PaymentGateway\Mapper\InvoiceBasketMapper;
 use WirecardEE\PaymentGateway\Mapper\OrderBasketMapper;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
+use WirecardEE\PaymentGateway\Payments\RatepayInvoicePayment;
 use WirecardEE\PaymentGateway\Service\BackendOperationsHandler;
 use WirecardEE\PaymentGateway\Service\Logger;
 use WirecardEE\PaymentGateway\Service\PaymentFactory;
@@ -186,7 +187,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             $this->throwError("Unable to process backend operation (refund)");
         }
 
-        $items = $creditMemoPost['items'];
+        $items    = $creditMemoPost['items'];
 
         if (! $this->paymentFactory->isSupportedPayment($creditMemo->getOrder()->getPayment())) {
             return [];
@@ -245,7 +246,6 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         $this->logger->info('Executing operation "refund" on order #' . $creditMemo->getOrder()->getRealOrderId()
                             . ' (split across ' . count($transactionEntries) . ' transactions)');
 
-        var_dump($items);
         $actions = [];
         foreach ($transactionEntries as $transactionEntry) {
             /** @var Mage_Sales_Model_Order_Payment_Transaction $transaction */
@@ -261,6 +261,10 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             // basket.
             $transactionItems = [];
             foreach ($items as $itemOrderId => $meta) {
+                if (! isset($meta['qty']) || !isset($meta['price'])) {
+                    continue;
+                }
+
                 $refundingQuantity = $meta['qty'];
                 if ($refundingQuantity < 1) {
                     continue;
@@ -284,12 +288,19 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                 }
             }
 
+            $basket = new CreditmemoBasketMapper(
+                $creditMemo,
+                $transactionItems,
+                $transactionBasket['additional'] > 0 ? $remainingAdditionalAmount : 0
+            );
+            $remainingAdditionalAmount -= $transactionBasket['additional'];
+
             $action    = $this->processBackendOperation(
                 $transaction,
                 $payment,
                 $backendService,
                 $payment->getRefundOperation(),
-                new CreditmemoBasketMapper($creditMemo, $transactionItems),
+                $basket,
                 new Amount(BasketMapper::numberFormat($amount), $creditMemo->getBaseCurrencyCode())
             );
             $actions[] = $action;
@@ -447,8 +458,10 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         );
         $backendTransaction->setParentTransactionId($transaction->getTxnId());
 
-        $basketMapper->setTransaction($backendTransaction);
-        $backendTransaction->setBasket($basketMapper->getBasket());
+        if ($payment->getName() === RatepayInvoicePayment::NAME) {
+            $basketMapper->setTransaction($backendTransaction);
+            $backendTransaction->setBasket($basketMapper->getBasket());
+        }
 
         if ($amount) {
             $backendTransaction->setAmount($amount);
@@ -556,7 +569,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                 }
 
                 // Check if the product is in this transaction
-                if (! isset($refundableBasket[$item])) {
+                if (! isset($refundableBasket[$item]) || $refundableBasket[$item] === 0) {
                     continue;
                 }
 

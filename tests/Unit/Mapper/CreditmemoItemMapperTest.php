@@ -29,6 +29,7 @@ class CreditmemoItemMapperTest extends TestCase
         $mageCreditmemoItem->setSku('A10');
         $mageCreditmemoItem->setDescription('foobar');
         $mageCreditmemoItem->setTaxAmount(200);
+        $mageCreditmemoItem->setData('invoicing_quantity', 1);
         $mapper = new CreditmemoItemMapper($mageCreditmemoItem, 'EUR');
 
         $item = $mapper->getItem();

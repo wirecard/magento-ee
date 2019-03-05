@@ -45,7 +45,7 @@ class CreditmemoItemMapper extends BasketItemMapper
      */
     protected function getQuantity()
     {
-        return $this->item->getQty();
+        return $this->item->getData('invoicing_quantity');
     }
 
     /**
