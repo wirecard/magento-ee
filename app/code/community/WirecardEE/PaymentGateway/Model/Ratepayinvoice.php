@@ -8,6 +8,7 @@
  */
 
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
+use WirecardEE\PaymentGateway\Payments\RatepayInvoicePayment;
 
 /**
  * @since 1.2.0
@@ -42,6 +43,7 @@ class WirecardEE_PaymentGateway_Model_Ratepayinvoice extends WirecardEE_PaymentG
 
         /** @var Mage_Checkout_Model_Session $checkoutSession */
         $checkoutSession = Mage::getSingleton('checkout/session');
+        $errorMsg    = "";
 
         if ($checkoutSession->getQuote()->getCustomerDob()) {
             return $this;
@@ -52,7 +54,23 @@ class WirecardEE_PaymentGateway_Model_Ratepayinvoice extends WirecardEE_PaymentG
             || empty($paymentData['birthday']['month'])
             || empty($paymentData['birthday']['day'])
             || empty($paymentData['birthday']['year'])) {
-            Mage::throwException($this->_getHelper()->__('dob_required'));
+            $errorMsg = $this->_getHelper()->__('dob_required');
+        }
+
+        $birthday = $checkoutSession->getQuote()->getCustomerDob()
+            ? new \DateTime($checkoutSession->getQuote()->getCustomerDob())
+            : (new \DateTime())->setDate(
+                intval($paymentData['birthday']['year']),
+                intval($paymentData['birthday']['month']),
+                intval($paymentData['birthday']['day'])
+            );
+
+        if ($birthday->diff(new \DateTime())->y < RatepayInvoicePayment::MINIMUM_CONSUMER_AGE) {
+            $errorMsg = Mage::helper('catalog')->__('ratepay_age_restriction');
+        }
+
+        if ($errorMsg) {
+            Mage::throwException($errorMsg);
         }
 
         return $this;

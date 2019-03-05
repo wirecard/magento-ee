@@ -7,6 +7,8 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
+use WirecardEE\PaymentGateway\Payments\PayolutionInvoicePayment;
+
 /**
  * @since 1.2.0
  */
@@ -77,6 +79,18 @@ class WirecardEE_PaymentGateway_Model_Payolutioninvoice extends WirecardEE_Payme
                 || empty($paymentData['birthday']['day'])
                 || empty($paymentData['birthday']['year']))) {
             $errorMsg .= $this->_getHelper()->__('dob_required') . PHP_EOL;
+        }
+
+        $birthday = $checkoutSession->getQuote()->getCustomerDob()
+            ? new \DateTime($checkoutSession->getQuote()->getCustomerDob())
+            : (new \DateTime())->setDate(
+                intval($paymentData['birthday']['year']),
+                intval($paymentData['birthday']['month']),
+                intval($paymentData['birthday']['day'])
+            );
+
+        if ($birthday->diff(new \DateTime())->y < PayolutionInvoicePayment::MINIMUM_CONSUMER_AGE) {
+            $errorMsg = Mage::helper('catalog')->__('ratepayinvoice_fields_error');
         }
 
         if ($errorMsg) {
