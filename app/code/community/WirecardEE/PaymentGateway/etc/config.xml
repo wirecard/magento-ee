@@ -340,6 +340,7 @@
                 <api_secret>16d85b73-79e2-4c33-932a-7da99fb04a9c</api_secret>
                 <transaction_type>pay</transaction_type>
                 <fraud_prevention>1</fraud_prevention>
+                <order_identification>1</order_identification>
                 <sort_order>38</sort_order>
             </wirecardee_paymentgateway_unionpayinternational>
             <wirecardee_paymentgateway_alipay-xborder>
