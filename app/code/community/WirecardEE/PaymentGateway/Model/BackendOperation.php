@@ -147,7 +147,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             ),
             $payment->getCaptureOperation(),
             new InvoiceBasketMapper($invoice, $invoicePost['items']),
-            new Amount($invoice->getGrandTotal(), $invoice->getBaseCurrencyCode()),
+            new Amount(BasketMapper::numberFormat($invoice->getGrandTotal()), $invoice->getBaseCurrencyCode()),
             [TransactionManager::REFUNDABLE_BASKET_KEY => json_encode($refundableBasket)]
         );
 
@@ -277,7 +277,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                             'price' => 0,
                         ];
                     }
-                    $transactionItems[$itemOrderId]['qty'] = $availableQuantity - $refundingQuantity <= 0
+                    $transactionItems[$itemOrderId]['qty']   = $availableQuantity - $refundingQuantity <= 0
                         ? $availableQuantity
                         : $refundingQuantity;
                     $transactionItems[$itemOrderId]['price'] = $meta['price'] * $transactionItems[$itemOrderId]['qty'];
@@ -290,7 +290,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                 $backendService,
                 $payment->getRefundOperation(),
                 new CreditmemoBasketMapper($creditMemo, $transactionItems),
-                new Amount($amount, $creditMemo->getBaseCurrencyCode())
+                new Amount(BasketMapper::numberFormat($amount), $creditMemo->getBaseCurrencyCode())
             );
             $actions[] = $action;
 
@@ -372,7 +372,11 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             ),
             $payment->getCancelOperation(),
             new OrderBasketMapper($magePayment->getOrder()),
-            new Amount($magePayment->getOrder()->getGrandTotal(), $magePayment->getOrder()->getBaseCurrencyCode())
+            new Amount(
+                BasketMapper::numberFormat(
+                    $magePayment->getOrder()->getGrandTotal()
+                ), $magePayment->getOrder()->getBaseCurrencyCode()
+            )
         );
 
         if ($action instanceof SuccessAction) {
