@@ -150,7 +150,6 @@ class PayolutionInvoicePayment extends Payment implements
         );
         $paymentConfig->setRequiresConsent($this->getPluginConfig('require_consent'));
         $paymentConfig->setMerchantId($this->getPluginConfig('mid'));
-        $paymentConfig->setTermsUrl($this->getPluginConfig('terms_url'));
         $paymentConfig->setTransactionOperation(Operation::RESERVE);
 
         return $paymentConfig;

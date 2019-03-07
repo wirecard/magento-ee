@@ -32,11 +32,6 @@ class PayolutionInvoicePaymentConfig extends PaymentConfig
     protected $merchantId;
 
     /**
-     * @var string
-     */
-    protected $termsUrl;
-
-    /**
      * @var bool
      */
     protected $requiresConsent;
@@ -135,26 +130,6 @@ class PayolutionInvoicePaymentConfig extends PaymentConfig
     public function setMerchantId($merchantId)
     {
         $this->merchantId = $merchantId;
-    }
-
-    /**
-     * @return string
-     *
-     * @since 1.2.0
-     */
-    public function getTermsUrl()
-    {
-        return $this->termsUrl;
-    }
-
-    /**
-     * @param string $termsUrl
-     *
-     * @since 1.2.0
-     */
-    public function setTermsUrl($termsUrl)
-    {
-        $this->termsUrl = $termsUrl;
     }
 
     /**

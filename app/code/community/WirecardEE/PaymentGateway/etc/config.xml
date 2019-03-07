@@ -384,7 +384,6 @@
                 <identical_billing_shipping_address>1</identical_billing_shipping_address>
                 <require_consent>1</require_consent>
                 <mid />
-                <terms_url />
                 <sort_order>18</sort_order>
             </wirecardee_paymentgateway_payolutioninvoice>
         </payment>

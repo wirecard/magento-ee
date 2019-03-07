@@ -47,8 +47,9 @@ class WirecardEE_PaymentGateway_Model_Payolutioninvoice extends WirecardEE_Payme
      */
     public function getTermsUrl()
     {
+        $url = 'https://payment.payolution.com/payolution-payment/infoport/dataprivacyconsent?mId=';
         $config = \Mage::getStoreConfig('payment/wirecardee_paymentgateway_payolutioninvoice');
-        return isset($config['terms_url']) ? $config['terms_url'] : '#';
+        return $url . ($config['mid'] ? $config['mid'] : '');
     }
 
     /**
