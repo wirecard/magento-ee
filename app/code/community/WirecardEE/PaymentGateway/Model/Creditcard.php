@@ -40,15 +40,14 @@ class WirecardEE_PaymentGateway_Model_CreditCard extends WirecardEE_PaymentGatew
     }
 
     /**
-     * Keep in mind that this additionally depends on the credit card payment configuration.
-     *
      * @return bool
      *
      * @since 1.2.0
      */
     public function showTokenSelection()
     {
-        return Mage::getSingleton('customer/session')->isLoggedIn();
+        return Mage::getSingleton('customer/session')->isLoggedIn()
+            && Mage::getStoreConfig('payment/wirecardee_paymentgateway_creditcard/vault_enabled');
     }
 
     /**
