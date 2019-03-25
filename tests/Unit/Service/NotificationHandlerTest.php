@@ -66,6 +66,7 @@ class NotificationHandlerTest extends MagentoTestCase
         $order = $this->createMock(\Mage_Sales_Model_Order::class);
         $order->method('load')->willReturnSelf();
         $order->method('getId')->willReturn(null);
+        $order->method('getAllVisibleItems')->willReturn([]);
         $order->expects($this->once())->method('loadByIncrementId')->willReturnSelf();
         $this->replaceMageModel('sales/order', $order);
 

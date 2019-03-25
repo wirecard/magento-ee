@@ -23,7 +23,7 @@ describe('default test', () => {
     await addProductToCartAndGotoCheckout(driver, '/accessories/eyewear/aviator-sunglasses.html');
     await fillOutGuestCheckout(driver);
     await chooseFlatRateShipping(driver);
-    await choosePaymentMethod(driver,'p_method_cashondelivery');
+    await choosePaymentMethod(driver,'p_method_cashondelivery', 'Cash On Delivery');
     await placeOrder(driver);
     await checkConfirmationPage(driver, 'Thank you for your purchase!');
   });

@@ -7,7 +7,7 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplate;
+use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplateInterface;
 
 /**
  * Allows for a payment method to display a custom form during the checkout process by implementing CustomFormTemplate.
@@ -28,7 +28,7 @@ class WirecardEE_PaymentGateway_Block_Form extends Mage_Payment_Block_Form
         $paymentName = str_replace('wirecardee_paymentgateway_', '', $paymentCode);
         $payment     = (new \WirecardEE\PaymentGateway\Service\PaymentFactory())->create($paymentName);
 
-        if ($payment instanceof CustomFormTemplate) {
+        if ($payment instanceof CustomFormTemplateInterface) {
             return $payment->getFormTemplateName();
         }
 

@@ -7,7 +7,7 @@
  */
 
 exports.config = {
-  url: process.env.TEST_URL || 'http://localhost:9000',
+  url: process.env.TEST_URL || 'http://localhost:26600',
   payments: {
     creditCard: {
       label: 'Wirecard Credit Card',
@@ -84,6 +84,51 @@ exports.config = {
       expirationYear: '2023',
       password: 'wirecard'
     },
+    upi: {
+      label: 'Wirecard UnionPay International',
+      fields: {
+        last_name: 'Lastname',
+        account_number: '6210943123456786'
+      },
+      expirationYear: 2023
+    },
+    alipay: {
+      label: 'Wirecard Alipay Cross-border',
+      fields: {
+        email: 'alipaytest20091@gmail.com',
+        password: '111111',
+        paymentPasswordDigit: '1'
+      }
+    },
+    masterpass: {
+      label: 'Wirecard Masterpass',
+      fields: {
+        email: 'masterpass@mailadresse.net',
+        password: 'WirecardPass42'
+      }
+    },
+    poi: {
+      label: 'Wirecard Payment On Invoice'
+    },
+    pia: {
+      label: 'Wirecard Payment In Advance'
+    },
+    payolution: {
+      label: 'Wirecard Guaranteed Invoice by payolution',
+      fields: {
+        'wirecardee-payolution--dob-day': '27',
+        'wirecardee-payolution--dob-month': '10',
+        'wirecardee-payolution--dob-year': '1990'
+      }
+    },
+    ratepay: {
+      label: 'Wirecard Guaranteed Invoice by Wirecard',
+      fields: {
+        'wirecardee-ratepay--dob-day': '27',
+        'wirecardee-ratepay--dob-month': '10',
+        'wirecardee-ratepay--dob-year': '1990'
+      }
+    }
   }
 };
 
@@ -308,6 +353,50 @@ exports.tests = [
   },
   {
     file: 'Payments/SofortTest',
+    timeout: 120000
+  },
+  {
+    file: 'Payments/EpsTest.js',
+    timeout: 60000,
+  },
+  {
+    file: 'Payments/GiropayTest.js',
+    timeout: 120000,
+  },
+  {
+    file: 'Payments/IdealTest.js',
+    timeout: 120000,
+  },
+  {
+    file: 'Payments/MaestroTest.js',
+    timeout: 120000,
+  },
+  {
+    file: 'Payments/PoiTest.js',
+    timeout: 120000,
+  },
+  {
+    file: 'Payments/PiaTest.js',
+    timeout: 120000,
+  },
+  {
+    file: 'Payments/MasterpassTest.js',
+    timeout: 120000,
+  },
+  {
+    file: 'Payments/UpiTest.js',
+    timeout: 120000,
+  },
+  {
+    file: 'Payments/AlipayTest.js',
+    timeout: 120000,
+  },
+  {
+    file: 'Payments/PayolutionTest.js',
+    timeout: 120000
+  },
+  {
+    file: 'Payments/RatepayTest.js',
     timeout: 120000
   }
 ];

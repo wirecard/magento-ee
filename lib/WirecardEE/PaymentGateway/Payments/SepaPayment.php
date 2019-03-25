@@ -22,10 +22,10 @@ use WirecardEE\PaymentGateway\Data\SepaCreditTransferPaymentConfig;
 use WirecardEE\PaymentGateway\Exception\InsufficientDataException;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\SepaPaymentConfig;
-use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplate;
+use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplateInterface;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
-class SepaPayment extends Payment implements ProcessPaymentInterface, CustomFormTemplate
+class SepaPayment extends Payment implements ProcessPaymentInterface, CustomFormTemplateInterface
 {
     const NAME = SepaDirectDebitTransaction::NAME;
 

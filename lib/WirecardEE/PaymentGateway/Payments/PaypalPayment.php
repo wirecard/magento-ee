@@ -53,7 +53,7 @@ class PaypalPayment extends Payment implements ProcessPaymentInterface
     }
 
     /**
-     * @param $selectedCurrency
+     * @param string $selectedCurrency
      *
      * @return Config
      *

@@ -13,14 +13,14 @@ use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Item;
 
 /**
- * Represents a single item from the Magento basket as object.
+ * Parent class for basket items.
  *
  * @since 1.0.0
  */
-class BasketItemMapper
+abstract class BasketItemMapper
 {
     /**
-     * @var \Mage_Sales_Model_Order_Item
+     * @var \Mage_Core_Model_Abstract
      */
     protected $item;
 
@@ -30,12 +30,12 @@ class BasketItemMapper
     protected $currency;
 
     /**
-     * @param \Mage_Sales_Model_Order_Item $item
-     * @param string                       $currency
+     * @param \Mage_Core_Model_Abstract $item
+     * @param string                    $currency
      *
      * @since 1.0.0
      */
-    public function __construct(\Mage_Sales_Model_Order_Item $item, $currency)
+    public function __construct(\Mage_Core_Model_Abstract $item, $currency)
     {
         $this->item     = $item;
         $this->currency = $currency;
@@ -48,22 +48,71 @@ class BasketItemMapper
      */
     public function getItem()
     {
-        $amount = new Amount(BasketMapper::numberFormat($this->item->getPriceInclTax()), $this->currency);
+        $amount = new Amount(BasketMapper::numberFormat($this->getPrice()), $this->currency);
 
-        $item = new Item($this->item->getName(), $amount, (int)$this->item->getQtyOrdered());
-        $item->setArticleNumber($this->item->getSku());
-        $item->setDescription($this->item->getDescription());
+        $item = new Item($this->getName(), $amount, (int)$this->getQuantity());
+        $item->setArticleNumber($this->getSku());
+        $item->setDescription($this->getDescription());
 
         if ($amount->getValue() >= 0.0) {
             $taxAmount = new Amount(
-                BasketMapper::numberFormat($this->item->getTaxAmount() / (int)$this->item->getQtyOrdered()),
+                BasketMapper::numberFormat($this->getTaxAmount() / (int)$this->getQuantity()),
                 $this->currency
             );
 
-            $item->setTaxRate($this->item->getTaxPercent());
+            $item->setTaxRate($this->getTaxPercent());
             $item->setTaxAmount($taxAmount);
         }
 
         return $item;
     }
+
+    /**
+     * @return float
+     *
+     * @since 1.2.0
+     */
+    abstract protected function getPrice();
+
+    /**
+     * @return float
+     *
+     * @since 1.2.0
+     */
+    abstract protected function getQuantity();
+
+    /**
+     * @return string
+     *
+     * @since 1.2.0
+     */
+    abstract protected function getName();
+
+    /**
+     * @return string
+     *
+     * @since 1.2.0
+     */
+    abstract protected function getSku();
+
+    /**
+     * @return string
+     *
+     * @since 1.2.0
+     */
+    abstract protected function getDescription();
+
+    /**
+     * @return float
+     *
+     * @since 1.2.0
+     */
+    abstract protected function getTaxAmount();
+
+    /**
+     * @return float
+     *
+     * @since 1.2.0
+     */
+    abstract protected function getTaxPercent();
 }

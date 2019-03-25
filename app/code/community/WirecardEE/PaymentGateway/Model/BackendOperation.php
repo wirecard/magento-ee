@@ -14,7 +14,12 @@ use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\SuccessAction;
 use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
+use WirecardEE\PaymentGateway\Mapper\BasketMapper;
+use WirecardEE\PaymentGateway\Mapper\CreditmemoBasketMapper;
+use WirecardEE\PaymentGateway\Mapper\InvoiceBasketMapper;
+use WirecardEE\PaymentGateway\Mapper\OrderBasketMapper;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
+use WirecardEE\PaymentGateway\Payments\RatepayInvoicePayment;
 use WirecardEE\PaymentGateway\Service\BackendOperationsHandler;
 use WirecardEE\PaymentGateway\Service\Logger;
 use WirecardEE\PaymentGateway\Service\PaymentFactory;
@@ -138,11 +143,12 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             $initialNotification,
             $payment,
             new BackendService(
-                $payment->getTransactionConfig(Mage::app()->getLocale()->getCurrency()),
+                $payment->getTransactionConfig($invoice->getBaseCurrencyCode()),
                 $this->logger
             ),
             $payment->getCaptureOperation(),
-            new Amount($invoice->getGrandTotal(), $invoice->getBaseCurrencyCode()),
+            new InvoiceBasketMapper($invoice, $invoicePost['items']),
+            new Amount(BasketMapper::numberFormat($invoice->getGrandTotal()), $invoice->getBaseCurrencyCode()),
             [TransactionManager::REFUNDABLE_BASKET_KEY => json_encode($refundableBasket)]
         );
 
@@ -181,6 +187,8 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             $this->throwError("Unable to process backend operation (refund)");
         }
 
+        $items    = $creditMemoPost['items'];
+
         if (! $this->paymentFactory->isSupportedPayment($creditMemo->getOrder()->getPayment())) {
             return [];
         }
@@ -192,7 +200,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         }
 
         $backendService = new BackendService(
-            $payment->getTransactionConfig(Mage::app()->getLocale()->getCurrency()),
+            $payment->getTransactionConfig($creditMemo->getBaseCurrencyCode()),
             $this->logger
         );
 
@@ -214,8 +222,8 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
 
         foreach ($creditMemo->getAllItems() as $item) {
             /** @var Mage_Sales_Model_Order_Creditmemo_Item $item */
-            if (array_key_exists($item->getOrderItemId(), $creditMemoPost['items'])) {
-                $creditMemoPost['items'][$item->getOrderItemId()]['price'] = $item->getBasePriceInclTax();
+            if (array_key_exists($item->getOrderItemId(), $items)) {
+                $items[$item->getOrderItemId()]['price'] = $item->getBasePriceInclTax();
             }
         }
 
@@ -228,13 +236,11 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         $transactionEntries = $this->findTransactionsForItems(
             $transactionEntries,
             $refundableTransactions,
-            $creditMemoPost['items']
+            $items
         );
 
         if (count($transactionEntries) === 0) {
-            $this->throwError('Unable to refund (no proper refundable baskets)', [
-                'refundableTransactions' => $refundableTransactions,
-            ]);
+            $this->throwError('Unable to refund (no proper refundable baskets)');
         }
 
         $this->logger->info('Executing operation "refund" on order #' . $creditMemo->getOrder()->getRealOrderId()
@@ -243,19 +249,59 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         $actions = [];
         foreach ($transactionEntries as $transactionEntry) {
             /** @var Mage_Sales_Model_Order_Payment_Transaction $transaction */
-            $transaction = $transactionEntry['transaction'];
-            $amount      = $transactionEntry['amount'];
+            $transaction       = $transactionEntry['transaction'];
+            $amount            = $transactionEntry['amount'];
+            $transactionBasket = $transactionEntry['basket'];
 
             if ($amount <= 0) {
                 continue;
             }
+
+            // List of items which will be refunded from the current transaction, required for building the proper
+            // basket.
+            $transactionItems = [];
+            foreach ($items as $itemOrderId => $meta) {
+                if (! isset($meta['qty']) || !isset($meta['price'])) {
+                    continue;
+                }
+
+                $refundingQuantity = $meta['qty'];
+                if ($refundingQuantity < 1) {
+                    continue;
+                }
+
+                if (isset($transactionBasket[$itemOrderId]) && $transactionBasket[$itemOrderId] > 0) {
+                    $availableQuantity          = $transactionBasket[$itemOrderId];
+                    $items[$itemOrderId]['qty'] = ($refundingQuantity - $availableQuantity > 0)
+                        ? $refundingQuantity - $availableQuantity
+                        : 0;
+                    if (! isset($transactionItems[$itemOrderId])) {
+                        $transactionItems[$itemOrderId] = [
+                            'qty'   => 0,
+                            'price' => 0,
+                        ];
+                    }
+                    $transactionItems[$itemOrderId]['qty']   = $availableQuantity - $refundingQuantity <= 0
+                        ? $availableQuantity
+                        : $refundingQuantity;
+                    $transactionItems[$itemOrderId]['price'] = $meta['price'] * $transactionItems[$itemOrderId]['qty'];
+                }
+            }
+
+            $basket = new CreditmemoBasketMapper(
+                $creditMemo,
+                $transactionItems,
+                $transactionBasket['additional'] > 0 ? $remainingAdditionalAmount : 0
+            );
+            $remainingAdditionalAmount -= $transactionBasket['additional'];
 
             $action    = $this->processBackendOperation(
                 $transaction,
                 $payment,
                 $backendService,
                 $payment->getRefundOperation(),
-                new Amount($amount, $creditMemo->getBaseCurrencyCode())
+                $basket,
+                new Amount(BasketMapper::numberFormat($amount), $creditMemo->getBaseCurrencyCode())
             );
             $actions[] = $action;
 
@@ -332,10 +378,16 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             $initialNotification,
             $payment,
             new BackendService(
-                $payment->getTransactionConfig(Mage::app()->getLocale()->getCurrency()),
+                $payment->getTransactionConfig($magePayment->getOrder()->getBaseCurrencyCode()),
                 $this->logger
             ),
-            $payment->getCancelOperation()
+            $payment->getCancelOperation(),
+            new OrderBasketMapper($magePayment->getOrder()),
+            new Amount(
+                BasketMapper::numberFormat(
+                    $magePayment->getOrder()->getGrandTotal()
+                ), $magePayment->getOrder()->getBaseCurrencyCode()
+            )
         );
 
         if ($action instanceof SuccessAction) {
@@ -378,6 +430,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
      * @param PaymentInterface                           $payment
      * @param BackendService                             $backendService
      * @param string                                     $operation
+     * @param BasketMapper                               $basketMapper
      * @param Amount|null                                $amount
      * @param array                                      $transactionContext
      *
@@ -390,6 +443,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         PaymentInterface $payment,
         BackendService $backendService,
         $operation,
+        BasketMapper $basketMapper,
         Amount $amount = null,
         $transactionContext = []
     ) {
@@ -403,6 +457,12 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
             $transaction
         );
         $backendTransaction->setParentTransactionId($transaction->getTxnId());
+
+        if ($payment->getName() === RatepayInvoicePayment::NAME) {
+            $basketMapper->setTransaction($backendTransaction);
+            $backendTransaction->setBasket($basketMapper->getBasket());
+        }
+
         if ($amount) {
             $backendTransaction->setAmount($amount);
         }
@@ -509,7 +569,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                 }
 
                 // Check if the product is in this transaction
-                if (! isset($refundableBasket[$item])) {
+                if (! isset($refundableBasket[$item]) || $refundableBasket[$item] === 0) {
                     continue;
                 }
 
@@ -527,9 +587,10 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                     ];
                 }
 
-                $suitableTransactions[$refundableTransaction->getId()]['amount']        += $quantity
-                                                                                           * $meta['price'];
-                $suitableTransactions[$refundableTransaction->getId()]['basket'][$item] = $quantity;
+                $suitableTransactions[$refundableTransaction->getId()]['amount']        += floatval(
+                    $quantity * $meta['price']
+                );
+                $suitableTransactions[$refundableTransaction->getId()]['basket'][$item] = floatval($quantity);
 
                 $remainingQuantity -= $quantity;
 

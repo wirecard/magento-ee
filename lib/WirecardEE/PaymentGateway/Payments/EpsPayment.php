@@ -20,10 +20,10 @@ use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\SepaCreditTransferPaymentConfig;
-use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplate;
+use WirecardEE\PaymentGateway\Payments\Contracts\CustomFormTemplateInterface;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
-class EpsPayment extends Payment implements ProcessPaymentInterface, CustomFormTemplate
+class EpsPayment extends Payment implements ProcessPaymentInterface, CustomFormTemplateInterface
 {
     const NAME = EpsTransaction::NAME;
 
@@ -56,7 +56,7 @@ class EpsPayment extends Payment implements ProcessPaymentInterface, CustomFormT
     }
 
     /**
-     * @param $selectedCurrency
+     * @param string $selectedCurrency
      *
      * @return Config
      *

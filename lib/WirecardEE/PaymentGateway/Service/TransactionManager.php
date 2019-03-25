@@ -204,6 +204,41 @@ class TransactionManager
 
     /**
      * @param \Mage_Sales_Model_Order $order
+     *
+     * @return array|null
+     *
+     * @since 1.2.0
+     */
+    public function findInitialResponse(\Mage_Sales_Model_Order $order)
+    {
+        try {
+            /** @var \Mage_Sales_Model_Resource_Order_Payment_Transaction_Collection $transactions */
+            $transactions = \Mage::getResourceModel('sales/order_payment_transaction_collection');
+            $transactions->addOrderIdFilter($order->getId());
+            $transactions->setOrder('transaction_id', 'ASC');
+
+            if ($transactions->count() === 0) {
+                return null;
+            }
+
+            foreach ($transactions as $transaction) {
+                /** @var \Mage_Sales_Model_Order_Payment_Transaction $transaction */
+                $additionalInformation = self::getAdditionalInformationFromTransaction($transaction);
+                if (empty($additionalInformation[TransactionManager::TYPE_KEY])) {
+                    continue;
+                }
+                if ($additionalInformation[TransactionManager::TYPE_KEY] === TransactionManager::TYPE_INITIAL) {
+                    return $additionalInformation;
+                }
+            }
+        } catch (\Exception $e) {
+        }
+
+        return null;
+    }
+
+    /**
+     * @param \Mage_Sales_Model_Order $order
      * @param PaymentInterface        $payment
      * @param BackendService          $backendService
      *
@@ -237,10 +272,14 @@ class TransactionManager
                 );
                 $backendTransaction->setParentTransactionId($transaction->getTxnId());
 
+                // Transactions are considered invalid for refunds if either the operation is not allowed (regarding
+                // `retrieveBackendOperations`) or you're trying to refund an authorization.
+                // It's important to check for transaction type AFTER checking for a valid operations, since the
+                // transaction type gets sets within `retrieveBackendOperations`.
                 if (! array_key_exists(
                     $payment->getRefundOperation(),
                     $backendService->retrieveBackendOperations($backendTransaction, true)
-                )) {
+                ) || $backendTransaction->getParentTransactionType() === Transaction::TYPE_AUTHORIZATION) {
                     continue;
                 }
 
@@ -252,6 +291,39 @@ class TransactionManager
         }
 
         return [];
+    }
+
+    /**
+     * @param array                   $requestData
+     * @param \Mage_Sales_Model_Order $order
+     *
+     * @return Mage_Sales_Model_Order_Payment_Transaction|null
+     * @throws \Mage_Core_Exception
+     *
+     * @since 1.2.0
+     */
+    public function createInitialRequestTransaction(array $requestData, \Mage_Sales_Model_Order $order)
+    {
+        if (! isset($requestData['transaction_type'])) {
+            return null;
+        }
+
+        /** @var \Mage_Sales_Model_Order_Payment_Transaction $transaction */
+        $transaction = \Mage::getModel('sales/order_payment_transaction');
+        $transaction->setTxnType(
+            TransactionManager::getMageTransactionType($requestData['transaction_type'])
+        );
+        $transaction->setOrder($order);
+        $transaction->setOrderPaymentObject($order->getPayment());
+        $transaction->setAdditionalInformation(
+            \Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS,
+            array_merge($requestData, [
+                TransactionManager::TYPE_KEY => TransactionManager::TYPE_INITIAL_REQUEST,
+            ])
+        );
+        $transaction->save();
+
+        return $transaction;
     }
 
     /**
@@ -351,7 +423,6 @@ class TransactionManager
                 }
             }
         } catch (\Exception $e) {
-            return null;
         }
 
         return null;

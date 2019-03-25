@@ -22,12 +22,17 @@ interface ProcessReturnInterface
      * is directly returned to the controller) or `null`. Returning `null` leads to the `TransactionService` taking
      * care of handling the response (via `handleResponse`) which is then returned to the controller.
      *
-     * @param TransactionService                 $transactionService
+     * @param TransactionService $transactionService
      * @param \Mage_Core_Controller_Request_Http $request
+     * @param \Mage_Sales_Model_Order $order
      *
      * @return Response|null
      *
      * @since 1.0.0
      */
-    public function processReturn(TransactionService $transactionService, \Mage_Core_Controller_Request_Http $request);
+    public function processReturn(
+        TransactionService $transactionService,
+        \Mage_Core_Controller_Request_Http $request,
+        \Mage_Sales_Model_Order $order
+    );
 }

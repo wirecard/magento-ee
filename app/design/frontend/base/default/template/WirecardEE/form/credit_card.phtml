@@ -1,0 +1,61 @@
+<?php
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento-ee/blob/master/LICENSE
+ */
+
+/** @var $this Mage_Payment_Block_Form */
+
+$creditCardModel = Mage::getModel('paymentgateway/creditCard');
+if (! $creditCardModel->showTokenSelection()) {
+    return;
+}
+?>
+<ul class="form-list" id="payment_form_<?php echo $this->getMethodCode(); ?>" style="display: none;">
+    <li>
+        <div style="padding: 15px; border: 1px #cecece solid;">
+            <h4><?php echo $this->__('text_vault'); ?></h4>
+            <ul>
+                <?php
+                foreach ($creditCardModel->getTokensForCustomer() as $card) {
+                    /** @var WirecardEE_PaymentGateway_Model_CreditCardVaultToken $card */
+                    ?>
+                    <li>
+                        <input type="radio" name="wirecardElasticEngine[token]"
+                               id="wirecardee--card__<?php echo $card->getId(); ?>"
+                               value="<?php echo $card->getId(); ?>" style="margin-right: 15px;">
+                        <label
+                            for="wirecardee--card__<?php echo $card->getId(); ?>">
+                            <?php echo Mage::helper('core')->escapeHtml($card->getMaskedAccountNumber()); ?> -
+                            <?php echo Mage::helper('core')->escapeHtml($card->getFirstName()); ?>
+                            <?php echo Mage::helper('core')->escapeHtml($card->getLastName()); ?>
+                        </label>
+
+                        <small>
+                            <a href="<?php echo $this->getUrl('paymentgateway/gateway/deleteCreditCardToken',
+                                ['tokenId' => $card->getId()]); ?>">
+                                <?php echo $this->__('vault_delete_card_text'); ?>
+                            </a>
+                        </small>
+                    </li>
+                    <?php
+                }
+                ?>
+                <li style="border-top: 1px #cecece solid; padding-top: 8px;">
+                    <input type="radio" name="wirecardElasticEngine[token]"
+                           value="wirecardee--new-card-save" style="margin-right: 15px;" id="new-card-save">
+                    <label for="new-card-save"><?php echo $this->__('vault_use_new_card_save'); ?></label>
+                </li>
+                <li style="margin-bottom: 0;">
+                    <input type="radio" name="wirecardElasticEngine[token]"
+                           value="wirecardee--new-card" id="new-card"
+                           style="margin-right: 15px;" checked="checked">
+                    <label for="new-card"><?php echo $this->__('vault_use_new_card'); ?></label>
+                </li>
+            </ul>
+        </div>
+    </li>
+</ul>
