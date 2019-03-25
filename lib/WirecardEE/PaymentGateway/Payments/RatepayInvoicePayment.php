@@ -109,6 +109,7 @@ class RatepayInvoicePayment extends Payment implements
         $paymentConfig->setTransactionMAID($this->getPluginConfig('api_maid'));
         $paymentConfig->setTransactionSecret($this->getPluginConfig('api_secret'));
         $paymentConfig->setTransactionOperation(Operation::RESERVE);
+        $paymentConfig->setSendBasket(true);
         $paymentConfig->setMinAmount($this->getPluginConfig('min_amount'));
         $paymentConfig->setMaxAmount($this->getPluginConfig('max_amount'));
         $paymentConfig->setAcceptedCurrencies(
