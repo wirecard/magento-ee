@@ -2,12 +2,6 @@ sudo: false
 dist: trusty
 language: php
 
-php:
-  - 7.2
-  - 7.1
-  - 7.0
-  - 5.6
-
 cache:
   directories:
     - $HOME/.composer/cache/files
@@ -28,16 +22,61 @@ env:
     - MAGENTO_VERSION=1.9.4.0
     - EXTENSION_NAME="wirecard-ee"
     - n98="php ${TRAVIS_BUILD_DIR}/n98-magerun.phar -n --root-dir=${MAGENTO_DIRECTORY}"
+    - NGROK_SUBDOMAIN=c596a2a9
     - github_token:
         secure: "D4Kx568TZU1w8YPJ/yCCbJjNGvuOfJ/xhKTJ7mG2Yide4+OrDvoRw4KrQ6Eku68ceMNAnziEtGcPEauCoxAyrC4Dykvkq2tCXOZfg//Vaoj/VepNUfrmqVQe0OgZeBHlchvDUr/ygdBDGLQDJc3bF1+s0VHljiZCoRO/POLELiN7Wd2yNtELfH+LIRlO1E1VVz7yib8fgJeB3G6WL/klHj0nW5fzFRDvWN5fcCELWUA659wI7ehdhzaLKnNAc1uhZPTA2XDKqTU0Nsu5y3f58ugfcXFNtd7G1LCwrsTwrUYk/pXBUWMbeQSg8CIhgc65dZeWADkHiiEr0/CF1Vgu2yjexncTbAlnJYyqz9AO9LP4zMN3OGaqmOC0Kf9lhc5NVqVsjSQk2yYYSjGiTrjKZ2E2zIqyGS7C+JzAzcrAkfc92zH7+4OoPcicxQkfSXyUpcSW2yk9GUqCjG0H6YzHHudVUh9cCVCeXtPaxm6ePiboTc0DvIJea2qMob8Sb40/MxMOjlPsnu+1JCq6WwJLez2Evc8t0ZWujQYr4N2iHUmdHWRfOl9s/QdcrI3ispzEx3C5h46XIt0QzigY3cc7aLKbpGFSd7bGM/gYJepeOK1R2KY8EbNJ12/PHlLn26fw2fPa+ZxAKpscB1aDOV7plDWh1jVX1wi9KjFydJdcAIo="
 
+matrix:
+  allow_failures:
+    - stage: acceptance-test
+  include:
+    - php: 5.6
+      if: type = cron
+    - php: 7.0
+      if: type != cron
+    - php: 7.1
+      if: type = cron
+    - php: 7.2
+      if: type = cron
+    - stage: acceptance-test
+      if: type != cron
+      php: 7.2
+      env: GATEWAY=API-TEST
+      before_script:
+      - cd ${TRAVIS_BUILD_DIR}
+      - travis_retry npm install
+      # run UI tests
+      script: travis_wait npm run test:runner
+      after_script: skip
+      after_failure:
+      - bash ./build/bin/send-notify.sh
+
+
 before_install:
+  #get apache
+  - sudo apt-get update
+  - sudo apt-get install apache2 libapache2-mod-fastcgi
+  - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} != "5.6" ]]; then sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf; fi
+  - sudo a2enmod rewrite actions fastcgi alias
+  - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
+  - sudo chown -R travis:travis /var/lib/apache2/fastcgi
+  - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
+  - sudo cp -f build/bin/travis-ci-apache /etc/apache2/sites-available/000-default.conf
+  - sudo sed -e "s?%DOCUMENT_ROOT%?${MAGENTO_DIRECTORY}?g" --in-place /etc/apache2/sites-available/000-default.conf
+  - sudo service apache2 restart
+  # get magento installed
   - wget https://files.magerun.net/n98-magerun.phar
   - $n98 --version
+ # prepare database with sample data
   - mysql -e 'CREATE DATABASE magento;'
+  - mysql -u travis magento < build/bin/magento_sample_data_for_1.9.2.4.sql
+
 
 install:
   - travis_retry composer install $COMPOSER_ARGS
+  #- travis_retry npm install
   - composer show
   # Download proper Magento version
   - git clone https://github.com/OpenMage/magento-mirror.git ${MAGENTO_DIRECTORY}
@@ -46,7 +85,7 @@ install:
   - git checkout tags/${MAGENTO_VERSION}
   # Install Magento
   - $n98 sys:check
-  - $n98 install --dbUser=travis --dbHost=127.0.0.1 --dbName=magento --baseUrl="http://127.0.0.1" --installationFolder=${MAGENTO_DIRECTORY} --noDownload --forceUseDb
+  - $n98 install --dbUser=travis --dbHost=127.0.0.1 --dbName=magento --baseUrl="http://127.0.0.1:8000" --installationFolder=${MAGENTO_DIRECTORY} --noDownload --forceUseDb
   - wget https://raw.github.com/colinmollenhour/modman/master/modman
   - chmod +x modman
   - ./modman init
@@ -54,12 +93,16 @@ install:
   - cp -r ${TRAVIS_BUILD_DIR} ${MAGENTO_DIRECTORY}/.modman/${EXTENSION_NAME}
   - ./modman deploy ${EXTENSION_NAME}
   - cd ${MAGENTO_DIRECTORY}/.modman/${EXTENSION_NAME}
+  # activate all payment methods
+  - mysql -u travis magento < build/bin/payment_method_config.sql
+  # activate symlinks so plugin is displayed in the shop
+  - $n98 dev:symlinks 1
+
 
 script:
-  - npm run test:runner
-#  - composer cs-check
-#  - composer test-coverage
-#  - build/bin/find-sensitive-data
+  - composer cs-check
+  - composer test-coverage
+  - build/bin/find-sensitive-data
 
 after_script:
   - travis_retry composer upload-coverage

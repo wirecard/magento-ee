@@ -33,44 +33,65 @@ describe('PayPal test', () => {
     await choosePaymentMethod(driver, 'p_method_wirecardee_paymentgateway_paypal', paymentLabel);
     await placeOrder(driver);
 
-    try {
-      // Log in to PayPal
-      console.log('wait for #loginSection');
-      await driver.wait(until.elementLocated(By.id('loginSection')), 30000);
-      await waitUntilOverlayIsNotVisible(driver, By.id('preloaderSpinner'));
-      console.log('click #loginSection .btn');
-      await driver.wait(driver.findElement(By.css('#loginSection .btn')).click(), 10000);
-      await waitUntilOverlayIsNotVisible(driver, By.id('preloaderSpinner'));
-    } catch (e) {
-      console.log('PayPal skipped loginSection, proceed with credentials');
-    }
-
-    // Enter PayPal credentials
-    console.log('wait for #btnNext');
-    await driver.wait(until.elementLocated(By.id('btnNext')), 10000);
+  try {
     console.log('wait for #email');
     await driver.wait(until.elementLocated(By.id('email')), 10000);
-    await driver.findElement(By.id('email')).sendKeys(formFields.email, Key.ENTER);
-
-    await waitUntilOverlayIsNotVisible(driver, By.className('spinnerWithLockIcon'));
-
-    console.log('wait for #btnLogin');
-    await driver.wait(until.elementLocated(By.id('btnLogin')), 25000);
+    await driver.findElement(By.id('email')).sendKeys(formFields.email);
     console.log('wait for #password');
     await driver.wait(until.elementLocated(By.id('password')), 10000);
     await driver.findElement(By.id('password')).sendKeys(formFields.password, Key.ENTER);
+    console.log('wait for #confirmButtonTop');
+    await driver.wait(until.elementLocated(By.id('confirmButtonTop')));
+    console.log('#confirmButtonTop located');
+    await driver.findElement(By.id('confirmButtonTop')).click();
+    console.log('#confirmButtonTop clicked');
 
-    await waitUntilOverlayIsNotVisible(driver, By.id('preloaderSpinner'));
+    await waitForAlert(driver, 30000);
+  //  await driver.sleep(30000);
+  //  await checkConfirmationPage(driver, 'Thank you for your purchase!');
+     await checkConfirmationPage(driver, paymentLabel);
+  } catch (e) {
+
+    // Enter PayPal credentials
+    console.log('wait for #btnNext');
+    await
+    driver.wait(until.elementLocated(By.id('btnNext')), 10000);
+    console.log('wait for #email');
+    await
+    driver.wait(until.elementLocated(By.id('email')), 10000);
+    await
+    driver.findElement(By.id('email')).sendKeys(formFields.email, Key.ENTER);
+
+    await
+    waitUntilOverlayIsNotVisible(driver, By.className('spinnerWithLockIcon'));
+
+    console.log('wait for #btnLogin');
+    await
+    driver.wait(until.elementLocated(By.id('btnLogin')), 25000);
+    console.log('wait for #password');
+    await
+    driver.wait(until.elementLocated(By.id('password')), 10000);
+    await
+    driver.findElement(By.id('password')).sendKeys(formFields.password, Key.ENTER);
+
+    await
+    waitUntilOverlayIsNotVisible(driver, By.id('preloaderSpinner'));
 
     console.log('wait for #confirmButtonTop');
-    await driver.wait(until.elementLocated(By.id('confirmButtonTop')), 25000);
-    await waitUntilOverlayIsNotVisible(driver, By.id('preloaderSpinner'));
+    await
+    driver.wait(until.elementLocated(By.id('confirmButtonTop')), 25000);
+    await
+    waitUntilOverlayIsNotVisible(driver, By.id('preloaderSpinner'));
     console.log('click #confirmButtonTop');
-    await driver.wait(driver.findElement(By.id('confirmButtonTop')).click(), 10000);
+    await
+    driver.wait(driver.findElement(By.id('confirmButtonTop')).click(), 10000);
 
-    await waitForAlert(driver, 15000);
+    await
+    waitForAlert(driver, 25000);
 
-    await checkConfirmationPage(driver, 'Thank you for your purchase!');
+    await
+    checkConfirmationPage(driver, 'Thank you for your purchase!');
+  }
   });
 
   after(async () => driver.quit());

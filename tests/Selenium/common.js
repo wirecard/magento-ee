@@ -26,7 +26,8 @@ exports.fillOutGuestCheckout = async (driver) => {
   await driver.findElement(By.id('billing:email')).sendKeys('firstname.lastname@example.com');
   await driver.findElement(By.id('billing:street1')).sendKeys('Street');
   await driver.findElement(By.id('billing:city')).sendKeys('Examplecity');
-  await driver.findElement(By.id('billing:country_id')).sendKeys('Austria');
+  await driver.findElement(By.id('billing:country_id')).sendKeys('Österreich ');
+  // await driver.findElement(By.id('billing:country_id')).sendKeys('Austria');
   await driver.findElement(By.id('billing:region_id')).sendKeys('Steiermark');
   await driver.findElement(By.id('billing:postcode')).sendKeys('8020');
   await driver.findElement(By.id('billing:telephone')).sendKeys('123456789');
