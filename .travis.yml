@@ -12,6 +12,12 @@ cache:
   directories:
     - $HOME/.composer/cache/files
 
+addons:
+  browserstack:
+    username: ${BROWSERSTACK_USER}
+    access_key:
+      secure: "X5rYWmTBajo7zuJ88WBcE1C0avNwChG26wuOyRqoi2ibGRVM64pTF+eTn60Y12g3dUfoV20XtTSpIiRmwzK827mk4Zh0csn1oTd1UhZm01MYtnxCXbB8xphVWRTgnyJbZM+KDldlRZZyClY5RLW3qH/I+TTifuWcT+ptsijLIcu6vMNQ6Iqc0E5vUFflY3XrE20va9jnJkRe8E7HroR3c9SP7lN2dG8GnzOi6ode4WTIrkXlZ4T/k5dVUwD+h0VZPTwXagorsYrBAaV8jNt5M5cWSBd4KvK4Q2F8NKX2eOebLiQ47NdhPJXG7SLxPF88l7mtJVODKqxTXUFy6apU+vf9w3OY0fX967u74WEO2CQorYJ1HgC3yxbc5zUtlzjtLpKRCFkI2kPbz3gA5EKX6XydYAyGIBFr7ZqPtjLUF/3qZNP5lA2phVyO49Mc3sUBfZ0hzGy6uepgTx1PcRBCqDT4QXuNJJKMJ8Cmm0Sq8XZrzPFK9Y84lLgbGGbZhaulHhSXF8O2DlvIIFwWOU7PbV52KiUw4oO9G//qxWU1BKnLk5wne23j1uAmT20ueR8Rg1WsPqc1wPT8uFGg5ueiVrYgdizGxV5zsEwRiOto+nwQ6IJf77HUi0CxkRZOatYhRRH5zXnhBNCm+ZcUdpr806Q+vuyriBPNug04Fa6KaaY="
+
 services:
   - mysql
 
@@ -50,9 +56,10 @@ install:
   - cd ${MAGENTO_DIRECTORY}/.modman/${EXTENSION_NAME}
 
 script:
-  - composer cs-check
-  - composer test-coverage
-  - build/bin/find-sensitive-data
+  - npm run test:runner
+#  - composer cs-check
+#  - composer test-coverage
+#  - build/bin/find-sensitive-data
 
 after_script:
   - travis_retry composer upload-coverage
