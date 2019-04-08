@@ -49,10 +49,9 @@ const run = async () => {
 
                 mocha.run()
                     .on('fail', test => {
-                        fail = true; 
+                        fail = true;
                         console.log(test);
                         resolve();
-                        //reject(new Error(`Selenium test (${test.title}) failed.`));
                     })
                     .on('end', () => {
                         resolve();
