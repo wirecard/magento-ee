@@ -156,7 +156,7 @@ const OSX = {
 
 const CHROME = {
   name: 'Chrome',
-  currentVersion: '68.0'
+  currentVersion: '72.0'
 };
 
 const FIREFOX = {
