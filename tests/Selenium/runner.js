@@ -11,6 +11,7 @@ const { browsers, tests } = require('./config');
 const { asyncForEach } = require('./common');
 const Mocha = require('mocha');
 
+let fail = false;
 const run = async () => {
     await asyncForEach(browsers, async browser => {
         const bsConfig = Object.assign({
@@ -44,12 +45,13 @@ const run = async () => {
 
                 console.log(`Running ${testCase.file} against ${browser.browserName} (v${browser.browser_version}) on ${browser.os} (${browser.os_version})`);
 
-                mocha.addFile(`./Tests/Selenium/${testCase.file}.js`);
+                mocha.addFile(`./tests/Selenium/${testCase.file}.js`);
 
                 mocha.run()
                     .on('fail', test => {
+                        fail = true;
                         console.log(test);
-                        reject(new Error(`Selenium test (${test.title}) failed.`));
+                        resolve();
                     })
                     .on('end', () => {
                         resolve();
@@ -60,4 +62,11 @@ const run = async () => {
     });
 };
 
-run();
+//wait till all tests are run and return 1 if any of tests failed
+(async function() {
+  await run();
+  if (fail) {
+    console.log('Some tests failed in the test suite')
+    process.exit(1);
+}
+})()

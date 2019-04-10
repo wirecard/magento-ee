@@ -7,7 +7,7 @@
  */
 
 exports.config = {
-  url: process.env.TEST_URL || 'http://localhost:26600',
+  url: process.env.TEST_URL || 'http://127.0.0.1:8000',
   payments: {
     creditCard: {
       label: 'Wirecard Credit Card',
@@ -156,7 +156,7 @@ const OSX = {
 
 const CHROME = {
   name: 'Chrome',
-  currentVersion: '68.0'
+  currentVersion: '72.0'
 };
 
 const FIREFOX = {
@@ -217,118 +217,118 @@ exports.browsers = [
     os: WINDOWS.name,
     os_version: WINDOWS.versions.win10,
     resolution: DEFAULT_RESOLUTION
-  },
-  {
-    browserName: FIREFOX.name,
-    browser_version: FIREFOX.currentVersion,
-    os: WINDOWS.name,
-    os_version: WINDOWS.versions.win8,
-    resolution: DEFAULT_RESOLUTION
-  },
-  {
-    browserName: OPERA.name,
-    browser_version: OPERA.currentVersion,
-    os: WINDOWS.name,
-    os_version: WINDOWS.versions.win8,
-    resolution: DEFAULT_RESOLUTION
-  },
-  {
-    browserName: IE.name,
-    browser_version: IE.versions.ie8,
-    os: WINDOWS.name,
-    os_version: WINDOWS.versions.win7,
-    resolution: DEFAULT_RESOLUTION
-  },
-  {
-    browserName: IE.name,
-    browser_version: IE.versions.ie9,
-    os: WINDOWS.name,
-    os_version: WINDOWS.versions.win7,
-    resolution: DEFAULT_RESOLUTION
-  },
-  {
-    browserName: IE.name,
-    browser_version: IE.versions.ie10,
-    os: WINDOWS.name,
-    os_version: WINDOWS.versions.win7,
-    resolution: DEFAULT_RESOLUTION
-  },
-  {
-    browserName: IE.name,
-    browser_version: IE.versions.ie11,
-    os: WINDOWS.name,
-    os_version: WINDOWS.versions.win7,
-    resolution: DEFAULT_RESOLUTION
-  },
-  // APPLE
-  {
-    browserName: CHROME.name,
-    browser_version: CHROME.currentVersion,
-    os: OSX.name,
-    os_version: OSX.versions.highSierra,
-    resolution: DEFAULT_RESOLUTION
-  },
-  {
-    browserName: CHROME.name,
-    browser_version: CHROME.currentVersion,
-    os: OSX.name,
-    os_version: OSX.versions.sierra,
-    resolution: DEFAULT_RESOLUTION
-  },
-  {
-    browserName: SAFARI.name,
-    browser_version: SAFARI.versions.v11_1,
-    os: OSX.name,
-    os_version: OSX.versions.highSierra,
-    resolution: DEFAULT_RESOLUTION
-  },
-  {
-    browserName: SAFARI.name,
-    browser_version: SAFARI.versions.v10_1,
-    os: OSX.name,
-    os_version: OSX.versions.sierra,
-    resolution: DEFAULT_RESOLUTION
-  },
-  // MOBILE: ANDROID
-  {
-    browserName: CHROME.name,
-    os: ANDROID_7_DEVICE.name,
-    os_version: ANDROID_7_DEVICE.version,
-    real_mobile: 'true'
-  },
-  {
-    browserName: CHROME.name,
-    os: ANDROID_8_DEVICE.name,
-    os_version: ANDROID_8_DEVICE.version,
-    real_mobile: 'true'
-  },
-  {
-    browserName: CHROME.name,
-    device: ANDROID_8_DEVICE.name,
-    os_version: ANDROID_8_DEVICE.version,
-    real_mobile: 'true',
-    deviceOrientation: 'landscape'
-  },
-  // MOBILE: iOS
-  {
-    browserName: SAFARI.name,
-    os: IOS_10_DEVICE.name,
-    os_version: IOS_10_DEVICE.version,
-    real_mobile: 'true'
-  },
-  {
-    browserName: SAFARI.name,
-    os: IOS_11_DEVICE.name,
-    os_version: IOS_11_DEVICE.version,
-    real_mobile: 'true'
-  },
-  {
-    browserName: SAFARI.name,
-    os: IOS_11_DEVICE.name,
-    os_version: IOS_11_DEVICE.version,
-    real_mobile: 'true',
-    deviceOrientation: 'landscape'
-  }
+  }//,
+  // {
+  // browserName: FIREFOX.name,
+  // browser_version: FIREFOX.currentVersion,
+  // os: WINDOWS.name,
+  // os_version: WINDOWS.versions.win8,
+  // resolution: DEFAULT_RESOLUTION
+  // },
+  // {
+  // browserName: OPERA.name,
+  // browser_version: OPERA.currentVersion,
+  // os: WINDOWS.name,
+  // os_version: WINDOWS.versions.win8,
+  // resolution: DEFAULT_RESOLUTION
+  // },
+  // {
+  // browserName: IE.name,
+  // browser_version: IE.versions.ie8,
+  // os: WINDOWS.name,
+  // os_version: WINDOWS.versions.win7,
+  // resolution: DEFAULT_RESOLUTION
+  // },
+  // {
+  // browserName: IE.name,
+  // browser_version: IE.versions.ie9,
+  // os: WINDOWS.name,
+  // os_version: WINDOWS.versions.win7,
+  // resolution: DEFAULT_RESOLUTION
+  // },
+  // {
+  // browserName: IE.name,
+  // browser_version: IE.versions.ie10,
+  // os: WINDOWS.name,
+  // os_version: WINDOWS.versions.win7,
+  // resolution: DEFAULT_RESOLUTION
+  // },
+  // {
+  // browserName: IE.name,
+  // browser_version: IE.versions.ie11,
+  // os: WINDOWS.name,
+  // os_version: WINDOWS.versions.win7,
+  // resolution: DEFAULT_RESOLUTION
+  // },
+  // // APPLE
+  // {
+  // browserName: CHROME.name,
+  // browser_version: CHROME.currentVersion,
+  // os: OSX.name,
+  // os_version: OSX.versions.highSierra,
+  // resolution: DEFAULT_RESOLUTION
+  // },
+  // {
+  // browserName: CHROME.name,
+  // browser_version: CHROME.currentVersion,
+  // os: OSX.name,
+  // os_version: OSX.versions.sierra,
+  // resolution: DEFAULT_RESOLUTION
+  // },
+  // {
+  // browserName: SAFARI.name,
+  // browser_version: SAFARI.versions.v11_1,
+  // os: OSX.name,
+  // os_version: OSX.versions.highSierra,
+  // resolution: DEFAULT_RESOLUTION
+  // },
+  // {
+  // browserName: SAFARI.name,
+  // browser_version: SAFARI.versions.v10_1,
+  // os: OSX.name,
+  // os_version: OSX.versions.sierra,
+  // resolution: DEFAULT_RESOLUTION
+  // },
+  // // MOBILE: ANDROID
+  // {
+  // browserName: CHROME.name,
+  // os: ANDROID_7_DEVICE.name,
+  // os_version: ANDROID_7_DEVICE.version,
+  // real_mobile: 'true'
+  // },
+  // {
+  // browserName: CHROME.name,
+  // os: ANDROID_8_DEVICE.name,
+  // os_version: ANDROID_8_DEVICE.version,
+  // real_mobile: 'true'
+  // },
+  // {
+  // browserName: CHROME.name,
+  // device: ANDROID_8_DEVICE.name,
+  // os_version: ANDROID_8_DEVICE.version,
+  // real_mobile: 'true',
+  // deviceOrientation: 'landscape'
+  // },
+  // // MOBILE: iOS
+  // {
+  // browserName: SAFARI.name,
+  // os: IOS_10_DEVICE.name,
+  // os_version: IOS_10_DEVICE.version,
+  // real_mobile: 'true'
+  // },
+  // {
+  // browserName: SAFARI.name,
+  // os: IOS_11_DEVICE.name,
+  // os_version: IOS_11_DEVICE.version,
+  // real_mobile: 'true'
+  // },
+  // {
+  // browserName: SAFARI.name,
+  // os: IOS_11_DEVICE.name,
+  // os_version: IOS_11_DEVICE.version,
+  // real_mobile: 'true',
+  // deviceOrientation: 'landscape'
+  // }
 ];
 
 /**
@@ -356,47 +356,47 @@ exports.tests = [
     timeout: 120000
   },
   {
-    file: 'Payments/EpsTest.js',
+    file: 'Payments/EpsTest',
     timeout: 60000,
   },
   {
-    file: 'Payments/GiropayTest.js',
+    file: 'Payments/GiropayTest',
     timeout: 120000,
   },
   {
-    file: 'Payments/IdealTest.js',
+    file: 'Payments/IdealTest',
     timeout: 120000,
   },
   {
-    file: 'Payments/MaestroTest.js',
+    file: 'Payments/MaestroTest',
     timeout: 120000,
   },
   {
-    file: 'Payments/PoiTest.js',
+    file: 'Payments/PoiTest',
     timeout: 120000,
   },
   {
-    file: 'Payments/PiaTest.js',
+    file: 'Payments/PiaTest',
     timeout: 120000,
   },
   {
-    file: 'Payments/MasterpassTest.js',
+    file: 'Payments/MasterpassTest',
     timeout: 120000,
   },
   {
-    file: 'Payments/UpiTest.js',
+    file: 'Payments/UpiTest',
     timeout: 120000,
   },
   {
-    file: 'Payments/AlipayTest.js',
+    file: 'Payments/AlipayTest',
     timeout: 120000,
   },
   {
-    file: 'Payments/PayolutionTest.js',
+    file: 'Payments/PayolutionTest',
     timeout: 120000
   },
   {
-    file: 'Payments/RatepayTest.js',
+    file: 'Payments/RatepayTest',
     timeout: 120000
   }
 ];

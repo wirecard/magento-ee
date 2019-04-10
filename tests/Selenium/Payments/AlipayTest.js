@@ -31,7 +31,7 @@ describe('Alipay test', () => {
     await choosePaymentMethod(driver, 'p_method_wirecardee_paymentgateway_alipay-xborder', paymentLabel);
     await placeOrder(driver);
 
-    await driver.wait(until.elementLocated(By.css('.payAmount-area')), 20000);
+    await driver.wait(until.elementLocated(By.css('.payAmount-area')), 30000);
     const paymentContent = await driver.findElement(By.css('.payAmount-area')).getText();
     expect(paymentContent).to.include('60.00 EUR');
 
