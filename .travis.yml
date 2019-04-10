@@ -75,7 +75,6 @@ before_install:
 
 install:
   - travis_retry composer install $COMPOSER_ARGS
-  #- travis_retry npm install
   - composer show
   # Download proper Magento version
   - git clone https://github.com/OpenMage/magento-mirror.git ${MAGENTO_DIRECTORY}
