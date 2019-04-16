@@ -143,7 +143,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
     {
         list($controller, $order, $transaction, $coreSession) = $this->prepareForIndexAction(CreditCardTransaction::NAME);
 
-        $transaction->expects($this->once())->method('setTxnType')->with('authorization');
+        $transaction->expects($this->once())->method('setTxnType')->with('capture');
         $transaction->expects($this->once())->method('setOrder')->with($order);
 
         $coreSession->method('getData')->willReturnMap([
