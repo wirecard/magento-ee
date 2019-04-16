@@ -172,6 +172,6 @@ abstract class BasketMapper
      */
     public static function numberFormat($amount)
     {
-        return number_format($amount, 2, '.', '');
+        return (double)number_format($amount, 2, '.', '');
     }
 }
