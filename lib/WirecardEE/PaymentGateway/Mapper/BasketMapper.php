@@ -166,12 +166,12 @@ abstract class BasketMapper
      *
      * @param string|float $amount
      *
-     * @return string
+     * @return float
      *
      * @since 1.0.0
      */
     public static function numberFormat($amount)
     {
-        return (double)number_format($amount, 2, '.', '');
+        return (float)number_format($amount, 2, '.', '');
     }
 }
