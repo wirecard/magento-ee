@@ -172,6 +172,9 @@ abstract class BasketMapper
      */
     public static function numberFormat($amount)
     {
+        // $amount => float
+        // rounding 2 digits
+
         return (float)number_format($amount, 2, '.', '');
     }
 }
