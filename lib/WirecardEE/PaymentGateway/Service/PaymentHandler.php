@@ -118,7 +118,7 @@ class PaymentHandler extends Handler
      * @since   1.0.0
      * @throws \Mage_Core_Model_Store_Exception
      */
-    private function prepareTransaction(
+    public function prepareTransaction(
         OrderSummary $orderSummary,
         Redirect $redirect,
         $notificationUrl
