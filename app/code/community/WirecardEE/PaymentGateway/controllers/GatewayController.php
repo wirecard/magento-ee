@@ -8,7 +8,6 @@
  */
 
 use Wirecard\PaymentSdk\BackendService;
-use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\TransactionService;
@@ -20,7 +19,6 @@ use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Exception\UnknownActionException;
 use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
 use WirecardEE\PaymentGateway\Mail\MerchantNotificationMail;
-use WirecardEE\PaymentGateway\Mapper\BasketMapper;
 use WirecardEE\PaymentGateway\Mapper\OrderBasketMapper;
 use WirecardEE\PaymentGateway\Mapper\UserMapper;
 use WirecardEE\PaymentGateway\Service\NotificationHandler;
@@ -156,7 +154,6 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
 
         $session        = Mage::getSingleton("core/session", ["name" => "frontend"]);
         $sessionManager = new SessionManager($session);
-
         $order          = $this->getCheckoutSession()->getLastRealOrder();
 
         if ($order->getState() !== \Mage_Sales_Model_Order::STATE_NEW) {
