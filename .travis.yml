@@ -19,7 +19,6 @@ env:
   global:
     - COMPOSER_ARGS="--no-interaction"
     - MAGENTO_DIRECTORY=${HOME}/magento
-    - MAGENTO_VERSION=1.9.4.0
     - EXTENSION_NAME="wirecard-ee"
     - n98="php ${TRAVIS_BUILD_DIR}/n98-magerun.phar -n --root-dir=${MAGENTO_DIRECTORY}"
     - github_token:
@@ -30,17 +29,30 @@ matrix:
     - stage: acceptance-test
   include:
     - php: 5.6
-      if: type != cron
-    - php: 7.0
-      if: type != cron
-    - php: 7.1
-      if: type != cron
-    - php: 7.2
-      if: type != cron
-    - stage: acceptance-test
       if: type = cron
+    - php: 7.0
+      if: type = cron
+    - php: 7.1
+      if: type = cron
+    - php: 7.2
+      if: type = cron
+    # nigthly get latest shopware versions and store them in shop-releases.txt
+    - stage: get-magento-versions
+      if: type != cron
       php: 7.2
-      env: GATEWAY=API-TEST
+      before_install: skip
+      install: skip
+      script: bash build/bin/get-magento-versions.sh
+      after_script: skip
+      after_failure: skip
+    - &acceptance-test
+      stage: acceptance-test
+      if: type != cron
+      php: 7.2
+      env:
+      - GATEWAY=API-TEST
+#     magento version - fist line in SHOPWARE_RELEASES_FILE
+      - MAGENTO_VERSION=$(awk 'NR==1 {print; exit}' ${SHOPWARE_RELEASES_FILE})
       before_script:
       - cd ${TRAVIS_BUILD_DIR}
       - travis_retry npm install
@@ -49,6 +61,16 @@ matrix:
       after_script: skip
       after_failure:
       - bash ./build/bin/send-notify.sh
+    - <<: *acceptance-test
+      env:
+      - GATEWAY=API-TEST
+#    magento version - 2nd line in SHOPWARE_RELEASES_FILE
+      - MAGENTO_VERSION=$(awk 'NR==2 {print; exit}' ${SHOPWARE_RELEASES_FILE})
+    - <<: *acceptance-test
+      env:
+      - GATEWAY=API-TEST
+#    magento version - 3nd line in SHOPWARE_RELEASES_FILE
+      - MAGENTO_VERSION=$(awk 'NR==3 {print; exit}' ${SHOPWARE_RELEASES_FILE})
 
 
 before_install:
@@ -77,11 +99,7 @@ install:
   - travis_retry composer install $COMPOSER_ARGS
   - composer show
   # Download proper Magento version
-  - git clone https://github.com/OpenMage/magento-mirror.git ${MAGENTO_DIRECTORY}
-  - cd ${MAGENTO_DIRECTORY}
-  - git tag -l
-  - git checkout tags/${MAGENTO_VERSION}
-  # Install Magento
+  - if [[ -z "${MAGENTO_VERSION}" ]]; then export MAGENTO_VERSION="1.9.4.0"; fi && git clone https://github.com/OpenMage/magento-mirror.git ${MAGENTO_DIRECTORY} --branch ${MAGENTO_VERSION}
   - $n98 sys:check
   - $n98 install --dbUser=travis --dbHost=127.0.0.1 --dbName=magento --baseUrl="http://127.0.0.1:8000" --installationFolder=${MAGENTO_DIRECTORY} --noDownload --forceUseDb
   - wget https://raw.github.com/colinmollenhour/modman/master/modman
