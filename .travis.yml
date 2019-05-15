@@ -21,6 +21,8 @@ env:
     - MAGENTO_DIRECTORY=${HOME}/magento
     - EXTENSION_NAME="wirecard-ee"
     - n98="php ${TRAVIS_BUILD_DIR}/n98-magerun.phar -n --root-dir=${MAGENTO_DIRECTORY}"
+    - MAGENTO_RELEASES_FILE=${TRAVIS_BUILD_DIR}/build/bin/shop-releases.txt
+
     - github_token:
         secure: "D4Kx568TZU1w8YPJ/yCCbJjNGvuOfJ/xhKTJ7mG2Yide4+OrDvoRw4KrQ6Eku68ceMNAnziEtGcPEauCoxAyrC4Dykvkq2tCXOZfg//Vaoj/VepNUfrmqVQe0OgZeBHlchvDUr/ygdBDGLQDJc3bF1+s0VHljiZCoRO/POLELiN7Wd2yNtELfH+LIRlO1E1VVz7yib8fgJeB3G6WL/klHj0nW5fzFRDvWN5fcCELWUA659wI7ehdhzaLKnNAc1uhZPTA2XDKqTU0Nsu5y3f58ugfcXFNtd7G1LCwrsTwrUYk/pXBUWMbeQSg8CIhgc65dZeWADkHiiEr0/CF1Vgu2yjexncTbAlnJYyqz9AO9LP4zMN3OGaqmOC0Kf9lhc5NVqVsjSQk2yYYSjGiTrjKZ2E2zIqyGS7C+JzAzcrAkfc92zH7+4OoPcicxQkfSXyUpcSW2yk9GUqCjG0H6YzHHudVUh9cCVCeXtPaxm6ePiboTc0DvIJea2qMob8Sb40/MxMOjlPsnu+1JCq6WwJLez2Evc8t0ZWujQYr4N2iHUmdHWRfOl9s/QdcrI3ispzEx3C5h46XIt0QzigY3cc7aLKbpGFSd7bGM/gYJepeOK1R2KY8EbNJ12/PHlLn26fw2fPa+ZxAKpscB1aDOV7plDWh1jVX1wi9KjFydJdcAIo="
 
@@ -52,7 +54,7 @@ matrix:
       env:
       - GATEWAY=API-TEST
 #     magento version - fist line in SHOPWARE_RELEASES_FILE
-      - MAGENTO_VERSION=$(awk 'NR==1 {print; exit}' ${SHOPWARE_RELEASES_FILE})
+      - MAGENTO_VERSION=$(awk 'NR==1 {print; exit}' ${MAGENTO_RELEASES_FILE})
       before_script:
       - cd ${TRAVIS_BUILD_DIR}
       - travis_retry npm install
@@ -65,12 +67,12 @@ matrix:
       env:
       - GATEWAY=API-TEST
 #    magento version - 2nd line in SHOPWARE_RELEASES_FILE
-      - MAGENTO_VERSION=$(awk 'NR==2 {print; exit}' ${SHOPWARE_RELEASES_FILE})
+      - MAGENTO_VERSION=$(awk 'NR==2 {print; exit}' ${MAGENTO_RELEASES_FILE})
     - <<: *acceptance-test
       env:
       - GATEWAY=API-TEST
 #    magento version - 3nd line in SHOPWARE_RELEASES_FILE
-      - MAGENTO_VERSION=$(awk 'NR==3 {print; exit}' ${SHOPWARE_RELEASES_FILE})
+      - MAGENTO_VERSION=$(awk 'NR==3 {print; exit}' ${MAGENTO_RELEASES_FILE})
 
 
 before_install:
@@ -99,7 +101,12 @@ install:
   - travis_retry composer install $COMPOSER_ARGS
   - composer show
   # Download proper Magento version
-  - if [[ -z "${MAGENTO_VERSION}" ]]; then export MAGENTO_VERSION="1.9.4.0"; fi && git clone https://github.com/OpenMage/magento-mirror.git ${MAGENTO_DIRECTORY} --branch ${MAGENTO_VERSION}
+  - echo "Magento version: ${MAGENTO_VERSION}"
+  - git clone https://github.com/OpenMage/magento-mirror.git ${MAGENTO_DIRECTORY}
+  - cd ${MAGENTO_DIRECTORY}
+  - git tag -l
+  - if [[ -z "${MAGENTO_VERSION}" ]]; then export MAGENTO_VERSION="1.9.4.0"; fi && git checkout tags/${MAGENTO_VERSION}
+  # Install Magento
   - $n98 sys:check
   - $n98 install --dbUser=travis --dbHost=127.0.0.1 --dbName=magento --baseUrl="http://127.0.0.1:8000" --installationFolder=${MAGENTO_DIRECTORY} --noDownload --forceUseDb
   - wget https://raw.github.com/colinmollenhour/modman/master/modman
