@@ -31,13 +31,13 @@ matrix:
     - stage: acceptance-test
   include:
     - php: 5.6
-      if: type = cron
+      if: type != cron
     - php: 7.0
-      if: type = cron
+      if: type != cron
     - php: 7.1
-      if: type = cron
+      if: type != cron
     - php: 7.2
-      if: type = cron
+      if: type != cron
     # nigthly get latest shopware versions and store them in shop-releases.txt
     - stage: get-magento-versions
       if: type != cron
@@ -61,7 +61,9 @@ matrix:
       # run UI tests
       script: travis_wait npm run test:runner
       after_script: skip
+      after_success: echo "Tests on ${MAGENTO_VERSION} passed"
       after_failure:
+      - echo "Tests on ${MAGENTO_VERSION} failed"
       - bash ./build/bin/send-notify.sh
     - <<: *acceptance-test
       env:
@@ -101,7 +103,6 @@ install:
   - travis_retry composer install $COMPOSER_ARGS
   - composer show
   # Download proper Magento version
-  - echo "${MAGENTO_VERSION}"
   - git clone https://github.com/OpenMage/magento-mirror.git ${MAGENTO_DIRECTORY}
   - cd ${MAGENTO_DIRECTORY}
   - git tag -l
