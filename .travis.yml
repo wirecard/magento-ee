@@ -101,7 +101,7 @@ install:
   - travis_retry composer install $COMPOSER_ARGS
   - composer show
   # Download proper Magento version
-  - echo "Magento version: ${MAGENTO_VERSION}"
+  - echo "${MAGENTO_VERSION}"
   - git clone https://github.com/OpenMage/magento-mirror.git ${MAGENTO_DIRECTORY}
   - cd ${MAGENTO_DIRECTORY}
   - git tag -l
