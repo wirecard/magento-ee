@@ -10,12 +10,9 @@
 [![Build Status](https://travis-ci.org/wirecard/magento-ee.svg?branch=master)](https://travis-ci.org/wirecard/magento-ee)
 
 ***
-## General information 
-Before proceeding, please read [general information](https://github.com/wirecard/magento-ee/wiki/Wirecard-Shop-Plugins-General-Information), as it provides information on Wirecard shop extensions functionality and features.
+## General Information 
+Before you proceed, please read our [General Information](https://github.com/wirecard/magento-ee/wiki/Wirecard-Shop-Extensions-General-Information) for more details on Wirecard Shop Extension functionality and features.
 
 ***
-## Magento documentation - Wiki
-
-[Magento Wiki](https://github.com/wirecard/magento-ee/wiki) provides detailed technical documentation.
-It lists all available [payment methods](https://github.com/wirecard/magento-ee/wiki#supported-payment-methods) and post-processing operations.
-Furthermore, it includes extensive instructions how to [install](https://github.com/wirecard/magento-ee/wiki/Installation) and [configure](https://github.com/wirecard/magento-ee/wiki/Configuration).
+## Documentation
+Our [documentation](https://github.com/wirecard/magento-ee/wiki) provides detailed technical information: it includes extensive instructions on how to [install](https://github.com/wirecard/magento-ee/wiki/Installation) and [configure](https://github.com/wirecard/magento-ee/wiki/Configuration) the module. It also lists all available [payment methods](https://github.com/wirecard/magento-ee/wiki#supported-payment-methods) and post-processing operations.
