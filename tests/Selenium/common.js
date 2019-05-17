@@ -21,15 +21,15 @@ exports.fillOutGuestCheckout = async (driver) => {
   await driver.findElement(By.id('onepage-guest-register-button')).click();
   await driver.wait(until.elementLocated(By.id('checkout-step-billing')));
 
-  await driver.findElement(By.id('billing:firstname')).sendKeys('Firstname');
-  await driver.findElement(By.id('billing:lastname')).sendKeys('Lastname');
-  await driver.findElement(By.id('billing:email')).sendKeys('firstname.lastname@example.com');
-  await driver.findElement(By.id('billing:street1')).sendKeys('Street');
-  await driver.findElement(By.id('billing:city')).sendKeys('Examplecity');
+  await driver.findElement(By.id('billing:firstname')).sendKeys('John');
+  await driver.findElement(By.id('billing:lastname')).sendKeys('Doe');
+  await driver.findElement(By.id('billing:email')).sendKeys('john.doe@example.com');
+  await driver.findElement(By.id('billing:street1')).sendKeys('Hauptplatz 1');
+  await driver.findElement(By.id('billing:city')).sendKeys('Graz');
   await driver.findElement(By.id('billing:country_id')).sendKeys('Österreich ');
   await driver.findElement(By.id('billing:region_id')).sendKeys('Steiermark');
   await driver.findElement(By.id('billing:postcode')).sendKeys('8020');
-  await driver.findElement(By.id('billing:telephone')).sendKeys('123456789');
+  await driver.findElement(By.id('billing:telephone')).sendKeys('03168720');
 
   await driver.findElement(By.id('co-billing-form')).submit();
 };

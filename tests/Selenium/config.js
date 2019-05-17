@@ -391,10 +391,10 @@ exports.tests = [
     file: 'Payments/AlipayTest',
     timeout: 120000,
   },
-  // {
-  //   file: 'Payments/PayolutionTest',
-  //   timeout: 120000
-  // },
+  {
+    file: 'Payments/PayolutionTest',
+    timeout: 120000
+  },
   {
     file: 'Payments/RatepayTest',
     timeout: 120000
