@@ -343,10 +343,6 @@ exports.tests = [
     file: 'Payments/CreditCard3dsTest',
     timeout: 120000
   },
-  // {
-  //   file: 'Payments/PayPalTest',
-  //   timeout: 180000
-  // },
   {
     file: 'Payments/SepaTest',
     timeout: 90000
@@ -379,10 +375,6 @@ exports.tests = [
     file: 'Payments/PiaTest',
     timeout: 120000,
   },
-  // {
-  //   file: 'Payments/MasterpassTest',
-  //   timeout: 120000,
-  // },
   {
     file: 'Payments/UpiTest',
     timeout: 120000,
@@ -399,4 +391,5 @@ exports.tests = [
     file: 'Payments/RatepayTest',
     timeout: 120000
   }
+  //Add Payments/MasterpassTest and Payments/PayPalTest
 ];
