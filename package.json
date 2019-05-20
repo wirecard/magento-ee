@@ -1,6 +1,6 @@
 {
   "name": "@wirecard/magento-ee",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "scripts": {
     "test": "node_modules/.bin/mocha tests/Selenium/**/*Test.js --timeout 220000",
     "test:default": "node_modules/.bin/mocha tests/Selenium/Payments/DefaultTest.js --timeout 60000",
