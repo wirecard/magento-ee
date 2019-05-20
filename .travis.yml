@@ -23,8 +23,6 @@ env:
     - n98="php ${TRAVIS_BUILD_DIR}/n98-magerun.phar -n --root-dir=${MAGENTO_DIRECTORY}"
     - MAGENTO_RELEASES_FILE=${TRAVIS_BUILD_DIR}/build/bin/shop-releases.txt
 
-    - github_token:
-        secure: "D4Kx568TZU1w8YPJ/yCCbJjNGvuOfJ/xhKTJ7mG2Yide4+OrDvoRw4KrQ6Eku68ceMNAnziEtGcPEauCoxAyrC4Dykvkq2tCXOZfg//Vaoj/VepNUfrmqVQe0OgZeBHlchvDUr/ygdBDGLQDJc3bF1+s0VHljiZCoRO/POLELiN7Wd2yNtELfH+LIRlO1E1VVz7yib8fgJeB3G6WL/klHj0nW5fzFRDvWN5fcCELWUA659wI7ehdhzaLKnNAc1uhZPTA2XDKqTU0Nsu5y3f58ugfcXFNtd7G1LCwrsTwrUYk/pXBUWMbeQSg8CIhgc65dZeWADkHiiEr0/CF1Vgu2yjexncTbAlnJYyqz9AO9LP4zMN3OGaqmOC0Kf9lhc5NVqVsjSQk2yYYSjGiTrjKZ2E2zIqyGS7C+JzAzcrAkfc92zH7+4OoPcicxQkfSXyUpcSW2yk9GUqCjG0H6YzHHudVUh9cCVCeXtPaxm6ePiboTc0DvIJea2qMob8Sb40/MxMOjlPsnu+1JCq6WwJLez2Evc8t0ZWujQYr4N2iHUmdHWRfOl9s/QdcrI3ispzEx3C5h46XIt0QzigY3cc7aLKbpGFSd7bGM/gYJepeOK1R2KY8EbNJ12/PHlLn26fw2fPa+ZxAKpscB1aDOV7plDWh1jVX1wi9KjFydJdcAIo="
 
 matrix:
   allow_failures:
