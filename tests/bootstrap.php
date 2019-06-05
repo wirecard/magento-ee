@@ -11,6 +11,9 @@
 
 require_once __DIR__ . '/../../../app/Mage.php';
 
+//Define global ip address for tests
+$_SERVER['REMOTE_ADDR'] = '123.123.1.1';
+
 function fix_error_handler()
 {
     $mageErrorHandler = set_error_handler(function () {
