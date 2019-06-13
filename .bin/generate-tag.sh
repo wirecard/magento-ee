@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [[ $TRAVIS_BRANCH == 'TPWDCEE-4063' ]]; then
-    if [[ $TRAVIS_PULL_REQUEST == 'true' ]]; then
+# if [[ $TRAVIS_BRANCH == 'master' ]]; then
+#    if [[ $TRAVIS_PULL_REQUEST == 'false' ]]; then
         VERSION=`cat SHOPVERSIONS | jq -r '.[0] | .release'`
         STATUS=`curl -s -o /dev/null -w "%{http_code}" -H "Authorization: token ${GITHUB_TOKEN}" https://api.github.com/repos/${TRAVIS_REPO_SLUG}/git/refs/tags/${VERSION}`
 
@@ -20,5 +20,5 @@ if [[ $TRAVIS_BRANCH == 'TPWDCEE-4063' ]]; then
 
         git tag -a ${VERSION} -m "Pre-release version"
         git push --quiet https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG $VERSION > /dev/null 2>&1
-    fi
-fi
+#    fi
+# fi
