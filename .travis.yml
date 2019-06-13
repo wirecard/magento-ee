@@ -147,7 +147,7 @@ deploy:
   provider: releases
   github_token: ${GITHUB_TOKEN}
   api_key: ${GITHUB_TOKEN}
-  file: woocommerce-wirecard-ee.zip
+  file: magento-wirecard-ee.zip
   name: "${REPO_NAME} ${TRAVIS_TAG}"
   body: "${RELEASE_NOTES}"
   skip_cleanup: true
