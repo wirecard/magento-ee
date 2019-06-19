@@ -18,9 +18,12 @@ const {
   chooseFlatRateShipping
 } = require('../common');
 const { config } = require('../config');
+let driver;
 
 describe('ratepay invoice test', () => {
-  const driver = getDriver();
+  before(async () => {
+    driver = await getDriver('ratepay');
+  });
 
   const paymentLabel = config.payments.ratepay.label;
   const formFields = config.payments.ratepay.fields;

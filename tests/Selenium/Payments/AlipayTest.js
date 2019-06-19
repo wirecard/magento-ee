@@ -17,9 +17,12 @@ const {
   chooseFlatRateShipping
 } = require('../common');
 const { config } = require('../config');
+let driver;
 
 describe('Alipay test', () => {
-  const driver = getDriver();
+  before(async () => {
+    driver = await getDriver('alipay');
+  });
 
   const paymentLabel = config.payments.alipay.label;
   //const formFields = config.payments.alipay.fields;

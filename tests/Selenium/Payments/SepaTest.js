@@ -18,9 +18,12 @@ const {
   chooseFlatRateShipping
 } = require('../common');
 const { config } = require('../config');
+let driver;
 
 describe('SEPA Direct Debit test', () => {
-  const driver = getDriver();
+  before(async () => {
+    driver = await getDriver('sepa');
+  });
 
   const paymentLabel = config.payments.sepa.label;
   const formFields = config.payments.sepa.fields;

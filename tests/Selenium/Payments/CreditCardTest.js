@@ -18,9 +18,12 @@ const {
   chooseFlatRateShipping
 } = require('../common');
 const { config } = require('../config');
+let driver;
 
 describe('Credit Card test', () => {
-  const driver = getDriver();
+  before(async () => {
+    driver = await getDriver('credit card');
+  });
 
   const paymentLabel = config.payments.creditCard.label;
   const formFields = config.payments.creditCard.fields;

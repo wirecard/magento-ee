@@ -19,9 +19,12 @@ const {
   chooseFlatRateShipping
 } = require('../common');
 const { config } = require('../config');
+let driver;
 
 describe('Maestro SecureCode test', () => {
-  const driver = getDriver();
+  before(async () => {
+    driver = await getDriver('maestro');
+  });
 
   const paymentLabel = config.payments.maestro.label;
   const formFields = config.payments.maestro.fields;

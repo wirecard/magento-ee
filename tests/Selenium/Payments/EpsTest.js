@@ -18,9 +18,12 @@ const {
   chooseFlatRateShipping
 } = require('../common');
 const { config } = require('../config');
+let driver;
 
 describe('eps test', () => {
-  const driver = getDriver();
+  before(async () => {
+    driver = await getDriver('eps');
+  });
 
   const paymentLabel = config.payments.eps.label;
   const formFields = config.payments.eps.fields;

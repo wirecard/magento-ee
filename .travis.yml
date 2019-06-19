@@ -47,7 +47,7 @@ matrix:
       after_failure: skip
     - &acceptance-test
       stage: acceptance-test
-      if: type = cron
+      if: type != cron
       php: 7.2
       env:
       - GATEWAY=API-TEST
@@ -57,7 +57,7 @@ matrix:
       - cd ${TRAVIS_BUILD_DIR}
       - travis_retry npm install
       # run UI tests
-      script: travis_wait npm run test:runner
+      script: npm run test:payments
       after_script: skip
       after_success: echo "Tests on ${MAGENTO_VERSION} passed"
       after_failure:

@@ -16,9 +16,12 @@ const {
   chooseFlatRateShipping
 } = require('../common');
 const { config } = require('../config');
+let driver;
 
 describe('Payment On Invoice test', () => {
-  const driver = getDriver();
+  before(async () => {
+    driver = await getDriver('poi');
+  });
 
   const paymentLabel = config.payments.poi.label;
 
