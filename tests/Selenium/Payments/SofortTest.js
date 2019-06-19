@@ -17,9 +17,12 @@ const {
   chooseFlatRateShipping
 } = require('../common');
 const { config } = require('../config');
+let driver;
 
 describe('Sofort. test', () => {
-  const driver = getDriver();
+  before(async () => {
+    driver = await getDriver('sofort');
+  });
 
   const paymentLabel = config.payments.sofort.label;
   const formFields = config.payments.sofort.fields;

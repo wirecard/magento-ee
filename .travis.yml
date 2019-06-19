@@ -57,12 +57,10 @@ matrix:
       - cd ${TRAVIS_BUILD_DIR}
       - travis_retry npm install
       # run UI tests
-      script: travis_wait npm run test:runner
+      script: npm run test:payments
       after_script: skip
-      after_success: echo "Tests on ${MAGENTO_VERSION} passed"
-      after_failure:
-      - echo "Tests on ${MAGENTO_VERSION} failed"
-      - bash ./build/bin/send-notify.sh
+      after_success: bash ./build/bin/upload-logs-and-notify.sh
+      after_failure: bash ./build/bin/upload-logs-and-notify.sh fail
     - <<: *acceptance-test
       env:
       - GATEWAY=API-TEST

@@ -18,9 +18,12 @@ const {
   chooseFlatRateShipping
 } = require('../common');
 const { config } = require('../config');
+let driver;
 
 describe('Unionpay International test', () => {
-  const driver = getDriver();
+  before(async () => {
+    driver = await getDriver('upi');
+  });
 
   const paymentLabel = config.payments.upi.label;
   const formFields = config.payments.upi.fields;

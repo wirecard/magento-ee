@@ -18,9 +18,12 @@ const {
   asyncForEach
 } = require('../common');
 const { config } = require('../config');
+let driver;
 
 describe('iDEAL test', () => {
-  const driver = getDriver();
+  before(async () => {
+    driver = await getDriver('ideal');
+  });
 
   const paymentLabel = config.payments.ideal.label;
   const formFields = config.payments.ideal.fields;

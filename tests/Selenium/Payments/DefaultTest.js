@@ -15,9 +15,12 @@ const {
   addProductToCartAndGotoCheckout,
   chooseFlatRateShipping
 } = require('../common');
+let driver;
 
 describe('default test', () => {
-  const driver = getDriver();
+  before(async () => {
+    driver = await getDriver('default');
+  });
 
   it('should check the default checkout', async () => {
     await addProductToCartAndGotoCheckout(driver, '/accessories/eyewear/aviator-sunglasses.html');

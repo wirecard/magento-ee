@@ -18,9 +18,12 @@ const {
   chooseFlatRateShipping
 } = require('../common');
 const { config } = require('../config');
+let driver;
 
 describe('payolution invoice test', () => {
-  const driver = getDriver();
+  before(async () => {
+    driver = await getDriver('payolution');
+  });
 
   const paymentLabel = config.payments.payolution.label;
   const formFields = config.payments.payolution.fields;

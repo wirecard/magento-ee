@@ -18,9 +18,12 @@ const {
   chooseFlatRateShipping
 } = require('../common');
 const { config } = require('../config');
+let driver;
 
 describe('Giropay test', () => {
-  const driver = getDriver();
+  before(async () => {
+    driver = await getDriver('giropay');
+  });
 
   const paymentLabel = config.payments.giropay.label;
   const formFields = config.payments.giropay.fields;

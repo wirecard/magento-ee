@@ -16,9 +16,12 @@ const {
   chooseFlatRateShipping
 } = require('../common');
 const { config } = require('../config');
+let driver;
 
 describe('Payment In Advance test', () => {
-  const driver = getDriver();
+  before(async () => {
+    driver = await getDriver('pia');
+  });
 
   const paymentLabel = config.payments.pia.label;
 
