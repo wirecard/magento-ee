@@ -39,6 +39,7 @@ Mage::setIsDeveloperMode(true);
 fix_error_handler();
 
 $_SESSION = [];
+$_SERVER['REMOTE_ADDR']  = '127.0.0.1';
 
 if (! Mage::getConfig()->getModuleConfig('WirecardEE_PaymentGateway')->is('active', true)) {
     throw new \RuntimeException('The Wirecard Elastic Engine extension is not enabled!');
