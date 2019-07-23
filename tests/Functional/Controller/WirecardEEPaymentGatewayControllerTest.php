@@ -343,7 +343,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $this->assertContains('redirect', $action->getBlockName());
     }
 
-    public function testIndexActionWithGiropay()
+    /*public function testIndexActionWithGiropay()
     {
         list($controller, , $transaction, $coreSession) = $this->prepareForIndexAction(GiropayTransaction::NAME);
 
@@ -359,16 +359,16 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
             ],
             [\WirecardEE_PaymentGateway_Helper_Data::DEVICE_FINGERPRINT_ID, false, md5('test')],
         ]);
-        $coreSession->method('getMessages')->willReturn(new \Mage_Core_Model_Message_Collection());
+        $coreSession->method('getMessages')->willReturn(new \Mage_Core_Model_Message_Collection());*/
 
         /** @var RedirectAction $action */
-        $action = $controller->indexAction();
+        /*$action = $controller->indexAction();
         $this->assertInstanceOf(RedirectAction::class, $action);
         $this->assertStringStartsWith(
             'https://giropaytest1.fiducia.de/ShopSystem/bank',
             $action->getUrl()
         );
-    }
+    }*/
 
     public function testIndexActionWithAlipay()
     {
