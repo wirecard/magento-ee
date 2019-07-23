@@ -11,13 +11,13 @@ function WirecardEECheckCredentials(payment) {
   var httpUser = document.getElementById("payment_wirecardee_paymentgateway_" + payment + "_api_user").value;
   var httpPassword = document.getElementById("payment_wirecardee_paymentgateway_" + payment + "_api_password").value;
   var testButton = document.getElementById("payment_wirecardee_paymentgateway_" + payment + "_check_credentials_button");
-
+  var baseUrl = testButton.getAttribute("data-base-url");
   if (!new RegExp("^https?://([^/]+?\.[a-zA-Z]{2,4})/?$", "gm").test(server)) {
     alert(testButton.getAttribute("data-invalid-url-string"));
     return;
   }
 
-  new Ajax.Request("/admin/WirecardEEPaymentGateway/testCredentials", {
+    new Ajax.Request(baseUrl + "admin/WirecardEEPaymentGateway/testCredentials", {
     parameters: {
       wirecardElasticEngineServer: server,
       wirecardElasticEngineHttpUser: httpUser,

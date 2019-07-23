@@ -28,7 +28,7 @@
                     <comment>
                         <![CDATA[
                             <div>
-                            <img src="/skin/adminhtml/default/default/images/WirecardEE/PaymentGateway/wirecard-logo.png" alt="Wirecard" />
+                            <img src="https://www.wirecard.com/assets/media/Logos/wirecard_dark.svg" alt="Wirecard" width="200" />
                             </div>
                         ]]>
                     </comment>
