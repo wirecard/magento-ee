@@ -29,13 +29,13 @@ matrix:
     - stage: acceptance-test
   include:
     - php: 5.6
-      if: type != cron
+      if: type = cron
     - php: 7.0
-      if: type != cron
+      if: type = cron
     - php: 7.1
-      if: type != cron
+      if: type = cron
     - php: 7.2
-      if: type != cron
+      if: type = cron
     # nigthly get latest shopware versions and store them in shop-releases.txt
     - stage: get-magento-versions
       if: type = cron
@@ -47,7 +47,7 @@ matrix:
       after_failure: skip
     - &acceptance-test
       stage: acceptance-test
-      if: type = cron
+      if: type != cron
       php: 7.2
       env:
       - GATEWAY=API-TEST
@@ -57,7 +57,8 @@ matrix:
       - cd ${TRAVIS_BUILD_DIR}
       - travis_retry npm install
       # run UI tests
-      script: npm run test:payments
+      script: exit 1
+#      script: npm run test:payments
       after_script: skip
       after_success: bash ./build/bin/upload-logs-and-notify.sh
       after_failure: bash ./build/bin/upload-logs-and-notify.sh fail

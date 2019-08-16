@@ -19,4 +19,6 @@ curl -X POST -H 'Content-type: application/json' \
     --data "{'text': 'Build Failed. Magento version: ${MAGENTO_VERSION}\n
      Build URL : ${TRAVIS_JOB_WEB_URL}\n
     Build Number: ${TRAVIS_BUILD_NUMBER}\n
-    Branch: ${TRAVIS_BRANCH}', 'channel': '${CHANNEL}'}" ${SLACK_ROOMS}
+    Branch: ${TRAVIS_BRANCH}', 'channel': '${CHANNEL}'}\n
+    Report link: ${PREVIEW_LINK}/${SCREENSHOT_COMMIT_HASH}/${PROJECT_FOLDER}/${GATEWAY}/${TODAY}/${REPORT_FILE}
+    " ${SLACK_ROOMS}
