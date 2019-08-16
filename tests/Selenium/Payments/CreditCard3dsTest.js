@@ -54,9 +54,7 @@ describe('Credit Card 3-D Secure test', () => {
     await driver.findElement(By.id('password')).sendKeys(config.payments.creditCard3ds.password, Key.ENTER);
 
     await waitForAlert(driver, 10000);
-    await checkConfirmationPage(driver, 'FAIL THE TEST');
-
-    // await checkConfirmationPage(driver, 'Thank you for your purchase!');
+    await checkConfirmationPage(driver, 'Thank you for your purchase!');
   });
 
   after(async () => driver.quit());
