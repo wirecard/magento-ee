@@ -67,8 +67,6 @@ matrix:
 #    magento version - 2nd line in MAGENTO_RELEASES_FILE
       - MAGENTO_VERSION=$(awk 'NR==2 {print; exit}' ${MAGENTO_RELEASES_FILE})
     - <<: *acceptance-test
-#     at the moment 3rd oldest version of magento is 1.9.3.9 which does not support 7.2 php
-      php: 5.6
       env:
       - GATEWAY=API-TEST
 #    magento version - 3rd line in MAGENTO_RELEASES_FILE
