@@ -1,5 +1,15 @@
 [
     {
+        "release": "1.2.4",
+        "shopsystem": "Magento",
+        "tested": "1.9.4.2",
+        "compatibility": "1.9.3.4",
+        "changelog": [
+            "Fix descriptors with special characters not being sanitized",
+            "Fix language code handling for seamless credit card form"
+        ]
+    },
+    {
         "release": "1.2.3",
         "shopsystem": "Magento",
         "tested": "1.9.4.0",
