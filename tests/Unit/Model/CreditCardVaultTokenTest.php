@@ -21,11 +21,13 @@ class CreditCardVaultTokenTest extends TestCase
         $model->setToken('ABC123');
         $model->setExpirationDate(2019, 2);
         $model->setLastUsed(new \DateTime());
+        $model->setCreatedAt(new \DateTime('2019-08-21 12:12:33'));
 
         $this->assertEquals(42, $model->getCustomerId());
         $this->assertEquals('123***321', $model->getMaskedAccountNumber());
         $this->assertEquals('ABC123', $model->getToken());
         $this->assertStringStartsWith('2019-02-01', $model->getExpirationDate());
+        $this->assertEquals(new \DateTime('2019-08-21 12:12:33'), $model->getCreatedAt());
     }
 
     public function testAdditionalData()
