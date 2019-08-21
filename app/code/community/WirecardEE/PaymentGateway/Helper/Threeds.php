@@ -58,6 +58,8 @@ class WirecardEE_PaymentGateway_Helper_Threeds extends Mage_Payment_Helper_Data
 
     /**
      * Check if a token is a new one
+     * handle the special token ids: 'wirecardee--new-card' and 'wirecardee--new-card-save', the indicating
+     * a non-one-click checkout and a one-click-checkout using a new card, skip the db query in this case
      *
      * @param $tokenId
      *
@@ -69,6 +71,12 @@ class WirecardEE_PaymentGateway_Helper_Threeds extends Mage_Payment_Helper_Data
         if ($tokenId === null) {
             return false;
         }
+
+        // return true for non-one-click checkout and for a new card to be saved
+        if (in_array($tokenId, ['wirecardee--new-card', 'wirecardee--new-card-save'])) {
+            return true;
+        }
+
         /** @var WirecardEE_PaymentGateway_Model_Resource_CreditCardVaultToken_Collection $vaultTokenModelColl */
         $vaultTokenModelColl = Mage::getModel('paymentgateway/creditCardVaultToken')->getCollection();
 

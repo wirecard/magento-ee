@@ -130,7 +130,11 @@ class AccountInfoMapper
      * Get challenge indicator depending on existing token
      * - return config setting: for non one-click-checkout, guest checkout, existing token
      * - return 04/CHALLENGE_MANDATE: for new one-click-checkout token
+     * the tokenId is set to 'wirecardee--new-card-save' for one-click-checkout using a new card this is checked in
+     * the threeds helper isNewToken.
+     * the tokenId is set to 'wirecardee--new-card' for a non-one-click-checkout
      *
+     * @see WirecardEE_PaymentGateway_Helper_Threeds::isNewToken()
      * @param $tokenId
      *
      * @return string
@@ -138,7 +142,7 @@ class AccountInfoMapper
     protected function getChallengeIndicator($tokenId)
     {
         // non one-click-checkout
-        if ($tokenId === null) {
+        if ($tokenId === null || $tokenId === 'wirecardee--new-card') {
             return $this->challengeIndicator;
         }
 

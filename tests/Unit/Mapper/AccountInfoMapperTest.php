@@ -86,9 +86,8 @@ class AccountInfoMapperTest extends TestCase
         $this->session->method('isLoggedIn')->willReturn(true);
         $accountInfo = $this->mapper->getAccountInfo(null);
 
-        $mapped = $accountInfo->mappedProperties();
-
-        $this->assertEquals([
+        $mapped   = $accountInfo->mappedProperties();
+        $expected = [
             'authentication-method'      => AuthMethod::USER_CHECKOUT,
             'authentication-timestamp'   => 1231321323,
             'challenge-indicator'        => ChallengeInd::NO_CHALLENGE,
@@ -96,7 +95,12 @@ class AccountInfoMapperTest extends TestCase
             'shipping-address-first-use' => '2019-08-21',
             'card-creation-date'         => '2018-08-21',
             'purchases-last-six-months'  => 6,
-        ], $mapped);
+        ];
+        $this->assertEquals($expected, $mapped);
+
+        $accountInfo = $this->mapper->getAccountInfo('wirecardee--new-card');
+        $mapped      = $accountInfo->mappedProperties();
+        $this->assertEquals($expected, $mapped);
     }
 
     public function testGetAccountInfoWithoutTokenWithCreationDate()
