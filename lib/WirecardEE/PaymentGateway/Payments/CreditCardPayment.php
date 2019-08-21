@@ -257,7 +257,7 @@ class CreditCardPayment extends Payment implements
         $requestData = $transactionService->getCreditCardUiWithData(
             $transaction,
             $orderSummary->getPayment()->getTransactionType(),
-            \Mage::app()->getLocale()->getLocaleCode()
+            substr(\Mage::app()->getLocale()->getLocaleCode(), 0, 2)
         );
 
         $requestDataArray = json_decode($requestData, true);
