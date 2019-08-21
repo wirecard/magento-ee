@@ -191,6 +191,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      *
      * @return OrderSummary
      * @throws Exception
+     * @since 1.2.5
      */
     protected function buildOrderSummary(Mage_Sales_Model_Order $order, PaymentInterface $payment)
     {
@@ -526,7 +527,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
     /**
      * @return Mage_Core_Helper_Abstract|WirecardEE_PaymentGateway_Helper_ThreeDS
      *
-     * @since 1.2.4
+     * @since 1.2.5
      */
     protected function getThreeDSHelper()
     {

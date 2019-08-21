@@ -18,7 +18,7 @@ use Wirecard\PaymentSdk\Constant\ChallengeInd;
 use Wirecard\PaymentSdk\Entity\AccountInfo;
 
 /**
- * @since 1.2.4
+ * @since 1.2.5
  */
 class AccountInfoMapper
 {

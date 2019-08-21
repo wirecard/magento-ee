@@ -121,7 +121,7 @@ class WirecardEE_PaymentGateway_Model_CreditCardVaultToken extends Mage_Core_Mod
     /**
      * @return \DateTime
      * @throws Exception
-     * @since 1.2.4
+     * @since 1.2.5
      */
     public function getCreatedAt()
     {

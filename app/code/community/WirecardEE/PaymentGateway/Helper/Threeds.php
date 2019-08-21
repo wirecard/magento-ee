@@ -10,7 +10,7 @@
 /**
  * ThreeDS Payment helper object, can be accessed with Mage::helper('paymentgateway/threeds')
  *
- * @since 1.2.4
+ * @since 1.2.5
  */
 class WirecardEE_PaymentGateway_Helper_Threeds extends Mage_Payment_Helper_Data
 {
@@ -21,7 +21,6 @@ class WirecardEE_PaymentGateway_Helper_Threeds extends Mage_Payment_Helper_Data
      * Configuration->Advanced->System => set Log => Enable Log to "Yes".
      *
      * @return int
-     * @since 1.2.4
      */
     public function getCustomerLastLogin()
     {
@@ -37,7 +36,6 @@ class WirecardEE_PaymentGateway_Helper_Threeds extends Mage_Payment_Helper_Data
      * get customer session
      *
      * @return Mage_Customer_Model_Session
-     * @since 1.2.4
      */
     public function getCustomerSession()
     {
@@ -52,7 +50,6 @@ class WirecardEE_PaymentGateway_Helper_Threeds extends Mage_Payment_Helper_Data
      *
      * @return mixed|string
      * @throws Exception
-     * @since 1.2.4
      */
     public function getChallengeIndicator()
     {
@@ -66,7 +63,6 @@ class WirecardEE_PaymentGateway_Helper_Threeds extends Mage_Payment_Helper_Data
      *
      * @return bool
      * @throws Exception
-     * @since 1.2.4
      */
     public function isNewToken($tokenId)
     {
@@ -88,7 +84,6 @@ class WirecardEE_PaymentGateway_Helper_Threeds extends Mage_Payment_Helper_Data
      *
      * @return mixed|string
      * @throws Exception
-     * @since 1.2.4
      */
     public function getCardCreationDate($tokenId)
     {
@@ -120,7 +115,6 @@ class WirecardEE_PaymentGateway_Helper_Threeds extends Mage_Payment_Helper_Data
      *
      * @return DateTime|null
      * @throws Exception
-     * @since 1.2.4
      */
     public function getAddressFirstUsed($addressId)
     {
@@ -152,7 +146,6 @@ class WirecardEE_PaymentGateway_Helper_Threeds extends Mage_Payment_Helper_Data
      *
      * @return int
      * @throws Exception
-     * @since 1.2.4
      */
     public function getSuccessfulOrdersLastSixMonths($customerId)
     {

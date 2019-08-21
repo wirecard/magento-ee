@@ -51,13 +51,13 @@ class OrderSummary
 
     /**
      * @var AccountInfoMapper
-     * @since 1.2.4
+     * @since 1.2.5
      */
     protected $accountInfoMapper;
 
     /**
      * @var RiskInfoMapper
-     * @since 1.2.4
+     * @since 1.2.5
      */
     protected $riskInfoMapper;
     /**
@@ -140,7 +140,7 @@ class OrderSummary
     /**
      * @return AccountInfoMapper
      *
-     * @since 1.2.4
+     * @since 1.2.5
      */
     public function getAccountInfoMapper()
     {
@@ -150,7 +150,7 @@ class OrderSummary
     /**
      * @return RiskInfoMapper
      *
-     * @since 1.2.4
+     * @since 1.2.5
      */
     public function getRiskInfoMapper()
     {

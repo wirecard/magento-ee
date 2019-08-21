@@ -10,7 +10,7 @@
 use Wirecard\PaymentSdk\Constant\ChallengeInd;
 
 /**
- * @since 1.2.4
+ * @since 1.2.5
  */
 class WirecardEE_PaymentGateway_Model_Challengeindicator
 {
@@ -18,8 +18,6 @@ class WirecardEE_PaymentGateway_Model_Challengeindicator
      * Return available challenge indicators
      *
      * @return array
-     *
-     * @since 1.2.4
      */
     public function toOptionArray()
     {
