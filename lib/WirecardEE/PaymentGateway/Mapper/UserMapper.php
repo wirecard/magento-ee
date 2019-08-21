@@ -94,9 +94,11 @@ class UserMapper
     {
         $address       = $this->getOrder()->getBillingAddress();
         $accountHolder = new AccountHolder();
+        $accountHolder->setCrmId($this->getOrder()->getCustomerId());
         $accountHolder->setFirstName($address->getFirstname());
         $accountHolder->setLastName($address->getLastname());
         $accountHolder->setEmail($address->getEmail());
+        $accountHolder->setCrmId($this->getOrder()->getCustomerId());
         if ($this->getOrder()->getCustomerDob()) {
             $accountHolder->setDateOfBirth(new \DateTime($this->getOrder()->getCustomerDob()));
         }
@@ -147,6 +149,7 @@ class UserMapper
         );
         $shippingAddress->setPostalCode($address->getPostcode());
         $shippingAddress->setStreet2($address->getStreet2());
+        $shippingAddress->setStreet3($address->getStreet3());
         if ($address->getRegion()) {
             $shippingAddress->setState($address->getRegion());
         }

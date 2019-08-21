@@ -10,7 +10,9 @@
 namespace WirecardEE\PaymentGateway\Data;
 
 use Wirecard\PaymentSdk\Entity\Device;
+use WirecardEE\PaymentGateway\Mapper\AccountInfoMapper;
 use WirecardEE\PaymentGateway\Mapper\BasketMapper;
+use WirecardEE\PaymentGateway\Mapper\RiskInfoMapper;
 use WirecardEE\PaymentGateway\Mapper\UserMapper;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
 
@@ -48,17 +50,30 @@ class OrderSummary
     protected $userMapper;
 
     /**
+     * @var AccountInfoMapper
+     * @since 1.2.4
+     */
+    protected $accountInfoMapper;
+
+    /**
+     * @var RiskInfoMapper
+     * @since 1.2.4
+     */
+    protected $riskInfoMapper;
+    /**
      * @var array
      */
     protected $additionalPaymentData;
 
     /**
-     * @param PaymentInterface        $payment
+     * @param PaymentInterface $payment
      * @param \Mage_Sales_Model_Order $order
-     * @param BasketMapper            $basketMapper
-     * @param UserMapper              $userMapper
-     * @param string                  $deviceFingerprintId
-     * @param array                   $additionalPaymentData
+     * @param BasketMapper $basketMapper
+     * @param UserMapper $userMapper
+     * @param AccountInfoMapper $accountInfoMapper
+     * @param RiskInfoMapper $riskInfoMapper
+     * @param string $deviceFingerprintId
+     * @param array $additionalPaymentData
      *
      * @since 1.0.0
      */
@@ -67,6 +82,8 @@ class OrderSummary
         \Mage_Sales_Model_Order $order,
         BasketMapper $basketMapper,
         UserMapper $userMapper,
+        AccountInfoMapper $accountInfoMapper,
+        RiskInfoMapper $riskInfoMapper,
         $deviceFingerprintId,
         $additionalPaymentData = []
     ) {
@@ -75,6 +92,8 @@ class OrderSummary
         $this->deviceFingerprintId   = $deviceFingerprintId;
         $this->basketMapper          = $basketMapper;
         $this->userMapper            = $userMapper;
+        $this->accountInfoMapper     = $accountInfoMapper;
+        $this->riskInfoMapper        = $riskInfoMapper;
         $this->additionalPaymentData = $additionalPaymentData;
     }
 
@@ -116,6 +135,26 @@ class OrderSummary
     public function getUserMapper()
     {
         return $this->userMapper;
+    }
+
+    /**
+     * @return AccountInfoMapper
+     *
+     * @since 1.2.4
+     */
+    public function getAccountInfoMapper()
+    {
+        return $this->accountInfoMapper;
+    }
+
+    /**
+     * @return RiskInfoMapper
+     *
+     * @since 1.2.4
+     */
+    public function getRiskInfoMapper()
+    {
+        return $this->riskInfoMapper;
     }
 
     /**
