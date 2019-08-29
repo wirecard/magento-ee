@@ -37,7 +37,16 @@ class AccountInfoMapperTest extends TestCase
 
     protected function setUp()
     {
-        $this->customer = $this->createMock(Mage_Customer_Model_Customer::class);
+        // we need to explicitely specify the getUpdatedAt method, because it is implemented via __call
+        $this->customer = $this->getMockBuilder(Mage_Customer_Model_Customer::class)
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->disableArgumentCloning()
+            ->disallowMockingUnknownTypes()
+            ->setMethods(['getUpdatedAt', 'getCreatedAtTimestamp'])
+            ->getMock();
+
+        $this->customer->method('getUpdatedAt')->willReturn('2019-08-21 12:12:12');
 
         $this->session = $this->createMock(Mage_Customer_Model_Session::class);
         $this->session->method('getCustomer')->willReturn($this->customer);
