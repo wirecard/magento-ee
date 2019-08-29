@@ -242,8 +242,6 @@ class CreditCardPayment extends Payment implements
         $transaction->setIsoTransactionType(IsoTransactionType::GOODS_SERVICE_PURCHASE);
 
         if ($tokenId !== null) {
-            $tokenId = isset($paymentData['token']) ? $paymentData['token'] : null;
-
             /** @var \Mage_Core_Model_Session $session */
             $session        = \Mage::getSingleton("core/session", ["name" => "frontend"]);
             $sessionManager = new SessionManager($session);
