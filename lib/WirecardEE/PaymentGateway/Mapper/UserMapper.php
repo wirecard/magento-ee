@@ -98,7 +98,7 @@ class UserMapper
         $accountHolder->setFirstName($address->getFirstname());
         $accountHolder->setLastName($address->getLastname());
         $accountHolder->setEmail($address->getEmail());
-        $accountHolder->setCrmId($this->getOrder()->getCustomerId());
+
         if ($this->getOrder()->getCustomerDob()) {
             $accountHolder->setDateOfBirth(new \DateTime($this->getOrder()->getCustomerDob()));
         }
