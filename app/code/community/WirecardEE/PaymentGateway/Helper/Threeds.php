@@ -10,7 +10,7 @@
 /**
  * ThreeDS Payment helper object, can be accessed with Mage::helper('paymentgateway/threeds')
  *
- * @since 1.2.5
+ * @since 1.3.0
  */
 class WirecardEE_PaymentGateway_Helper_Threeds extends Mage_Payment_Helper_Data
 {

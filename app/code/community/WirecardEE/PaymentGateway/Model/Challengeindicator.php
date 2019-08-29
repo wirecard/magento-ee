@@ -10,7 +10,7 @@
 use Wirecard\PaymentSdk\Constant\ChallengeInd;
 
 /**
- * @since 1.2.5
+ * @since 1.3.0
  */
 class WirecardEE_PaymentGateway_Model_Challengeindicator
 {

@@ -15,7 +15,7 @@ use Wirecard\PaymentSdk\Constant\RiskInfoReorder;
 use Wirecard\PaymentSdk\Entity\RiskInfo;
 
 /**
- * @since 1.2.5
+ * @since 1.3.0
  */
 class RiskInfoMapper
 {
