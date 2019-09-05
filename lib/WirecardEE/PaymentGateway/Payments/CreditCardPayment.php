@@ -10,6 +10,7 @@
 namespace WirecardEE\PaymentGateway\Payments;
 
 use Wirecard\PaymentSdk\Config\CreditCardConfig;
+use Wirecard\PaymentSdk\Constant\IsoTransactionType;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
@@ -220,10 +221,27 @@ class CreditCardPayment extends Payment implements
         $transaction = $this->getTransaction();
         $transaction->setTermUrl($redirect);
 
+        $tokenId = null;
+        $paymentData = $orderSummary->getAdditionalPaymentData();
         if ($this->getPaymentConfig()->isVaultEnabled()) {
-            $paymentData = $orderSummary->getAdditionalPaymentData();
-            $tokenId     = isset($paymentData['token']) ? $paymentData['token'] : null;
+            $tokenId = isset($paymentData['token']) ? $paymentData['token'] : null;
+        }
 
+        $accountInfoMapper = $orderSummary->getAccountInfoMapper();
+
+        $shippingAccount = $orderSummary->getUserMapper()->getShippingAccountHolder();
+        $accountHolder = $orderSummary->getUserMapper()->getBillingAccountHolder();
+        $accountInfo = $accountInfoMapper->getAccountInfo($tokenId);
+        $riskInfo = $orderSummary->getRiskInfoMapper()->getRiskInfo();
+
+        $accountHolder->setAccountInfo($accountInfo);
+
+        $transaction->setAccountHolder($accountHolder);
+        $transaction->setRiskInfo($riskInfo);
+        $transaction->setShipping($shippingAccount);
+        $transaction->setIsoTransactionType(IsoTransactionType::GOODS_SERVICE_PURCHASE);
+
+        if ($tokenId !== null) {
             /** @var \Mage_Core_Model_Session $session */
             $session        = \Mage::getSingleton("core/session", ["name" => "frontend"]);
             $sessionManager = new SessionManager($session);

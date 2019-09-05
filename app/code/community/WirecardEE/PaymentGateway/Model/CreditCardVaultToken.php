@@ -119,6 +119,16 @@ class WirecardEE_PaymentGateway_Model_CreditCardVaultToken extends Mage_Core_Mod
     }
 
     /**
+     * @return \DateTime
+     * @throws Exception
+     * @since 1.3.0
+     */
+    public function getCreatedAt()
+    {
+        return new \DateTime($this->getData('created_at'));
+    }
+
+    /**
      * @return array
      *
      * @since 1.2.0
@@ -150,6 +160,16 @@ class WirecardEE_PaymentGateway_Model_CreditCardVaultToken extends Mage_Core_Mod
     public function setLastUsed(\DateTime $lastUsed)
     {
         $this->setData('last_used', $lastUsed->format(\DateTime::W3C));
+    }
+
+    /**
+     * @param DateTime $createdAt
+     *
+     * @since 1.2.0
+     */
+    public function setCreatedAt(\DateTime $createdAt)
+    {
+        $this->setData('created_at', $createdAt->format(\DateTime::W3C));
     }
 
     /**
