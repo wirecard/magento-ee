@@ -5,7 +5,7 @@
         "tested": "1.9.4.2",
         "compatibility": "1.9.3.4",
         "changelog": [
-            "Add PSD2 parameters"
+            "Add PSD2 parameters",
             "Remove deprecated path from modman",
             "Fix jQuery compatibility issue"
         ]
