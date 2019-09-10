@@ -112,7 +112,7 @@ exports.getDriver = async (testCase = 'generic') => {
     .withCapabilities(Object.assign({
       name: testCase,
       build: process.env.TRAVIS ? `${process.env.TRAVIS_JOB_NUMBER}` : 'local',
-      project: 'Magento:WirecardElasticEngine'
+      project: `Magento1:WirecardElasticEngine-${process.env.GATEWAY}-${process.env.MAGENTO_VERSION}`
     }, bsConfig))
     .build();
 

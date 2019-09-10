@@ -28,7 +28,7 @@ const run = async () => {
                 .withCapabilities(Object.assign({
                     name: testCase.file,
                     build: process.env.TRAVIS ? `${process.env.TRAVIS_JOB_NUMBER}` : 'local',
-                    project: 'Magento1:WirecardElasticEngine'
+                    project: `Magento1:WirecardElasticEngine-${process.env.GATEWAY}-${process.env.MAGENTO_VERSION}`
                 }, bsConfig))
                 .build();
 
