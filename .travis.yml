@@ -4,138 +4,191 @@ language: php
 
 cache:
   directories:
-    - $HOME/.composer/cache/files
+  - $HOME/.composer/cache/files
 
 services:
-  - mysql
+- mysql
 
 env:
   global:
-    - COMPOSER_ARGS="--no-interaction"
-    - MAGENTO_DIRECTORY=${HOME}/magento
-    - EXTENSION_NAME="wirecard-ee"
-    - n98="php ${TRAVIS_BUILD_DIR}/n98-magerun.phar -n --root-dir=${MAGENTO_DIRECTORY}"
-    - MAGENTO_RELEASES_FILE=${TRAVIS_BUILD_DIR}/build/bin/shop-releases.txt
-
+  - COMPOSER_ARGS="--no-interaction"
+  - MAGENTO_DIRECTORY=${HOME}/magento
+  - EXTENSION_NAME="wirecard-ee"
+  - n98="php ${TRAVIS_BUILD_DIR}/n98-magerun.phar -n --root-dir=${MAGENTO_DIRECTORY}"
+  - SHOP_SYSTEM_UPDATE_COMMIT="Update latest shop releases"
+  - MAGENTO_RELEASES_FILE=${TRAVIS_BUILD_DIR}/build/bin/shop-releases.txt
+  - MANUAL_UITEST_TRIGGER_COMMIT="Test my build"
+  - PATCH_RELEASE="patch"
+  - MINOR_RELEASE="minor"
+  - MAJOR_RELEASE="major"
 
 matrix:
-  allow_failures:
-    - stage: acceptance-test
   include:
-    - php: 5.6
-      if: type != cron
-    - php: 7.0
-      if: type != cron
-    - php: 7.1
-      if: type != cron
-    - php: 7.2
-      if: type != cron
+  - php: 5.6
+    if: type != cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
+  - php: 7.0
+    if: type != cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
+  - php: 7.1
+    if: type != cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
+  - php: 7.2
+    if: type != cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
     # nigthly get latest shopware versions and store them in shop-releases.txt
-    - stage: get-magento-versions
-      if: type = cron
-      php: 7.2
-      before_install: skip
-      install: skip
-      script: bash build/bin/get-magento-versions.sh
-      after_script: skip
-      after_failure: skip
-    - &acceptance-test
-      stage: acceptance-test
-      if: type = cron
-      php: 7.2
-      env:
-      - GATEWAY=API-TEST
-#     magento version - first line in MAGENTO_RELEASES_FILE
-      - MAGENTO_VERSION=$(awk 'NR==1 {print; exit}' ${MAGENTO_RELEASES_FILE})
-      before_script:
-      - cd ${TRAVIS_BUILD_DIR}
-      - travis_retry npm install
-      script:
-      - export BROWSERSTACK_LOCAL_IDENTIFIER="magento-${GATEWAY}-${MAGENTO_VERSION}-${RANDOM}"
-      # start browserstack local
-      - bash build/bin/install-browserstack.sh
-      # run UI tests
-      - npm run test:payments
-      after_script: skip
-      after_success: bash ./build/bin/upload-logs-and-notify.sh
-      after_failure: bash ./build/bin/upload-logs-and-notify.sh fail
-    - <<: *acceptance-test
-      env:
-      - GATEWAY=API-TEST
-#    magento version - 2nd line in MAGENTO_RELEASES_FILE
-      - MAGENTO_VERSION=$(awk 'NR==2 {print; exit}' ${MAGENTO_RELEASES_FILE})
-    - <<: *acceptance-test
-      env:
-      - GATEWAY=API-TEST
-#    magento version - 3rd line in MAGENTO_RELEASES_FILE
-      - MAGENTO_VERSION=$(awk 'NR==3 {print; exit}' ${MAGENTO_RELEASES_FILE})
-
+  - stage: get-magento-versions
+    if: type = cron
+    php: 7.2
+    before_install: skip
+    install: skip
+    script: bash build/bin/get-magento-versions.sh
+    after_script: skip
+    after_failure: skip
+  
+  - &acceptance-test
+    stage: acceptance-test
+    # run this stage on pull request if head branch name contains one of these words (patch, major, minor)
+    # or when build triggered ad-hoc with special commit message
+    # or branch which originated pull request
+    # or branch which was defined in ad-hoc trigger in Travis UI
+    if: (type = pull_request AND (head_branch =~ env(PATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE))) OR (commit_message =~ env(MANUAL_UITEST_TRIGGER_COMMIT))
+    env:
+    - GATEWAY=API-TEST
+    # magento version - first line in MAGENTO_RELEASES_FILE
+    -  MAGENTO_RELEASE_VERSION=1
+    before_script:
+    - cd ${TRAVIS_BUILD_DIR}
+    - travis_retry npm install
+    script:
+    - export MAGENTO_VERSION=$(awk "NR==$MAGENTO_RELEASE_VERSION {print; exit}" ${MAGENTO_RELEASES_FILE})
+    - export BROWSERSTACK_LOCAL_IDENTIFIER="magento-${GATEWAY}-${MAGENTO_VERSION}-${RANDOM}"
+    - echo "Testing Magento version ${MAGENTO_VERSION}"
+    # start browserstack local
+    - bash build/bin/install-browserstack.sh
+    # run UI tests
+    - npm run test:payments
+    after_script: skip
+    after_success: bash ./build/bin/upload-logs-and-notify.sh
+    after_failure: bash ./build/bin/upload-logs-and-notify.sh fail
+    
+    # run this stage on pull request if head branch name contains major (on major release)
+    # tests will use branch which originated pull request
+  - <<: *acceptance-test
+    if: type = pull_request AND head_branch =~ env(MAJOR_RELEASE)
+    env:
+    - GATEWAY=API-TEST
+    # magento version - 2nd line in MAGENTO_RELEASES_FILE
+    - MAGENTO_RELEASE_VERSION=2
+  
+  # run this stage on pull request if head branch name contains major (on major release)
+  # tests will use branch which originated pull request
+  - <<: *acceptance-test
+    if: type = pull_request AND head_branch =~ env(MAJOR_RELEASE)
+    env:
+    - GATEWAY=API-TEST
+    # magento version - 3rd line in MAGENTO_RELEASES_FILE
+    - MAGENTO_RELEASE_VERSION=3
+    
+    
+    # run this stage when shop system updated with latest shop extension release version
+    # tests will use tip of master branch
+  - <<: *acceptance-test
+    # when commit message contains string "Update latest shop releases"
+    if: commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT)
+    env:
+    - GATEWAY=API-TEST
+    # magento version - 1st line in MAGENTO_RELEASES_FILE
+    - MAGENTO_RELEASE_VERSION=1
+    # if this stage fails, it will not fail the whole build
+    - ALLOW_FAIL=1
+    
+    # run this stage when shop system updated with latest shop extension release version
+    # tests will use latest released extension version
+  - <<: *acceptance-test
+    # when commit message contains string "Update latest shop releases"
+    if: commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT)
+    env:
+    - GATEWAY=API-TEST
+    # magento version - 1st line in MAGENTO_RELEASES_FILE
+    - MAGENTO_RELEASE_VERSION=1
+    - LATEST_EXTENSION_RELEASE=1
+    # if this stage fails, it will not fail the whole build
+    - ALLOW_FAIL=1
+  allow_failures:
+  - stage: acceptance-test
+    env:
+    - GATEWAY=API-TEST
+    - MAGENTO_RELEASE_VERSION=1
+    - ALLOW_FAIL=1
+  - stage: acceptance-test
+    env:
+    - GATEWAY=API-TEST
+    - MAGENTO_RELEASE_VERSION=1
+    - LATEST_EXTENSION_RELEASE=1
+    - ALLOW_FAIL=1
 
 before_install:
-  #get apache
-  - sudo apt-get update
-  - sudo apt-get install apache2 libapache2-mod-fastcgi
-  - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} != "5.6" ]]; then sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf; fi
-  - sudo a2enmod rewrite actions fastcgi alias
-  - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
-  - sudo chown -R travis:travis /var/lib/apache2/fastcgi
-  - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
-  - sudo cp -f build/bin/travis-ci-apache /etc/apache2/sites-available/000-default.conf
-  - sudo sed -e "s?%DOCUMENT_ROOT%?${MAGENTO_DIRECTORY}?g" --in-place /etc/apache2/sites-available/000-default.conf
-  - sudo service apache2 restart
-  # get magento installed
-  - wget https://files.magerun.net/n98-magerun.phar
-  - $n98 --version
-  # prepare database with sample data
-  - mysql -e 'CREATE DATABASE magento;'
-  - mysql -u travis magento < build/bin/magento_sample_data_for_1.9.2.4.sql
-
+# get apache
+- sudo apt-get update
+- sudo apt-get install apache2 libapache2-mod-fastcgi
+- sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+- if [[ ${TRAVIS_PHP_VERSION:0:3} != "5.6" ]]; then sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf; fi
+- sudo a2enmod rewrite actions fastcgi alias
+- echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+- sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
+- sudo chown -R travis:travis /var/lib/apache2/fastcgi
+- ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
+- sudo cp -f build/bin/travis-ci-apache /etc/apache2/sites-available/000-default.conf
+- sudo sed -e "s?%DOCUMENT_ROOT%?${MAGENTO_DIRECTORY}?g" --in-place /etc/apache2/sites-available/000-default.conf
+- sudo service apache2 restart
+# get magento installed
+- wget -q https://files.magerun.net/n98-magerun.phar
+- $n98 --version
+# prepare database with sample data
+- mysql -e 'CREATE DATABASE magento;'
+- mysql -u travis magento < build/bin/magento_sample_data_for_1.9.2.4.sql
 
 install:
-  - travis_retry composer install $COMPOSER_ARGS
-  - composer show
-  # Download proper Magento version
-  - git clone https://github.com/OpenMage/magento-mirror.git ${MAGENTO_DIRECTORY}
-  - cd ${MAGENTO_DIRECTORY}
-  - git tag -l
-  - if [[ -z "${MAGENTO_VERSION}" ]]; then export MAGENTO_VERSION="1.9.4.0"; fi && git checkout tags/${MAGENTO_VERSION}
-  # Install Magento
-  - $n98 sys:check
-  - $n98 install --dbUser=travis --dbHost=127.0.0.1 --dbName=magento --baseUrl="http://127.0.0.1:8000" --installationFolder=${MAGENTO_DIRECTORY} --noDownload --forceUseDb
-  - wget https://raw.github.com/colinmollenhour/modman/master/modman
-  - chmod +x modman
-  - ./modman init
-  # Install the extension
-  - cp -r ${TRAVIS_BUILD_DIR} ${MAGENTO_DIRECTORY}/.modman/${EXTENSION_NAME}
-  - ./modman deploy ${EXTENSION_NAME}
-  - cd ${MAGENTO_DIRECTORY}/.modman/${EXTENSION_NAME}
-  # activate all payment methods
-  - mysql -u travis magento < build/bin/payment_method_config.sql
-  # activate symlinks so plugin is displayed in the shop
-  - $n98 dev:symlinks 1
-
+- travis_retry composer install $COMPOSER_ARGS
+- composer show
+# Download proper Magento version
+- git clone https://github.com/OpenMage/magento-mirror.git ${MAGENTO_DIRECTORY}
+- cd ${MAGENTO_DIRECTORY}
+- git tag -l
+- if [[ -z "${MAGENTO_VERSION}" ]]; then export MAGENTO_VERSION="1.9.4.0"; fi && git checkout tags/${MAGENTO_VERSION}
+# Install Magento
+- $n98 sys:check
+- $n98 install --dbUser=travis --dbHost=127.0.0.1 --dbName=magento --baseUrl="http://127.0.0.1:8000" --installationFolder=${MAGENTO_DIRECTORY} --noDownload --forceUseDb
+- wget https://raw.github.com/colinmollenhour/modman/master/modman
+- chmod +x modman
+- ./modman init
+# Install the extension
+# get latest released version of shop extension
+- export LATEST_RELEASED_SHOP_EXTENSION_VERSION=`jq .[0].release ${TRAVIS_BUILD_DIR}/SHOPVERSIONS | tr -d '"'`
+- if [[ ${LATEST_EXTENSION_RELEASE}  == "1" ]]; then cd ${TRAVIS_BUILD_DIR} && git checkout tags/${LATEST_RELEASED_SHOP_EXTENSION_VERSION} && cd ${MAGENTO_DIRECTORY} ;fi
+- cp -r ${TRAVIS_BUILD_DIR} ${MAGENTO_DIRECTORY}/.modman/${EXTENSION_NAME}
+- ./modman deploy ${EXTENSION_NAME}
+- cd ${MAGENTO_DIRECTORY}/.modman/${EXTENSION_NAME}
+# activate all payment methods
+- mysql -u travis magento < build/bin/payment_method_config.sql
+# activate symlinks so plugin is displayed in the shop
+- $n98 dev:symlinks 1
 
 script:
-  - composer cs-check
-  - composer test-coverage
-  - build/bin/find-sensitive-data
-
+- composer cs-check
+- composer test-coverage
+- build/bin/find-sensitive-data
 
 after_script:
-  - travis_retry composer upload-coverage
-  - bash .bin/generate-tag.sh
+- travis_retry composer upload-coverage
+- bash .bin/generate-tag.sh
 
 after_failure:
-  - cat ${MAGENTO_DIRECTORY}/var/log/wirecard_elastic_engine.log
+- cat ${MAGENTO_DIRECTORY}/var/log/wirecard_elastic_engine.log
 
 before_deploy:
-  - export REPO_NAME=`echo $TRAVIS_REPO_SLUG | awk -F'/' '{print $2}'`
-  - export RELEASE_NOTES=$(composer make-release-notes)
-  - bash .bin/generate-wiki-notes.sh
-  - bash .bin/generate-readme-badge.sh
-  - bash .bin/generate-release-package.sh $TRAVIS_TAG
+- export REPO_NAME=`echo $TRAVIS_REPO_SLUG | awk -F'/' '{print $2}'`
+- export RELEASE_NOTES=$(composer make-release-notes)
+- bash .bin/generate-wiki-notes.sh
+- bash .bin/generate-readme-badge.sh
+- bash .bin/generate-release-package.sh $TRAVIS_TAG
 
 deploy:
   provider: releases
@@ -155,8 +208,8 @@ notifications:
     rooms:
       secure: YI7sUrfMyKyJD60kElGkO7yBDkGEh+069yS8bFAIDUST7s48J+dDP/r2G9dN9oQwhs9hvNjpNytpZDPys838T+Z0mNtFZ9Wu022hV3MpbKUuMl7L9P0MQQmxjg4bKyKK3Hl9tPrZ3UsKRlwIUmRGGYQ7cjs4zumorqs19YsB3X+WnnxAmmYB3kHQYfNKgVnmcG2QHJyx5KaLZ0EsWynSHXkYb8bVCtdlbQFNnpChvGHPprZrHAszLCYnlU7AEZGdbuk17oIfXO9Wjuu1GV8iJ2VgKkTCzW4FBC5eHJyZezojPFUm1I5tvdihRZuyBekVGOF23J6pvHLqPx77clT+/Vn6T+UMDuh1INZ0LKt4UOU42oEDKGblWZx2VYWcHwfEK+ckJWZkT9EBfg/CMenJly2tbtBj6++XNvxgGEDn6XqKIEatcb7X/aiy4f8BPXa3/pzgZAlvzZbGGqHFNZPAlgcXBBXgbaC7VvMhvi6Z5AG5ylKzPS5GCD95ozPC+cGv0234TBJus5oZck4qNiT53IUQ7Ta+OGVB0Mea105VAoQI0I7YcgaqW6c4h2YTmnuuQsIzAwPOrJ5TAinj8Z8mZ9C11tEcNF3Pgy1tOoG/YLurhOJm7v1ebotRb/DIeSHU8RfNatnDSSky4YS6Y8k2pQthdC9m7m2f2mJYuGdLjlM=
     template:
-      - "%{repository}#%{build_number} (%{branch} : %{author}): %{message}"
-      - "Change view : %{compare_url}"
-      - "Build details : %{build_url}"
+    - "%{repository}#%{build_number} (%{branch} : %{author}): %{message}"
+    - "Change view : %{compare_url}"
+    - "Build details : %{build_url}"
     on_success: change
     on_failure: change
