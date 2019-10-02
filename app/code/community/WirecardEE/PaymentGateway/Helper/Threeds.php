@@ -203,11 +203,17 @@ class WirecardEE_PaymentGateway_Helper_Threeds extends Mage_Payment_Helper_Data
         $orderCollection = Mage::getModel('sales/order')
             ->getCollection();
 
-        $orderCollection->join(['oi' => 'sales/order_item'], 'oi.order_id = main_table.entity_id');
-        $orderCollection->addFieldToFilter('customer_id', $this->getCustomerSession()->getCustomerId());
-        $orderCollection->addFieldToFilter('oi.product_id', ['in' => $productIds]);
+        /** @var Mage_Core_Model_Resource $resource */
+        $resource = Mage::getSingleton('core/resource');
 
-        return $orderCollection->count() > 0;
+        $joinTable = $resource->getTableName('sales/order_item');
+
+        $sql = $orderCollection->getSelectCountSql()
+            ->join(['oi' => $joinTable], 'oi.order_id = main_table.entity_id', [])
+            ->where('main_table.customer_id = ?', $this->getCustomerSession()->getCustomerId())
+            ->where('oi.product_id IN (?)', $productIds);
+
+        return $orderCollection->getConnection()->fetchOne($sql) > 0;
     }
 
     /**
