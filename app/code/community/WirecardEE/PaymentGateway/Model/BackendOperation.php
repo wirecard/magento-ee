@@ -180,6 +180,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
      */
     public function refund(Varien_Event_Observer $observer)
     {
+        /** @var Mage_Sales_Model_Order_Creditmemo $creditMemo */
         $creditMemo     = $observer->getData('creditmemo');
         $creditMemoPost = Mage::app()->getRequest()->getPost('creditmemo', []);
 
