@@ -41,7 +41,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
      * Gets payment from `PaymentFactory`, assembles the `OrderSummary` and executes the payment through the
      * `PaymentHandler` service. Further action depends on the response from the handler.
      *
-     * @return Action
+     * @return Action|Mage_Core_Controller_Varien_Action
      * @throws UnknownActionException
      * @throws Mage_Core_Exception
      * @throws UnknownPaymentException
@@ -57,6 +57,11 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
             $this->getHelper()->getLogger()
         );
         $order       = $this->getCheckoutSession()->getLastRealOrder();
+
+        // if someone directly calls this url
+        if (!count($order->getData())) {
+            return $this->_redirect('/');
+        }
 
         $this->getHelper()->validateBasket();
 
@@ -204,6 +209,11 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
         $paymentData = $sessionManager->getPaymentData();
         $tokenId     = is_array($paymentData) && isset($paymentData['token']) ? $paymentData['token'] : null;
 
+        $shippingAddressId = null;
+        // virtual/downloadable products do not require a shipping address
+        if (is_object($order->getShippingAddress())) {
+            $shippingAddressId = $order->getShippingAddress()->getCustomerAddressId();
+        }
         return new OrderSummary(
             $payment,
             $order,
@@ -219,7 +229,7 @@ class WirecardEE_PaymentGateway_GatewayController extends Mage_Core_Controller_F
                 $threedsHelper->getCustomerLastLogin(),
                 $threedsHelper->getChallengeIndicator(),
                 $threedsHelper->isNewToken($tokenId),
-                $threedsHelper->getAddressFirstUsed($order->getShippingAddress()->getCustomerAddressId()),
+                $threedsHelper->getAddressFirstUsed($shippingAddressId),
                 $threedsHelper->getCardCreationDate($tokenId),
                 $threedsHelper->getSuccessfulOrdersLastSixMonths($order->getCustomerId())
             ),

@@ -126,6 +126,10 @@ class WirecardEE_PaymentGateway_Helper_Threeds extends Mage_Payment_Helper_Data
      */
     public function getAddressFirstUsed($addressId)
     {
+        if (is_null($addressId)) {
+            return null;
+        }
+
         /** @var Mage_Sales_Model_Resource_Order_Collection $orderCollection */
         $orderCollection = Mage::getModel('sales/order')
             ->getCollection();

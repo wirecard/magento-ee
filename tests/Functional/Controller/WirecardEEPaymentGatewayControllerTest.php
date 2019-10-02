@@ -28,6 +28,7 @@ use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
 use WirecardEE\PaymentGateway\Service\SessionManager;
 use WirecardEE\Tests\Test\Stubs\PaymentHelperData;
 use WirecardEE\Tests\Test\MagentoTestCase;
+use WirecardEE_PaymentGateway_GatewayController;
 
 class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
 {
@@ -41,7 +42,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $request  = $this->getMockForAbstractClass(\Zend_Controller_Request_Abstract::class);
         $response = $this->getMockForAbstractClass(\Zend_Controller_Response_Abstract::class);
 
-        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        $controller = new WirecardEE_PaymentGateway_GatewayController($request, $response);
 
         $this->expectException(UnknownPaymentException::class);
         $this->expectExceptionMessage("Unknown payment ''");
@@ -56,7 +57,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
             'method' => 'foo',
         ]);
 
-        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        $controller = new WirecardEE_PaymentGateway_GatewayController($request, $response);
 
         $this->expectException(UnknownPaymentException::class);
         $this->expectExceptionMessage("Unknown payment 'foo'");
@@ -70,7 +71,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
 
         $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
 
-        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        $controller = new WirecardEE_PaymentGateway_GatewayController($request, $response);
         \Mage::app()->setRequest($request);
 
         $currency = $this->createMock(\Mage_Directory_Model_Currency::class);
@@ -115,6 +116,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $order->method('getPayment')->willReturn($payment);
         $order->method('getRealOrderId')->willReturn('145000001');
         $order->method('getId')->willReturn("1");
+        $order->method('getData')->willReturn(["id" => 1]); // to trick direct call check
 
         $checkoutSession = $this->createMock(\Mage_Checkout_Model_Session::class);
         $checkoutSession->method('getLastRealOrder')->willReturn($order);
@@ -136,7 +138,36 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $this->replaceMageSingleton('core/session', $coreSession);
         $this->replaceMageHelper('paymentgateway', new PaymentHelperData());
 
-        return [$controller, $order, $transaction, $coreSession];
+        return [$controller, $order, $transaction, $coreSession, $payment];
+    }
+
+    /**
+     * if someone enters the URL directly
+     *
+     * @throws UnknownPaymentException
+     * @throws \Mage_Core_Exception
+     * @throws \WirecardEE\PaymentGateway\Exception\UnknownActionException
+     * @throws \Zend_Controller_Request_Exception
+     */
+    public function testIndexDirectInvocation()
+    {
+        $request = new \Mage_Core_Controller_Request_Http();
+        $request->setParams(['method' => CreditCardTransaction::NAME]);
+
+        $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
+
+        $controller = new WirecardEE_PaymentGateway_GatewayController($request, $response);
+
+        $order = $this->createMock(\Mage_Sales_Model_Order::class);
+        $order->method('getData')->willReturn([]);
+
+        $checkoutSession = $this->createMock(\Mage_Checkout_Model_Session::class);
+        $checkoutSession->method('getLastRealOrder')->willReturn($order);
+        $this->replaceMageSingleton('checkout/session', $checkoutSession);
+
+        /** @var WirecardEE_PaymentGateway_GatewayController $action */
+        $action = $controller->indexAction();
+        $this->assertInstanceOf(WirecardEE_PaymentGateway_GatewayController::class, $action);
     }
 
     public function testIndexActionWithCreditCard()
@@ -458,7 +489,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $request  = $this->getMockForAbstractClass(\Zend_Controller_Request_Abstract::class);
         $response = $this->getMockForAbstractClass(\Zend_Controller_Response_Abstract::class);
 
-        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        $controller = new WirecardEE_PaymentGateway_GatewayController($request, $response);
 
         $this->expectException(UnknownPaymentException::class);
         $this->expectExceptionMessage("Unknown payment ''");
@@ -472,7 +503,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
 
         $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
 
-        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        $controller = new WirecardEE_PaymentGateway_GatewayController($request, $response);
         \Mage::app()->setRequest($request);
 
         $currency = $this->createMock(\Mage_Directory_Model_Currency::class);
@@ -521,7 +552,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $request  = new \Mage_Core_Controller_Request_Http();
         $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
 
-        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        $controller = new WirecardEE_PaymentGateway_GatewayController($request, $response);
         \Mage::app()->setRequest($request);
 
         $this->assertTrue($controller->cancelAction());
@@ -544,7 +575,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $request  = new \Mage_Core_Controller_Request_Http();
         $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
 
-        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        $controller = new WirecardEE_PaymentGateway_GatewayController($request, $response);
         \Mage::app()->setRequest($request);
 
         $this->assertInstanceOf(\Mage_Core_Controller_Varien_Action::class, $controller->deleteCreditCardTokenAction());
@@ -555,7 +586,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $request  = new \Mage_Core_Controller_Request_Http();
         $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
 
-        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        $controller = new WirecardEE_PaymentGateway_GatewayController($request, $response);
         \Mage::app()->setRequest($request);
 
         $order           = $this->createMock(\Mage_Sales_Model_Order::class);
@@ -574,7 +605,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $request  = new \Mage_Core_Controller_Request_Http();
         $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
 
-        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        $controller = new WirecardEE_PaymentGateway_GatewayController($request, $response);
         \Mage::app()->setRequest($request);
 
         $checkoutSession = $this->createMock(\Mage_Checkout_Model_Session::class);
@@ -590,7 +621,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $request  = $this->getMockForAbstractClass(\Zend_Controller_Request_Abstract::class);
         $response = $this->getMockForAbstractClass(\Zend_Controller_Response_Abstract::class);
 
-        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        $controller = new WirecardEE_PaymentGateway_GatewayController($request, $response);
 
         $this->expectException(UnknownPaymentException::class);
         $this->expectExceptionMessage("Unknown payment ''");
@@ -605,7 +636,7 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
 
         $response = $this->createMock(\Mage_Core_Controller_Response_Http::class);
 
-        $controller = new \WirecardEE_PaymentGateway_GatewayController($request, $response);
+        $controller = new WirecardEE_PaymentGateway_GatewayController($request, $response);
         \Mage::app()->setRequest($request);
 
         $payment = new \Mage_Sales_Model_Order_Payment();
