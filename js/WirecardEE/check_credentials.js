@@ -17,7 +17,7 @@ function WirecardEECheckCredentials(payment) {
     return;
   }
 
-    new Ajax.Request(baseUrl + "admin/WirecardEEPaymentGateway/testCredentials", {
+    new Ajax.Request(baseUrl, {
     parameters: {
       wirecardElasticEngineServer: server,
       wirecardElasticEngineHttpUser: httpUser,
