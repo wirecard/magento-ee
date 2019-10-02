@@ -9,6 +9,9 @@
 
 namespace WirecardEE\Tests\Unit\Model;
 
+use Mage_Sales_Model_Order_Creditmemo;
+use PHPUnit_Framework_MockObject_MockObject;
+use Varien_Event_Observer;
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\SuccessAction;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
@@ -21,7 +24,7 @@ class BackendOperationTest extends MagentoTestCase
 {
     public function testCaptureException()
     {
-        $observer = $this->createMock(\Varien_Event_Observer::class);
+        $observer = $this->createMock(Varien_Event_Observer::class);
         $backend  = new \WirecardEE_PaymentGateway_Model_BackendOperation();
         $this->expectException(\Mage_Core_Exception::class);
         $backend->capture($observer);
@@ -37,7 +40,7 @@ class BackendOperationTest extends MagentoTestCase
         $invoice = $this->createMock(\Mage_Sales_Model_Order_Invoice::class);
         $invoice->method('getOrder')->willReturn($order);
 
-        $observer = $this->createMock(\Varien_Event_Observer::class);
+        $observer = $this->createMock(Varien_Event_Observer::class);
         $observer->method('getData')->willReturn($invoice);
 
         $backend = new \WirecardEE_PaymentGateway_Model_BackendOperation();
@@ -60,7 +63,7 @@ class BackendOperationTest extends MagentoTestCase
         $invoice = $this->createMock(\Mage_Sales_Model_Order_Invoice::class);
         $invoice->method('getOrder')->willReturn($order);
 
-        $observer = $this->createMock(\Varien_Event_Observer::class);
+        $observer = $this->createMock(Varien_Event_Observer::class);
         $observer->method('getData')->willReturn($invoice);
 
         $payment = $this->createMock(PaymentInterface::class);
@@ -109,7 +112,7 @@ class BackendOperationTest extends MagentoTestCase
             ['getBaseCurrencyCode', [], 'EUR']
         ]);
 
-        $observer = $this->createMock(\Varien_Event_Observer::class);
+        $observer = $this->createMock(Varien_Event_Observer::class);
         $observer->method('getData')->willReturn($invoice);
 
         $handler = $this->createMock(BackendOperationsHandler::class);
@@ -130,7 +133,7 @@ class BackendOperationTest extends MagentoTestCase
 
     public function testRefundException()
     {
-        $observer = $this->createMock(\Varien_Event_Observer::class);
+        $observer = $this->createMock(Varien_Event_Observer::class);
         $backend  = new \WirecardEE_PaymentGateway_Model_BackendOperation();
         $this->expectException(\Mage_Core_Exception::class);
         $backend->refund($observer);
@@ -138,21 +141,15 @@ class BackendOperationTest extends MagentoTestCase
 
     public function testRefundEmpty()
     {
-        $request = $this->createMock(\Mage_Core_Controller_Request_Http::class);
-        $request->method('getPost')->willReturn([
-            'items' => ['item']
-        ]);
-        \Mage::app()->setRequest($request);
-
         $payment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
 
         $order = $this->createMock(\Mage_Sales_Model_Order::class);
         $order->method('getPayment')->willReturn($payment);
 
-        $creditMemo = $this->createMock(\Mage_Sales_Model_Order_Creditmemo::class);
+        $creditMemo = $this->createMock(Mage_Sales_Model_Order_Creditmemo::class);
         $creditMemo->method('getOrder')->willReturn($order);
 
-        $observer = $this->createMock(\Varien_Event_Observer::class);
+        $observer = $this->createMock(Varien_Event_Observer::class);
         $observer->method('getData')->willReturn($creditMemo);
 
         $backend = new \WirecardEE_PaymentGateway_Model_BackendOperation();
@@ -161,12 +158,6 @@ class BackendOperationTest extends MagentoTestCase
 
     public function testRefund()
     {
-        $request = $this->createMock(\Mage_Core_Controller_Request_Http::class);
-        $request->method('getPost')->willReturn([
-            'items' => ['item']
-        ]);
-        \Mage::app()->setRequest($request);
-
         $payment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
         $payment->method('getData')->willReturn('wirecardee_paymentgateway_creditcard');
 
@@ -183,7 +174,7 @@ class BackendOperationTest extends MagentoTestCase
         $transactionManager = $this->createMock(TransactionManager::class);
         $transactionManager->method('findRefundableTransactions')->willReturn([$transaction]);
 
-        $creditMemo = $this->createMock(\Mage_Sales_Model_Order_Creditmemo::class);
+        $creditMemo = $this->createMock(Mage_Sales_Model_Order_Creditmemo::class);
         $creditMemo->method('getOrder')->willReturn($order);
         $creditMemo->method('getAllItems')->willReturn([]);
         $creditMemo->method('__call')->willReturnMap([
@@ -193,7 +184,7 @@ class BackendOperationTest extends MagentoTestCase
             ['getBaseCurrencyCode', [], 'EUR']
         ]);
 
-        $observer = $this->createMock(\Varien_Event_Observer::class);
+        $observer = $this->createMock(Varien_Event_Observer::class);
         $observer->method('getData')->willReturn($creditMemo);
 
         $handler = $this->createMock(BackendOperationsHandler::class);
@@ -222,19 +213,22 @@ class BackendOperationTest extends MagentoTestCase
         $order = $this->createMock(\Mage_Sales_Model_Order::class);
         $order->method('getPayment')->willReturn($payment);
 
+        /** @var TransactionManager|PHPUnit_Framework_MockObject_MockObject $transactionManager */
         $transactionManager = $this->createMock(TransactionManager::class);
         $transactionManager->method('findRefundableTransactions')->willReturn([]);
 
-        $creditMemo = $this->createMock(\Mage_Sales_Model_Order_Creditmemo::class);
+        $creditMemo = $this->createMock(Mage_Sales_Model_Order_Creditmemo::class);
         $creditMemo->method('getOrder')->willReturn($order);
         $creditMemo->method('getAllItems')->willReturn([]);
         $creditMemo->method('__call')->willReturnMap([
+            ['getBaseCurrencyCode', [], 'EUR'],
             ['getShippingAmount', [], 0],
             ['getAdjustmentPositive', [], 0],
             ['getAdjustmentNegative', [], 0],
         ]);
 
-        $observer = $this->createMock(\Varien_Event_Observer::class);
+        /** @var Varien_Event_Observer|PHPUnit_Framework_MockObject_MockObject $observer */
+        $observer = $this->createMock(Varien_Event_Observer::class);
         $observer->method('getData')->willReturn($creditMemo);
 
         $backend = new \WirecardEE_PaymentGateway_Model_BackendOperation();
@@ -245,19 +239,13 @@ class BackendOperationTest extends MagentoTestCase
 
     public function testDisabledRefund()
     {
-        $request = $this->createMock(\Mage_Core_Controller_Request_Http::class);
-        $request->method('getPost')->willReturn([
-            'items' => ['item']
-        ]);
-        \Mage::app()->setRequest($request);
-
         $magePayment = $this->createMock(\Mage_Sales_Model_Order_Payment::class);
         $magePayment->method('getData')->willReturn('wirecardee_paymentgateway_creditcard');
 
         $order = $this->createMock(\Mage_Sales_Model_Order::class);
         $order->method('getPayment')->willReturn($magePayment);
 
-        $creditMemo = $this->createMock(\Mage_Sales_Model_Order_Creditmemo::class);
+        $creditMemo = $this->createMock(Mage_Sales_Model_Order_Creditmemo::class);
         $creditMemo->method('getOrder')->willReturn($order);
         $creditMemo->method('getAllItems')->willReturn([]);
         $creditMemo->method('__call')->willReturnMap([
@@ -266,7 +254,7 @@ class BackendOperationTest extends MagentoTestCase
             ['getAdjustmentNegative', [], 0],
         ]);
 
-        $observer = $this->createMock(\Varien_Event_Observer::class);
+        $observer = $this->createMock(Varien_Event_Observer::class);
         $observer->method('getData')->willReturn($creditMemo);
 
         $payment = $this->createMock(PaymentInterface::class);
@@ -284,7 +272,7 @@ class BackendOperationTest extends MagentoTestCase
 
     public function testCancelException()
     {
-        $observer = $this->createMock(\Varien_Event_Observer::class);
+        $observer = $this->createMock(Varien_Event_Observer::class);
         $backend  = new \WirecardEE_PaymentGateway_Model_BackendOperation();
         $this->expectException(\Mage_Core_Exception::class);
         $backend->cancel($observer);
@@ -297,7 +285,7 @@ class BackendOperationTest extends MagentoTestCase
         $order->method('getPayment')->willReturn($payment);
         $payment->method('getOrder')->willReturn($order);
 
-        $observer = $this->createMock(\Varien_Event_Observer::class);
+        $observer = $this->createMock(Varien_Event_Observer::class);
         $observer->method('getData')->willReturn($payment);
 
         $backend = new \WirecardEE_PaymentGateway_Model_BackendOperation();
@@ -318,7 +306,7 @@ class BackendOperationTest extends MagentoTestCase
         $order->method('getAllVisibleItems')->willReturn([]);
         $payment->method('getOrder')->willReturn($order);
 
-        $observer = $this->createMock(\Varien_Event_Observer::class);
+        $observer = $this->createMock(Varien_Event_Observer::class);
         $observer->method('getData')->willReturn($payment);
 
         $transaction = $this->createMock(\Mage_Sales_Model_Order_Payment_Transaction::class);
@@ -354,7 +342,7 @@ class BackendOperationTest extends MagentoTestCase
         $order->method('getPayment')->willReturn($magePayment);
         $magePayment->method('getOrder')->willReturn($order);
 
-        $observer = $this->createMock(\Varien_Event_Observer::class);
+        $observer = $this->createMock(Varien_Event_Observer::class);
         $observer->method('getData')->willReturn($magePayment);
 
         $payment = $this->createMock(PaymentInterface::class);
