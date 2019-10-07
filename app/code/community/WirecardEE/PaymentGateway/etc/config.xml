@@ -47,6 +47,16 @@
         </models>
 
         <events>
+            <wirecardee_paymentgateway_autoload>
+                <observers>
+                    <wirecard_ee_composer_autoload>
+                        <type>singleton</type>
+                        <class>paymentgateway/observer</class>
+                        <method>controllerFrontInitBefore</method>
+                    </wirecard_ee_composer_autoload>
+                </observers>
+            </wirecardee_paymentgateway_autoload>
+
             <controller_front_init_before>
                 <observers>
                     <wirecard_ee_composer_autoload>
