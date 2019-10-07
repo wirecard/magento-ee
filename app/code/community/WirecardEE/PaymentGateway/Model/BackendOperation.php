@@ -180,14 +180,11 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
      */
     public function refund(Varien_Event_Observer $observer)
     {
-        $creditMemo     = $observer->getData('creditmemo');
-        $creditMemoPost = Mage::app()->getRequest()->getPost('creditmemo', []);
+        $creditMemo = $observer->getData('creditmemo');
 
-        if (! ($creditMemo instanceof Mage_Sales_Model_Order_Creditmemo) || empty($creditMemoPost['items'])) {
+        if (!($creditMemo instanceof Mage_Sales_Model_Order_Creditmemo)) {
             $this->throwError("Unable to process backend operation (refund)");
         }
-
-        $items    = $creditMemoPost['items'];
 
         if (! $this->paymentFactory->isSupportedPayment($creditMemo->getOrder()->getPayment())) {
             return [];
@@ -219,12 +216,10 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         $remainingAdditionalAmount = $creditMemo->getShippingAmount()
                                      + $creditMemo->getAdjustmentPositive()
                                      - $creditMemo->getAdjustmentNegative();
-
+        $items = [];
         foreach ($creditMemo->getAllItems() as $item) {
             /** @var Mage_Sales_Model_Order_Creditmemo_Item $item */
-            if (array_key_exists($item->getOrderItemId(), $items)) {
-                $items[$item->getOrderItemId()]['price'] = $item->getBasePriceInclTax();
-            }
+            $items[$item->getOrderItemId()] = ['price' => $item->getBasePriceInclTax(), 'qty' => $item->getQty()];
         }
 
         $transactionEntries = [];
