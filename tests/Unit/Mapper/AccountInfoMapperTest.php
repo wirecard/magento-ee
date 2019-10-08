@@ -172,4 +172,24 @@ class AccountInfoMapperTest extends TestCase
             'creation-date'              => '1997-09-16'
         ], $mapped);
     }
+
+    public function testGetWithoutShippingAddressFirstUsedAndCardCreationDate()
+    {
+        $this->session->method('isLoggedIn')->willReturn(true);
+
+        $mapper = new AccountInfoMapper($this->session, 1323, ChallengeInd::NO_CHALLENGE, false, null, null, 6);
+        $accountInfo = $mapper->getAccountInfo(null);
+
+        $mapped = $accountInfo->mappedProperties();
+
+        $this->assertEquals([
+            'authentication-method'    => AuthMethod::USER_CHECKOUT,
+            'authentication-timestamp' => 1323,
+            'challenge-indicator'      => ChallengeInd::NO_CHALLENGE,
+            'update-date'                => '2019-08-21',
+            'card-creation-date'         => date('Y-m-d'),
+            'purchases-last-six-months'  => 6,
+        ], $mapped);
+    }
+
 }

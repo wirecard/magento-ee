@@ -177,7 +177,9 @@ class AccountInfoMapper
 
             $dt = new DateTime($this->getCustomer()->getUpdatedAt());
             $accountInfo->setUpdateDate($dt);
-            $accountInfo->setShippingAddressFirstUse($this->shippingFirstUsed);
+            if (!is_null($this->shippingFirstUsed)) {
+                $accountInfo->setShippingAddressFirstUse($this->shippingFirstUsed);
+            }
             $accountInfo->setCardCreationDate($this->cardCreationDate === null ?
                 new DateTime() : $this->cardCreationDate);
             $accountInfo->setAmountPurchasesLastSixMonths($this->numPurchasesSixMonth);

@@ -126,9 +126,11 @@ class WirecardEE_PaymentGateway_Helper_Threeds extends Mage_Payment_Helper_Data
      */
     public function getAddressFirstUsed($addressId)
     {
-        /** @var Mage_Sales_Model_Resource_Order_Collection $orderCollection */
-        $orderCollection = Mage::getModel('sales/order')
-            ->getCollection();
+        if (is_null($addressId)) {
+            return null;
+        }
+
+        $orderCollection = $this->getMageOrderCollection();
 
         $orderCollection->join(['oa' => 'sales/order_address'], 'oa.entity_id = main_table.shipping_address_id');
 
@@ -157,9 +159,7 @@ class WirecardEE_PaymentGateway_Helper_Threeds extends Mage_Payment_Helper_Data
      */
     public function getSuccessfulOrdersLastSixMonths($customerId)
     {
-        /** @var Mage_Sales_Model_Resource_Order_Collection $orderCollection */
-        $orderCollection = Mage::getModel('sales/order')
-            ->getCollection();
+        $orderCollection = $this->getMageOrderCollection();
 
         $orderCollection->addFieldToFilter('customer_id', $customerId);
 
@@ -195,15 +195,19 @@ class WirecardEE_PaymentGateway_Helper_Threeds extends Mage_Payment_Helper_Data
             return $i->getProductId();
         }, $items);
 
-        /** @var Mage_Sales_Model_Resource_Order_Collection $orderCollection */
-        $orderCollection = Mage::getModel('sales/order')
-            ->getCollection();
+        $orderCollection = $this->getMageOrderCollection();
 
-        $orderCollection->join(['oi' => 'sales/order_item'], 'oi.order_id = main_table.entity_id');
-        $orderCollection->addFieldToFilter('customer_id', $this->getCustomerSession()->getCustomerId());
-        $orderCollection->addFieldToFilter('oi.product_id', ['in' => $productIds]);
+        /** @var Mage_Core_Model_Resource $resource */
+        $resource = Mage::getSingleton('core/resource');
 
-        return $orderCollection->count() > 0;
+        $joinTable = $resource->getTableName('sales/order_item');
+
+        $sql = $orderCollection->getSelectCountSql()
+            ->join(['oi' => $joinTable], 'oi.order_id = main_table.entity_id', [])
+            ->where('main_table.customer_id = ?', $this->getCustomerSession()->getCustomerId())
+            ->where('oi.product_id IN (?)', $productIds);
+
+        return $orderCollection->getConnection()->fetchOne($sql) > 0;
     }
 
     /**
@@ -226,5 +230,13 @@ class WirecardEE_PaymentGateway_Helper_Threeds extends Mage_Payment_Helper_Data
         }
 
         return false;
+    }
+
+    /**
+     * @return Mage_Sales_Model_Resource_Order_Collection
+     */
+    protected function getMageOrderCollection()
+    {
+        return Mage::getModel('sales/order')->getCollection();
     }
 }
