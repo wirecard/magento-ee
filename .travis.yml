@@ -32,7 +32,7 @@ matrix:
     if: type != cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
   - php: 7.2
     if: type != cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
-    # nigthly get latest shopware versions and store them in shop-releases.txt
+    # nigthly get latest magento versions and store them in shop-releases.txt
   - stage: get-magento-versions
     if: type = cron
     php: 7.2
