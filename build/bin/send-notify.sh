@@ -1,4 +1,10 @@
 #!/bin/bash
+# Shop System SDK:
+# - Terms of Use can be found under:
+# https://github.com/wirecard/magento-ee/blob/master/_TERMS_OF_USE
+# - License can be found under:
+# https://github.com/wirecard/magento-ee/blob/master/LICENSE
+
 PREVIEW_LINK='https://raw.githack.com/wirecard/reports'
 REPORT_FILE='report.html'
 #choose slack channel depending on the gateway
@@ -19,6 +25,6 @@ curl -X POST -H 'Content-type: application/json' \
     --data "{'text': 'Build Failed. Magento version: ${MAGENTO_VERSION}\n
      Build URL : ${TRAVIS_JOB_WEB_URL}\n
     Build Number: ${TRAVIS_BUILD_NUMBER}\n
-    Branch: ${TRAVIS_BRANCH}\n
-    Report link: ${PREVIEW_LINK}/${SCREENSHOT_COMMIT_HASH}/${PROJECT_FOLDER}/${GATEWAY}/${TODAY}/${REPORT_FILE}',
+    Branch: ${BRANCH_FOLDER}\n
+    Report link: ${PREVIEW_LINK}/${SCREENSHOT_COMMIT_HASH}/${RELATIVE_REPORTS_LOCATION}/${REPORT_FILE}',
     'channel': '${CHANNEL}'}" ${SLACK_ROOMS}
