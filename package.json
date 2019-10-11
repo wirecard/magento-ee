@@ -21,7 +21,7 @@
     "test:alipay": "node_modules/.bin/mocha tests/Selenium/Payments/AlipayTest.js --timeout 60000",
     "test:payolution": "node_modules/.bin/mocha tests/Selenium/Payments/PayolutionTest.js --timeout 60000",
     "test:runner": "node --max-old-space-size=3000 tests/Selenium/runner.js",
-    "test:payments": "node_modules/.bin/mocha $(find tests/Selenium/Payments -name '*.js' -not -name 'MasterpassTest.js' -not -name 'PayPalTest.js') --timeout 6000000 --reporter mocha-multi-reporters --reporter-options configFile=./config.json"
+    "test:payments": "node_modules/.bin/mocha $(find tests/Selenium/Payments -name '*.js' -not -name 'MasterpassTest.js' -not -name 'PayPalTest.js') --timeout 120000 --reporter mocha-multi-reporters --reporter-options configFile=./config.json"
   },
   "private": true,
   "license": "GPL-3.0",
