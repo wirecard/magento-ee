@@ -7,7 +7,7 @@
         "changelog": [
             "Fix refund (credit memo) for scripts and third party modules - #71",
             "Fix admin path on test credentials",
-            "Fix orders without shipping address (virtual products) - #62"
+            "Fix orders without shipping address (virtual products) - #62",
             "Add custom event for registering the autoloader - #63"
         ]
     },
