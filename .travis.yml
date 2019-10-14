@@ -7,20 +7,20 @@ cache:
   - $HOME/.composer/cache/files
 
 services:
-- mysql
+  - mysql
 
 env:
   global:
-  - COMPOSER_ARGS="--no-interaction"
-  - MAGENTO_DIRECTORY=${HOME}/magento
-  - EXTENSION_NAME="wirecard-ee"
-  - n98="php ${TRAVIS_BUILD_DIR}/n98-magerun.phar -n --root-dir=${MAGENTO_DIRECTORY}"
-  - SHOP_SYSTEM_UPDATE_COMMIT="Update latest shop releases"
-  - MAGENTO_RELEASES_FILE=${TRAVIS_BUILD_DIR}/build/bin/shop-releases.txt
-  - MANUAL_UITEST_TRIGGER_COMMIT="Test my build"
-  - PATCH_RELEASE="patch"
-  - MINOR_RELEASE="minor"
-  - MAJOR_RELEASE="major"
+    - COMPOSER_ARGS="--no-interaction"
+    - MAGENTO_DIRECTORY=${HOME}/magento
+    - EXTENSION_NAME="wirecard-ee"
+    - n98="php ${TRAVIS_BUILD_DIR}/n98-magerun.phar -n --root-dir=${MAGENTO_DIRECTORY}"
+    - SHOP_SYSTEM_UPDATE_COMMIT="Update latest shop releases"
+    - MAGENTO_RELEASES_FILE=${TRAVIS_BUILD_DIR}/build/bin/shop-releases.txt
+    - MANUAL_UITEST_TRIGGER_COMMIT="Test my build"
+    - PATCH_RELEASE="patch"
+    - MINOR_RELEASE="minor"
+    - MAJOR_RELEASE="major"
 
 matrix:
   # these stages are allowed to fail
@@ -126,70 +126,70 @@ matrix:
     - ALLOW_FAIL=1
 
 before_install:
-# get apache
-- sudo apt-get update
-- sudo apt-get install apache2 libapache2-mod-fastcgi
-- sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
-- if [[ ${TRAVIS_PHP_VERSION:0:3} != "5.6" ]]; then sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf; fi
-- sudo a2enmod rewrite actions fastcgi alias
-- echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-- sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
-- sudo chown -R travis:travis /var/lib/apache2/fastcgi
-- ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
-- sudo cp -f build/bin/travis-ci-apache /etc/apache2/sites-available/000-default.conf
-- sudo sed -e "s?%DOCUMENT_ROOT%?${MAGENTO_DIRECTORY}?g" --in-place /etc/apache2/sites-available/000-default.conf
-- sudo service apache2 restart
-# get magento installed
-- wget -q https://files.magerun.net/n98-magerun.phar
-- $n98 --version
-# prepare database with sample data
-- mysql -e 'CREATE DATABASE magento;'
-- mysql -u travis magento < build/bin/magento_sample_data_for_1.9.2.4.sql
+  # get apache
+  - sudo apt-get update
+  - sudo apt-get install apache2 libapache2-mod-fastcgi
+  - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} != "5.6" ]]; then sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf; fi
+  - sudo a2enmod rewrite actions fastcgi alias
+  - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
+  - sudo chown -R travis:travis /var/lib/apache2/fastcgi
+  - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
+  - sudo cp -f build/bin/travis-ci-apache /etc/apache2/sites-available/000-default.conf
+  - sudo sed -e "s?%DOCUMENT_ROOT%?${MAGENTO_DIRECTORY}?g" --in-place /etc/apache2/sites-available/000-default.conf
+  - sudo service apache2 restart
+  # get magento installed
+  - wget -q https://files.magerun.net/n98-magerun.phar
+  - $n98 --version
+  # prepare database with sample data
+  - mysql -e 'CREATE DATABASE magento;'
+  - mysql -u travis magento < build/bin/magento_sample_data_for_1.9.2.4.sql
 
 install:
-- travis_retry composer install $COMPOSER_ARGS
-- composer show
-# Download proper Magento version
-- git clone https://github.com/OpenMage/magento-mirror.git ${MAGENTO_DIRECTORY}
-- cd ${MAGENTO_DIRECTORY}
-- git tag -l
-- if [[ -z "${MAGENTO_VERSION}" ]]; then export MAGENTO_VERSION="1.9.4.0"; fi && git checkout tags/${MAGENTO_VERSION}
-# Install Magento
-- $n98 sys:check
-- $n98 install --dbUser=travis --dbHost=127.0.0.1 --dbName=magento --baseUrl="http://127.0.0.1:8000" --installationFolder=${MAGENTO_DIRECTORY} --noDownload --forceUseDb
-- wget https://raw.github.com/colinmollenhour/modman/master/modman
-- chmod +x modman
-- ./modman init
-# Install the extension
-# get latest released version of shop extension
-- export LATEST_RELEASED_SHOP_EXTENSION_VERSION=`jq .[0].release ${TRAVIS_BUILD_DIR}/SHOPVERSIONS | tr -d '"'`
-- if [[ ${LATEST_EXTENSION_RELEASE}  == "1" ]]; then cd ${TRAVIS_BUILD_DIR} && git checkout tags/${LATEST_RELEASED_SHOP_EXTENSION_VERSION} && cd ${MAGENTO_DIRECTORY} ;fi
-- cp -r ${TRAVIS_BUILD_DIR} ${MAGENTO_DIRECTORY}/.modman/${EXTENSION_NAME}
-- ./modman deploy ${EXTENSION_NAME}
-- cd ${MAGENTO_DIRECTORY}/.modman/${EXTENSION_NAME}
-# activate all payment methods
-- mysql -u travis magento < build/bin/payment_method_config.sql
-# activate symlinks so plugin is displayed in the shop
-- $n98 dev:symlinks 1
+  - travis_retry composer install $COMPOSER_ARGS
+  - composer show
+  # Download proper Magento version
+  - git clone https://github.com/OpenMage/magento-mirror.git ${MAGENTO_DIRECTORY}
+  - cd ${MAGENTO_DIRECTORY}
+  - git tag -l
+  - if [[ -z "${MAGENTO_VERSION}" ]]; then export MAGENTO_VERSION="1.9.4.0"; fi && git checkout tags/${MAGENTO_VERSION}
+  # Install Magento
+  - $n98 sys:check
+  - $n98 install --dbUser=travis --dbHost=127.0.0.1 --dbName=magento --baseUrl="http://127.0.0.1:8000" --installationFolder=${MAGENTO_DIRECTORY} --noDownload --forceUseDb
+  - wget https://raw.github.com/colinmollenhour/modman/master/modman
+  - chmod +x modman
+  - ./modman init
+  # Install the extension
+  # get latest released version of shop extension
+  - export LATEST_RELEASED_SHOP_EXTENSION_VERSION=`jq .[0].release ${TRAVIS_BUILD_DIR}/SHOPVERSIONS | tr -d '"'`
+  - if [[ ${LATEST_EXTENSION_RELEASE}  == "1" ]]; then cd ${TRAVIS_BUILD_DIR} && git checkout tags/${LATEST_RELEASED_SHOP_EXTENSION_VERSION} && cd ${MAGENTO_DIRECTORY} ;fi
+  - cp -r ${TRAVIS_BUILD_DIR} ${MAGENTO_DIRECTORY}/.modman/${EXTENSION_NAME}
+  - ./modman deploy ${EXTENSION_NAME}
+  - cd ${MAGENTO_DIRECTORY}/.modman/${EXTENSION_NAME}
+  # activate all payment methods
+  - mysql -u travis magento < build/bin/payment_method_config.sql
+  # activate symlinks so plugin is displayed in the shop
+  - $n98 dev:symlinks 1
 
 script:
-- composer cs-check
-- composer test-coverage
-- build/bin/find-sensitive-data
+  - composer cs-check
+  - composer test-coverage
+  - build/bin/find-sensitive-data
 
 after_script:
-- travis_retry composer upload-coverage
-- bash .bin/generate-tag.sh
+  - travis_retry composer upload-coverage
+  - bash .bin/generate-tag.sh
 
 after_failure:
-- cat ${MAGENTO_DIRECTORY}/var/log/wirecard_elastic_engine.log
+  - cat ${MAGENTO_DIRECTORY}/var/log/wirecard_elastic_engine.log
 
 before_deploy:
-- export REPO_NAME=`echo $TRAVIS_REPO_SLUG | awk -F'/' '{print $2}'`
-- export RELEASE_NOTES=$(composer make-release-notes)
-- bash .bin/generate-wiki-notes.sh
-- bash .bin/generate-readme-badge.sh
-- bash .bin/generate-release-package.sh $TRAVIS_TAG
+  - export REPO_NAME=`echo $TRAVIS_REPO_SLUG | awk -F'/' '{print $2}'`
+  - export RELEASE_NOTES=$(composer make-release-notes)
+  - bash .bin/generate-wiki-notes.sh
+  - bash .bin/generate-readme-badge.sh
+  - bash .bin/generate-release-package.sh $TRAVIS_TAG
 
 deploy:
   provider: releases
