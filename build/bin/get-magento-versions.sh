@@ -15,6 +15,6 @@ sort -nr tmp.txt > ${MAGENTO_RELEASES_FILE}
 
 if [[ $(git diff HEAD ${MAGENTO_RELEASES_FILE}) != '' ]]; then
     git add  ${MAGENTO_RELEASES_FILE}
-    git commit -m "${MANUAL_UITEST_TRIGGER_COMMIT}"
+    git commit -m "${SHOP_SYSTEM_UPDATE_COMMIT}"
     git push --quiet https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG} HEAD:master
 fi
