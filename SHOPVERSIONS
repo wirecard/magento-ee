@@ -5,7 +5,9 @@
         "tested": "1.9.4.2",
         "compatibility": "1.9.3.4",
         "changelog": [
-            "Remove Masterpass as a standalone payment method"
+            "Remove Masterpass as a standalone payment method",
+            "Remove Maestro as a standalone payment method",
+            "Remove UnionPay International as a standalone payment method"
         ]
     },
     {
