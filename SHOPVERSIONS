@@ -7,7 +7,8 @@
         "changelog": [
             "Remove Masterpass as a standalone payment method",
             "Remove Maestro as a standalone payment method",
-            "Remove UnionPay International as a standalone payment method"
+            "Remove UnionPay International as a standalone payment method",
+            "Fix condition for pending payment message on success page #68"
         ]
     },
     {
