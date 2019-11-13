@@ -14,7 +14,6 @@ use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\EpsTransaction;
 use Wirecard\PaymentSdk\Transaction\GiropayTransaction;
 use Wirecard\PaymentSdk\Transaction\IdealTransaction;
-use Wirecard\PaymentSdk\Transaction\MasterpassTransaction;
 use Wirecard\PaymentSdk\Transaction\MaestroTransaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
@@ -27,7 +26,6 @@ use WirecardEE\PaymentGateway\Payments\CreditCardPayment;
 use WirecardEE\PaymentGateway\Payments\EpsPayment;
 use WirecardEE\PaymentGateway\Payments\GiropayPayment;
 use WirecardEE\PaymentGateway\Payments\IdealPayment;
-use WirecardEE\PaymentGateway\Payments\MasterpassPayment;
 use WirecardEE\PaymentGateway\Payments\MaestroPayment;
 use WirecardEE\PaymentGateway\Payments\PayByBankAppPayment;
 use WirecardEE\PaymentGateway\Payments\PaymentInterface;
@@ -122,6 +120,7 @@ class PaymentFactory
      *
      * @return array
      *
+     * @since 2.0.0 Remove Masterpass
      * @since 1.0.0
      */
     private function getMappedPayments()
@@ -139,7 +138,6 @@ class PaymentFactory
             MaestroTransaction::NAME           => MaestroPayment::class,
             PoiPayment::NAME                   => PoiPayment::class,
             PiaPayment::NAME                   => PiaPayment::class,
-            MasterpassTransaction::NAME        => MasterpassPayment::class,
             AlipayCrossborderTransaction::NAME => AlipayPayment::class,
             UpiTransaction::NAME               => UnionpayPayment::class,
             PayolutionInvoicePayment::NAME     => PayolutionInvoicePayment::class,
