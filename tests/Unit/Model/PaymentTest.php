@@ -235,15 +235,4 @@ class PaymentTest extends TestCase
         $this->expectException(\Mage_Core_Exception::class);
         $this->assertEquals($payment, $payment->validate());
     }
-
-    public function testUnionpay()
-    {
-        $payment = new \WirecardEE_PaymentGateway_Model_Unionpay();
-        $this->assertStringEndsWith(
-            '/paymentgateway/gateway/index/method/unionpayinternational/',
-            $payment->getOrderPlaceRedirectUrl()
-        );
-        $this->assertEquals('wirecardee_paymentgateway_unionpayinternational', $payment->getCode());
-        $this->assertNotEmpty($payment->toOptionArray());
-    }
 }

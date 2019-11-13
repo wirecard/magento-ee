@@ -17,7 +17,6 @@
     "test:poi": "node_modules/.bin/mocha tests/Selenium/Payments/PoiTest.js --timeout 60000",
     "test:pia": "node_modules/.bin/mocha tests/Selenium/Payments/PiaTest.js --timeout 60000",
     "test:masterpass": "node_modules/.bin/mocha tests/Selenium/Payments/MasterpassTest.js --timeout 60000",
-    "test:upi": "node_modules/.bin/mocha tests/Selenium/Payments/UpiTest.js --timeout 60000",
     "test:alipay": "node_modules/.bin/mocha tests/Selenium/Payments/AlipayTest.js --timeout 60000",
     "test:payolution": "node_modules/.bin/mocha tests/Selenium/Payments/PayolutionTest.js --timeout 60000",
     "test:runner": "node --max-old-space-size=3000 tests/Selenium/runner.js",

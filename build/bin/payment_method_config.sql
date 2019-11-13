@@ -100,17 +100,6 @@ INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('defa
 INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_giropay/fraud_prevention','1');
 INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_giropay/order_identification','1');
 INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_giropay/sort_order','11');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_unionpayinternational/title','Wirecard UnionPay International');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_unionpayinternational/active','1');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_unionpayinternational/api_url','https://api-test.wirecard.com');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_unionpayinternational/api_user','70000-APILUHN-CARD');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_unionpayinternational/api_password','8mhwavKVb91T');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_unionpayinternational/api_maid','c6e9331c-5c1f-4fc6-8a08-ef65ce09ddb0');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_unionpayinternational/api_secret','16d85b73-79e2-4c33-932a-7da99fb04a9c');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_unionpayinternational/transaction_type','pay');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_unionpayinternational/fraud_prevention','1');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_unionpayinternational/order_identification','1');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_unionpayinternational/sort_order','38');
 INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_alipay-xborder/title','Wirecard Alipay Cross-border');
 INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_alipay-xborder/active','1');
 INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_alipay-xborder/api_url','https://api-test.wirecard.com');

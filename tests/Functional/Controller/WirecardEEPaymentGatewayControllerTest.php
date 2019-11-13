@@ -20,7 +20,6 @@ use Wirecard\PaymentSdk\Transaction\MasterpassTransaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
-use Wirecard\PaymentSdk\Transaction\UpiTransaction;
 use WirecardEE\PaymentGateway\Actions\ErrorAction;
 use WirecardEE\PaymentGateway\Actions\RedirectAction;
 use WirecardEE\PaymentGateway\Actions\ViewAction;
@@ -440,30 +439,6 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $this->assertArrayHasKey('url', $assignments);
         $this->assertEquals('https://api-wdcee-test.wirecard.com', $assignments['wirecardUrl']);
         $this->assertStringEndsWith('paymentgateway/gateway/return/method/maestro/', $assignments['url']);
-    }
-
-    public function testIndexActionWithUnionpay()
-    {
-        list($controller, $order, $transaction, $coreSession) = $this->prepareForIndexAction(UpiTransaction::NAME);
-
-        $transaction->expects($this->once())->method('setTxnType')->with('capture');
-        $transaction->expects($this->once())->method('setOrder')->with($order);
-
-        $coreSession->method('getData')->willReturnMap([
-            [\WirecardEE_PaymentGateway_Helper_Data::DEVICE_FINGERPRINT_ID, false, md5('test')],
-        ]);
-        $coreSession->method('getMessages')->willReturn(new \Mage_Core_Model_Message_Collection());
-
-        /** @var ViewAction $action */
-        $action = $controller->indexAction();
-        $this->assertInstanceOf(ViewAction::class, $action);
-        $this->assertEquals('paymentgateway/seamless', $action->getBlockName());
-        $assignments = $action->getAssignments();
-        $this->assertArrayHasKey('wirecardUrl', $assignments);
-        $this->assertArrayHasKey('wirecardRequestData', $assignments);
-        $this->assertArrayHasKey('url', $assignments);
-        $this->assertEquals('https://api-test.wirecard.com', $assignments['wirecardUrl']);
-        $this->assertStringEndsWith('paymentgateway/gateway/return/method/unionpayinternational/', $assignments['url']);
     }
 
     public function testInsufficientDataExceptionIndexActionWithGiropay()
