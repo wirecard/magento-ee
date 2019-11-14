@@ -7,6 +7,13 @@ app/design/frontend/base/default/template/WirecardEE/*                      app/
 app/design/frontend/base/default/layout/wirecardee_paymentgateway.xml       app/design/frontend/base/default/layout/wirecardee_paymentgateway.xml
 
 app/locale/de_DE/WirecardEE_PaymentGateway.csv                              app/locale/de_DE/WirecardEE_PaymentGateway.csv
+app/locale/de_AT/WirecardEE_PaymentGateway.csv                              app/locale/de_AT/WirecardEE_PaymentGateway.csv
+app/locale/de_CH/WirecardEE_PaymentGateway.csv                              app/locale/de_CH/WirecardEE_PaymentGateway.csv
+app/locale/en_AU/WirecardEE_PaymentGateway.csv                              app/locale/en_AU/WirecardEE_PaymentGateway.csv
+app/locale/en_CA/WirecardEE_PaymentGateway.csv                              app/locale/en_CA/WirecardEE_PaymentGateway.csv
+app/locale/en_GB/WirecardEE_PaymentGateway.csv                              app/locale/en_GB/WirecardEE_PaymentGateway.csv
+app/locale/en_IE/WirecardEE_PaymentGateway.csv                              app/locale/en_IE/WirecardEE_PaymentGateway.csv
+app/locale/en_NZ/WirecardEE_PaymentGateway.csv                              app/locale/en_NZ/WirecardEE_PaymentGateway.csv
 app/locale/en_US/WirecardEE_PaymentGateway.csv                              app/locale/en_US/WirecardEE_PaymentGateway.csv
 
 js/WirecardEE/*                                                             js/WirecardEE/
