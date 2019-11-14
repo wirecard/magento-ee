@@ -74,16 +74,6 @@ exports.config = {
         extensionSc: 4000
       }
     },
-    maestro: {
-      label: 'Wirecard Maestro SecureCode',
-      fields: {
-        last_name: 'Lastname',
-        account_number: '6799860300001000003',
-        card_security_code: '003'
-      },
-      expirationYear: '2023',
-      password: 'wirecard'
-    },
     alipay: {
       label: 'Wirecard Alipay Cross-border',
       fields: {
@@ -353,10 +343,6 @@ exports.tests = [
   },
   {
     file: 'Payments/IdealTest',
-    timeout: 120000,
-  },
-  {
-    file: 'Payments/MaestroTest',
     timeout: 120000,
   },
   {

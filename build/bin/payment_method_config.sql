@@ -110,17 +110,6 @@ INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('defa
 INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_alipay-xborder/fraud_prevention','1');
 INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_alipay-xborder/order_identification','1');
 INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_alipay-xborder/sort_order','3');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_maestro/title','Wirecard Maestro SecureCode');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_maestro/active','1');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_maestro/api_url','https://api-wdcee-test.wirecard.com');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_maestro/api_user','plugin-test');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_maestro/api_password','4-41N4\\lI0]783');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_maestro/api_maid','4945f0ef-51e0-43af-972f-885405320842');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_maestro/api_secret','822e87ea-dcc3-4d01-861c-e39f14a0ab6c');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_maestro/transaction_type','pay');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_maestro/fraud_prevention','1');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_maestro/order_identification','1');
-INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_maestro/sort_order','22');
 INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_masterpass/title','Wirecard Masterpass');
 INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_masterpass/active','1');
 INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_masterpass/api_url','https://api-test.wirecard.com');
