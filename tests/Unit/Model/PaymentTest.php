@@ -108,17 +108,6 @@ class PaymentTest extends TestCase
         $this->assertNotEmpty($payment->toOptionArray());
     }
 
-    public function testMasterpass()
-    {
-        $payment = new \WirecardEE_PaymentGateway_Model_Masterpass();
-        $this->assertStringEndsWith(
-            '/paymentgateway/gateway/index/method/masterpass/',
-            $payment->getOrderPlaceRedirectUrl()
-        );
-        $this->assertEquals('wirecardee_paymentgateway_masterpass', $payment->getCode());
-        $this->assertNotEmpty($payment->toOptionArray());
-    }
-
     public function testIdeal()
     {
         $payment = new \WirecardEE_PaymentGateway_Model_Ideal();

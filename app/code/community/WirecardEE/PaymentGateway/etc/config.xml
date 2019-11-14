@@ -270,20 +270,6 @@
                 <order_identification>1</order_identification>
                 <sort_order>21</sort_order>
             </wirecardee_paymentgateway_ideal>
-            <wirecardee_paymentgateway_masterpass>
-                <active>0</active>
-                <model>paymentgateway/masterpass</model>
-                <title>Wirecard Masterpass</title>
-                <api_url>https://api-test.wirecard.com</api_url>
-                <api_user>70000-APITEST-AP</api_user>
-                <api_password>qD2wzQ_hrc!8</api_password>
-                <api_maid>8bc8ed6d-81a8-43be-bd7b-75b008f89fa6</api_maid>
-                <api_secret>2d96596b-9d10-4c98-ac47-4d56e22fd878</api_secret>
-                <transaction_type>pay</transaction_type>
-                <fraud_prevention>1</fraud_prevention>
-                <order_identification>1</order_identification>
-                <sort_order>23</sort_order>
-            </wirecardee_paymentgateway_masterpass>
             <wirecardee_paymentgateway_ratepayinvoice>
                 <active>0</active>
                 <model>paymentgateway/ratepayinvoice</model>

@@ -82,13 +82,6 @@ exports.config = {
         paymentPasswordDigit: '1'
       }
     },
-    masterpass: {
-      label: 'Wirecard Masterpass',
-      fields: {
-        email: 'masterpass@mailadresse.net',
-        password: 'WirecardPass42'
-      }
-    },
     poi: {
       label: 'Wirecard Payment On Invoice'
     },
@@ -365,5 +358,5 @@ exports.tests = [
     file: 'Payments/RatepayTest',
     timeout: 120000
   }
-  //Add Payments/MasterpassTest and Payments/PayPalTest
+  //Add Payments/PayPalTest
 ];

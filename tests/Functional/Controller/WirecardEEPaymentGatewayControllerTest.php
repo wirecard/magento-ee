@@ -15,7 +15,6 @@ use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 use Wirecard\PaymentSdk\Transaction\EpsTransaction;
 use Wirecard\PaymentSdk\Transaction\GiropayTransaction;
-use Wirecard\PaymentSdk\Transaction\MasterpassTransaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
@@ -317,25 +316,6 @@ class WirecardEEPaymentGatewayControllerTest extends MagentoTestCase
         $this->assertInstanceOf(RedirectAction::class, $action);
         $this->assertStringStartsWith(
             'https://www.banking.co.at/appl/ebp/logout/so/loginPrepare/eps.html',
-            $action->getUrl()
-        );
-    }
-
-    public function testIndexActionWithMasterpass()
-    {
-        list($controller, , $transaction, $coreSession) = $this->prepareForIndexAction(MasterpassTransaction::NAME);
-
-        $transaction->expects($this->once())->method('setTxnType')->with('payment');
-
-        $coreSession->method('getData')->willReturnMap([
-            [\WirecardEE_PaymentGateway_Helper_Data::DEVICE_FINGERPRINT_ID, false, md5('test')],
-        ]);
-
-        /** @var RedirectAction $action */
-        $action = $controller->indexAction();
-        $this->assertInstanceOf(RedirectAction::class, $action);
-        $this->assertContains(
-            '/engine/notification/masterpass/lightBoxPaymentPage',
             $action->getUrl()
         );
     }
