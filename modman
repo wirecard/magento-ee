@@ -6,7 +6,7 @@ app/design/adminhtml/default/default/template/WirecardEE/*                  app/
 app/design/frontend/base/default/template/WirecardEE/*                      app/design/frontend/base/default/template/WirecardEE
 app/design/frontend/base/default/layout/wirecardee_paymentgateway.xml       app/design/frontend/base/default/layout/wirecardee_paymentgateway.xml
 
-app/locale/*                                                                app/locale
+app/locale/*                                                                app/locale/
 
 js/WirecardEE/*                                                             js/WirecardEE/
 
