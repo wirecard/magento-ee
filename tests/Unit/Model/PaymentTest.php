@@ -108,28 +108,6 @@ class PaymentTest extends TestCase
         $this->assertNotEmpty($payment->toOptionArray());
     }
 
-    public function testMaestro()
-    {
-        $payment = new \WirecardEE_PaymentGateway_Model_Maestro();
-        $this->assertStringEndsWith(
-            '/paymentgateway/gateway/index/method/maestro/',
-            $payment->getOrderPlaceRedirectUrl()
-        );
-        $this->assertEquals('wirecardee_paymentgateway_maestro', $payment->getCode());
-        $this->assertNotEmpty($payment->toOptionArray());
-    }
-
-    public function testMasterpass()
-    {
-        $payment = new \WirecardEE_PaymentGateway_Model_Masterpass();
-        $this->assertStringEndsWith(
-            '/paymentgateway/gateway/index/method/masterpass/',
-            $payment->getOrderPlaceRedirectUrl()
-        );
-        $this->assertEquals('wirecardee_paymentgateway_masterpass', $payment->getCode());
-        $this->assertNotEmpty($payment->toOptionArray());
-    }
-
     public function testIdeal()
     {
         $payment = new \WirecardEE_PaymentGateway_Model_Ideal();
@@ -234,16 +212,5 @@ class PaymentTest extends TestCase
         $payment->setData('info_instance', $paymentInfo);
         $this->expectException(\Mage_Core_Exception::class);
         $this->assertEquals($payment, $payment->validate());
-    }
-
-    public function testUnionpay()
-    {
-        $payment = new \WirecardEE_PaymentGateway_Model_Unionpay();
-        $this->assertStringEndsWith(
-            '/paymentgateway/gateway/index/method/unionpayinternational/',
-            $payment->getOrderPlaceRedirectUrl()
-        );
-        $this->assertEquals('wirecardee_paymentgateway_unionpayinternational', $payment->getCode());
-        $this->assertNotEmpty($payment->toOptionArray());
     }
 }

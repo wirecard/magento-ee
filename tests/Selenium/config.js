@@ -74,37 +74,12 @@ exports.config = {
         extensionSc: 4000
       }
     },
-    maestro: {
-      label: 'Wirecard Maestro SecureCode',
-      fields: {
-        last_name: 'Lastname',
-        account_number: '6799860300001000003',
-        card_security_code: '003'
-      },
-      expirationYear: '2023',
-      password: 'wirecard'
-    },
-    upi: {
-      label: 'Wirecard UnionPay International',
-      fields: {
-        last_name: 'Lastname',
-        account_number: '6210943123456786'
-      },
-      expirationYear: 2023
-    },
     alipay: {
       label: 'Wirecard Alipay Cross-border',
       fields: {
         email: 'alipaytest20091@gmail.com',
         password: '111111',
         paymentPasswordDigit: '1'
-      }
-    },
-    masterpass: {
-      label: 'Wirecard Masterpass',
-      fields: {
-        email: 'masterpass@mailadresse.net',
-        password: 'WirecardPass42'
       }
     },
     poi: {
@@ -364,19 +339,11 @@ exports.tests = [
     timeout: 120000,
   },
   {
-    file: 'Payments/MaestroTest',
-    timeout: 120000,
-  },
-  {
     file: 'Payments/PoiTest',
     timeout: 120000,
   },
   {
     file: 'Payments/PiaTest',
-    timeout: 120000,
-  },
-  {
-    file: 'Payments/UpiTest',
     timeout: 120000,
   },
   {
@@ -391,5 +358,5 @@ exports.tests = [
     file: 'Payments/RatepayTest',
     timeout: 120000
   }
-  //Add Payments/MasterpassTest and Payments/PayPalTest
+  //Add Payments/PayPalTest
 ];

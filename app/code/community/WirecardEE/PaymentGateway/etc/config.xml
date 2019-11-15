@@ -270,20 +270,6 @@
                 <order_identification>1</order_identification>
                 <sort_order>21</sort_order>
             </wirecardee_paymentgateway_ideal>
-            <wirecardee_paymentgateway_masterpass>
-                <active>0</active>
-                <model>paymentgateway/masterpass</model>
-                <title>Wirecard Masterpass</title>
-                <api_url>https://api-test.wirecard.com</api_url>
-                <api_user>70000-APITEST-AP</api_user>
-                <api_password>qD2wzQ_hrc!8</api_password>
-                <api_maid>8bc8ed6d-81a8-43be-bd7b-75b008f89fa6</api_maid>
-                <api_secret>2d96596b-9d10-4c98-ac47-4d56e22fd878</api_secret>
-                <transaction_type>pay</transaction_type>
-                <fraud_prevention>1</fraud_prevention>
-                <order_identification>1</order_identification>
-                <sort_order>23</sort_order>
-            </wirecardee_paymentgateway_masterpass>
             <wirecardee_paymentgateway_ratepayinvoice>
                 <active>0</active>
                 <model>paymentgateway/ratepayinvoice</model>
@@ -303,20 +289,6 @@
                 <identical_billing_shipping_address>1</identical_billing_shipping_address>
                 <sort_order>17</sort_order>
             </wirecardee_paymentgateway_ratepayinvoice>
-            <wirecardee_paymentgateway_maestro>
-                <active>0</active>
-                <model>paymentgateway/maestro</model>
-                <title>Wirecard Maestro SecureCode</title>
-                <api_url>https://api-wdcee-test.wirecard.com</api_url>
-                <api_user>plugin-test</api_user>
-                <api_password>4-41N4\lI0]783</api_password>
-                <api_maid>4945f0ef-51e0-43af-972f-885405320842</api_maid>
-                <api_secret>822e87ea-dcc3-4d01-861c-e39f14a0ab6c</api_secret>
-                <transaction_type>pay</transaction_type>
-                <fraud_prevention>1</fraud_prevention>
-                <order_identification>1</order_identification>
-                <sort_order>22</sort_order>
-            </wirecardee_paymentgateway_maestro>
             <wirecardee_paymentgateway_poi>
                 <active>0</active>
                 <model>paymentgateway/poi</model>
@@ -343,20 +315,6 @@
                 <order_identification>1</order_identification>
                 <sort_order>27</sort_order>
             </wirecardee_paymentgateway_pia>
-            <wirecardee_paymentgateway_unionpayinternational>
-                <active>0</active>
-                <model>paymentgateway/unionpay</model>
-                <title>Wirecard UnionPay International</title>
-                <api_url>https://api-test.wirecard.com</api_url>
-                <api_user>70000-APILUHN-CARD</api_user>
-                <api_password>8mhwavKVb91T</api_password>
-                <api_maid>c6e9331c-5c1f-4fc6-8a08-ef65ce09ddb0</api_maid>
-                <api_secret>16d85b73-79e2-4c33-932a-7da99fb04a9c</api_secret>
-                <transaction_type>pay</transaction_type>
-                <fraud_prevention>1</fraud_prevention>
-                <order_identification>1</order_identification>
-                <sort_order>38</sort_order>
-            </wirecardee_paymentgateway_unionpayinternational>
             <wirecardee_paymentgateway_alipay-xborder>
                 <active>0</active>
                 <model>paymentgateway/alipay</model>
