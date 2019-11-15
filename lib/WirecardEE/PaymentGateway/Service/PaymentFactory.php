@@ -18,6 +18,7 @@ use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
+use Wirecard\PaymentSdk\Transaction\PtwentyfourTransaction;
 use WirecardEE\PaymentGateway\Exception\UnknownPaymentException;
 use WirecardEE\PaymentGateway\Payments\AlipayPayment;
 use WirecardEE\PaymentGateway\Payments\CreditCardPayment;
@@ -33,6 +34,7 @@ use WirecardEE\PaymentGateway\Payments\PiaPayment;
 use WirecardEE\PaymentGateway\Payments\RatepayInvoicePayment;
 use WirecardEE\PaymentGateway\Payments\SepaPayment;
 use WirecardEE\PaymentGateway\Payments\SofortPayment;
+use WirecardEE\PaymentGateway\Payments\PtwentyfourPayment;
 
 /**
  * Responsible for creating payment objects based on their name.
@@ -135,6 +137,7 @@ class PaymentFactory
             PiaPayment::NAME                   => PiaPayment::class,
             AlipayCrossborderTransaction::NAME => AlipayPayment::class,
             PayolutionInvoicePayment::NAME     => PayolutionInvoicePayment::class,
+            PtwentyfourTransaction::NAME       => PtwentyfourPayment::class
         ];
     }
 
