@@ -32,7 +32,7 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
     /**
      * @return string
      *
-     * @since 1.0.0
+     * @since 2.0.0
      */
     public function getName()
     {
@@ -42,7 +42,7 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
     /**
      * @return PtwentyfourTransaction
      *
-     * @since 1.0.0
+     * @since 2.0.0
      */
     public function getTransaction()
     {
@@ -100,7 +100,7 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
      *
      * @return null|Action
      *
-     * @since 1.0.0
+     * @since 2.0.0
      */
     public function processPayment(
         OrderSummary $orderSummary,
@@ -122,7 +122,7 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
     /**
      * @return string
      *
-     * @since 1.0.0
+     * @since 2.0.0
      */
     public function getRefundOperation()
     {
