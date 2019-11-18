@@ -9,11 +9,14 @@
 
 namespace WirecardEE\PaymentGateway\Payments;
 
+use Exception;
+use InvalidArgumentException;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\PtwentyfourTransaction;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
@@ -22,12 +25,33 @@ use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
 class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
 {
-    const NAME = PtwentyfourTransaction::NAME;
+    /**
+     * Payment method name in mage
+     *
+     * @since 2.0.0
+     */
+    const NAME = 'ptwentyfour';
+
+    /**
+     * Accepted currency code for p24
+     *
+     * @since 2.0.0
+     */
+    const ACCEPTED_CURRENCY_CODE = 'PLN';
 
     /**
      * @var PtwentyfourTransaction
+     *
+     * @since 2.0.0
      */
     private $transactionInstance;
+
+    /**
+     * @var OrderSummary
+     *
+     * @since 2.0.0
+     */
+    protected $orderSummary;
 
     /**
      * @return string
@@ -57,7 +81,7 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
      *
      * @return Config
      *
-     * @since 1.0.0
+     * @since 2.0.0
      */
     public function getTransactionConfig($selectedCurrency)
     {
@@ -73,7 +97,7 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
     /**
      * @return PaymentConfig
      *
-     * @since 1.0.0
+     * @since 2.0.0
      */
     public function getPaymentConfig()
     {
@@ -85,10 +109,7 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
 
         $paymentConfig->setTransactionMAID($this->getPluginConfig('api_maid'));
         $paymentConfig->setTransactionSecret($this->getPluginConfig('api_secret'));
-        $paymentConfig->setTransactionOperation($this->getPluginConfig('transaction_type'));
-        $paymentConfig->setSendBasket($this->getPluginConfig('send_basket'));
-        $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
-        $paymentConfig->setOrderIdentification($this->getPluginConfig('order_identification'));
+        $paymentConfig->setTransactionOperation(Operation::PAY);
 
         return $paymentConfig;
     }
@@ -97,6 +118,9 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
      * @param OrderSummary $orderSummary
      * @param TransactionService $transactionService
      * @param Redirect $redirect
+     *
+     * @throws Exception if account holder can not be added
+     * @throws InvalidArgumentException if mandatory fields are missing
      *
      * @return null|Action
      *
@@ -107,14 +131,10 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
         TransactionService $transactionService,
         Redirect $redirect
     ) {
-        $transaction = $this->getTransaction();
-
-        $transaction->setOrderDetail(sprintf(
-            '%s - %.2f %s',
-            $orderSummary->getOrder()->getRealOrderId(),
-            $orderSummary->getOrder()->getBaseGrandTotal(),
-            $orderSummary->getOrder()->getBaseCurrencyCode()
-        ));
+        $transaction        = $this->getTransaction();
+        $this->orderSummary = $orderSummary;
+        $this->addAccountHolder($transaction);
+        $this->validateMandatoryFields();
 
         return null;
     }
@@ -127,5 +147,47 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
     public function getRefundOperation()
     {
         return Operation::CANCEL;
+    }
+
+    /**
+     * @param Transaction $transaction
+     *
+     * @throws Exception if account holder can not be set
+     *
+     * @since 2.0.0
+     */
+    protected function addAccountHolder($transaction)
+    {
+        $accountHolder = $this->orderSummary->getUserMapper()->getBillingAccountHolder();
+        $transaction->setAccountHolder($accountHolder);
+    }
+
+    /**
+     * Validates mandatory fields
+     *
+     * @throws InvalidArgumentException if validation fails
+     *
+     * @since 2.0.0
+     */
+    protected function validateMandatoryFields()
+    {
+        $this->validateCurrency();
+    }
+
+    /**
+     *
+     * Checks if currency used is PLN
+     *
+     * @throws InvalidArgumentException if currency code is not set to PLN
+     *
+     * @since 2.0.0
+     */
+    protected function validateCurrency()
+    {
+        $fetchedCurrencyCode  = (string)$this->orderSummary->getOrder()->getBaseCurrencyCode();
+
+        if (self::ACCEPTED_CURRENCY_CODE !== $fetchedCurrencyCode) {
+            throw new InvalidArgumentException('Currency is not set to PLN');
+        }
     }
 }

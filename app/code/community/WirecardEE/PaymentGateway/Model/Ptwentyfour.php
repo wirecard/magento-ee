@@ -7,7 +7,7 @@
  * https://github.com/wirecard/magento-ee/blob/master/LICENSE
  */
 
-use Wirecard\PaymentSdk\Transaction\PtwentyfourTransaction;
+use WirecardEE\PaymentGateway\Payments\PtwentyfourPayment;
 
 /**
  * @since 2.0.0
@@ -15,5 +15,6 @@ use Wirecard\PaymentSdk\Transaction\PtwentyfourTransaction;
 class WirecardEE_PaymentGateway_Model_Ptwentyfour extends WirecardEE_PaymentGateway_Model_Payment
 {
     protected $_code = 'wirecardee_paymentgateway_ptwentyfour';
-    protected $_paymentMethod = PtwentyfourTransaction::NAME;
+    protected $_paymentMethod = PtwentyfourPayment::NAME;
 }
+
