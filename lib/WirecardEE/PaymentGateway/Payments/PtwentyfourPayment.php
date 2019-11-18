@@ -91,6 +91,7 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
             $this->getPaymentConfig()->getTransactionMAID(),
             $this->getPaymentConfig()->getTransactionSecret()
         ));
+
         return $config;
     }
 
