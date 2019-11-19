@@ -363,8 +363,7 @@
                 <api_password>3!3013=D3fD8X7</api_password>
                 <api_maid>86451785-3ed0-4aa1-99b2-cc32cf54ce9a</api_maid>
                 <api_secret>fdd54ea1-cef1-449a-945c-55abc631cfdc</api_secret>
-                <transaction_type>pay</transaction_type>
-                <allowed_currencies>PLN</allowed_currencies>
+                <fraud_prevention>1</fraud_prevention>
                 <order_identification>1</order_identification>
                 <sort_order>30</sort_order>
             </wirecardee_paymentgateway_ptwentyfour>
