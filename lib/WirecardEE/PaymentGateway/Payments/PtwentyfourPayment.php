@@ -13,6 +13,7 @@ use Exception;
 use InvalidArgumentException;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\PtwentyfourTransaction;
@@ -21,6 +22,7 @@ use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Actions\Action;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\PaymentConfig;
+use WirecardEE\PaymentGateway\Exception\InsufficientDataException;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
 
 class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
@@ -52,6 +54,13 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
      * @since 2.0.0
      */
     protected $orderSummary;
+
+    /**
+     * @var string
+     *
+     * @since 2.0.0
+     */
+    protected $mail;
 
     /**
      * @return string
@@ -111,6 +120,8 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
         $paymentConfig->setTransactionMAID($this->getPluginConfig('api_maid'));
         $paymentConfig->setTransactionSecret($this->getPluginConfig('api_secret'));
         $paymentConfig->setTransactionOperation(Operation::PAY);
+        $paymentConfig->setFraudPrevention($this->getPluginConfig('fraud_prevention'));
+        $paymentConfig->setOrderIdentification($this->getPluginConfig('order_identification'));
 
         return $paymentConfig;
     }
@@ -120,8 +131,9 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
      * @param TransactionService $transactionService
      * @param Redirect $redirect
      *
-     * @throws Exception if account holder can not be added
-     * @throws InvalidArgumentException if mandatory fields are missing
+     * @throws InvalidArgumentException if currency is not set to PLN
+     * @throws InsufficientDataException if mail address is missing
+     * @throws Exception if account holder can not be set
      *
      * @return null|Action
      *
@@ -134,8 +146,8 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
     ) {
         $transaction        = $this->getTransaction();
         $this->orderSummary = $orderSummary;
-        $this->addAccountHolder($transaction);
         $this->validateMandatoryFields();
+        $this->addAccountHolder($transaction);
 
         return null;
     }
@@ -159,20 +171,35 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
      */
     protected function addAccountHolder($transaction)
     {
-        $accountHolder = $this->orderSummary->getUserMapper()->getBillingAccountHolder();
+        $accountHolder = new AccountHolder();
+        $accountHolder->setEmail($this->getBillingAddressMail());
         $transaction->setAccountHolder($accountHolder);
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getBillingAddressMail()
+    {
+        $userMapper    = $this->orderSummary->getUserMapper();
+        $order         = $userMapper->getOrder();
+        $addressData   = $order->getBillingAddress();
+
+        return $addressData->getEmail();
     }
 
     /**
      * Validates mandatory fields
      *
-     * @throws InvalidArgumentException if validation fails
+     * @throws InvalidArgumentException if currency validation fails
+     * @throws InsufficientDataException if billing mail is not set
      *
      * @since 2.0.0
      */
     protected function validateMandatoryFields()
     {
         $this->validateCurrency();
+        $this->validateMail();
     }
 
     /**
@@ -185,10 +212,24 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
      */
     protected function validateCurrency()
     {
-        $fetchedCurrencyCode  = (string)$this->orderSummary->getOrder()->getBaseCurrencyCode();
+        $fetchedCurrencyCode = (string)$this->orderSummary->getOrder()->getBaseCurrencyCode();
 
         if (self::ACCEPTED_CURRENCY_CODE !== $fetchedCurrencyCode) {
             throw new InvalidArgumentException('Currency is not set to PLN');
+        }
+    }
+
+    /**
+     * Checks if mail is set
+     *
+     * @throws InsufficientDataException
+     *
+     * @since 2.0.0
+     */
+    protected function validateMail()
+    {
+        if (empty($this->getBillingAddressMail())) {
+            throw new InsufficientDataException('Email address is not set');
         }
     }
 }
