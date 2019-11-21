@@ -177,7 +177,11 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
     }
 
     /**
-     * @return mixed
+     * Get billing address mail from order
+     *
+     * @return string
+     *
+     * @since 2.0.0
      */
     protected function getBillingAddressMail()
     {
