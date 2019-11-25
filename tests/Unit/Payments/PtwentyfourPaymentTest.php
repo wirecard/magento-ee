@@ -9,6 +9,7 @@
 
 namespace WirecardEE\Tests\Unit\Payments;
 
+use InvalidArgumentException;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\Operation;
@@ -16,6 +17,7 @@ use Wirecard\PaymentSdk\Transaction\PtwentyfourTransaction;
 use Wirecard\PaymentSdk\TransactionService;
 use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\PaymentConfig;
+use WirecardEE\PaymentGateway\Exception\InsufficientDataException;
 use WirecardEE\PaymentGateway\Payments\PtwentyfourPayment;
 use WirecardEE\Tests\Test\MagentoTestCase;
 
@@ -47,35 +49,13 @@ class PtwentyfourPaymentTest extends MagentoTestCase
 
     public function testProcessPaymentSuccess()
     {
-        $payment     = new PtwentyfourPayment();
-        $transaction = $payment->getTransaction();
-        $transaction->setOperation(Operation::PAY);
-        $transaction->setLocale('en_US');
-
-        $orderSummary       = $this->createMock(OrderSummary::class);
-        $transactionService = $this->createMock(TransactionService::class);
-        $redirect           = $this->createMock(Redirect::class);
-        $order              = $this->createMock(\Mage_Sales_Model_Order::class);
-        $addressData        = $this->createMock(\Mage_Sales_Model_Order_Address::class);
-
-        $orderSummary->method('getOrder')->willReturn($order);
-        $order->method('getRealOrderId')->willReturn('ABC123');
-        $order->method('getBillingAddress')->willReturn($addressData);
-        $order->method('__call')->willReturnMap([
-            ['getBaseGrandTotal', [], '10.0'],
-            ['getBaseCurrencyCode', [], self::CURRENCY],
-        ]);
-        $addressData->method('getEmail')->willReturn('test@mail.com');
-
-        $this->assertNull($payment->processPayment($orderSummary, $transactionService, $redirect));
-
-        $this->assertArrayHasKey('order-detail', $transaction->mappedProperties());
-        // Assert array has account holder mail
-        // assert array currency is pln
+        $payment = $this->processPaymentWrapper();
+        $this->assertNull($payment);
     }
 
     public function testProcessPaymentWrongCurrency()
     {
+        $this->expectException(InvalidArgumentException::class);
         $payment = $this->processPaymentWrapper('EUR');
 
         $this->assertNotNull($payment);
@@ -83,6 +63,7 @@ class PtwentyfourPaymentTest extends MagentoTestCase
 
     public function testProcessPaymentNoMail()
     {
+        $this->expectException(InsufficientDataException::class);
         $payment = $this->processPaymentWrapper(self::CURRENCY, false);
 
         $this->assertNotNull($payment);
