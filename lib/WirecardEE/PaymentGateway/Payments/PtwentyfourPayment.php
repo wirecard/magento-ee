@@ -185,8 +185,7 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
      */
     protected function getBillingAddressMail()
     {
-        $userMapper    = $this->orderSummary->getUserMapper();
-        $order         = $userMapper->getOrder();
+        $order         = $this->orderSummary->getOrder();
         $addressData   = $order->getBillingAddress();
 
         return $addressData->getEmail();
@@ -233,7 +232,7 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
     protected function validateMail()
     {
         if (empty($this->getBillingAddressMail())) {
-            throw new InsufficientDataException('Email address is not set');
+            throw new InsufficientDataException('Payment P24, email address is not set');
         }
     }
 }
