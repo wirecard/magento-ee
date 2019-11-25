@@ -71,7 +71,9 @@ class PtwentyfourPaymentTest extends MagentoTestCase
 
     protected function processPaymentWrapper($currency = self::CURRENCY, $mailSet = true)
     {
-        $payment     = new PtwentyfourPayment();
+        $payment     = $this->getMockBuilder(PtwentyfourPayment::class)
+            ->setMethods(['getBillingAddressMail'])
+            ->getMock();
         $transaction = $payment->getTransaction();
         $transaction->setOperation(Operation::PAY);
         $transaction->setLocale('en_US');
@@ -80,21 +82,19 @@ class PtwentyfourPaymentTest extends MagentoTestCase
         $transactionService = $this->createMock(TransactionService::class);
         $redirect           = $this->createMock(Redirect::class);
         $order              = $this->createMock(\Mage_Sales_Model_Order::class);
-        $addressData        = $this->createMock(\Mage_Sales_Model_Order_Address::class);
 
-
-        if ($mailSet) {
-            $addressData->method('getEmail')->willReturn('test@mail.com');
-        } else {
-            $addressData->method('getEmail')->willReturn(null);
-        }
         $orderSummary->method('getOrder')->willReturn($order);
         $order->method('getRealOrderId')->willReturn('ABC123');
-        $order->method('getBillingAddress')->willReturn($addressData);
         $order->method('__call')->willReturnMap([
             ['getBaseGrandTotal', [], '10.0'],
             ['getBaseCurrencyCode', [], $currency],
         ]);
+
+        if ($mailSet) {
+            $payment->method('getBillingAddressMail')->willReturn('test@mail.com');
+        } else {
+            $payment->method('getBillingAddressMail')->willReturn(null);
+        }
 
         return $payment->processPayment($orderSummary, $transactionService, $redirect);
     }
