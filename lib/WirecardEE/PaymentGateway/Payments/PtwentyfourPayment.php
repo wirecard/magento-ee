@@ -185,8 +185,7 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
      */
     protected function getBillingAddressMail()
     {
-        $userMapper    = $this->orderSummary->getUserMapper();
-        $order         = $userMapper->getOrder();
+        $order         = $this->orderSummary->getOrder();
         $addressData   = $order->getBillingAddress();
 
         return $addressData->getEmail();
