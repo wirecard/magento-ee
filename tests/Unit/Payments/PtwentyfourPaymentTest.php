@@ -92,6 +92,8 @@ class PtwentyfourPaymentTest extends MagentoTestCase
 
         if ($mailSet) {
             $addressData->method('getEmail')->willReturn('test@mail.com');
+        } else {
+            $addressData->method('getEmail')->willReturn(null);
         }
 
         return $payment->processPayment($orderSummary, $transactionService, $redirect);
