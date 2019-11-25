@@ -82,6 +82,12 @@ class PtwentyfourPaymentTest extends MagentoTestCase
         $order              = $this->createMock(\Mage_Sales_Model_Order::class);
         $addressData        = $this->createMock(\Mage_Sales_Model_Order_Address::class);
 
+
+        if ($mailSet) {
+            $addressData->method('getEmail')->willReturn('test@mail.com');
+        } else {
+            $addressData->method('getEmail')->willReturn(null);
+        }
         $orderSummary->method('getOrder')->willReturn($order);
         $order->method('getRealOrderId')->willReturn('ABC123');
         $order->method('getBillingAddress')->willReturn($addressData);
@@ -89,12 +95,6 @@ class PtwentyfourPaymentTest extends MagentoTestCase
             ['getBaseGrandTotal', [], '10.0'],
             ['getBaseCurrencyCode', [], $currency],
         ]);
-
-        if ($mailSet) {
-            $addressData->method('getEmail')->willReturn('test@mail.com');
-        } else {
-            $addressData->method('getEmail')->willReturn(null);
-        }
 
         return $payment->processPayment($orderSummary, $transactionService, $redirect);
     }
