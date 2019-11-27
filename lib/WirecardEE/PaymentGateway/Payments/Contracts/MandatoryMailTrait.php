@@ -3,7 +3,6 @@
 
 namespace WirecardEE\PaymentGateway\Payments\Contracts;
 
-
 use WirecardEE\PaymentGateway\Exception\InsufficientDataException;
 
 /**
@@ -42,5 +41,4 @@ trait MandatoryMailTrait
 
         return $this->mail;
     }
-
 }
