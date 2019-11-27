@@ -9,6 +9,7 @@
             "Remove Maestro as a standalone payment method",
             "Remove UnionPay International as a standalone payment method",
             "Fix condition for pending payment message on success page #68",
+            "Fix refund value with shipping tax"
             "Improve compatibility with custom and third party themes #72",
             "Add ordernumber to all transactions",
             "Add additional translation files"
