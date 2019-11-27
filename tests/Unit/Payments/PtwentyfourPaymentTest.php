@@ -72,7 +72,7 @@ class PtwentyfourPaymentTest extends MagentoTestCase
     protected function processPaymentWrapper($currency = self::CURRENCY, $mailSet = true)
     {
         $payment     = $this->getMockBuilder(PtwentyfourPayment::class)
-            ->setMethods(['getBillingAddressMail'])
+            ->setMethods(['fetchBillingAddressMail'])
             ->getMock();
         $transaction = $payment->getTransaction();
         $transaction->setOperation(Operation::PAY);
@@ -91,9 +91,9 @@ class PtwentyfourPaymentTest extends MagentoTestCase
         ]);
 
         if ($mailSet) {
-            $payment->method('getBillingAddressMail')->willReturn('test@mail.com');
+            $payment->method('fetchBillingAddressMail')->willReturn('test@mail.com');
         } else {
-            $payment->method('getBillingAddressMail')->willReturn(null);
+            $payment->method('fetchBillingAddressMail')->willReturn(null);
         }
 
         return $payment->processPayment($orderSummary, $transactionService, $redirect);

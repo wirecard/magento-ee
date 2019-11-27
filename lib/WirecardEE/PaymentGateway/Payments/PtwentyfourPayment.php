@@ -24,9 +24,11 @@ use WirecardEE\PaymentGateway\Data\OrderSummary;
 use WirecardEE\PaymentGateway\Data\PaymentConfig;
 use WirecardEE\PaymentGateway\Exception\InsufficientDataException;
 use WirecardEE\PaymentGateway\Payments\Contracts\ProcessPaymentInterface;
+use WirecardEE\PaymentGateway\Payments\Contracts\MandatoryMailTrait;
 
 class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
 {
+    use MandatoryMailTrait;
     /**
      * Payment method name in mage
      *
@@ -54,13 +56,6 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
      * @since 2.0.0
      */
     protected $orderSummary;
-
-    /**
-     * @var string
-     *
-     * @since 2.0.0
-     */
-    protected $mail;
 
     /**
      * @return string
@@ -146,7 +141,8 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
     ) {
         $transaction        = $this->getTransaction();
         $this->orderSummary = $orderSummary;
-        $this->validateMandatoryFields();
+        $this->setMail();
+        $this->validateCurrency();
         $this->addAccountHolder($transaction);
 
         return null;
@@ -165,14 +161,15 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
     /**
      * @param Transaction $transaction
      *
-     * @throws Exception if account holder can not be set
+     * @throws Exception|InsufficientDataException if account holder can not be set
+     *         Or if email is not set
      *
      * @since 2.0.0
      */
     protected function addAccountHolder($transaction)
     {
         $accountHolder = new AccountHolder();
-        $accountHolder->setEmail($this->getBillingAddressMail());
+        $accountHolder->setEmail($this->getValidatedMail());
         $transaction->setAccountHolder($accountHolder);
     }
 
@@ -183,26 +180,12 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
      *
      * @since 2.0.0
      */
-    protected function getBillingAddressMail()
+    protected function fetchBillingAddressMail()
     {
         $order         = $this->orderSummary->getOrder();
         $addressData   = $order->getBillingAddress();
 
         return $addressData->getEmail();
-    }
-
-    /**
-     * Validates mandatory fields
-     *
-     * @throws InvalidArgumentException if currency validation fails
-     * @throws InsufficientDataException if billing mail is not set
-     *
-     * @since 2.0.0
-     */
-    protected function validateMandatoryFields()
-    {
-        $this->validateCurrency();
-        $this->validateMail();
     }
 
     /**
@@ -223,16 +206,12 @@ class PtwentyfourPayment extends Payment implements ProcessPaymentInterface
     }
 
     /**
-     * Checks if mail is set
-     *
-     * @throws InsufficientDataException
+     * Set mail
      *
      * @since 2.0.0
      */
-    protected function validateMail()
+    protected function setMail()
     {
-        if (empty($this->getBillingAddressMail())) {
-            throw new InsufficientDataException('Payment P24, email address is not set');
-        }
+        $this->mail = $this->fetchBillingAddressMail();
     }
 }
