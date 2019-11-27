@@ -135,8 +135,8 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
         }
 
         $refundableBasket                                            = $invoicePost['items'];
-        $refundableBasket[TransactionManager::ADDITIONAL_AMOUNT_KEY] = $invoice->getShippingAmount() > 0.0
-            ? $invoice->getShippingAmount()
+        $refundableBasket[TransactionManager::ADDITIONAL_AMOUNT_KEY] = $invoice->getShippingInclTax() > 0.0
+            ? $invoice->getShippingInclTax()
             : 0;
 
         $action = $this->processBackendOperation(
@@ -213,7 +213,7 @@ class WirecardEE_PaymentGateway_Model_BackendOperation
                               "for this order)");
         }
 
-        $remainingAdditionalAmount = $creditMemo->getShippingAmount()
+        $remainingAdditionalAmount = $creditMemo->getShippingInclTax()
                                      + $creditMemo->getAdjustmentPositive()
                                      - $creditMemo->getAdjustmentNegative();
         $items = [];
