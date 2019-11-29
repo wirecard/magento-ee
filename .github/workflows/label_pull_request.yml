@@ -10,6 +10,6 @@ jobs:
     steps:
       - name: Label pull requests on master
         if: github.base_ref == 'master'
-        uses: wirecard/pr-labeler-action@master
+        uses: wirecard/pr-labeler-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
