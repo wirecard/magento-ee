@@ -11,7 +11,8 @@
             "Fix condition for pending payment message on success page #68",
             "Fix refund value with shipping tax"
             "Improve compatibility with custom and third party themes #72",
-            "Add additional translation files"
+            "Add additional translation files",
+            "Add P24 #54"
         ]
     },
     {
