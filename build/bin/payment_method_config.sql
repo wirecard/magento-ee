@@ -168,3 +168,13 @@ INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('defa
 INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_payolutioninvoice/require_consent','1');
 INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_payolutioninvoice/mid',NULL);
 INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_payolutioninvoice/sort_order','18');
+INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_ptwentyfour/title','Wirecard Przelewy24');
+INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_ptwentyfour/active','1');
+INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_ptwentyfour/api_url','https://api-test.wirecard.com');
+INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_ptwentyfour/api_user','16390-testing');
+INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_ptwentyfour/api_password','3!3013=D3fD8X7');
+INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_ptwentyfour/api_maid','86451785-3ed0-4aa1-99b2-cc32cf54ce9a');
+INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_ptwentyfour/api_secret','fdd54ea1-cef1-449a-945c-55abc631cfdc');
+INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_ptwentyfour/fraud_prevention','1');
+INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_ptwentyfour/order_identification','1');
+INSERT INTO `core_config_data` (`scope`,`scope_id`,`path`,`value`) VALUES ('default',0,'payment/wirecardee_paymentgateway_ptwentyfour/sort_order','30');

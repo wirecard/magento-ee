@@ -33,6 +33,7 @@ use WirecardEE\PaymentGateway\Payments\PiaPayment;
 use WirecardEE\PaymentGateway\Payments\RatepayInvoicePayment;
 use WirecardEE\PaymentGateway\Payments\SepaPayment;
 use WirecardEE\PaymentGateway\Payments\SofortPayment;
+use WirecardEE\PaymentGateway\Payments\PtwentyfourPayment;
 
 /**
  * Responsible for creating payment objects based on their name.
@@ -135,6 +136,7 @@ class PaymentFactory
             PiaPayment::NAME                   => PiaPayment::class,
             AlipayCrossborderTransaction::NAME => AlipayPayment::class,
             PayolutionInvoicePayment::NAME     => PayolutionInvoicePayment::class,
+            PtwentyfourPayment::NAME           => PtwentyfourPayment::class
         ];
     }
 

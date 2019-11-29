@@ -135,7 +135,6 @@
         <wirecardee_paymentgateway>
             <settings>
                 <notify_mail />
-                <!--<pending_mail>0</pending_mail>-->
                 <delete_cancelled_orders>0</delete_cancelled_orders>
                 <unmatched_payment_mail />
             </settings>
@@ -355,6 +354,19 @@
                 <mid />
                 <sort_order>18</sort_order>
             </wirecardee_paymentgateway_payolutioninvoice>
+            <wirecardee_paymentgateway_ptwentyfour>
+                <active>0</active>
+                <model>paymentgateway/ptwentyfour</model>
+                <title>Wirecard Przelewy24</title>
+                <api_url>https://api-test.wirecard.com</api_url>
+                <api_user>16390-testing</api_user>
+                <api_password>3!3013=D3fD8X7</api_password>
+                <api_maid>86451785-3ed0-4aa1-99b2-cc32cf54ce9a</api_maid>
+                <api_secret>fdd54ea1-cef1-449a-945c-55abc631cfdc</api_secret>
+                <fraud_prevention>1</fraud_prevention>
+                <order_identification>1</order_identification>
+                <sort_order>30</sort_order>
+            </wirecardee_paymentgateway_ptwentyfour>
         </payment>
     </default>
 
