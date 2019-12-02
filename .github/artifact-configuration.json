@@ -6,14 +6,16 @@
       ".editorconfig",
       ".gitignore",
       ".travis.yml",
-      "SHOPVERSIONS",
+      "CHANGELOG.md",
       "composer.json",
       "composer.lock",
       "config.json",
       "modman",
       "package.json",
       "phpcs.xml",
-      "phpunit.xml"
+      "phpunit.xml",
+      "README.md",
+      "SHOPVERSIONS"
     ],
     "folder-blacklist": [
       ".bin",
