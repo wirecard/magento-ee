@@ -131,6 +131,7 @@ class PaymentHandler extends Handler
 
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('order-id', $orderSummary->getOrder()->getId()));
+        $transaction->setOrderNumber($orderSummary->getOrder()->getRealOrderId());
         $transaction->setCustomFields($customFields);
 
         $transaction->setAmount(
@@ -145,7 +146,6 @@ class PaymentHandler extends Handler
         }
 
         if ($paymentConfig->hasFraudPrevention()) {
-            $transaction->setOrderNumber($orderSummary->getOrder()->getRealOrderId());
             $transaction->setDevice($orderSummary->getWirecardDevice());
             $transaction->setConsumerId($orderSummary->getOrder()->getCustomerId());
             $transaction->setIpAddress($orderSummary->getUserMapper()->getClientIp());
