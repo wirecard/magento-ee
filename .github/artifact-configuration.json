@@ -1,0 +1,31 @@
+{
+  "package": {
+    "type": "zip",
+    "execution-path": "/github/workspace",
+    "file-blacklist": [
+      ".editorconfig",
+      ".gitignore",
+      ".travis.yml",
+      "CHANGELOG.md",
+      "composer.json",
+      "composer.lock",
+      "config.json",
+      "modman",
+      "package.json",
+      "phpcs.xml",
+      "phpunit.xml",
+      "README.md",
+      "SHOPVERSIONS"
+    ],
+    "folder-blacklist": [
+      ".bin",
+      ".git",
+      ".github",
+      "build",
+      "tests"
+    ]
+  },
+  "composer": {
+    "execution-path": "/github/workspace"
+  }
+}
