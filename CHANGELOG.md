@@ -10,5 +10,6 @@
 * Fix condition for pending payment message on success page #68
 * Fix refund value with shipping tax
 * Improve compatibility with custom and third party themes #72
+* Improve submission of order number for all payment methods
 
 <em><strong>Tested version(s):</strong> Magento 1.9.4.2 with PHP 5.6, PHP 7.0, PHP 7.1 and PHP 7.2</em><br><em><strong>Compatibility:</strong> Magento 1.9.3.4 - 1.9.4.2 with PHP 5.6, PHP 7.0, PHP 7.1 and PHP 7.2</em>
