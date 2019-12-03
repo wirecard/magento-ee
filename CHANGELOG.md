@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.2.0
+## v2.0.0
 
 * Add P24 #54
 * Add additional translation files
