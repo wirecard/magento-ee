@@ -184,29 +184,9 @@ script:
 
 after_script:
   - travis_retry composer upload-coverage
-  - bash .bin/generate-tag.sh
 
 after_failure:
   - cat ${MAGENTO_DIRECTORY}/var/log/wirecard_elastic_engine.log
-
-before_deploy:
-  - export REPO_NAME=`echo $TRAVIS_REPO_SLUG | awk -F'/' '{print $2}'`
-  - export RELEASE_NOTES=$(composer make-release-notes)
-  - bash .bin/generate-wiki-notes.sh
-  - bash .bin/generate-readme-badge.sh
-  - bash .bin/generate-release-package.sh $TRAVIS_TAG
-
-deploy:
-  provider: releases
-  github_token: ${GITHUB_TOKEN}
-  api_key: ${GITHUB_TOKEN}
-  file: magento-wirecard-ee.zip
-  name: "${REPO_NAME} ${TRAVIS_TAG}"
-  body: "${RELEASE_NOTES}"
-  skip_cleanup: true
-  on:
-    repo: ${TRAVIS_REPO_SLUG}
-    tags: true
 
 notifications:
   email: false
