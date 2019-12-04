@@ -188,9 +188,6 @@ after_script:
 after_failure:
   - cat ${MAGENTO_DIRECTORY}/var/log/wirecard_elastic_engine.log
 
-before_deploy:
-  - export REPO_NAME=`echo $TRAVIS_REPO_SLUG | awk -F'/' '{print $2}'`
-
 notifications:
   email: false
   slack:
