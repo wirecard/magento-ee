@@ -13,7 +13,7 @@
 * Improve submission of order number for all payment methods
 * Update to new release process
 
-|  Overview | Magento version | PHP 5.6 | PHP 7.0 | PHP 7.1 | PHP 7.2 |
-|---|---|:---:|:---:|:---:|:---:|
-| **Tested version(s)** | Magento 1.9.4.2 | &#9989; | &#9989; | &#9989; | &#9989; |
-| **Compatibility** | Magento 1.9.3.4 - 1.9.4.2 | &#9989; | &#9989; | &#9989; | &#9989; |
+|  Overview | Magento version | PHP 5.6 | PHP 7.0 | PHP 7.1 | PHP 7.2 |  
+|---|---|:---:|:---:|:---:|:---:|  
+| **Tested version(s)** | Magento 1.9.4.2 | &#9989; | &#9989; | &#9989; | &#9989; |  
+| **Compatibility** | Magento 1.9.3.4 - 1.9.4.2 | &#9989; | &#9989; | &#9989; | &#9989; |  
