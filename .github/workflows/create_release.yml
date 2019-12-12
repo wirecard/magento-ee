@@ -26,7 +26,7 @@ jobs:
         run: git tag -a ${{ steps.tag_and_prepare_release.outputs.tag }} -m "Pre release" && git push origin ${{ steps.tag_and_prepare_release.outputs.tag }}
       - name: Create release on tag with release notes
         if: steps.tag_and_prepare_release.outputs.tag
-        uses: serucee/github-create-release-action@master #Fork Roang-zero1/github-create-release-action once PR is merged
+        uses: wirecard/github-create-release-action@master
         with:
           created_tag: ${{ steps.tag_and_prepare_release.outputs.tag }}
           release_title: magento-ee ${{steps.tag_and_prepare_release.outputs.tag}}
