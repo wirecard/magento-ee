@@ -38,6 +38,7 @@ describe('payolution invoice test', () => {
       });
     });
     await driver.findElement(By.id('wirecardee-payolution--consent')).click();
+    await driver.findElement(By.id('wirecardee-payolution--consent')).click();
     await placeOrder(driver);
 
     await checkConfirmationPage(driver, 'Thank you for your purchase!');
