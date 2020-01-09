@@ -9,6 +9,81 @@
 const { expect } = require('chai');
 const { config, browsers } = require('./config');
 const { Builder, By, until } = require('selenium-webdriver');
+const mysql = require('mysql');
+const { exec } = require('child_process');
+
+const createDatabaseConnection = () => {
+  return mysql.createConnection({
+    host: '127.0.0.1',
+    user: 'travis',
+    password: '',
+    database: 'magento'
+  });
+};
+
+const runInShell = async function (cmd) {
+  return new Promise(function (resolve, reject) {
+    exec(cmd, (err, stdout, stderr) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve({ stdout, stderr });
+      }
+    });
+  });
+};
+
+exports.updateDatabaseTransactionType = async function(databaseTransactionValue, databaseTransactionName) {
+  let con = createDatabaseConnection();
+  let sql = 'UPDATE core_config_data SET value = ? WHERE path = ?';
+  let data = [databaseTransactionValue, databaseTransactionName];
+
+  con.query(sql, data, (error) => {
+    if (error) {
+      return console.error(error.message);
+    }
+    console.log('database transaction type has been updated.');
+  });
+
+  con.end();
+
+  // delete cache to update database
+  await runInShell('php -r \'require("/home/travis/magento/app/Mage.php"); Mage::app()->getCacheInstance()->flush();\'');
+
+};
+
+exports.clearDatabaseRows = async function(databaseTransactionValue) {
+  let con = createDatabaseConnection();
+  let sql = 'DELETE FROM sales_payment_transaction WHERE txn_type <> ?';
+  let data = [databaseTransactionValue];
+
+  con.query(sql, data, (error) => {
+    if (error) {
+      return console.error(error.message);
+    }
+    console.log('database successfully cleared.');
+  });
+
+  con.end();
+
+  // delete cache to update database
+  await runInShell('php -r \'require("/home/travis/magento/app/Mage.php"); Mage::app()->getCacheInstance()->flush();\'');
+
+};
+
+exports.checkTransactionTypeInDatabase = function(transactionType) {
+  let con = createDatabaseConnection();
+  con.query('SELECT txn_type FROM sales_payment_transaction ORDER BY transaction_id DESC LIMIT 1', function (err, result) {
+    if (err) {
+      return console.error(err.message);
+    }
+    Object.values(result).forEach(function(row) {
+      expect(row.txn_type).to.equal(transactionType);
+      console.log('I can see ' + transactionType + ' in transaction table!');
+    });
+  });
+  con.end();
+};
 
 exports.addProductToCartAndGotoCheckout = async (driver, url) => {
   await driver.get(`${config.url}${url}`);
