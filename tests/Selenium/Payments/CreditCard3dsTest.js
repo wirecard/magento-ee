@@ -16,7 +16,10 @@ const {
   choosePaymentMethod,
   fillOutGuestCheckout,
   addProductToCartAndGotoCheckout,
-  chooseFlatRateShipping
+  chooseFlatRateShipping,
+  updateDatabaseTransactionType,
+  checkTransactionTypeInDatabase,
+  clearDatabaseRows
 } = require('../common');
 const { config } = require('../config');
 let driver;
@@ -30,6 +33,7 @@ describe('Credit Card 3-D Secure test', () => {
   const formFields = config.payments.creditCard3ds.fields;
 
   it('should check the credit card 3ds payment process', async () => {
+    await updateDatabaseTransactionType('pay', 'payment/wirecardee_paymentgateway_creditcard/transaction_type');
     await addProductToCartAndGotoCheckout(driver, '/flapover-briefcase.html');
     await fillOutGuestCheckout(driver);
     await chooseFlatRateShipping(driver);
@@ -55,6 +59,10 @@ describe('Credit Card 3-D Secure test', () => {
 
     await waitForAlert(driver, 10000);
     await checkConfirmationPage(driver, 'Thank you for your purchase!');
+    await clearDatabaseRows('capture');
+    console.log('Check transaction type in database!');
+    // capture means purchase
+    checkTransactionTypeInDatabase('capture');
   });
 
   after(async () => driver.quit());

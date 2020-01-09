@@ -6,6 +6,7 @@
     "test:default": "node_modules/.bin/mocha tests/Selenium/Payments/DefaultTest.js --timeout 60000",
     "test:creditcard": "node_modules/.bin/mocha tests/Selenium/Payments/CreditCardTest.js --timeout 60000",
     "test:creditcard3ds": "node_modules/.bin/mocha tests/Selenium/Payments/CreditCard3dsTest.js --timeout 60000",
+    "test:creditcard3dsauthorization": "node_modules/.bin/mocha tests/Selenium/Payments/CreditCard3dsAuthorizationTest.js --timeout 60000",
     "test:paypal": "node_modules/.bin/mocha tests/Selenium/Payments/PayPalTest.js --timeout 180000",
     "test:sepa": "node_modules/.bin/mocha tests/Selenium/Payments/SepaTest.js --timeout 60000",
     "test:sofort": "node_modules/.bin/mocha tests/Selenium/Payments/SofortTest.js --timeout 60000",
@@ -18,7 +19,7 @@
     "test:alipay": "node_modules/.bin/mocha tests/Selenium/Payments/AlipayTest.js --timeout 60000",
     "test:payolution": "node_modules/.bin/mocha tests/Selenium/Payments/PayolutionTest.js --timeout 60000",
     "test:runner": "node --max-old-space-size=3000 tests/Selenium/runner.js",
-    "test:payments": "node_modules/.bin/mocha $(find tests/Selenium/Payments -name '*.js' -not -name 'PayPalTest.js') --timeout 120000 --reporter mocha-multi-reporters --reporter-options configFile=./config.json"
+    "test:payments": "node_modules/.bin/mocha $(if [ \"$GATEWAY\" = \"API-TEST\" ]; then find tests/Selenium/Payments -name '*.js' -not -name 'MasterpassTest.js' -not -name 'PayPalTest.js'; else find tests/Selenium/Payments -name 'CreditCard3dsAuthorizationTest.js'; fi) --timeout 120000 --reporter mocha-multi-reporters --reporter-options configFile=./config.json"
   },
   "private": true,
   "license": "GPL-3.0",
@@ -29,6 +30,7 @@
     "selenium-webdriver": "^4.0.0-alpha.1",
     "mocha-junit-reporter": "^1.23.0",
     "mocha-multi-reporters": "^1.1.7",
-    "mochawesome": "4.0.1"
+    "mochawesome": "4.0.1",
+    "mysql": "2.17.1"
   }
 }
