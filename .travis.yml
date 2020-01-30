@@ -11,16 +11,16 @@ services:
 
 env:
   global:
-    - COMPOSER_ARGS="--no-interaction"
+    - COMPOSER_ARGS=--no-interaction
     - MAGENTO_DIRECTORY=${HOME}/magento
-    - EXTENSION_NAME="wirecard-ee"
+    - EXTENSION_NAME=wirecard-ee
     - n98="php ${TRAVIS_BUILD_DIR}/n98-magerun.phar -n --root-dir=${MAGENTO_DIRECTORY}"
-    - SHOP_SYSTEM_UPDATE_COMMIT="Update latest shop releases"
+    - SHOP_SYSTEM_UPDATE_COMMIT=UpdateLatestShopReleases
     - MAGENTO_RELEASES_FILE=${TRAVIS_BUILD_DIR}/build/bin/compatible-shop-releases.txt
-    - MANUAL_UITEST_TRIGGER_COMMIT="Test my build"
-    - PATCH_RELEASE="patch"
-    - MINOR_RELEASE="minor"
-    - MAJOR_RELEASE="major"
+    - MANUAL_UITEST_TRIGGER_COMMIT=TestMyBuild
+    - PATCH_RELEASE=patch
+    - MINOR_RELEASE=minor
+    - MAJOR_RELEASE=major
     - MAGENTO_COMPATIBILITY_FILE=${TRAVIS_BUILD_DIR}/build/bin/new-shop-releases.txt
 
 matrix:
