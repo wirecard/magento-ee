@@ -227,16 +227,16 @@ class SupportMail
      */
     private function getWhitelistedConfigFields($activeMethods)
     {
-        $whitelistedPaymentConfigs = [];
+        $paymentConfigs = [];
         foreach ($this->paymentFactory->getSupportedPayments() as $payment) {
             $configFields = $payment->getPaymentConfig()->toArray();
-            $whitelistedPaymentConfigs[$payment->getName()] = array_intersect_key(
+            $paymentConfigs[$payment->getName()] = array_intersect_key(
                 $configFields,
                 array_flip(self::WHITELISTED_FIELDS)
             );
-            $whitelistedPaymentConfigs[$payment->getName()]['active'] = in_array($payment->getName(), $activeMethods);
+            $paymentConfigs[$payment->getName()]['active'] = in_array($payment->getName(), $activeMethods);
         }
 
-        return $whitelistedPaymentConfigs;
+        return $paymentConfigs;
     }
 }
