@@ -2,7 +2,7 @@
 
 ## v2.0.1
 
-* ...
+* Fix support email form settings, security update
 
 |  Overview | Magento version | PHP 5.6 | PHP 7.0 | PHP 7.1 | PHP 7.2 |  
 |---|---|:---:|:---:|:---:|:---:|  
