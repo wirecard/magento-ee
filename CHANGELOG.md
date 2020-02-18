@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.0.1
+
+* Fix support email form settings, security update
+
+|  Overview | Magento version | PHP 5.6 | PHP 7.0 | PHP 7.1 | PHP 7.2 |  
+|---|---|:---:|:---:|:---:|:---:|  
+| **Tested version(s)** | Magento 1.9.4.2 | &#9989; | &#9989; | &#9989; | &#9989; |  
+| **Compatibility** | Magento 1.9.3.4 - 1.9.4.2 | &#9989; | &#9989; | &#9989; | &#9989; |  
+
 ## v2.0.0
 
 * Add P24 #54

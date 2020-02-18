@@ -18,6 +18,34 @@ class SupportMail
 {
     const SUPPORT_MAIL = 'shop-systems-support@wirecard.com';
 
+    const WHITELISTED_FIELDS = array(
+        'baseUrl',
+        'transactionMAID',
+        'transactionOperation',
+        'sendBasket',
+        'fraudPrevention',
+        'orderIdentification',
+        'threeDMAID',
+        'threeDMinLimit',
+        'threeDMinLimitCurrency',
+        'sslMaxLimit',
+        'sslMaxLimitCurrency',
+        'vaultEnabled',
+        'allowAddressChanges',
+        'threeDUsageOnTokens',
+        'creditorStreet',
+        'creditorZip',
+        'creditorCity',
+        'creditorCountry',
+        'backendTransactionMaid',
+        'minAmount',
+        'maxAmount',
+        'acceptedCurrencies',
+        'shippingCountries',
+        'billingCountries',
+        'allowDifferentBillingShipping'
+    );
+
     /**
      * @var PaymentFactory
      */
@@ -117,9 +145,9 @@ class SupportMail
     protected function getServerInfo()
     {
         return [
-            'os'     => php_uname(),
+            'os' => php_uname(),
             'server' => isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : 'unknown',
-            'php'    => phpversion(),
+            'php' => phpversion(),
         ];
     }
 
@@ -131,7 +159,7 @@ class SupportMail
     protected function getShopInfo()
     {
         return [
-            'name'    => 'Magento ' . \Mage::getEdition(),
+            'name' => 'Magento ' . \Mage::getEdition(),
             'version' => \Mage::getVersion(),
         ];
     }
@@ -146,7 +174,7 @@ class SupportMail
     {
         /** @var \Mage_Payment_Model_Config $paymentConfig */
         $paymentConfig = \Mage::getModel('payment/config');
-        $paymentName   = 'wirecardee_paymentgateway_';
+        $paymentName = 'wirecardee_paymentgateway_';
         $activeMethods = [];
 
         /** @var \WirecardEE_PaymentGateway_Model_Payment $paymentMethod */
@@ -157,18 +185,12 @@ class SupportMail
             }
         }
 
-        $paymentConfigs = [];
-        foreach ($this->paymentFactory->getSupportedPayments() as $payment) {
-            $paymentConfigs[$payment->getName()]           = $payment->getPaymentConfig()->toArray();
-            $paymentConfigs[$payment->getName()]['active'] = in_array($payment->getName(), $activeMethods);
-        }
-
         /** @var \WirecardEE_PaymentGateway_Helper_Data $paymentHelper */
         $paymentHelper = \Mage::helper('paymentgateway');
         return [
-            'name'     => $paymentHelper->getPluginName(),
-            'version'  => $paymentHelper->getPluginVersion(),
-            'payments' => $paymentConfigs,
+            'name' => $paymentHelper->getPluginName(),
+            'version' => $paymentHelper->getPluginVersion(),
+            'payments' => $this->getWhitelistedConfigFields($activeMethods),
         ];
     }
 
@@ -185,13 +207,36 @@ class SupportMail
         /** @var \Mage_Core_Model_Config_Element $plugin */
         foreach ($modules as $key => $plugin) {
             $plugins[] = [
-                'name'     => $key,
-                'version'  => isset($plugin->version) ? (string)$plugin->version : null,
-                'active'   => $plugin->is('active') ? 'Yes' : 'No',
+                'name' => $key,
+                'version' => isset($plugin->version) ? (string)$plugin->version : null,
+                'active' => $plugin->is('active') ? 'Yes' : 'No',
                 'codePool' => isset($plugin->codePool) ? (string)$plugin->codePool : null,
             ];
         }
 
         return $plugins;
+    }
+
+    /**
+     * Returns array of whitelisted payment configuration fields
+     *
+     * @param $activeMethods
+     * @return array
+     * @throws \WirecardEE\PaymentGateway\Exception\UnknownPaymentException
+     * @since 2.0.1
+     */
+    private function getWhitelistedConfigFields($activeMethods)
+    {
+        $paymentConfigs = [];
+        foreach ($this->paymentFactory->getSupportedPayments() as $payment) {
+            $configFields = $payment->getPaymentConfig()->toArray();
+            $paymentConfigs[$payment->getName()] = array_intersect_key(
+                $configFields,
+                array_flip(self::WHITELISTED_FIELDS)
+            );
+            $paymentConfigs[$payment->getName()]['active'] = in_array($payment->getName(), $activeMethods);
+        }
+
+        return $paymentConfigs;
     }
 }
