@@ -29,6 +29,10 @@ describe('PayPal test', () => {
   const paymentLabel = config.payments.paypal.label;
   const formFields = config.payments.paypal.fields;
 
+  const payPalPassword = Object.assign({
+    "paypal.password": process.env.PAYPAL_PASSWORD
+  });
+
   it('should check the paypal payment process', async () => {
     await addProductToCartAndGotoCheckout(driver, '/accessories/jewelry/blue-horizons-bracelets.html');
     await fillOutGuestCheckout(driver);
@@ -42,7 +46,9 @@ describe('PayPal test', () => {
     await driver.findElement(By.id('email')).sendKeys(formFields.email);
     console.log('wait for #password');
     await driver.wait(until.elementLocated(By.id('password')), 10000);
-    await driver.findElement(By.id('password')).sendKeys(formFields.password, Key.ENTER);
+    await driver.findElement(By.id("password")).sendKeys(payPalPassword["paypal.password"], Key.ENTER);
+    await driver.wait(until.elementLocated(By.className("btn full confirmButton continueButton")));
+    await driver.findElement(By.className("btn full confirmButton continueButton")).click();
     console.log('wait for #confirmButtonTop');
     await driver.wait(until.elementLocated(By.id('confirmButtonTop')));
     console.log('#confirmButtonTop located');
@@ -67,9 +73,11 @@ describe('PayPal test', () => {
     await driver.wait(until.elementLocated(By.id('btnLogin')), 25000);
     console.log('wait for #password');
     await driver.wait(until.elementLocated(By.id('password')), 10000);
-    await driver.findElement(By.id('password')).sendKeys(formFields.password, Key.ENTER);
+    await driver.findElement(By.id("password")).sendKeys(payPalPassword["paypal.password"], Key.ENTER);
 
     await waitUntilOverlayIsNotVisible(driver, By.id('preloaderSpinner'));
+    await driver.wait(until.elementLocated(By.className("btn full confirmButton continueButton")));
+    await driver.findElement(By.className("btn full confirmButton continueButton")).click();
 
     console.log('wait for #confirmButtonTop');
     await driver.wait(until.elementLocated(By.id('confirmButtonTop')), 25000);

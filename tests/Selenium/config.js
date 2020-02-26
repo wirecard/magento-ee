@@ -31,8 +31,7 @@ exports.config = {
     paypal: {
       label: 'Wirecard PayPal',
       fields: {
-        email: 'paypal.magento1.buyer@wirecard.com',
-        password: 'Wirecardbuyer'
+        email: "paypal-shop-extensions-test@wirecard.com"
       }
     },
     sepa: {
