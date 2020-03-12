@@ -75,7 +75,6 @@ matrix:
     after_script: skip
     after_success:
     - bash ./build/bin/upload-logs-and-notify.sh
-    - bash ./build/bin/update-shop-release-versions.sh
     after_failure: bash ./build/bin/upload-logs-and-notify.sh fail
 
     # run this stage on pull request if head branch name contains major (on major release)
